@@ -1,6 +1,7 @@
 # 📌 [문서 제목]
 <!--기술적 의사결정의 핵심 주제를 간결하게 작성-->
-예: "로컬 개발 환경에서의 DB 선택: SQLite vs MySQL"
+작성일: YYYY-MM-DD     
+"로컬 개발 환경에서의 DB 선택: SQLite vs MySQL"
 
 <br>
 
