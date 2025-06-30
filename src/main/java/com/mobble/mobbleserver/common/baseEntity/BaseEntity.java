@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.Common.BaseEntity;
+package com.mobble.mobbleserver.common.baseEntity;
 
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
