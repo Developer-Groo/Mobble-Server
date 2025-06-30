@@ -19,39 +19,19 @@ Temporary Items
 *.icloud
 
 # === IntelliJ IDEA ===
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-.idea/**/aws.xml
-.idea/**/contentModel.xml
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-.idea/**/gradle.xml
-.idea/**/libraries
-.idea/httpRequests
-.idea/replstate.xml
-.idea/sonarlint/
-.idea/**/sonarIssues.xml
-.idea/**/markdown-navigator.xml
-.idea/**/markdown-navigator-enh.xml
-.idea/**/markdown-navigator/
-.idea/codestream.xml
-.idea/**/azureSettings.xml
-.idea_modules/
-.idea/$CACHE_FILE$
+.idea
+*.iws
+*.iml
+*.ipr
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 # === Java ===
 *.class
 *.log
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -62,6 +42,7 @@ hs_err_pid*
 replay_pid*
 
 # === Gradle ===
+.gradle
 build/
 
 # === Local Environment ===
