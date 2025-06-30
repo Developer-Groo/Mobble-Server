@@ -7,7 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
 @MappedSuperclass
-public class BaseEntity extends CreatedAtEntity {
+public abstract class BaseEntity extends CreatedAtEntity {
 
     @LastModifiedDate
     protected LocalDateTime updatedAt;
