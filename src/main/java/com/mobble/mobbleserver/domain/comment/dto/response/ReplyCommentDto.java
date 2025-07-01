@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 public record ReplyCommentDto(
         Long commentId,
+        Long memberId,
+        String name,
         Long parentId,
         String content,
         LocalDateTime createdAt,
@@ -16,8 +18,8 @@ public record ReplyCommentDto(
         return new ReplyCommentDto(
                 comment.getId(),
 //            Todo: 필드 구현 완료되면 작업 진행
-//            comment.getMember().getId(),
-//            comment.getMember().getName(),
+                comment.getMember().getId(),
+                comment.getMember().getName(),
                 Boolean.TRUE.equals(comment.hasParent()) ? comment.getParent().getId() : null,
                 comment.getContent(),
                 comment.getCreatedAt(),
