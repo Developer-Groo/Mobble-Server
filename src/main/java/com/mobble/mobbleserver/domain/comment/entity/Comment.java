@@ -1,20 +1,13 @@
 package com.mobble.mobbleserver.domain.comment.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -52,15 +45,24 @@ public class Comment extends BaseEntity {
 
     public static Comment createRootComment(String content) {
         return Comment.builder()
-            .content(content)
-            .build();
+                .content(content)
+                .build();
     }
 
     public static Comment createReplyComment(Comment parent, String content) {
         return Comment.builder()
-            .parent(parent)
-            .content(content)
-            .build();
+                .parent(parent)
+                .content(content)
+                .build();
+    }
+
+    public Comment changeContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public Boolean hasParent() {
+        return this.parent != null;
     }
 
 }
