@@ -20,7 +20,7 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createRootComment(Long articleId, CommentRequestDto dto) {
-        // Todo: 해당 member 의 댓글인지 검증 필요
+        // Todo: 해당 member 가 존재하는지 검증 필요
         // Todo: 해당 article 이 존재하는지 검증 필요
         Comment comment = dto.toEntity();
 
@@ -29,7 +29,7 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createReplyComment(Long articleId, Long parentCommentId, CommentRequestDto dto) {
-        // Todo: 해당 member 의 댓글인지 검증 필요
+        // Todo: 해당 member 가 존재하는지 검증 필요
         // Todo: 해당 article 이 존재하는지 검증 필요
         Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
