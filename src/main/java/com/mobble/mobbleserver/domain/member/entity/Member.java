@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.member.entity;
+package com.mobble.mobbleserver.domain.member.entity;
 
-import com.mobble.mobbleserver.Common.BaseEntity.BaseEntity;
+import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,7 +49,7 @@ public class Member extends BaseEntity {
     private boolean isDeleted;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Member(
+    private Member(
             String name,
             int age,
             Gender gender,
@@ -71,7 +71,6 @@ public class Member extends BaseEntity {
         this.privacyAgreed = privacyAgreed;
     }
 
-
     public static Member createMember(
             String name,
             int age,
@@ -83,7 +82,6 @@ public class Member extends BaseEntity {
             boolean termsAgreed,
             boolean privacyAgreed
     ) {
-
         return Member.builder()
                 .name(name)
                 .age(age)
@@ -95,6 +93,5 @@ public class Member extends BaseEntity {
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
                 .build();
-
     }
 }
