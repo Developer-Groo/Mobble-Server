@@ -1,8 +1,10 @@
 package com.mobble.mobbleserver.domain.article.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public enum ArticleType {
     NOTICE("공지"),
     REVIEW("모임 후기"),
@@ -11,7 +13,4 @@ public enum ArticleType {
 
     private final String displayName;
 
-    ArticleType(String displayName) {
-        this.displayName = displayName;
-    }
 }
