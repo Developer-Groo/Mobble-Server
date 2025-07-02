@@ -72,8 +72,7 @@ public class CommentService {
 
     private Comment findCommentOrThrow(Long commentId) {
         return commentRepository.findById(commentId)
-                // Todo: Custom 예외 적용
                 .orElseThrow(() -> new IllegalArgumentException(""));
-
+                // Todo: Custom 예외 적용
     }
 }
