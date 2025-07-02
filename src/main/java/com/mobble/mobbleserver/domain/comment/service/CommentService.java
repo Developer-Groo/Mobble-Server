@@ -63,11 +63,12 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private void validateArticleExistence(Long articleId) {
-        if (!articleRepository.existsById(articleId)) {
-            // Todo: Custom 예외 적용
-            throw new IllegalArgumentException("");
-        }
+    private Article findArticleOrThrow(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException(""));
+                // Todo: Custom 예외 적용
+    }
+
     private Member findMemberOrThrow(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
