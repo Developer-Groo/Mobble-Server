@@ -1,11 +1,14 @@
 package com.mobble.mobbleserver.domain.comment.service;
 
+import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
+import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepository;
+import com.mobble.mobbleserver.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,28 +22,34 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public CommentResponseDto createRootComment(Long articleId, CommentRequestDto dto) {
-        // Todo: 해당 member 가 존재하는지 검증 필요
-        validateArticleExistence(articleId);
-        Comment comment = dto.toEntity();
+    public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
+        Member member = findMemberOrThrow(memberId);
+        Article article = findArticleOrThrow(articleId);
+        Comment comment = dto.toEntity(member, article);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
     }
 
     @Transactional
-    public CommentResponseDto createReplyComment(Long articleId, Long parentCommentId, CommentRequestDto dto) {
-        // Todo: 해당 member 가 존재하는지 검증 필요
-        validateArticleExistence(articleId);
+    public CommentResponseDto createReplyComment(
+            Long memberId,
+            Long articleId,
+            Long parentCommentId,
+            CommentRequestDto dto
+    ) {
+        Member member = findMemberOrThrow(memberId);
+        Article article = findArticleOrThrow(articleId);
         Comment parentComment = findCommentOrThrow(parentCommentId);
-        Comment comment = dto.toEntity(parentComment);
+        Comment comment = dto.toEntity(member, article, parentComment);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
     }
 
     public List<CommentListResponseDto> getCommentListByArticle(Long articleId) {
-        validateArticleExistence(articleId);
+        findArticleOrThrow(articleId);
 
         return commentRepository.findCommentsWithRepliesByArticleId(articleId).stream()
                 .map(CommentListResponseDto::toDto)
@@ -48,8 +57,8 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, CommentRequestDto dto) {
-        // Todo: 해당 member 의 댓글인지 검증 필요
+    public CommentResponseDto updateComment(Long memberId, Long commentId, CommentRequestDto dto) {
+        findMemberOrThrow(memberId);
         Comment comment = findCommentOrThrow(commentId);
         Comment updatedComment = comment.changeContent(dto.content());
 
@@ -57,8 +66,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
-        // Todo: 해당 member 의 댓글인지 검증 필요
+    public void deleteComment(Long memberId, Long commentId) {
+        findMemberOrThrow(memberId);
         Comment comment = findCommentOrThrow(commentId);
         commentRepository.delete(comment);
     }
