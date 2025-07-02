@@ -20,10 +20,9 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_id")
     private Long id;
 
-//    Todo: 구현 완료되면 주석 해제
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "article_id")
-//    private Article article;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "name_id")
