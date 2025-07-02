@@ -24,8 +24,7 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
                 .leftJoin(comment.children, child)
                 .fetchJoin()
                 .where(
-                        // Todo: 구현 완료 되면 주석 해제
-//                        comment.article.id.eq(articleId),
+                        comment.article.id.eq(articleId),
                         comment.parent.isNull()
                 )
                 .orderBy(comment.createdAt.asc(), child.createdAt.asc())
