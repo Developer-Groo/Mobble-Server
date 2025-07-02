@@ -68,6 +68,10 @@ public class CommentService {
             // Todo: Custom 예외 적용
             throw new IllegalArgumentException("");
         }
+    private Member findMemberOrThrow(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException(""));
+                // Todo: Custom 예외 적용
     }
 
     private Comment findCommentOrThrow(Long commentId) {
