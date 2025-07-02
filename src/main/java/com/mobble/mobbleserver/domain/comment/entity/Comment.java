@@ -39,19 +39,36 @@ public class Comment extends BaseEntity {
     private List<Comment> children;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Comment(Comment parent, String content) {
+    private Comment(
+            Article article,
+            Member member,
+            Comment parent,
+            String content
+    ) {
+        this.article = article;
+        this.member = member;
         this.parent = parent;
         this.content = content;
     }
 
-    public static Comment createRootComment(String content) {
+    public static Comment createRootComment(Member member, Article article, String content) {
         return Comment.builder()
+                .member(member)
+                .article(article)
+                .parent(null)
                 .content(content)
                 .build();
     }
 
-    public static Comment createReplyComment(Comment parent, String content) {
+    public static Comment createReplyComment(
+            Member member,
+            Article article,
+            Comment parent,
+            String content
+    ) {
         return Comment.builder()
+                .member(member)
+                .article(article)
                 .parent(parent)
                 .content(content)
                 .build();
