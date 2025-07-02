@@ -1,9 +1,10 @@
 package com.mobble.mobbleserver.common.baseEntity;
 
 import jakarta.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
