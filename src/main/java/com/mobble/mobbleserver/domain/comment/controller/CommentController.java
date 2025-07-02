@@ -23,8 +23,10 @@ public class CommentController {
             @PathVariable("article-id") Long articleId,
             @RequestBody CommentRequestDto dto
     ) {
+        Long memberId = 1L; // Todo: 임시 member id
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.createRootComment(articleId, dto));
+                .body(commentService.createRootComment(memberId, articleId, dto));
     }
 
     @PostMapping("/{article-id}/comments/{parent-comment-id}/replies")
@@ -33,8 +35,10 @@ public class CommentController {
             @PathVariable("parent-comment-id") Long parentCommentId,
             @RequestBody CommentRequestDto dto
     ) {
+        Long memberId = 1L; // Todo: 임시 member id
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.createReplyComment(articleId, parentCommentId, dto));
+                .body(commentService.createReplyComment(memberId, articleId, parentCommentId, dto));
     }
 
     @GetMapping("/{article-id}/comments")
@@ -48,13 +52,16 @@ public class CommentController {
             @PathVariable("comment-id") Long commentId,
             @RequestBody CommentRequestDto dto
     ) {
+        Long memberId = 1L; // Todo: 임시 member id
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.updateComment(commentId, dto));
+                .body(commentService.updateComment(memberId, commentId, dto));
     }
 
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity<Void> deleteComment(@PathVariable("comment-id") Long commentId) {
-        commentService.deleteComment(commentId);
+        Long memberId = 1L; // Todo: 임시 member id
+        commentService.deleteComment(memberId, commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
