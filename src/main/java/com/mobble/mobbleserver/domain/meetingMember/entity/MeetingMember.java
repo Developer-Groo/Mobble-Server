@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.meetingMember.entity;
 
-import com.mobble.mobbleserver.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
