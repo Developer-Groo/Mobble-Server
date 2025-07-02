@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.meetingMember.entity;
+package com.mobble.mobbleserver.domain.meetingMember.entity;
 
 import com.mobble.mobbleserver.member.entity.Member;
 import jakarta.persistence.*;
