@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.meeting.entity;
+package com.mobble.mobbleserver.domain.meeting.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

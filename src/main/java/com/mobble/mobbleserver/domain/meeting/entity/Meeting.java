@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.meeting.entity;
+package com.mobble.mobbleserver.domain.meeting.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
