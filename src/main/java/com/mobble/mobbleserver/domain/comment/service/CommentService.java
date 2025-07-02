@@ -7,8 +7,8 @@ import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDt
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
-import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,19 +74,16 @@ public class CommentService {
 
     private Article findArticleOrThrow(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
-                // Todo: Custom 예외 적용
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
     }
 
     private Member findMemberOrThrow(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
-                // Todo: Custom 예외 적용
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
     }
 
     private Comment findCommentOrThrow(Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
-                // Todo: Custom 예외 적용
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
     }
 }
