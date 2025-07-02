@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.meeting.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +18,9 @@ public class Meeting {
     @Column(name = "meeting_id")
     private Long id;
 
-    @Column(name = "club_member_id")
-    private Long clubMemberId;
+//    @ManyToOne
+//    @JoinColumn(name = "club_member_id")
+//    private ClubMember clubMemberId;
 
     private String title;
 
@@ -30,8 +32,39 @@ public class Meeting {
 
     private int limit;
 
+    @Enumerated(EnumType.STRING)
     private MeetingType type;
 
 
+    //TODO ClubMember 필요
+    @Builder
+    public Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int limit, MeetingType type) {
+        //this.clubMember = clubMember
+        this.title = title;
+        this.datetime = datetime;
+        this.location = location;
+        this.cost = cost;
+        this.limit = limit;
+        this.type = type;
+    }
 
+    //TODO ClubMember 필요
+    public static Meeting createMeeting(
+//            ClubMember clubMember,
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int limit,
+            MeetingType type
+    ) {
+        return Meeting.builder()
+                .title(title)
+                .datetime(datetime)
+                .location(location)
+                .cost(cost)
+                .limit(limit)
+                .type(type)
+                .build();
+    }
 }
