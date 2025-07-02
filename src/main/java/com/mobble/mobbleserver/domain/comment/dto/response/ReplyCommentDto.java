@@ -25,6 +25,5 @@ public record ReplyCommentDto(
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
-
     }
 }
