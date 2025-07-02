@@ -17,7 +17,6 @@ public record ReplyCommentDto(
     public static ReplyCommentDto toDto(Comment comment) {
         return new ReplyCommentDto(
                 comment.getId(),
-//            Todo: 필드 구현 완료되면 작업 진행
                 comment.getMember().getId(),
                 comment.getMember().getName(),
                 Boolean.TRUE.equals(comment.hasParent()) ? comment.getParent().getId() : null,
