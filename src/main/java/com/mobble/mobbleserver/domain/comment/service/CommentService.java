@@ -60,4 +60,18 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException(""));
         commentRepository.delete(comment);
     }
+
+    private void validateArticleExistence(Long articleId) {
+        if (!articleRepository.existsById(articleId)) {
+            // Todo: Custom 예외 적용
+            throw new IllegalArgumentException("");
+        }
+    }
+
+    private Comment findCommentOrThrow(Long commentId) {
+        return commentRepository.findById(commentId)
+                // Todo: Custom 예외 적용
+                .orElseThrow(() -> new IllegalArgumentException(""));
+
+    }
 }
