@@ -35,10 +35,9 @@ public class Meeting {
     @Enumerated(EnumType.STRING)
     private MeetingType type;
 
-
     //TODO ClubMember 필요
     @Builder
-    public Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int limit, MeetingType type) {
+    private Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int limit, MeetingType type) {
         //this.clubMember = clubMember
         this.title = title;
         this.datetime = datetime;
