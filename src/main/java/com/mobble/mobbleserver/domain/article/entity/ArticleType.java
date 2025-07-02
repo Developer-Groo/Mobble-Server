@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.article.entity;
+package com.mobble.mobbleserver.domain.article.entity;
 
 import lombok.Getter;
 

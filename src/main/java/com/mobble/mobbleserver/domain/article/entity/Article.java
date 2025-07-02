@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.article.entity;
+package com.mobble.mobbleserver.domain.article.entity;
 
 import com.mobble.mobbleserver.Common.BaseEntity.BaseEntity;
 import jakarta.persistence.*;
