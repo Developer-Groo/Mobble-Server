@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.comment.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ public class Comment extends BaseEntity {
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "name_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,5 +65,4 @@ public class Comment extends BaseEntity {
     public Boolean hasParent() {
         return this.parent != null;
     }
-
 }
