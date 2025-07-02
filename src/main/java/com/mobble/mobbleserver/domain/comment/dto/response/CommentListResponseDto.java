@@ -8,6 +8,7 @@ import java.util.List;
 public record CommentListResponseDto(
         Long commentId,
         Long memberId,
+        Long articleId,
         String name,
         String content,
         LocalDateTime createdAt,
@@ -18,9 +19,8 @@ public record CommentListResponseDto(
     public static CommentListResponseDto toDto(Comment comment) {
         return new CommentListResponseDto(
                 comment.getId(),
-//            Todo: 필드 구현 완료되면 작업 진행
-//            comment.getArticle().getId(),
                 comment.getMember().getId(),
+                comment.getArticle().getId(),
                 comment.getMember().getName(),
                 comment.getContent(),
                 comment.getCreatedAt(),
