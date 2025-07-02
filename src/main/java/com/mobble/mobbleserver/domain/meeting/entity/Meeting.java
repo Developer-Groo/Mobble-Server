@@ -30,20 +30,21 @@ public class Meeting {
 
     private String cost;
 
-    private int limit;
+    @Column(name = "member_limit")
+    private int memberLimit;
 
     @Enumerated(EnumType.STRING)
     private MeetingType type;
 
     //TODO ClubMember 필요
     @Builder
-    private Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int limit, MeetingType type) {
+    private Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int memberLimit, MeetingType type) {
         //this.clubMember = clubMember
         this.title = title;
         this.datetime = datetime;
         this.location = location;
         this.cost = cost;
-        this.limit = limit;
+        this.memberLimit = memberLimit;
         this.type = type;
     }
 
@@ -54,7 +55,7 @@ public class Meeting {
             LocalDateTime datetime,
             String location,
             String cost,
-            int limit,
+            int memberLimit,
             MeetingType type
     ) {
         return Meeting.builder()
@@ -62,7 +63,7 @@ public class Meeting {
                 .datetime(datetime)
                 .location(location)
                 .cost(cost)
-                .limit(limit)
+                .memberLimit(memberLimit)
                 .type(type)
                 .build();
     }
