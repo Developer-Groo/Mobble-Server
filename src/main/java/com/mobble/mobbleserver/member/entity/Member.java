@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.member.entity;
 
 import com.mobble.mobbleserver.Common.BaseEntity.BaseEntity;
+import com.mobble.mobbleserver.account.oauth2.provider.SocialProvider;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,10 +40,11 @@ public class Member extends BaseEntity {
     @Column(name = "privacy_agreed")
     private boolean privacyAgreed;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "social_provider")
-    private String socialProvider;
+    private SocialProvider socialProvider;
 
-    @Column(name = "sicial_id")
+    @Column(name = "social_id")
     private String socialId;
 
     @Column(name = "is_deleted")
