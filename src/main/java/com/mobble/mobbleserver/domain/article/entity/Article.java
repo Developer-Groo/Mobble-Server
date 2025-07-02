@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.article.entity;
 
-import com.mobble.mobbleserver.Common.BaseEntity.BaseEntity;
+import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
