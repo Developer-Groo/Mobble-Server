@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.comment.service;
 
+import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
@@ -17,11 +18,12 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ArticleRepository articleRepository;
 
     @Transactional
     public CommentResponseDto createRootComment(Long articleId, CommentRequestDto dto) {
         // Todo: 해당 member 가 존재하는지 검증 필요
-        // Todo: 해당 article 이 존재하는지 검증 필요
+        validateArticleExistence(articleId);
         Comment comment = dto.toEntity();
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
@@ -30,15 +32,16 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createReplyComment(Long articleId, Long parentCommentId, CommentRequestDto dto) {
         // Todo: 해당 member 가 존재하는지 검증 필요
-        // Todo: 해당 article 이 존재하는지 검증 필요
-        Comment parentComment = commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+        validateArticleExistence(articleId);
+        Comment parentComment = findCommentOrThrow(parentCommentId);
         Comment comment = dto.toEntity(parentComment);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
     }
 
     public List<CommentListResponseDto> getCommentListByArticle(Long articleId) {
+        validateArticleExistence(articleId);
+
         return commentRepository.findCommentsWithRepliesByArticleId(articleId).stream()
                 .map(CommentListResponseDto::toDto)
                 .toList();
@@ -47,17 +50,16 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentRequestDto dto) {
         // Todo: 해당 member 의 댓글인지 검증 필요
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+        Comment comment = findCommentOrThrow(commentId);
+        Comment updatedComment = comment.changeContent(dto.content());
 
-        return CommentResponseDto.toDto(comment.changeContent(dto.content()));
+        return CommentResponseDto.toDto(updatedComment);
     }
 
     @Transactional
     public void deleteComment(Long commentId) {
         // Todo: 해당 member 의 댓글인지 검증 필요
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+        Comment comment = findCommentOrThrow(commentId);
         commentRepository.delete(comment);
     }
 
