@@ -12,4 +12,17 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/articles/{article-Id}/likes")
 public class ArticleLikeController {
+
+    private final ArticleLikeService articleLikeService;
+
+    @PostMapping
+    public ResponseEntity<ArticleLikeToggleResponseDto> like(
+            @PathVariable("article-Id") Long articleId,
+//            @AuthenticationPrincipal @Positive Member member
+            @RequestParam("memberId") Long memberId // 임시
+    ) {
+        Member member = Member.withId(memberId); // 임시
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .body(articleLikeService.toggleLike(articleId, member));
+    }
 }
