@@ -20,22 +20,22 @@ public class CommentLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
-    private Comment commentId;
+    private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     @Builder
     private CommentLike(Comment commentId, Member memberId) {
-        this.commentId = commentId;
-        this.memberId = memberId;
+        this.comment = comment;
+        this.member = member;
     }
 
-    public static CommentLike createcommentLike(Comment commentId, Member memberId) {
+    public static CommentLike createcommentLike(Comment comment, Member member) {
         return CommentLike.builder()
-                .commentId(commentId)
-                .memberId(memberId)
+                .commentId(comment)
+                .memberId(member)
                 .build();
     }
 }
