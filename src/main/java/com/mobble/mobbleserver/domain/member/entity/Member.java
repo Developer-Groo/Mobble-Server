@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
 
 @Entity
 @Getter
@@ -93,5 +96,16 @@ public class Member extends BaseEntity {
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
                 .build();
+    }
+
+    // 임시
+    public static Member withId(Long id) {
+        Member member = new Member();
+        Field idField = ReflectionUtils.findField(Member.class, "id");
+        if (idField != null) {
+            idField.setAccessible(true);
+            ReflectionUtils.setField(idField, member, id);
+        }
+        return member;
     }
 }
