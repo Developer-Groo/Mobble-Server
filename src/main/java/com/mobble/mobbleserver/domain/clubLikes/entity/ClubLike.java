@@ -27,8 +27,15 @@ public class ClubLike {
 
 //Todo Club 생성 후 import
 //    @Builder
-//    public ClubLike(Club clubId, Member memberId) {
+//    private ClubLike(Club clubId, Member memberId) {
 //        this.clubId = clubId;
 //        this.memberId = memberId;
+//    }
+
+//    public static ClubLike createClubLike(Club clubId, Member memberId) {
+//        return ClubLike.builder()
+//                .clubId(clubId)
+//                .memberId(memberId)
+//                .build();
 //    }
 }
