@@ -27,8 +27,15 @@ public class ArticleLike {
     private Member memberId;
 
     @Builder
-    public ArticleLike(Article articleId, Member memberId) {
+    private ArticleLike(Article articleId, Member memberId) {
         this.articleId = articleId;
         this.memberId = memberId;
+    }
+
+    public static ArticleLike createArticleLike(Article articleId, Member memberId) {
+        return ArticleLike.builder()
+                .articleId(articleId)
+                .memberId(memberId)
+                .build();
     }
 }
