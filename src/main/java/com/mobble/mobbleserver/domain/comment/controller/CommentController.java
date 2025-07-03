@@ -4,13 +4,17 @@ import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/articles")
@@ -20,8 +24,8 @@ public class CommentController {
 
     @PostMapping("/{article-id}/comments")
     public ResponseEntity<CommentResponseDto> createRootComment(
-            @PathVariable("article-id") Long articleId,
-            @RequestBody CommentRequestDto dto
+            @PathVariable("article-id") @Positive Long articleId,
+            @RequestBody @Valid CommentRequestDto dto
     ) {
         Long memberId = 1L; // Todo: 임시 member id
 
@@ -31,9 +35,9 @@ public class CommentController {
 
     @PostMapping("/{article-id}/comments/{parent-comment-id}/replies")
     public ResponseEntity<CommentResponseDto> createReplyComment(
-            @PathVariable("article-id") Long articleId,
-            @PathVariable("parent-comment-id") Long parentCommentId,
-            @RequestBody CommentRequestDto dto
+            @PathVariable("article-id") @Positive Long articleId,
+            @PathVariable("parent-comment-id") @Positive Long parentCommentId,
+            @RequestBody @Valid CommentRequestDto dto
     ) {
         Long memberId = 1L; // Todo: 임시 member id
 
@@ -42,15 +46,15 @@ public class CommentController {
     }
 
     @GetMapping("/{article-id}/comments")
-    public ResponseEntity<List<CommentListResponseDto>> getCommentList(@PathVariable("article-id") Long articleId) {
+    public ResponseEntity<List<CommentListResponseDto>> getCommentList(@PathVariable("article-id") @Positive Long articleId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentService.getCommentListByArticle(articleId));
     }
 
     @PatchMapping("/comments/{comment-id}")
     public ResponseEntity<CommentResponseDto> updateComment(
-            @PathVariable("comment-id") Long commentId,
-            @RequestBody CommentRequestDto dto
+            @PathVariable("comment-id") @Positive Long commentId,
+            @RequestBody @Valid CommentRequestDto dto
     ) {
         Long memberId = 1L; // Todo: 임시 member id
 
@@ -59,7 +63,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{comment-id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("comment-id") Long commentId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("comment-id") @Positive Long commentId) {
         Long memberId = 1L; // Todo: 임시 member id
         commentService.deleteComment(memberId, commentId);
 
