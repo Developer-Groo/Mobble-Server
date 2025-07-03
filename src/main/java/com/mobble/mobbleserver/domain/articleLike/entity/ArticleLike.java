@@ -20,22 +20,22 @@ public class ArticleLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
-    private Article articleId;
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     @Builder
-    private ArticleLike(Article articleId, Member memberId) {
-        this.articleId = articleId;
-        this.memberId = memberId;
+    private ArticleLike(Article article, Member member) {
+        this.article = article;
+        this.member = member;
     }
 
-    public static ArticleLike createArticleLike(Article articleId, Member memberId) {
+    public static ArticleLike createArticleLike(Article article, Member member) {
         return ArticleLike.builder()
-                .articleId(articleId)
-                .memberId(memberId)
+                .article(article)
+                .member(member)
                 .build();
     }
 }
