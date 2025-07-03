@@ -27,15 +27,15 @@ public class CommentLike {
     private Member member;
 
     @Builder
-    private CommentLike(Comment commentId, Member memberId) {
+    private CommentLike(Comment comment, Member member) {
         this.comment = comment;
         this.member = member;
     }
 
     public static CommentLike createcommentLike(Comment comment, Member member) {
         return CommentLike.builder()
-                .commentId(comment)
-                .memberId(member)
+                .comment(comment)
+                .member(member)
                 .build();
     }
 }
