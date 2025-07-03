@@ -5,6 +5,10 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  messages:
+    basename: validationMessages, globalMessages
+    encoding: UTF-8
+
   datasource:
     url: ${MYSQL_URL}
     username: ${MYSQL_USERNAME}
