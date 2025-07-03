@@ -20,22 +20,22 @@ public class MeetingMember {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id")
-    private Meeting meetingId;
+    private Meeting meeting;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     @Builder
-    private MeetingMember(Meeting meetingId, Member memberId) {
-        this.meetingId = meetingId;
-        this.memberId = memberId;
+    private MeetingMember(Meeting meeting, Member member) {
+        this.meeting = meeting;
+        this.member = member;
     }
 
-    public static MeetingMember createMeetingMember(Meeting meetingId, Member memberId) {
+    public static MeetingMember createMeetingMember(Meeting meeting, Member member) {
         return MeetingMember.builder()
-                .meetingId(meetingId)
-                .memberId(memberId)
+                .meeting(meeting)
+                .member(member)
                 .build();
     }
 }
