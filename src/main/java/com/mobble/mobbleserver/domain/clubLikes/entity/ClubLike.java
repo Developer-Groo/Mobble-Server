@@ -16,7 +16,7 @@ public class ClubLike {
     @Column(name = "club_like_id")
     private Long id;
 
-//Todo 추후 cascade, orphanRemoval = true 설정 필요
+//Todo cascade, orphanRemoval = true 설정 필요
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "club_id", nullable = false)
 //    private Club clubId;
@@ -24,4 +24,11 @@ public class ClubLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
+
+//Todo Club 생성 후 import
+//    @Builder
+//    public ClubLike(Club clubId, Member memberId) {
+//        this.clubId = clubId;
+//        this.memberId = memberId;
+//    }
 }
