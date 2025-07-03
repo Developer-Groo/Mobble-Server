@@ -50,30 +50,9 @@ public class Member extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-    @Builder(access = AccessLevel.PRIVATE)
-    public Member(
-            String name,
-            int age,
-            Gender gender,
-            String email,
-            String phone,
-            String ground,
-            String profileImage,
-            boolean termsAgreed,
-            boolean privacyAgreed
-    ) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.phone = phone;
-        this.ground = ground;
-        this.profileImage = profileImage;
-        this.termsAgreed = termsAgreed;
-        this.privacyAgreed = privacyAgreed;
-    }
-
-
+    /**
+     * 소셜 회원가입 완료 시 회원 생성
+     */
     public static Member createMember(
             String name,
             int age,
@@ -83,7 +62,9 @@ public class Member extends BaseEntity {
             String ground,
             String profileImage,
             boolean termsAgreed,
-            boolean privacyAgreed
+            boolean privacyAgreed,
+            SocialProvider socialProvider,
+            String socialId
     ) {
 
         return Member.builder()
@@ -96,7 +77,38 @@ public class Member extends BaseEntity {
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
+                .socialProvider(socialProvider)
+                .socialId(socialId)
+                .isDeleted(false)
                 .build();
+    }
 
+    @Builder(access = AccessLevel.PRIVATE)
+    private Member(
+            String name,
+            int age,
+            Gender gender,
+            String email,
+            String phone,
+            String ground,
+            String profileImage,
+            boolean termsAgreed,
+            boolean privacyAgreed,
+            SocialProvider socialProvider,
+            String socialId,
+            boolean isDeleted
+    ) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+        this.ground = ground;
+        this.profileImage = profileImage;
+        this.termsAgreed = termsAgreed;
+        this.privacyAgreed = privacyAgreed;
+        this.socialProvider = socialProvider;
+        this.socialId = socialId;
+        this.isDeleted = isDeleted;
     }
 }
