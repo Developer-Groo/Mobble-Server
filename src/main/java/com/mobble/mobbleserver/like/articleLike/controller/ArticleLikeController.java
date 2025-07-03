@@ -23,9 +23,9 @@ public class ArticleLikeController {
             @PathVariable("article-id") Long articleId
 //            @AuthenticationPrincipal @Positive Long member
     ) {
-        Long member = 1L;
+        Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(articleLikeService.toggleLike(articleId, member));
+                .body(articleLikeService.toggleLike(articleId, memberId));
     }
 
     @GetMapping("/count")
