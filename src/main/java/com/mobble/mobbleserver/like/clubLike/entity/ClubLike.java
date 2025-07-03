@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.clubLikes.entity;
+package com.mobble.mobbleserver.like.clubLike.entity;
 
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
