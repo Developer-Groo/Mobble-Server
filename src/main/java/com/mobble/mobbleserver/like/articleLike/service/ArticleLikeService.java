@@ -28,12 +28,9 @@ public class ArticleLikeService {
     public ArticleLikeToggleResponseDto toggleLike(Long articleId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
         Article article = findArticleOrThrow(articleId);
+//        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
-//         // TODO ClubMember 구현 및 security 구현 후 리팩토링
-//         boolean isClubMember = clubMemberRepository.existsByClubAndMember(article.getClub(), member);
-//         if (!isClubMember) {
-//             throw new IllegalStateException("클럽에 가입된 사용자만 좋아요를 누를 수 있습니다.");
-//         }
+
 
         return articleLikeRepository.findByArticleAndMember(article, member)
                 // like > unlike 변환
@@ -50,8 +47,7 @@ public class ArticleLikeService {
     }
 
     public ArticleLikeCountResponseDto getArticleLikeCount(Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        Article article = findArticleOrThrow(articleId);
 
         int count = articleLikeRepository.countByArticle(article);
 
@@ -59,8 +55,7 @@ public class ArticleLikeService {
     }
 
     public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        Article article = findArticleOrThrow(articleId);
 
         return articleLikeRepository.findAllByArticle(article).stream()
                 .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
@@ -76,4 +71,9 @@ public class ArticleLikeService {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
     }
+
+//    private ClubMember findClubMemberOrThrow(Long clubMemberId) {
+//        return clubMemberRepository.findById(clubMemberId)
+//                .orElseThrow(() -> new IllegalArgumentException(""));
+//    }
 }
