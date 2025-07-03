@@ -50,7 +50,7 @@ public class CommentService {
 
     public List<CommentListResponseDto> getCommentListByArticle(Long articleId) {
         findArticleOrThrow(articleId);
-
+        // Todo: 좋아요 갯수 반환 필요
         return commentRepository.findCommentsWithRepliesByArticleId(articleId).stream()
                 .map(CommentListResponseDto::toDto)
                 .toList();
