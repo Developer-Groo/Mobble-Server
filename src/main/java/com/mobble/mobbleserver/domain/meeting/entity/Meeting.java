@@ -38,7 +38,15 @@ public class Meeting {
 
     //TODO ClubMember 필요
     @Builder
-    private Meeting(/*ClubMember clubMember, */ String title, LocalDateTime datetime, String location, String cost, int memberLimit, MeetingType type) {
+    private Meeting(
+            /*ClubMember clubMember, */
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
         //this.clubMember = clubMember
         this.title = title;
         this.datetime = datetime;
