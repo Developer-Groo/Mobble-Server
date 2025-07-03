@@ -19,23 +19,23 @@ public class ClubLike {
 //Todo cascade, orphanRemoval = true 설정 필요
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "club_id", nullable = false)
-//    private Club clubId;
+//    private Club club;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
 //Todo Club 생성 후 import
 //    @Builder
-//    private ClubLike(Club clubId, Member memberId) {
-//        this.clubId = clubId;
-//        this.memberId = memberId;
+//    private ClubLike(Club club, Member member) {
+//        this.club = club;
+//        this.member = member;
 //    }
 
-//    public static ClubLike createClubLike(Club clubId, Member memberId) {
+//    public static ClubLike createClubLike(Club club, Member member) {
 //        return ClubLike.builder()
-//                .clubId(clubId)
-//                .memberId(memberId)
+//                .club(club)
+//                .member(member)
 //                .build();
 //    }
 }
