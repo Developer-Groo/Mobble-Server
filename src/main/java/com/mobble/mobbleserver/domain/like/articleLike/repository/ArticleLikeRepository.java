@@ -1,7 +1,5 @@
 package com.mobble.mobbleserver.domain.like.articleLike.repository;
 
-import com.mobble.mobbleserver.domain.article.entity.Article;
-import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,9 +8,10 @@ import java.util.Optional;
 
 public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
 
-    Optional<ArticleLike> findArticleLikeByArticleAndMember(Article article, Member member);
+    // 파라미터 Long타입으로 변경
+    Optional<ArticleLike> findByArticleIdAndMemberId(Long articleId, Long memberId);
 
-    int countArticleLikesByArticle(Article article);
+    int countByArticleId(Long articleId);
 
-    List<ArticleLike> findAllArticleLikedMemberByArticle(Article article);
+    List<ArticleLike> findAllMemberByArticleId(Long articleId);
 }

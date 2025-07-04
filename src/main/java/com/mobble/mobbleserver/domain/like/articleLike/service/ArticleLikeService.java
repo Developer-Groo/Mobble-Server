@@ -32,7 +32,7 @@ public class ArticleLikeService {
         Article article = findArticleOrThrow(articleId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
-        return articleLikeRepository.findArticleLikeByArticleAndMember(article, member)
+        return articleLikeRepository.findByArticleIdAndMemberId(articleId, memberId)
                 // like > unlike 변환
                 .map(existingLike -> {
                             articleLikeRepository.delete(existingLike);
@@ -48,9 +48,10 @@ public class ArticleLikeService {
                 );
     }
 
+    // 메서드 통합
     public ArticleLikeCountResponseDto getArticleLikeCount(Long articleId) {
         Article article = findArticleOrThrow(articleId);
-        int likeCount = articleLikeRepository.countArticleLikesByArticle(article);
+        int likeCount = articleLikeRepository.countByArticleId(articleId);
         // likeCount & likedMembers 통합시 사용
 //        List<ArticleLikeMemberResponseDto> members = articleLikeRepository.findAllArticleLikedMemberByArticle(article).stream()
 //                .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
@@ -62,7 +63,7 @@ public class ArticleLikeService {
     public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {
         Article article = findArticleOrThrow(articleId);
 
-        return articleLikeRepository.findAllArticleLikedMemberByArticle(article).stream()
+        return articleLikeRepository.findAllMemberByArticleId(articleId).stream()
                 .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
                 .toList();
     }
