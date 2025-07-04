@@ -48,9 +48,9 @@ public class ArticleLikeService {
 
     public ArticleLikeCountResponseDto getArticleLikeCount(Long articleId) {
         Article article = findArticleOrThrow(articleId);
-        int count = articleLikeRepository.countByArticle(article);
+        int likeCount = articleLikeRepository.countByArticle(article);
 
-        return ArticleLikeCountResponseDto.toDto(articleId, count);
+        return ArticleLikeCountResponseDto.toDto(articleId, likeCount);
     }
 
     public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {
