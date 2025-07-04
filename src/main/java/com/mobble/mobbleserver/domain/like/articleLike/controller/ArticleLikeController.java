@@ -18,7 +18,7 @@ public class ArticleLikeController {
     private final ArticleLikeService articleLikeService;
 
     @PostMapping
-    public ResponseEntity<ArticleLikeToggleResponseDto> like(
+    public ResponseEntity<ArticleLikeToggleResponseDto> likeToggle(
             @PathVariable("article-id") Long articleId
 //            @AuthenticationPrincipal @Positive Long member
     ) {
