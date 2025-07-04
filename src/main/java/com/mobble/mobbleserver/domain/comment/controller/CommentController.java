@@ -46,7 +46,9 @@ public class CommentController {
     }
 
     @GetMapping("/{article-id}/comments")
-    public ResponseEntity<List<CommentListResponseDto>> getCommentList(@PathVariable("article-id") @Positive Long articleId) {
+    public ResponseEntity<List<CommentListResponseDto>> getCommentList(
+            @PathVariable("article-id") @Positive Long articleId
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentService.getCommentListByArticle(articleId));
     }
@@ -63,7 +65,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{comment-id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("comment-id") @Positive Long commentId) {
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable("comment-id") @Positive Long commentId
+    ) {
         Long memberId = 1L; // Todo: 임시 member id
         commentService.deleteComment(memberId, commentId);
 
