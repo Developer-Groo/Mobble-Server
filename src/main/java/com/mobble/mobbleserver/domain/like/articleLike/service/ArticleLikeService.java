@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -45,15 +46,17 @@ public class ArticleLikeService {
                             return ArticleLikeToggleResponseDto.toDto(article, member, true);
                         }
                 );
-
-
     }
 
     public ArticleLikeCountResponseDto getArticleLikeCount(Long articleId) {
         Article article = findArticleOrThrow(articleId);
         int likeCount = articleLikeRepository.countArticleLikesByArticle(article);
+        // likeCount & likedMembers 통합시 사용
+//        List<ArticleLikeMemberResponseDto> members = articleLikeRepository.findAllArticleLikedMemberByArticle(article).stream()
+//                .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
+//                .toList();
 
-        return ArticleLikeCountResponseDto.toDto(article, likeCount);
+        return ArticleLikeCountResponseDto.toDto(article, likeCount, Collections.emptyList());
     }
 
     public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {
@@ -64,6 +67,9 @@ public class ArticleLikeService {
                 .toList();
     }
 
+    /**
+     * 예외처리 메서드 정리
+     */
     private Member findMemberOrThrow(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
