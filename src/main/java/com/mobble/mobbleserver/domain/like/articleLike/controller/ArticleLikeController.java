@@ -1,9 +1,9 @@
-package com.mobble.mobbleserver.like.articleLike.controller;
+package com.mobble.mobbleserver.domain.like.articleLike.controller;
 
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeCountResponseDto;
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeMemberResponseDto;
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
-import com.mobble.mobbleserver.like.articleLike.service.ArticleLikeService;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeCountResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

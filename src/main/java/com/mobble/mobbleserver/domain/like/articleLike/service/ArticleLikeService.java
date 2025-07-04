@@ -1,14 +1,14 @@
-package com.mobble.mobbleserver.like.articleLike.service;
+package com.mobble.mobbleserver.domain.like.articleLike.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeCountResponseDto;
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeMemberResponseDto;
-import com.mobble.mobbleserver.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
-import com.mobble.mobbleserver.like.articleLike.entity.ArticleLike;
-import com.mobble.mobbleserver.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeCountResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

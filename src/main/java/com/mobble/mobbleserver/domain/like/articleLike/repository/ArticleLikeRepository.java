@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.like.articleLike.repository;
+package com.mobble.mobbleserver.domain.like.articleLike.repository;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

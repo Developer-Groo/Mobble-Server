@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.like.articleLike.entity;
+package com.mobble.mobbleserver.domain.like.articleLike.entity;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
