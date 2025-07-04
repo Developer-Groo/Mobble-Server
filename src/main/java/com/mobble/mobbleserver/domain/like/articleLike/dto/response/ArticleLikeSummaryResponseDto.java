@@ -5,24 +5,12 @@ import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 
 import java.util.List;
 
-public record ArticleLikeSummaryResponseDto(
-        Long article,
-        int likeCount,
-        List<ArticleLikeMemberResponseDto> likedMembers
-) {
-    public static ArticleLikeSummaryResponseDto toDto(
-            Article article,
-            int likeCount,
-            List<ArticleLike> articleLikes
-    ) {
+public record ArticleLikeSummaryResponseDto(Long article, int likeCount, List<ArticleLikeMemberResponseDto> likedMembers) {
+    public static ArticleLikeSummaryResponseDto toDto(Article article, int likeCount, List<ArticleLike> articleLikes) {
         List<ArticleLikeMemberResponseDto> likedMembers = articleLikes.stream()
                 .map(articleLike -> ArticleLikeMemberResponseDto.toDto(articleLike.getMember()))
                 .toList();
 
-        return new ArticleLikeSummaryResponseDto(
-                article.getId(),
-                likeCount,
-                likedMembers
-        );
+        return new ArticleLikeSummaryResponseDto(article.getId(), likeCount, likedMembers);
     }
 }
