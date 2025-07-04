@@ -2,18 +2,16 @@ package com.mobble.mobbleserver.domain.like.articleLike.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
-import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeCountResponseDto;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeSummaryResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,24 +46,12 @@ public class ArticleLikeService {
                 );
     }
 
-    // 메서드 통합
-    public ArticleLikeCountResponseDto getArticleLikeCount(Long articleId) {
+    public ArticleLikeSummaryResponseDto getArticleLikeCountAndLikedMembers(Long articleId) {
         Article article = findArticleOrThrow(articleId);
         int likeCount = articleLikeRepository.countByArticleId(articleId);
-        // likeCount & likedMembers 통합시 사용
-//        List<ArticleLikeMemberResponseDto> members = articleLikeRepository.findAllArticleLikedMemberByArticle(article).stream()
-//                .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
-//                .toList();
+        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(articleId);
 
-        return ArticleLikeCountResponseDto.toDto(article, likeCount, Collections.emptyList());
-    }
-
-    public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {
-        Article article = findArticleOrThrow(articleId);
-
-        return articleLikeRepository.findAllMemberByArticleId(articleId).stream()
-                .map(like -> ArticleLikeMemberResponseDto.toDto(like.getMember()))
-                .toList();
+        return ArticleLikeSummaryResponseDto.toDto(article, likeCount, articleLikes);
     }
 
     /**
