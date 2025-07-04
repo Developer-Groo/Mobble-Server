@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ArticleLikeService {
+
     private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
     private final ArticleLikeRepository articleLikeRepository;
