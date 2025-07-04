@@ -34,14 +34,14 @@ public class ArticleLikeService {
                 // like > unlike 변환
                 .map(existingLike -> {
                             articleLikeRepository.delete(existingLike);
-                            return ArticleLikeToggleResponseDto.toDto(false, article, member);
+                            return ArticleLikeToggleResponseDto.toDto(article, member, false);
                         }
                 )
                 // unlike > like 변환
                 .orElseGet(() -> {
                             ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
                             articleLikeRepository.save(articleLike);
-                            return ArticleLikeToggleResponseDto.toDto(true, article, member);
+                            return ArticleLikeToggleResponseDto.toDto(article, member, true);
                         }
                 );
     }
@@ -50,7 +50,7 @@ public class ArticleLikeService {
         Article article = findArticleOrThrow(articleId);
         int likeCount = articleLikeRepository.countByArticle(article);
 
-        return ArticleLikeCountResponseDto.toDto(articleId, likeCount);
+        return ArticleLikeCountResponseDto.toDto(article, likeCount);
     }
 
     public List<ArticleLikeMemberResponseDto> getArticleLikedMembers(Long articleId) {

@@ -6,15 +6,15 @@ import com.mobble.mobbleserver.domain.like.LikeType;
 
 public record ArticleLikeToggleResponseDto(
         LikeType targetType,
-        Long articleId,
-        Long memberId,
+        Long article,
+        Long member,
         String status // "LIKED" or "UNLIKED"
 ) {
-    public static ArticleLikeToggleResponseDto toDto(boolean isLiked, Article articleId, Member memberId) {
+    public static ArticleLikeToggleResponseDto toDto(Article article, Member member, boolean isLiked) {
         return new ArticleLikeToggleResponseDto(
                 LikeType.ARTICLE,
-                articleId.getId(),
-                memberId.getId(),
+                article.getId(),
+                member.getId(),
                 isLiked ? "LIKED" : "UNLIKED"
         );
     }
