@@ -12,5 +12,5 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
 
     List<ArticleLike> findAllByArticleId(Long articleId);
 
-    boolean existsByArticleIdAndMemberId(Long articleId, Long memberId);
+    boolean existsLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 }

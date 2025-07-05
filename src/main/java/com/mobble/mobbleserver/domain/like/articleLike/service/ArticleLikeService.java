@@ -49,7 +49,7 @@ public class ArticleLikeService {
     public ArticleLikeInfoResponseDto getArticleLikeCountAndLikedMembers(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
         List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
-        boolean isLiked = (memberId != null) && articleLikeRepository.existsByArticleIdAndMemberId(article.getId(), memberId);
+        boolean isLiked = (memberId != null) && articleLikeRepository.existsLikedByArticleIdAndMemberId(article.getId(), memberId);
 
         return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
     }
