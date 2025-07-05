@@ -25,33 +25,33 @@ public class ArticleLikeService {
 //    private final ClubMemberRepository clubMemberRepository;
 
     @Transactional
-    public ArticleLikeToggleResponseDto toggleLike(Long articleId, Long memberId) {
+    public ArticleLikeInfoResponseDto toggleLike(Long articleId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
         Article article = findArticleOrThrow(articleId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
-        return articleLikeRepository.findByArticleIdAndMemberId(articleId, memberId)
+        return articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId())
                 // like > unlike 변환
                 .map(existingLike -> {
                             articleLikeRepository.delete(existingLike);
-                            return ArticleLikeToggleResponseDto.toDto(article, member, false);
+                            return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
                         }
                 )
                 // unlike > like 변환
                 .orElseGet(() -> {
                             ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
                             articleLikeRepository.save(articleLike);
-                            return ArticleLikeToggleResponseDto.toDto(article, member, true);
+                            return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
                         }
                 );
     }
 
-    public ArticleLikeSummaryResponseDto getArticleLikeCountAndLikedMembers(Long articleId) {
+    public ArticleLikeInfoResponseDto getArticleLikeCountAndLikedMembers(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-        int likeCount = articleLikeRepository.countByArticleId(articleId);
-        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(articleId);
+        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+        boolean isLiked = (memberId != null) && articleLikeRepository.existsByArticleIdAndMemberId(article.getId(), memberId);
 
-        return ArticleLikeSummaryResponseDto.toDto(article, likeCount, articleLikes);
+        return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
     }
 
     /**
