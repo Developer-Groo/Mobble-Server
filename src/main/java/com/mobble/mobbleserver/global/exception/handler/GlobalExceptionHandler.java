@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.global.exception.handler;
 
-import com.mobble.mobbleserver.global.exception.dto.ErrorResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
+import com.mobble.mobbleserver.global.exception.errorCode.global.GlobalErrorCode;
+import com.mobble.mobbleserver.global.exception.handler.dto.ErrorResponseDto;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,24 +10,18 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Locale;
-
+@Order(3)
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalExceptionHandler {
-
-    private final MessageSource messageSource;
 
     /**
      * 클라이언트의 요청 본문이 JSON 형식이 아닐 경우 처리
      * 예: JSON 문법 오류, 잘못된 필드 타입 등
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponseDto> handleInvalidJson(Locale locale) {
-        String message = messageSource.getMessage("error.invalid_json", null, locale);
-
+    public ResponseEntity<ErrorResponseDto> handleInvalidJson() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponseDto.toDto(message, HttpStatus.BAD_REQUEST));
+                .body(ErrorResponseDto.toDto(GlobalErrorCode.INVALID_JSON));
     }
 
     /**
@@ -35,10 +29,18 @@ public class GlobalExceptionHandler {
      * 예: Content-Type 이 application/json 이 아닌 경우
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<ErrorResponseDto> handleMediaTypeNotSupported(Locale locale) {
-        String message = messageSource.getMessage("error.unsupported_media_type", null, locale);
-
+    public ResponseEntity<ErrorResponseDto> handleMediaTypeNotSupported() {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .body(ErrorResponseDto.toDto(message, HttpStatus.UNSUPPORTED_MEDIA_TYPE));
+                .body(ErrorResponseDto.toDto(GlobalErrorCode.UNSUPPORTED_MEDIA_TYPE));
+    }
+
+    /**
+     * 예상하지 못한 모든 예외(Exception)를 처리
+     * 예: 위에서 처리되지 않은 런타임 예외 or 시스템 오류 등이 발생한 경우
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleInternalServerError() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorResponseDto.toDto(GlobalErrorCode.INTERNAL_SERVER_ERROR));
     }
 }
