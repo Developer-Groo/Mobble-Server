@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.global.exception.handler;
 
 import com.mobble.mobbleserver.global.exception.errorCode.global.GlobalErrorCode;
 import com.mobble.mobbleserver.global.exception.handler.dto.ErrorResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @Order(3)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -39,7 +42,22 @@ public class GlobalExceptionHandler {
      * 예: 위에서 처리되지 않은 런타임 예외 or 시스템 오류 등이 발생한 경우
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleInternalServerError() {
+    public ResponseEntity<ErrorResponseDto> handleInternalServerError(Exception ex, HttpServletRequest request) {
+        log.error("""
+                        🚨 Unexpected Exception occurred 🚨
+                        [Type]   : {}
+                        [Message]: {}
+                        [URI]    : {} {}
+                        [IP]     : {}
+                        """,
+                ex.getClass().getName(),
+                ex.getMessage(),
+                request.getMethod(),
+                request.getRequestURI(),
+                request.getRemoteAddr(),
+                ex
+        );
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponseDto.toDto(GlobalErrorCode.INTERNAL_SERVER_ERROR));
     }
