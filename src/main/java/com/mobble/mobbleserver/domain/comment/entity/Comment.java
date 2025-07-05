@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.domain.comment.entity;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +47,7 @@ public class Comment extends BaseEntity {
             Comment parent,
             String content
     ) {
+        validateCommon(member, article, content);
         this.article = article;
         this.member = member;
         this.parent = parent;
@@ -66,6 +69,8 @@ public class Comment extends BaseEntity {
             Comment parent,
             String content
     ) {
+        if (parent == null) throw new DomainException(CommentErrorCode.PARENT_REQUIRED);
+
         return Comment.builder()
                 .member(member)
                 .article(article)
@@ -75,11 +80,18 @@ public class Comment extends BaseEntity {
     }
 
     public Comment changeContent(String content) {
+        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
         this.content = content;
         return this;
     }
 
     public Boolean hasParent() {
         return this.parent != null;
+    }
+
+    private void validateCommon(Member member, Article article, String content) {
+        if (member == null) throw new DomainException(CommentErrorCode.MEMBER_REQUIRED);
+        if (article == null) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
+        if (content == null) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
     }
 }
