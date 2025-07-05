@@ -2,8 +2,7 @@ package com.mobble.mobbleserver.domain.like.articleLike.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeSummaryResponseDto;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeInfoResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,20 +30,19 @@ public class ArticleLikeService {
         Article article = findArticleOrThrow(articleId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
-        return articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId())
-                // like > unlike 변환
-                .map(existingLike -> {
-                            articleLikeRepository.delete(existingLike);
-                            return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
-                        }
-                )
-                // unlike > like 변환
-                .orElseGet(() -> {
-                            ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
-                            articleLikeRepository.save(articleLike);
-                            return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
-                        }
-                );
+        Optional<ArticleLike> checkLiked = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
+
+        if (checkLiked.isPresent()) {
+            articleLikeRepository.delete(checkLiked.get());
+        } else {
+            ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
+            articleLikeRepository.save(articleLike);
+        }
+
+        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+        boolean isLiked = !checkLiked.isPresent();
+
+        return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);
     }
 
     public ArticleLikeInfoResponseDto getArticleLikeCountAndLikedMembers(Long articleId, Long memberId) {
