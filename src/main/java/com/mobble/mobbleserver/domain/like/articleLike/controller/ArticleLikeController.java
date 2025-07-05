@@ -1,14 +1,12 @@
 package com.mobble.mobbleserver.domain.like.articleLike.controller;
 
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeInfoResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +16,8 @@ public class ArticleLikeController {
     private final ArticleLikeService articleLikeService;
 
     @PostMapping
-    public ResponseEntity<ArticleLikeToggleResponseDto> likeToggle(
-            @PathVariable("article-id") Long articleId
+    public ResponseEntity<ArticleLikeInfoResponseDto> likeToggle(
+            @PathVariable("article-id") @Positive Long articleId
 //            @AuthenticationPrincipal @Positive Long member
     ) {
         Long memberId = 1L;
