@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
 
-    Optional<ArticleLike> findByArticleIdAndMemberId(Long articleId, Long memberId);
-
-    int countByArticleId(Long articleId);
+    Optional<ArticleLike> findLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 
     List<ArticleLike> findAllByArticleId(Long articleId);
+
+    boolean existsByArticleIdAndMemberId(Long articleId, Long memberId);
 }
