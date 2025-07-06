@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.global.exception.handler.dto;
 
 import com.mobble.mobbleserver.global.exception.common.ErrorCode;
-import org.springframework.http.HttpStatus;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -11,7 +10,8 @@ import java.util.Map;
 public record ErrorResponseDto(
         String timestamp,
         String message,
-        HttpStatus code,
+        int status,
+        String code,
         Map<String, String> errors) {
 
     // Validation or Binding Error
@@ -19,7 +19,8 @@ public record ErrorResponseDto(
         return new ErrorResponseDto(
                 createDateTime(),
                 errorCode.message(),
-                errorCode.httpStatus(),
+                errorCode.httpStatus().value(),
+                errorCode.httpStatus().name(),
                 errors
         );
     }
@@ -29,7 +30,8 @@ public record ErrorResponseDto(
         return new ErrorResponseDto(
                 createDateTime(),
                 errorCode.message(),
-                errorCode.httpStatus(),
+                errorCode.httpStatus().value(),
+                errorCode.httpStatus().name(),
                 null
         );
     }
