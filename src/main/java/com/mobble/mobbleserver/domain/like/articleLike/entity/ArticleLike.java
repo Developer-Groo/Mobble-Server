@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.domain.commentLike.entity;
+package com.mobble.mobbleserver.domain.like.articleLike.entity;
 
-import com.mobble.mobbleserver.domain.comment.entity.Comment;
+import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,30 +11,30 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentLike {
+public class ArticleLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_like_id")
+    @Column(name = "article_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    private CommentLike(Comment comment, Member member) {
-        this.comment = comment;
+    private ArticleLike(Article article, Member member) {
+        this.article = article;
         this.member = member;
     }
 
-    public static CommentLike createcommentLike(Comment comment, Member member) {
-        return CommentLike.builder()
-                .comment(comment)
+    public static ArticleLike createArticleLike(Article article, Member member) {
+        return ArticleLike.builder()
+                .article(article)
                 .member(member)
                 .build();
     }
