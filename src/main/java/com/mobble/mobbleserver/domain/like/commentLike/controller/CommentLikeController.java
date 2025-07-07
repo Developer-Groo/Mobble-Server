@@ -20,7 +20,7 @@ public class CommentLikeController {
             @PathVariable("comment-id") @Positive Long commentId
     ) {
         Long memberId = 1L;
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentLikeService.toggleLike(commentId, memberId));
 
     }
