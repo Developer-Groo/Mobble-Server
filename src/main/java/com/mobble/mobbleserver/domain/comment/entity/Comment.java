@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     @Id
@@ -80,7 +80,7 @@ public class Comment extends BaseEntity {
     }
 
     public Comment changeContent(String content) {
-        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+        validateContent(content);
         this.content = content;
         return this;
     }
@@ -92,6 +92,10 @@ public class Comment extends BaseEntity {
     private void validateCommon(Member member, Article article, String content) {
         if (member == null) throw new DomainException(CommentErrorCode.MEMBER_REQUIRED);
         if (article == null) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
-        if (content == null) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+        validateContent(content);
+    }
+
+    private void validateContent(String content) {
+        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
     }
 }
