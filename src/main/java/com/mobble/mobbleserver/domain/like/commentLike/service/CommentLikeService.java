@@ -44,6 +44,15 @@ public class CommentLikeService {
         return CommentLikeResponseDto.toDto(commentId, isLiked, likeCount);
     }
 
+    public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
+        Comment comment = findCommentOrThorw(commentId);
+
+        boolean isLiked = (memberId != null) && commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), memberId);
+        int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
+
+        return CommentLikeResponseDto.toDto(comment.getId(), isLiked, likeCount);
+    }
+
     private Member findMemberOrThrow(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
