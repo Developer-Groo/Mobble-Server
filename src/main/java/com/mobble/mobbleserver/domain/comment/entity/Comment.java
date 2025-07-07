@@ -85,7 +85,7 @@ public class Comment extends BaseEntity {
         return this;
     }
 
-    public Boolean hasParent() {
+    public boolean hasParent() {
         return this.parent != null;
     }
 
