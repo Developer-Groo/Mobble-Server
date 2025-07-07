@@ -46,7 +46,6 @@ public class CommentLikeService {
 
     public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
         Comment comment = findCommentOrThorw(commentId);
-
         boolean isLiked = (memberId != null) && commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), memberId);
         int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
 
