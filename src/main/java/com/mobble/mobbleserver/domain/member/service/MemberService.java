@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.member.service;
 
 import com.mobble.mobbleserver.domain.member.dto.request.MemberCreateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberCreateResponseDto;
+import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
@@ -24,5 +25,11 @@ public class MemberService {
         memberRepository.save(member);
 
         return MemberCreateResponseDto.toDto(member);
+    }
+
+    public MemberResponseDto getMember(Long memberId) {
+        Member member = memberValidator.findMemberOrThrow(memberId);
+
+        return MemberResponseDto.toDto(member);
     }
 }
