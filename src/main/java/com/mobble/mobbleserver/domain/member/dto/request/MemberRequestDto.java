@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.member.dto.request;
+package com.mobble.mobbleserver.domain.member.dto.request;
 
 import com.mobble.mobbleserver.account.oauth2.provider.SocialProvider;
-import com.mobble.mobbleserver.member.entity.Gender;
-import com.mobble.mobbleserver.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.entity.Gender;
+import com.mobble.mobbleserver.domain.member.entity.Member;
 
 public record MemberRequestDto(
         String name,
