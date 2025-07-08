@@ -50,6 +50,35 @@ public class Member extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @Builder(access = AccessLevel.PRIVATE)
+    private Member(
+            String name,
+            int age,
+            Gender gender,
+            String email,
+            String phone,
+            String ground,
+            String profileImage,
+            boolean termsAgreed,
+            boolean privacyAgreed,
+//            SocialProvider socialProvider,
+//            String socialId,
+            boolean isDeleted
+    ) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+        this.ground = ground;
+        this.profileImage = profileImage;
+        this.termsAgreed = termsAgreed;
+        this.privacyAgreed = privacyAgreed;
+//        this.socialProvider = socialProvider;
+//        this.socialId = socialId;
+        this.isDeleted = isDeleted;
+    }
+
     /**
      * 소셜 회원가입 완료 시 회원 생성
      */
@@ -81,34 +110,5 @@ public class Member extends BaseEntity {
                 .socialId(socialId)
                 .isDeleted(false)
                 .build();
-    }
-
-    @Builder(access = AccessLevel.PRIVATE)
-    private Member(
-            String name,
-            int age,
-            Gender gender,
-            String email,
-            String phone,
-            String ground,
-            String profileImage,
-            boolean termsAgreed,
-            boolean privacyAgreed,
-            SocialProvider socialProvider,
-            String socialId,
-            boolean isDeleted
-    ) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.phone = phone;
-        this.ground = ground;
-        this.profileImage = profileImage;
-        this.termsAgreed = termsAgreed;
-        this.privacyAgreed = privacyAgreed;
-        this.socialProvider = socialProvider;
-        this.socialId = socialId;
-        this.isDeleted = isDeleted;
     }
 }
