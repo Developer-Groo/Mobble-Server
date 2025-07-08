@@ -45,7 +45,8 @@ public class CommentLikeService {
 
     public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
         Comment comment = commentValidator.findCommentOrThrow(commentId);
-        boolean isLiked = (memberId != null) && commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), memberId);
+        Member member = findMemberOrThrow(memberId);
+        boolean isLiked = commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), member.getId());
         int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
 
         return CommentLikeResponseDto.toDto(comment.getId(), isLiked, likeCount);
