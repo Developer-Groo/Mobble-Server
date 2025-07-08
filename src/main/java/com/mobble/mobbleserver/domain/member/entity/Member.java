@@ -90,7 +90,7 @@ public class Member extends BaseEntity {
             String ground,
             String profileImage,
             boolean termsAgreed,
-            boolean privacyAgreed,
+            boolean privacyAgreed
 //            SocialProvider socialProvider,
 //            String socialId
     ) {
