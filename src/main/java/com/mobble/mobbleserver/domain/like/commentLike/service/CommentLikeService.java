@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.like.commentLike.service;
 
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
-import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
+import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.like.commentLike.dto.response.CommentLikeResponseDto;
 import com.mobble.mobbleserver.domain.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
@@ -20,13 +20,13 @@ import java.util.Optional;
 public class CommentLikeService {
 
     private final MemberRepository memberRepository;
-    private final CommentRepository commentRepository;
+    private final CommentValidator commentValidator;
     private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
     public CommentLikeResponseDto toggleLike(@Positive Long commentId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
-        Comment comment = findCommentOrThorw(commentId);
+        Comment comment = commentValidator.findCommentOrThrow(commentId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
         Optional<CommentLike> checkLiked = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
@@ -45,7 +45,7 @@ public class CommentLikeService {
     }
 
     public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
-        Comment comment = findCommentOrThorw(commentId);
+        Comment comment = commentValidator.findCommentOrThrow(commentId);
         boolean isLiked = (memberId != null) && commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), memberId);
         int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
 
