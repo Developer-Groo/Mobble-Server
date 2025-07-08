@@ -7,7 +7,6 @@ import com.mobble.mobbleserver.domain.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
-    public CommentLikeResponseDto toggleLike(@Positive Long commentId, Long memberId) {
+    public CommentLikeResponseDto toggleLike(Long commentId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
         Comment comment = commentValidator.findCommentOrThrow(commentId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
