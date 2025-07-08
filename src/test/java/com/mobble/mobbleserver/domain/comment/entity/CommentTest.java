@@ -27,7 +27,7 @@ class CommentTest {
 
         @Test
         @DisplayName("루트 댓글 생성 성공")
-        void create_RootComment_Success() {
+        void success_when_create_root_comment() {
             // given & when
             Comment rootComment = Comment.createRootComment(mockMember, mockArticle, content);
 
@@ -40,7 +40,7 @@ class CommentTest {
 
         @Test
         @DisplayName("대댓글 생성 성공")
-        void create_ReplyComment_Success() {
+        void success_when_create_reply_comment() {
             // given & when
             Comment rootComment = Comment.createRootComment(mockMember, mockArticle, content);
             Comment replyComment = Comment.createReplyComment(mockMember, mockArticle, rootComment, content);
@@ -55,7 +55,7 @@ class CommentTest {
 
         @Test
         @DisplayName("대댓글의 루트 댓글이 null 인 경우 예외 발생")
-        void create_ReplyComment_Fails_WithoutParent() {
+        void fails_when_create_reply_comment_parent_is_null() {
             // when & then
             assertThatThrownBy(() -> Comment.createReplyComment(mockMember, mockArticle, null, content))
                     .isInstanceOf(DomainException.class)
@@ -69,7 +69,7 @@ class CommentTest {
 
         @Test
         @DisplayName("댓글 내용 변경 성공")
-        void change_Content_Success() {
+        void success_when_change_content() {
             // given & when
             mockComment.changeContent("newContent");
 
@@ -79,7 +79,7 @@ class CommentTest {
 
         @Test
         @DisplayName("null 내용으로 변경 시 예외 발생")
-        void change_Content_Fails_With_Null() {
+        void fails_when_change_content_is_null() {
             // when & then
             assertThatThrownBy(() -> mockComment.changeContent(null))
                     .isInstanceOf(DomainException.class)
@@ -88,7 +88,7 @@ class CommentTest {
 
         @Test
         @DisplayName("공백 내용으로 변경 시 예외 발생")
-        void change_Content_Fails_With_Blank() {
+        void fails_when_change_content_is_blank() {
             // when & then
             assertThatThrownBy(() -> mockComment.changeContent("  "))
                     .isInstanceOf(DomainException.class)
@@ -102,7 +102,7 @@ class CommentTest {
 
         @Test
         @DisplayName("member 가 null 인 경우 예외 발생")
-        void fails_With_NullMember() {
+        void fails_with_null_member() {
             // when & then
             assertThatThrownBy(() -> Comment.createRootComment(null, mockArticle, content))
                     .isInstanceOf(DomainException.class)
@@ -111,7 +111,7 @@ class CommentTest {
 
         @Test
         @DisplayName("article 이 null 인 경우 예외 발생")
-        void fails_With_NullArticle() {
+        void fails_with_null_article() {
             // when & then
             assertThatThrownBy(() -> Comment.createRootComment(mockMember, null, content))
                     .isInstanceOf(DomainException.class)
@@ -120,7 +120,7 @@ class CommentTest {
 
         @Test
         @DisplayName("content 가 null 인 경우 예외 발생")
-        void fails_With_NullContent() {
+        void fails_with_null_content() {
             // when & then
             assertThatThrownBy(() -> Comment.createRootComment(mockMember, mockArticle, null))
                     .isInstanceOf(DomainException.class)
