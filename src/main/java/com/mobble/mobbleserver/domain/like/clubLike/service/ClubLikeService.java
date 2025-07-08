@@ -37,6 +37,15 @@ public class ClubLikeService {
     }
 */
 /*
+    public ClubLikeResponseDto getClubLikeCount(Long clubId, Long memberId) {
+        Club club = findClubOrThrow(clubId);
+        boolean isLiked = (memberId != null) && clubLikeRepository.existsByClubIdAndMemberId(club.getId(), memberId);
+        int likeCount = clubLikeRepository.countClubLikesByClubId(club.getId());
+
+        return ClubLikeResponseDto.toDto(club.getId(), isLiked, likeCount);
+    }
+*/
+/*
 
     private Member findMemberOrThrow(Long memberId) {
         return memberRepository.findById(memberId)
