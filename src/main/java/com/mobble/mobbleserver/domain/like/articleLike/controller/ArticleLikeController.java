@@ -20,7 +20,6 @@ public class ArticleLikeController {
     @PostMapping
     public ResponseEntity<ArticleLikeInfoResponseDto> likeToggle(
             @PathVariable("article-id") @Positive Long articleId
-//            @AuthenticationPrincipal @Positive Long member
     ) {
         Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.CREATED)
