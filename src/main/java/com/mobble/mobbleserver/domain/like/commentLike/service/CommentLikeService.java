@@ -56,11 +56,6 @@ public class CommentLikeService {
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
     }
 
-    private Comment findCommentOrThorw(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
-    }
-
 //    private ClubMember findClubMemberOrThrow(Long clubMemberId) {
 //        return clubMemberRepository.findById(clubMemberId)
 //                .orElseThrow(() -> new IllegalArgumentException(""));
