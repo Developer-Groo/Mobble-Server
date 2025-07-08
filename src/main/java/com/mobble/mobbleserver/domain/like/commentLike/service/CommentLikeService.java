@@ -37,7 +37,7 @@ public class CommentLikeService {
             commentLikeRepository.save(commentLike);
         }
 
-        boolean isLiked = !checkLiked.isPresent();
+        boolean isLiked = checkLiked.isEmpty();
         int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
 
         return CommentLikeResponseDto.toDto(comment.getId(), isLiked, likeCount);
