@@ -17,7 +17,7 @@ public class ClubLikeService {
 
 /*
     @Transactional
-    public ClubLikeResponseDto toggleLike(@Positive Long clubId, Long memberId) {
+    public ClubLikeResponseDto toggleLike(Long clubId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
 //        Club club = findClubOrThrow(clubId)
 
