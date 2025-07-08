@@ -32,6 +32,9 @@ public class ClubLike {
 //    }
 
 //    public static ClubLike createClubLike(Club club, Member member) {
+//        if (club == null) throw new DomainException(LikeErrorCode.CLUB_REQUIRED);
+//        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
+//
 //        return ClubLike.builder()
 //                .club(club)
 //                .member(member)
