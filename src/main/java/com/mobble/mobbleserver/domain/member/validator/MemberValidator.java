@@ -14,7 +14,7 @@ public class MemberValidator {
 
     public void validateEmail(String email) {
         if (memberRepository.existsByEmail(email)) {
-            throw new DomainException(MemberErrorCode.JOINED_MEMBER);
+            throw new DomainException(MemberErrorCode.JOINED_EMAIL);
         }
     }
 }
