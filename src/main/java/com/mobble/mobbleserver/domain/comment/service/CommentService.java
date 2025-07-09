@@ -30,6 +30,8 @@ public class CommentService {
     public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
         Member member = findMemberOrThrow(memberId);
         Article article = findArticleOrThrow(articleId);
+        // Todo: 해당 클럽의 멤버인지 검증 필요
+
         Comment comment = dto.toEntity(member, article);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
@@ -44,6 +46,8 @@ public class CommentService {
     ) {
         Member member = findMemberOrThrow(memberId);
         Article article = findArticleOrThrow(articleId);
+        // Todo: 해당 클럽의 멤버인지 검증 필요
+
         Comment parentComment = commentValidator.findCommentOrThrow(parentCommentId);
         Comment comment = dto.toEntity(member, article, parentComment);
 
