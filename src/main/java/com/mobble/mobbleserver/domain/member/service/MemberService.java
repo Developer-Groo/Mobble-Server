@@ -45,6 +45,6 @@ public class MemberService {
     @Transactional
     public void deleteMember(Long memberId) {
         Member member = memberValidator.findMemberOrThrow(memberId);
-        memberRepository.delete(member);
+        member.softDelete();
     }
 }
