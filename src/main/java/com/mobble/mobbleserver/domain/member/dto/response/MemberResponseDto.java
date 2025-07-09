@@ -7,6 +7,8 @@ public record MemberResponseDto(
         Long memberId,
         String name,
         Gender gender,
+        String email,
+        String phone,
         String ground,
         String profileImage
 ) {
@@ -15,6 +17,8 @@ public record MemberResponseDto(
                 member.getId(),
                 member.getName(),
                 member.getGender(),
+                member.getEmail(),
+                member.getPhone(),
                 member.getGround(),
                 member.getProfileImage()
         );
