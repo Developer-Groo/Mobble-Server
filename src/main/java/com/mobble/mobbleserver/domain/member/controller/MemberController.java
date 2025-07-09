@@ -20,7 +20,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberCreateResponseDto> createMember(
-            @Valid @RequestBody MemberCreateRequestDto dto
+            @RequestBody @Valid MemberCreateRequestDto dto
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberService.createMember(dto));
@@ -37,7 +37,7 @@ public class MemberController {
     @PatchMapping("/{member-id}")
     public ResponseEntity<MemberResponseDto> updateMember(
             @PathVariable("member-id") Long memberId,
-            @Valid @RequestBody MemberUpdateRequestDto dto
+            @RequestBody @Valid MemberUpdateRequestDto dto
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.updateMember(memberId, dto));
