@@ -37,12 +37,11 @@ public class MemberController {
                 .body(memberService.getMember(memberId));
     }
 
-
     @PatchMapping("/{member-id}")
     public ResponseEntity<MemberResponseDto> updateMember(
             @PathVariable("member-id") @Positive Long memberId,
             @Valid @RequestBody MemberUpdateRequestDto dto
-            ) {
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.updateMember(memberId, dto));
     }
