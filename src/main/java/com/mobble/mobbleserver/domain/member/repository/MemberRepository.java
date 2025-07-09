@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsByEmail(String email);
-
     /**
      * softDelete 멤버 조회
      * @param withdrewDate
