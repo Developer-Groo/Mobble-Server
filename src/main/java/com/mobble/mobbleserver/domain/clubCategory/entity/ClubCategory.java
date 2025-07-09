@@ -21,15 +21,11 @@ public class ClubCategory {
     private String name;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ClubCategory(
-            String name
-    ) {
+    private ClubCategory(String name) {
         this.name = name;
     }
 
-    public static ClubCategory createClubCategory(
-            String name
-    ) {
+    public static ClubCategory createClubCategory(String name) {
         return ClubCategory.builder()
                 .name(name)
                 .build();
