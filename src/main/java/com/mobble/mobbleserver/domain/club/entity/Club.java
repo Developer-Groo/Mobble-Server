@@ -21,16 +21,20 @@ public class Club extends BaseEntity {
 //    @Column(name = "club_category_id")
 //    private ClubCategory clubCategory;
 
+    @Column(name = "name")
     private String name;
 
 //    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private final List<ClubImage> clubImages = new ArrayList<>();
 
     // Todo: 지역관리를 위해 추후 Enum 또는 테이블로 관리해야함.
+    @Column(name = "ground")
     private String ground;
 
-    private int headcount;
+    @Column(name = "head_count")
+    private int headCount;
 
+    @Column(name = "join_type")
     private boolean joinType;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -42,12 +46,12 @@ public class Club extends BaseEntity {
             // Todo: ClubCategory,ChatRooom 주입 필요
             String name,
             String ground,
-            int headcount,
+            int headCount,
             boolean joinType
     ) {
         this.name = name;
         this.ground = ground;
-        this.headcount = headcount;
+        this.headCount = headCount;
         this.joinType = joinType;
     }
 
@@ -55,13 +59,13 @@ public class Club extends BaseEntity {
             // Todo: ClubCategory,ChatRooom 주입 필요
             String name,
             String ground,
-            int headcount,
+            int headCount,
             boolean joinType
     ){
         return Club.builder()
                 .name(name)
                 .ground(ground)
-                .headcount(headcount)
+                .headCount(headCount)
                 .joinType(joinType)
                 .build();
     }
