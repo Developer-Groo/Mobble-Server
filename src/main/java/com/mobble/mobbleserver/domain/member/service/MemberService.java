@@ -37,9 +37,9 @@ public class MemberService {
     @Transactional
     public MemberResponseDto updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = memberValidator.findMemberOrThrow(memberId);
-        member.updateMember(dto);
+        Member updateMember = member.updateMember(dto);
 
-        return MemberResponseDto.toDto(member);
+        return MemberResponseDto.toDto(updateMember);
     }
 
     @Transactional
