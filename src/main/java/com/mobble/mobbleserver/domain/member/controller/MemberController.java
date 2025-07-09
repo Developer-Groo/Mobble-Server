@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.member.controller;
 
 import com.mobble.mobbleserver.domain.member.dto.request.MemberCreateRequestDto;
+import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberCreateResponseDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.service.MemberService;
@@ -37,7 +38,14 @@ public class MemberController {
     }
 
 
-//    @PatchMapping("/{member-id}")
+    @PatchMapping("/{member-id}")
+    public ResponseEntity<MemberResponseDto> updateMember(
+            @PathVariable("member-id") @Positive Long memberId,
+            @Valid @RequestBody MemberUpdateRequestDto dto
+            ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberService.updateMember(memberId, dto));
+    }
 
 //    @DeleteMapping("/withdraw")
 
