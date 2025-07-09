@@ -20,8 +20,7 @@ public class MemberService {
     @Transactional
     public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
         memberRepository.existsByEmail(dto.email());
-        Member member = dto.toEntity();
-        memberRepository.save(member);
+        Member member = memberRepository.save(dto.toEntity());
 
         return MemberCreateResponseDto.toDto(member);
     }
