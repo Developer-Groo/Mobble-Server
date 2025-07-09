@@ -5,4 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClubLikeRepository extends JpaRepository<ClubLike, Long> {
 
+//    Optional<ClubLike> findLikedByClubIdAndMemberId(Long clubId, Long memberId);
+
+//    int countClubLikesByClubId(Long clubId);
+
+//    boolean existsByClubIdAndMemberId(Long clubId, Long memberId);
 }

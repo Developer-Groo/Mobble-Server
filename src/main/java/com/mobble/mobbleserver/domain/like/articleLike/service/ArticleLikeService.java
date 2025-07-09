@@ -39,7 +39,7 @@ public class ArticleLikeService {
             articleLikeRepository.save(articleLike);
         }
 
-        boolean isLiked = !checkLiked.isPresent();
+        boolean isLiked = checkLiked.isEmpty();
         List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
 
         return ArticleLikeInfoResponseDto.toDto(article.getId(), isLiked, articleLikes);

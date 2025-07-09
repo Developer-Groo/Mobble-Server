@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.like.articleLike.entity;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +35,9 @@ public class ArticleLike {
     }
 
     public static ArticleLike createArticleLike(Article article, Member member) {
+        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
+        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
+
         return ArticleLike.builder()
                 .article(article)
                 .member(member)

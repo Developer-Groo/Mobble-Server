@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.like.commentLike.entity;
 
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +35,9 @@ public class CommentLike {
     }
 
     public static CommentLike createcommentLike(Comment comment, Member member) {
+        if (comment == null) throw new DomainException(LikeErrorCode.COMMENT_REQUIRED);
+        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
+
         return CommentLike.builder()
                 .comment(comment)
                 .member(member)
