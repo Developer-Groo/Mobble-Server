@@ -25,21 +25,21 @@ public class ClubImage extends CreatedAtEntity {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "order")
-    private int order;
+    @Column(name = "image_order")
+    private int imageOrder;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ClubImage(Club club, String url, int order) {
+    private ClubImage(Club club, String url, int imageOrder) {
         this.club = club;
         this.url = url;
-        this.order = order;
+        this.imageOrder = imageOrder;
     }
 
-    public static ClubImage createClubImage(Club club, String url, int order) {
+    public static ClubImage createClubImage(Club club, String url, int imageOrder) {
         return ClubImage.builder()
                 .club(club)
                 .url(url)
-                .order(order)
+                .imageOrder(imageOrder)
                 .build();
     }
 }
