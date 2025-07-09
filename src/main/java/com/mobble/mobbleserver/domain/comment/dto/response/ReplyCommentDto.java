@@ -19,7 +19,7 @@ public record ReplyCommentDto(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getMember().getName(),
-                Boolean.TRUE.equals(comment.hasParent()) ? comment.getParent().getId() : null,
+                comment.hasParent() ? comment.getParent().getId() : null,
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
