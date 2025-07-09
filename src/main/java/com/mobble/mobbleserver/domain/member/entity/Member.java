@@ -113,8 +113,6 @@ public class Member extends BaseEntity {
     }
 
     public Member updateMember(MemberUpdateRequestDto dto) {
-        this.name = dto.name();
-        this.phone = dto.phone();
         this.ground = dto.ground();
         this.profileImage = dto.profileImage();
         return this;
