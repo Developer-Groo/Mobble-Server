@@ -1,0 +1,39 @@
+package com.mobble.mobbleserver.domain.member.scheduler;
+
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class MemberScheduler {
+
+    private final MemberRepository memberRepository;
+
+    @Scheduled(cron = " 0 0 0 * * *")
+    @Transactional
+    public void deleteWithdrawMembers() {
+        log.info("Delete the withdrew members.");
+
+        LocalDateTime withdrewDate = LocalDateTime.now().minusDays(7);
+        log.info("withdrew members delete time: {}", withdrewDate);
+
+        List<Member> membersToWithdrew = memberRepository.findWithdrewMembers(withdrewDate);
+
+        if (membersToWithdrew.isEmpty()) {
+            log.info("Not found withdrew members to delete");
+        }
+        log.info("Deleting {} withdrew members.", membersToWithdrew.size());
+
+        memberRepository.deleteAll(membersToWithdrew);
+        log.info("Finished deleting withdrew members.");
+    }
+}
