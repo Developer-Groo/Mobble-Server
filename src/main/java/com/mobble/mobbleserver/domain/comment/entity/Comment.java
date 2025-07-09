@@ -24,19 +24,21 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
+    @JoinColumn(name = "article_id",  nullable = false)
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
+    @Column(name = "content", nullable = false)
     private String content;
 
+    // Todo: 부모 댓글 삭제 했을 때, 자식 댓글 처리
     @OneToMany(mappedBy = "parent")
     private List<Comment> children;
 
