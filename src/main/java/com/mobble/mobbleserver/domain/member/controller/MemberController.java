@@ -47,6 +47,13 @@ public class MemberController {
                 .body(memberService.updateMember(memberId, dto));
     }
 
-//    @DeleteMapping("/withdraw")
+    @DeleteMapping("/{member-id}/withdraw")
+    public ResponseEntity<Void> deleteMember(
+            @PathVariable("member-id") @Positive Long memberId
+    ) {
+        memberService.deleteMember(memberId);
 
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }
