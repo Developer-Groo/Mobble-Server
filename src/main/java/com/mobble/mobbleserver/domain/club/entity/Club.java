@@ -18,7 +18,7 @@ public class Club extends BaseEntity {
     private Long id;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "club_category_id")
+//    @JoinColumn(name = "club_category_id")
 //    private ClubCategory clubCategory;
 
     @Column(name = "name")
@@ -37,8 +37,8 @@ public class Club extends BaseEntity {
     @Column(name = "join_type")
     private boolean joinType;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "chat_room_id")
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "chat_room_id")
 //    private ChatRooom chatRooom;
 
     @Builder(access = AccessLevel.PRIVATE)
