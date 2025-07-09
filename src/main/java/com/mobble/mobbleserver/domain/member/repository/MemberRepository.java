@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -20,4 +21,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "AND deleted_at < :withdrewDate",
             nativeQuery = true)
     List<Member> findWithdrewMembers(@Param("withdrewDate") LocalDateTime withdrewDate);
+    
+    @Query(value = "SELECT * FROM member m " +
+            "WHERE m.email = :email",
+            nativeQuery = true)
+    Optional<Member> findMemberByEmail(@Param("email") String email);
 }
