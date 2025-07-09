@@ -26,27 +26,28 @@ public class MemberController {
                 .body(memberService.createMember(dto));
     }
 
-    @GetMapping("/{member-id}")
+    @GetMapping
     public ResponseEntity<MemberResponseDto> getMember(
-            @PathVariable("member-id") Long memberId
     ) {
+        Long memberId = 1L;
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.getMember(memberId));
     }
 
-    @PatchMapping("/{member-id}")
+    @PatchMapping
     public ResponseEntity<MemberResponseDto> updateMember(
-            @PathVariable("member-id") Long memberId,
             @RequestBody @Valid MemberUpdateRequestDto dto
     ) {
+        Long memberId = 1L;
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.updateMember(memberId, dto));
     }
 
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity<Void> deleteMember(
-            @PathVariable("member-id") Long memberId
-    ) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMember() {
+        Long memberId = 1L;
         memberService.deleteMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
