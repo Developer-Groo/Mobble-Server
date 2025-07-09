@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,11 +40,11 @@ public class Member extends BaseEntity {
     @Column(name = "privacy_agreed")
     private boolean privacyAgreed;
 
-    @Column(name = "social_provider")
-    private String socialProvider;
-
-    @Column(name = "sicial_id")
-    private String socialId;
+//    @Column(name = "social_provider")
+//    private String socialProvider;
+//
+//    @Column(name = "sicial_id")
+//    private String socialId;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -59,6 +60,8 @@ public class Member extends BaseEntity {
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed
+//            SocialProvider socialProvider,
+//            String socialId,
     ) {
         this.name = name;
         this.age = age;
@@ -69,8 +72,13 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
+//        this.socialProvider = socialProvider;
+//        this.socialId = socialId;
     }
 
+    /**
+     * 소셜 회원가입 완료 시 회원 생성
+     */
     public static Member createMember(
             String name,
             int age,
@@ -81,7 +89,10 @@ public class Member extends BaseEntity {
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed
+//            SocialProvider socialProvider,
+//            String socialId
     ) {
+
         return Member.builder()
                 .name(name)
                 .age(age)
@@ -92,6 +103,14 @@ public class Member extends BaseEntity {
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
+//                .socialProvider(socialProvider)
+//                .socialId(socialId)
                 .build();
+    }
+
+    public Member updateMember(MemberUpdateRequestDto dto) {
+        this.ground = dto.ground();
+        this.profileImage = dto.profileImage();
+        return this;
     }
 }
