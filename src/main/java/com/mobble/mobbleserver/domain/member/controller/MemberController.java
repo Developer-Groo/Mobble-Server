@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -46,7 +46,7 @@ public class MemberController {
                 .body(memberService.updateMember(memberId, dto));
     }
 
-    @DeleteMapping("/{member-id}/withdraw")
+    @DeleteMapping("/withdraw/{member-id}")
     public ResponseEntity<Void> deleteMember(
             @PathVariable("member-id") @Positive Long memberId
     ) {
