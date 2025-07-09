@@ -33,8 +33,7 @@ class CommentValidatorTest {
         // given
         Long commentId = 1L;
         Comment mockComment = mock(Comment.class);
-        when(commentRepository.findById(commentId))
-                .thenReturn(Optional.of(mockComment));
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(mockComment));
 
         // when
         Comment comment = commentValidator.findCommentOrThrow(commentId);
@@ -64,8 +63,7 @@ class CommentValidatorTest {
         Long commentId = 1L;
         Long memberId = 2L;
         Comment mockComment = mock(Comment.class);
-        when(commentRepository.findByIdAndMemberId(commentId, memberId))
-                .thenReturn(Optional.of(mockComment));
+        when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.of(mockComment));
 
         // when
         Comment comment = commentValidator.findCommentByIdAndMemberOrThrow(memberId, commentId);
@@ -80,8 +78,7 @@ class CommentValidatorTest {
         // given
         Long commentId = 1L;
         Long memberId = 2L;
-        when(commentRepository.findByIdAndMemberId(commentId, memberId))
-                .thenReturn(Optional.empty());
+        when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> commentValidator.findCommentByIdAndMemberOrThrow(memberId, commentId))
