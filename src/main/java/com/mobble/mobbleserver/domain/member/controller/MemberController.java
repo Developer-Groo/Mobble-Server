@@ -18,7 +18,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<MemberCreateResponseDto> createMember(
             @Valid @RequestBody MemberCreateRequestDto dto
     ) {
