@@ -37,7 +37,7 @@ public class MemberService {
     public MemberResponseDto updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
-        Member updateMember = member.updateMember(dto);
+        Member updateMember = member.updateMember(dto.ground(), dto.profileImage());
 
         return MemberResponseDto.toDto(updateMember);
     }
