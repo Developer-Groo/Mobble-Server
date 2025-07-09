@@ -7,15 +7,23 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
 
     private final MemberRepository memberRepository;
 
-    public void validateEmail(String email) {
-        if (memberRepository.existsByEmail(email)) {
-            throw new DomainException(MemberErrorCode.JOINED_EMAIL);
+    public void validateEmailDuplication(String email) {
+        Optional<Member> checkMember = memberRepository.findMemberByEmail(email);
+        if (checkMember.isPresent()) {
+            Member member = checkMember.get();
+            if (member.isDeleted()) {
+                throw new DomainException(MemberErrorCode.FAILED_JOIN);
+            } else {
+                throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
+            }
         }
     }
 
