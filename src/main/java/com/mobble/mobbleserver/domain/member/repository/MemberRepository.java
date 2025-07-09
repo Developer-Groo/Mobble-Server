@@ -15,6 +15,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByEmail(String email);
 
+    /**
+     * softDelete 멤버 조회
+     * @param withdrewDate
+     * @return
+     */
     @Query(value =
             "SELECT * FROM member " +
             "WHERE is_deleted = true " +
@@ -22,6 +27,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             nativeQuery = true)
     List<Member> findWithdrewMembers(@Param("withdrewDate") LocalDateTime withdrewDate);
     
+    /**
+     * isDeleted 포함된 멤버 유무 조회
+     * @param email
+     * @return
+     */
     @Query(value = "SELECT * FROM member m " +
             "WHERE m.email = :email",
             nativeQuery = true)
