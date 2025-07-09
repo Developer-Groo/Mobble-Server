@@ -121,4 +121,9 @@ public class Member extends BaseEntity {
         this.profileImage = dto.profileImage();
         return this;
     }
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 }
