@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -109,5 +110,13 @@ public class Member extends BaseEntity {
 //                .socialId(socialId)
                 .isDeleted(false)
                 .build();
+    }
+
+    public Member updateMember(MemberUpdateRequestDto dto) {
+        this.name = dto.name();
+        this.phone = dto.phone();
+        this.ground = dto.ground();
+        this.profileImage = dto.profileImage();
+        return this;
     }
 }
