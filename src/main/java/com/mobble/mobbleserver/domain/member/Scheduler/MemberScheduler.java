@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.member.Scheduler;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ public class MemberScheduler {
 
     private final MemberRepository memberRepository;
 
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void deleteWithdrewMembers() {
 
