@@ -19,8 +19,8 @@ public class MemberValidator {
     }
 
     public void exitsEmailOrThrow(String email) {
-        if (memberRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("");
+        if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
         }
     }
 
