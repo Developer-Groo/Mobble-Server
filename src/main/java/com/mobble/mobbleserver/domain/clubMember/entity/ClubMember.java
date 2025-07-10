@@ -31,7 +31,7 @@ public class ClubMember extends CreatedAtEntity {
     @Column(name = "club_member_role")
     private ClubMemberRole clubMemberRole;
 
-    @Column(name = "jon_status")
+    @Column(name = "join_status")
     private boolean joinStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
