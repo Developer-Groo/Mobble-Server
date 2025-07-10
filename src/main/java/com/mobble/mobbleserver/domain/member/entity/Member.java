@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,17 +19,23 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "age")
     private int age;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
     private Gender gender;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
     private String phone;
 
+    @Column(name = "ground")
     private String ground;
 
     @Column(name = "profile_image")
@@ -48,6 +56,9 @@ public class Member extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Member(
             String name,
@@ -58,7 +69,8 @@ public class Member extends BaseEntity {
             String ground,
             String profileImage,
             boolean termsAgreed,
-            boolean privacyAgreed
+            boolean privacyAgreed,
+            boolean isDeleted
 //            SocialProvider socialProvider,
 //            String socialId,
     ) {
@@ -71,6 +83,7 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
+        this.isDeleted = isDeleted;
 //        this.socialProvider = socialProvider;
 //        this.socialId = socialId;
     }
@@ -102,6 +115,7 @@ public class Member extends BaseEntity {
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
+                .isDeleted(false)
 //                .socialProvider(socialProvider)
 //                .socialId(socialId)
                 .build();
@@ -111,5 +125,10 @@ public class Member extends BaseEntity {
         this.ground = ground;
         this.profileImage = profileImage;
         return this;
+    }
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 }

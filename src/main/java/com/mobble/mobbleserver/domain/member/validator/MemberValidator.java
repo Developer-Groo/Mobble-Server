@@ -14,7 +14,19 @@ public class MemberValidator {
     private final MemberRepository memberRepository;
 
     public Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    public void exitsEmailOrThrow(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("");
+        }
+    }
+
+    public void exitsWithdrewEmailOrThrow(String email) {
+        if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
+            throw new IllegalArgumentException("");
+        }
     }
 }

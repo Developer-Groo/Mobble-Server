@@ -21,7 +21,8 @@ public class MemberService {
 
     @Transactional
     public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
-        memberRepository.existsByEmail(dto.email());
+        memberValidator.exitsEmailOrThrow(dto.email());
+        memberValidator.exitsWithdrewEmailOrThrow(dto.email());
         Member member = memberRepository.save(dto.toEntity());
 
         return MemberCreateResponseDto.toDto(member);
@@ -44,6 +45,6 @@ public class MemberService {
     @Transactional
     public void deleteMember(Long memberId) {
         Member member = memberValidator.findMemberOrThrow(memberId);
-        memberRepository.delete(member);
+        member.softDelete();
     }
 }
