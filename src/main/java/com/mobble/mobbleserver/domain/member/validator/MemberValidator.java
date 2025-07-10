@@ -7,8 +7,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
@@ -20,16 +18,15 @@ public class MemberValidator {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    // Todo 분리
-    public void validateEmailDuplication(String email) {
-        Optional<Member> checkMember = memberRepository.findByEmail(email);
-        if (checkMember.isPresent()) {
-            Member member = checkMember.get();
-            if (member.isDeleted()) {
-                throw new IllegalArgumentException("");
-            } else {
-                throw new IllegalArgumentException("");
-            }
+    public void exitsEmailOrThrow(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("");
+        }
+    }
+
+    public void exitsWithdrewEmailOrThrow(String email) {
+        if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
+            throw new IllegalArgumentException("");
         }
     }
 }
