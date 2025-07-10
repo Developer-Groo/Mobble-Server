@@ -21,7 +21,7 @@ public class MemberService {
 
     @Transactional
     public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
-        memberRepository.existsByEmail(dto.email());
+        memberValidator.validateEmailDuplication(dto.email());
         Member member = memberRepository.save(dto.toEntity());
 
         return MemberCreateResponseDto.toDto(member);
