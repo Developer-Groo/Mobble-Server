@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.article.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,9 +18,9 @@ public class Article extends BaseEntity {
     @Column(name = "article_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "club_member_id")
-//    private ClubMemeber clubMemeber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "club_member_id")
+    private ClubMember clubMember;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "article_type")
@@ -31,23 +32,25 @@ public class Article extends BaseEntity {
 
     @Builder
     private Article(
-            // Todo: ClubMember 주입 필요
+            ClubMember clubMember,
             ArticleType articleType,
             String title,
             String content
     ) {
+        this.clubMember = clubMember;
         this.articleType = articleType;
         this.title = title;
         this.content = content;
     }
 
     public static Article createArticle(
-            // Todo: ClubMember 주입 필요
+            ClubMember clubMember,
             ArticleType articleType,
             String title,
             String content
     ) {
         return Article.builder()
+                .clubMember(clubMember)
                 .articleType(articleType)
                 .title(title)
                 .content(content)
