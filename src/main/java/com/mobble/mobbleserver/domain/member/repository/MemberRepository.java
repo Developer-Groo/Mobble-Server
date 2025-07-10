@@ -10,5 +10,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByEmail(String email);
 
-    List<Member> findWithdrewMembers(LocalDateTime withdrewDate);
+    List<Member> findByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate);
 }
