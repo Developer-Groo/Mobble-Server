@@ -30,7 +30,7 @@ public class Article extends BaseEntity {
 
     private String content;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Article(
             ClubMember clubMember,
             ArticleType articleType,
