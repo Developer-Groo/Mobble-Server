@@ -26,8 +26,10 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "article_type")
     private ArticleType articleType;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "content")
     private String content;
 
     @Builder(access = AccessLevel.PRIVATE)
