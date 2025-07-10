@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MemberScheduler {
+public class MemberDeleteScheduler {
 
     private final MemberRepository memberRepository;
 
