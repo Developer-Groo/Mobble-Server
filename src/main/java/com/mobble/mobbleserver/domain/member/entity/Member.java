@@ -107,7 +107,7 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Member updateMember(String ground, String profileImage ) {
+    public Member updateMember(String ground, String profileImage) {
         this.ground = ground;
         this.profileImage = profileImage;
         return this;

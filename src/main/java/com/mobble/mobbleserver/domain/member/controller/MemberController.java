@@ -27,8 +27,7 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberResponseDto> getMember(
-    ) {
+    public ResponseEntity<MemberResponseDto> getMember() {
         Long memberId = 1L;
 
         return ResponseEntity.status(HttpStatus.OK)
