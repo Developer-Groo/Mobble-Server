@@ -19,11 +19,11 @@ public class Article extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "club_member_id")
+    @JoinColumn(name = "club_member_id")
     private ClubMember clubMember;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "article_type")
+    @JoinColumn(name = "article_type")
     private ArticleType articleType;
 
     private String title;
