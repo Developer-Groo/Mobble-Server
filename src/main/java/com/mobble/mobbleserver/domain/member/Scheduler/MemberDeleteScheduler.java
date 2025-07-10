@@ -26,7 +26,7 @@ public class MemberDeleteScheduler {
         LocalDateTime withdrewDate = LocalDateTime.now().minusDays(7);
         log.info("withdrew members delete time: {}", withdrewDate);
 
-        List<Member> withdrewMembers = memberRepository.findByIsDeletedTrueAndDeletedAtBefore(withdrewDate);
+        List<Member> withdrewMembers = memberRepository.findAllByIsDeletedTrueAndDeletedAtBefore(withdrewDate);
 
         if (withdrewMembers.isEmpty()) {
             log.info("Not found withdrew members to delete");

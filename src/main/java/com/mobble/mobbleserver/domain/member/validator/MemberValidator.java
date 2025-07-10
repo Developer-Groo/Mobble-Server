@@ -16,12 +16,13 @@ public class MemberValidator {
     private final MemberRepository memberRepository;
 
     public Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
+    // Todo 분리
     public void validateEmailDuplication(String email) {
-        Optional<Member> checkMember = memberRepository.findMemberByEmail(email);
+        Optional<Member> checkMember = memberRepository.findByEmail(email);
         if (checkMember.isPresent()) {
             Member member = checkMember.get();
             if (member.isDeleted()) {

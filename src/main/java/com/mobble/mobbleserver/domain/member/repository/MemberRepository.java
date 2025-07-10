@@ -2,8 +2,6 @@ package com.mobble.mobbleserver.domain.member.repository;
 
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,25 +9,10 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    /**
-     * isDeleted = true 포함 멤버 유무 조회
-     * @param email
-     * @return
-     */
-    @Query(value = "SELECT * FROM member m " +
-            "WHERE m.email = :email",
-            nativeQuery = true)
-    Optional<Member> findMemberByEmail(@Param("email") String email);
+    // 활성 회원(isDeleted = false)만 조회하는 메소드
+    Optional<Member> findByIdAndIsDeletedFalse(Long memberId);
 
-    /**
-     * softDelete 멤버 조회
-     * @param withdrewDate
-     * @return
-     */
-    @Query(value =
-            "SELECT * FROM member " +
-                    "WHERE is_deleted = true " +
-                    "AND deleted_at < :withdrewDate",
-            nativeQuery = true)
-    List<Member> findByIsDeletedTrueAndDeletedAtBefore(@Param("withdrewDate") LocalDateTime withdrewDate);
+    // soft-delete(isDeleted = true) 회원을 포함한 모든 회원 조회
+    Optional<Member> findByEmail(String email);
+    List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate);
 }
