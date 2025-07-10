@@ -19,14 +19,14 @@ public class MemberValidator {
     }
 
     public void exitsEmailOrThrow(String email) {
-            throw new IllegalArgumentException("");
         if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
+            throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
         }
     }
 
     public void exitsWithdrewEmailOrThrow(String email) {
         if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
-            throw new IllegalArgumentException("");
+            throw new DomainException(MemberErrorCode.FAILED_JOIN);
         }
     }
 }
