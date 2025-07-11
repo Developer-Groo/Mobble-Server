@@ -71,7 +71,7 @@ class CommentTest {
         @DisplayName("댓글 내용 변경 성공")
         void success_when_change_content() {
             // given & when
-            mockComment.changeContent("newContent");
+            mockComment.updateContent("newContent");
 
             // then
             assertThat(mockComment.getContent()).isEqualTo("newContent");
@@ -81,7 +81,7 @@ class CommentTest {
         @DisplayName("null 내용으로 변경 시 예외 발생")
         void fails_when_change_content_is_null() {
             // when & then
-            assertThatThrownBy(() -> mockComment.changeContent(null))
+            assertThatThrownBy(() -> mockComment.updateContent(null))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.CONTENT_REQUIRED.message());
         }
@@ -90,7 +90,7 @@ class CommentTest {
         @DisplayName("공백 내용으로 변경 시 예외 발생")
         void fails_when_change_content_is_blank() {
             // when & then
-            assertThatThrownBy(() -> mockComment.changeContent("  "))
+            assertThatThrownBy(() -> mockComment.updateContent("  "))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.CONTENT_REQUIRED.message());
         }
