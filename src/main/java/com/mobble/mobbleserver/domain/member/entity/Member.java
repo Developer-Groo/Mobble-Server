@@ -31,8 +31,12 @@ public class Member extends BaseEntity {
     @Column(name = "gender")
     private Gender gender;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
+
+    // Todo 소셜 로그인 구현 후 삭제
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "phone")
     private String phone;
@@ -67,6 +71,7 @@ public class Member extends BaseEntity {
             int age,
             Gender gender,
             String email,
+            String password, // Todo 소셜 로그인 구현 후 삭제
             String phone,
             String ground,
             String profileImage,
@@ -81,6 +86,7 @@ public class Member extends BaseEntity {
         this.age = age;
         this.gender = gender;
         this.email = email;
+        this.password = password; // Todo 소셜 로그인 구현 후 삭제
         this.phone = phone;
         this.ground = ground;
         this.profileImage = profileImage;
@@ -99,6 +105,7 @@ public class Member extends BaseEntity {
             int age,
             Gender gender,
             String email,
+            String password, // Todo 소셜 로그인 구현 후 삭제
             String phone,
             String ground,
             String profileImage,
@@ -113,6 +120,7 @@ public class Member extends BaseEntity {
                 .age(age)
                 .gender(gender)
                 .email(email)
+                .password(password) // Todo 소셜 로그인 구현 후 삭제
                 .phone(phone)
                 .ground(ground)
                 .profileImage(profileImage)
