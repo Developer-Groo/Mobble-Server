@@ -2,9 +2,11 @@ package com.mobble.mobbleserver.domain.comment.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.article.entity.Article;
+import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
+import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +34,10 @@ class CommentRepositoryImplTest {
     void success_when_find_comments_with_replies_by_article_id() {
         // given
         Member member = MemberTestFixture.createDefaultMember();
-        Article article = ArticleTestFixture.createDefaultArticle();
+        Club club = ClubTestFixture.createDefaultClub();
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
         em.persist(member);
+        em.persist(club);
         em.persist(article);
 
         Comment firstRootComment = Comment.createRootComment(member, article, "parent comment-1");
