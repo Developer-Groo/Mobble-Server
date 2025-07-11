@@ -30,8 +30,9 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
-        Member member = clubMember.getMember();
         Article article = findArticleOrThrow(articleId);
+
+        Member member = clubMember.getMember();
         Comment comment = dto.toEntity(member, article);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
@@ -45,10 +46,10 @@ public class CommentService {
             CommentRequestDto dto
     ) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
-        Member member = clubMember.getMember();
         Article article = findArticleOrThrow(articleId);
-
         Comment parentComment = commentValidator.findCommentByCommentIdOrThrow(parentCommentId);
+
+        Member member = clubMember.getMember();
         Comment comment = dto.toEntity(member, article, parentComment);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
