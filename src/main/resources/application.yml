@@ -22,3 +22,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+        jwt:
+          secret: 'eignindiglriljiljlisjt9a3jigasjbxzvjnnm,bzxbmpowiataweqwqqpoigkroeperjtklf953tjoi09v028hbsd'
+          access-token-validity-in-seconds: 3600 # 1hour
+          refresh-token-validity-in-seconds: 259200 # 7days
