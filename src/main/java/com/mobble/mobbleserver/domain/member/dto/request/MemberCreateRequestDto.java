@@ -20,6 +20,8 @@ public record MemberCreateRequestDto(
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "MEMBER:WRONG_EMAIL_PATTERN")
         String email,
 
+        String password, // Todo 소셜로그인 구현시 삭제
+
         @NotBlank(message = "MEMBER:REQUIRED_PHONE")
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "MEMBER:WRONG_PHONE_PATTERN")
         String phone,
@@ -44,6 +46,7 @@ public record MemberCreateRequestDto(
                 this.age,
                 this.gender,
                 this.email,
+                this.password, // Todo 소셜로그인 구현시 삭제
                 this.phone,
                 this.ground,
                 this.profileImage,
