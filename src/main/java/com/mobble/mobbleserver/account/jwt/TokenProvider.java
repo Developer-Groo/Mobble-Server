@@ -42,3 +42,18 @@ public class TokenProvider {
                 .setExpiration(validity)
                 .compact();
     }
+
+    /**
+     * Refresh Token 생성
+     */
+    public String createRefreshToken(Long memberId) {
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + this.refreshTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(memberId.toString())
+                .setIssuedAt(now)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
