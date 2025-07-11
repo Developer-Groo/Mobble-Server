@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.comment.controller;
 
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Validated
 @RestController
@@ -43,14 +40,6 @@ public class CommentController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.createReplyComment(memberId, articleId, parentCommentId, dto));
-    }
-
-    @GetMapping("/{article-id}/comments")
-    public ResponseEntity<List<CommentListResponseDto>> getCommentList(
-            @PathVariable("article-id") @Positive Long articleId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.getCommentListByArticle(articleId));
     }
 
     @PatchMapping("/comments/{comment-id}")
