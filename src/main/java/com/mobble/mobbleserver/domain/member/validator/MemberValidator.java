@@ -13,7 +13,7 @@ public class MemberValidator {
 
     private final MemberRepository memberRepository;
 
-    public Member findMemberOrThrow(Long memberId) {
+    public Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
