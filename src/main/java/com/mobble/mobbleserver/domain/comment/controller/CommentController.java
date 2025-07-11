@@ -50,7 +50,7 @@ public class CommentController {
         Long memberId = 1L; // Todo: 임시 member id
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.updateComment(memberId, commentId, dto));
+                .body(commentService.updateComment(commentId, memberId, dto));
     }
 
     @DeleteMapping("/comments/{comment-id}")
@@ -58,7 +58,7 @@ public class CommentController {
             @PathVariable("comment-id") @Positive Long commentId
     ) {
         Long memberId = 1L; // Todo: 임시 member id
-        commentService.deleteComment(memberId, commentId);
+        commentService.deleteComment(commentId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

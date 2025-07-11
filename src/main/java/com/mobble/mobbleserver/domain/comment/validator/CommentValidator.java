@@ -18,7 +18,7 @@ public class CommentValidator {
                 .orElseThrow(() -> new DomainException(CommentErrorCode.NOT_FOUND));
     }
 
-    public Comment findCommentByCommentIdAndMemberIdOrThrow(Long memberId, Long commentId) {
+    public Comment findCommentByCommentIdAndMemberIdOrThrow(Long commentId, Long memberId) {
         return commentRepository.findByIdAndMemberId(commentId, memberId)
                 .orElseThrow(() -> new DomainException(CommentErrorCode.NO_PERMISSION));
     }

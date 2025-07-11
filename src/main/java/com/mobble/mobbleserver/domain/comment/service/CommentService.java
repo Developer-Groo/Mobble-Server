@@ -29,8 +29,9 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
         Article article = findArticleOrThrow(articleId);
+        Long clubId = article.getClub().getId();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         Member member = clubMember.getMember();
         Comment comment = dto.toEntity(member, article);
@@ -45,8 +46,9 @@ public class CommentService {
             Long parentCommentId,
             CommentRequestDto dto
     ) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
         Article article = findArticleOrThrow(articleId);
+        Long clubId = article.getClub().getId();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Comment parentComment = commentValidator.findCommentByCommentIdOrThrow(parentCommentId);
 
         Member member = clubMember.getMember();
@@ -64,16 +66,16 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long memberId, Long commentId, CommentRequestDto dto) {
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId);
+    public CommentResponseDto updateComment(Long commentId, Long memberId, CommentRequestDto dto) {
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
         Comment updatedComment = comment.updateContent(dto.content());
 
         return CommentResponseDto.toDto(updatedComment);
     }
 
     @Transactional
-    public void deleteComment(Long memberId, Long commentId) {
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId);
+    public void deleteComment(Long commentId, Long memberId) {
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
         commentRepository.delete(comment);
     }
 
