@@ -31,7 +31,7 @@ public class Member extends BaseEntity {
     @Column(name = "gender")
     private Gender gender;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     // Todo 소셜 로그인 구현 후 삭제
