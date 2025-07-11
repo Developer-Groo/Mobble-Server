@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.article.dto.request;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,8 +21,13 @@ public record ArticleRequestDto(
         String content
 ) {
 
-    public Article toEntity(ClubMember clubMember, ArticleType articleType, String title){
+    public Article toEntity(
+            Club club,
+            ClubMember clubMember,
+            ArticleType articleType,
+            String title) {
         return Article.createArticle(
+                club,
                 clubMember,
                 articleType,
                 title,
