@@ -22,7 +22,7 @@ public class MemberService {
     @Transactional
     public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
         memberValidator.exitsEmailOrThrow(dto.email());
-        memberValidator.exitsWithdrewEmailOrThrow(dto.email());
+        memberValidator.existsIsDeletedEmailOrThrow(dto.email());
         Member member = memberRepository.save(dto.toEntity());
 
         return MemberCreateResponseDto.toDto(member);

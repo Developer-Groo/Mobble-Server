@@ -24,7 +24,7 @@ public class MemberValidator {
         }
     }
 
-    public void exitsWithdrewEmailOrThrow(String email) {
+    public void existsIsDeletedEmailOrThrow(String email) {
         if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
             throw new DomainException(MemberErrorCode.FAILED_JOIN);
         }
