@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.comment.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
@@ -9,7 +11,6 @@ import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +24,14 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentValidator commentValidator;
+    private final ClubMemberValidator clubMemberValidator;
     private final ArticleRepository articleRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
-        Member member = findMemberOrThrow(memberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
+        Member member = clubMember.getMember();
         Article article = findArticleOrThrow(articleId);
-        // Todo: 해당 클럽의 멤버인지 검증 필요
-
         Comment comment = dto.toEntity(member, article);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
@@ -44,9 +44,9 @@ public class CommentService {
             Long parentCommentId,
             CommentRequestDto dto
     ) {
-        Member member = findMemberOrThrow(memberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(memberId, memberId);
+        Member member = clubMember.getMember();
         Article article = findArticleOrThrow(articleId);
-        // Todo: 해당 클럽의 멤버인지 검증 필요
 
         Comment parentComment = commentValidator.findCommentByCommentIdOrThrow(parentCommentId);
         Comment comment = dto.toEntity(member, article, parentComment);
@@ -78,11 +78,6 @@ public class CommentService {
 
     private Article findArticleOrThrow(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
-
-    private Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 }
