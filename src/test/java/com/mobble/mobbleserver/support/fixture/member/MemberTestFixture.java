@@ -11,6 +11,7 @@ public class MemberTestFixture {
                 1,
                 Gender.FEMALE,
                 "email",
+                "password",
                 "phone",
                 "ground",
                 "profileImage",
