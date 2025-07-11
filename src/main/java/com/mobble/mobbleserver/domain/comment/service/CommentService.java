@@ -48,7 +48,7 @@ public class CommentService {
         Article article = findArticleOrThrow(articleId);
         // Todo: 해당 클럽의 멤버인지 검증 필요
 
-        Comment parentComment = commentValidator.findCommentOrThrow(parentCommentId);
+        Comment parentComment = commentValidator.findCommentByCommentIdOrThrow(parentCommentId);
         Comment comment = dto.toEntity(member, article, parentComment);
 
         return CommentResponseDto.toDto(commentRepository.save(comment));
@@ -64,7 +64,7 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updateComment(Long memberId, Long commentId, CommentRequestDto dto) {
-        Comment comment = commentValidator.findCommentByIdAndMemberOrThrow(memberId, commentId);
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId);
         Comment updatedComment = comment.updateContent(dto.content());
 
         return CommentResponseDto.toDto(updatedComment);
@@ -72,7 +72,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
-        Comment comment = commentValidator.findCommentByIdAndMemberOrThrow(memberId, commentId);
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId);
         commentRepository.delete(comment);
     }
 

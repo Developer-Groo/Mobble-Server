@@ -25,7 +25,7 @@ public class CommentLikeService {
     @Transactional
     public CommentLikeResponseDto toggleLike(Long commentId, Long memberId) {
         Member member = findMemberOrThrow(memberId);
-        Comment comment = commentValidator.findCommentOrThrow(commentId);
+        Comment comment = commentValidator.findCommentByCommentIdOrThrow(commentId);
 //        ClubMember clubMember = findClubMemberOrThrow(clubMemberId);
 
         Optional<CommentLike> checkLiked = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
@@ -44,7 +44,7 @@ public class CommentLikeService {
     }
 
     public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
-        Comment comment = commentValidator.findCommentOrThrow(commentId);
+        Comment comment = commentValidator.findCommentByCommentIdOrThrow(commentId);
         Member member = findMemberOrThrow(memberId);
         boolean isLiked = commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), member.getId());
         int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());

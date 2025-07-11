@@ -90,7 +90,7 @@ class CommentServiceTest {
 
             given(memberRepository.findById(memberId)).willReturn(Optional.of(mockMember));
             given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
-            given(commentValidator.findCommentOrThrow(parentId)).willReturn(mockParentComment);
+            given(commentValidator.findCommentByCommentIdOrThrow(parentId)).willReturn(mockParentComment);
             given(commentRepository.save(any())).willReturn(mockComment);
             given(mockComment.getMember()).willReturn(mockMember);
             given(mockComment.getArticle()).willReturn(mockArticle);
@@ -147,7 +147,7 @@ class CommentServiceTest {
             Member mockMember = mock(Member.class);
             Article mockArticle = mock(Article.class);
 
-            given(commentValidator.findCommentByIdAndMemberOrThrow(memberId, articleId)).willReturn(mockComment);
+            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, articleId)).willReturn(mockComment);
             given(mockComment.updateContent(dto.content())).willReturn(mockComment);
             given(mockComment.getMember()).willReturn(mockMember);
             given(mockComment.getArticle()).willReturn(mockArticle);
@@ -174,7 +174,7 @@ class CommentServiceTest {
             Long articleId = 2L;
             Comment mockComment = mock(Comment.class);
 
-            given(commentValidator.findCommentByIdAndMemberOrThrow(memberId, articleId)).willReturn(mockComment);
+            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, articleId)).willReturn(mockComment);
 
             // when
             commentService.deleteComment(memberId, articleId);

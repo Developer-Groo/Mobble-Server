@@ -13,12 +13,12 @@ public class CommentValidator {
 
     private final CommentRepository commentRepository;
 
-    public Comment findCommentOrThrow(Long commentId) {
+    public Comment findCommentByCommentIdOrThrow(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new DomainException(CommentErrorCode.NOT_FOUND));
     }
 
-    public Comment findCommentByIdAndMemberOrThrow(Long memberId, Long commentId) {
+    public Comment findCommentByCommentIdAndMemberIdOrThrow(Long memberId, Long commentId) {
         return commentRepository.findByIdAndMemberId(commentId, memberId)
                 .orElseThrow(() -> new DomainException(CommentErrorCode.NO_PERMISSION));
     }
