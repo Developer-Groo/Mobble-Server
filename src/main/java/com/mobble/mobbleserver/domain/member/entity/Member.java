@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -74,6 +76,7 @@ public class Member extends BaseEntity {
 //            SocialProvider socialProvider,
 //            String socialId,
     ) {
+        validateCommon(name, gender, phone, ground, termsAgreed, privacyAgreed);
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -122,6 +125,7 @@ public class Member extends BaseEntity {
     }
 
     public Member updateMember(String ground, String profileImage) {
+        if (ground == null || ground.isBlank()) throw new DomainException(MemberErrorCode.GROUND_REQUIRED);
         this.ground = ground;
         this.profileImage = profileImage;
         return this;
@@ -130,5 +134,21 @@ public class Member extends BaseEntity {
     public void softDelete() {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
+    }
+
+    private void validateCommon(
+            String name,
+            Gender gender,
+            String phone,
+            String ground,
+            boolean termsAgreed,
+            boolean privacyAgreed
+    ) {
+        if (name == null) throw new DomainException(MemberErrorCode.NAME_REQUIRED);
+        if (gender == null) throw new DomainException(MemberErrorCode.GENDER_REQUIRED);
+        if (phone == null) throw new DomainException(MemberErrorCode.PHONE_REQUIRED);
+        if (ground == null) throw new DomainException(MemberErrorCode.GROUND_REQUIRED);
+        if (!termsAgreed) throw new DomainException(MemberErrorCode.TERMS_AGREED_REQUIRED);
+        if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
     }
 }
