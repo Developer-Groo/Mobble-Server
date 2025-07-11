@@ -13,20 +13,20 @@ public class MemberValidator {
 
     private final MemberRepository memberRepository;
 
-    public Member findMemberOrThrow(Long memberId) {
+    public Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
     public void exitsEmailOrThrow(String email) {
-        if (memberRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("");
+        if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
+            throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
         }
     }
 
-    public void exitsWithdrewEmailOrThrow(String email) {
+    public void existsIsDeletedEmailOrThrow(String email) {
         if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
-            throw new IllegalArgumentException("");
+            throw new DomainException(MemberErrorCode.FAILED_JOIN);
         }
     }
 }

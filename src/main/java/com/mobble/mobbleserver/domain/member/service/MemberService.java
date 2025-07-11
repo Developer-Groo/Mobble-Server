@@ -22,21 +22,21 @@ public class MemberService {
     @Transactional
     public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
         memberValidator.exitsEmailOrThrow(dto.email());
-        memberValidator.exitsWithdrewEmailOrThrow(dto.email());
+        memberValidator.existsIsDeletedEmailOrThrow(dto.email());
         Member member = memberRepository.save(dto.toEntity());
 
         return MemberCreateResponseDto.toDto(member);
     }
 
     public MemberResponseDto getMember(Long memberId) {
-        Member member = memberValidator.findMemberOrThrow(memberId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
         return MemberResponseDto.toDto(member);
     }
 
     @Transactional
     public MemberResponseDto updateMember(Long memberId, MemberUpdateRequestDto dto) {
-        Member member = memberValidator.findMemberOrThrow(memberId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member updateMember = member.updateMember(dto.ground(), dto.profileImage());
 
         return MemberResponseDto.toDto(updateMember);
@@ -44,7 +44,7 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Long memberId) {
-        Member member = memberValidator.findMemberOrThrow(memberId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         member.softDelete();
     }
 }
