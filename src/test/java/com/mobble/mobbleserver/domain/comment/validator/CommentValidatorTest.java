@@ -47,8 +47,7 @@ class CommentValidatorTest {
     void fails_when_find_comment_or_throw() {
         // given
         Long commentId = 1L;
-        when(commentRepository.findById(commentId))
-                .thenReturn(Optional.empty());
+        when(commentRepository.findById(commentId)).thenReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> commentValidator.findCommentByCommentIdOrThrow(commentId))
@@ -66,7 +65,7 @@ class CommentValidatorTest {
         when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.of(mockComment));
 
         // when
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId);
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
 
         // then
         assertThat(comment).isEqualTo(mockComment);
@@ -81,7 +80,7 @@ class CommentValidatorTest {
         when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdAndMemberIdOrThrow(memberId, commentId))
+        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(CommentErrorCode.NO_PERMISSION.message());
     }
