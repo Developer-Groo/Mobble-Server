@@ -81,7 +81,7 @@ public class Comment extends BaseEntity {
                 .build();
     }
 
-    public Comment changeContent(String content) {
+    public Comment updateContent(String content) {
         validateContent(content);
         this.content = content;
         return this;

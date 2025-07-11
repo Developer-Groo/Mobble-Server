@@ -65,7 +65,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long memberId, Long commentId, CommentRequestDto dto) {
         Comment comment = commentValidator.findCommentByIdAndMemberOrThrow(memberId, commentId);
-        Comment updatedComment = comment.changeContent(dto.content());
+        Comment updatedComment = comment.updateContent(dto.content());
 
         return CommentResponseDto.toDto(updatedComment);
     }
