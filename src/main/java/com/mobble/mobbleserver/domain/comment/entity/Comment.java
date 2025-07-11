@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     @Id
@@ -24,19 +24,21 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
+    @JoinColumn(name = "article_id",  nullable = false)
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
+    @Column(name = "content", nullable = false)
     private String content;
 
+    // Todo: 부모 댓글 삭제 했을 때, 자식 댓글 처리
     @OneToMany(mappedBy = "parent")
     private List<Comment> children;
 
@@ -79,19 +81,23 @@ public class Comment extends BaseEntity {
                 .build();
     }
 
-    public Comment changeContent(String content) {
-        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+    public Comment updateContent(String content) {
+        validateContent(content);
         this.content = content;
         return this;
     }
 
-    public Boolean hasParent() {
+    public boolean hasParent() {
         return this.parent != null;
     }
 
     private void validateCommon(Member member, Article article, String content) {
         if (member == null) throw new DomainException(CommentErrorCode.MEMBER_REQUIRED);
         if (article == null) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
-        if (content == null) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+        validateContent(content);
+    }
+
+    private void validateContent(String content) {
+        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
     }
 }

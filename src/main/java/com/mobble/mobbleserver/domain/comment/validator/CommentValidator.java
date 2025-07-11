@@ -23,4 +23,3 @@ public class CommentValidator {
                 .orElseThrow(() -> new DomainException(CommentErrorCode.NO_PERMISSION));
     }
 }
-
