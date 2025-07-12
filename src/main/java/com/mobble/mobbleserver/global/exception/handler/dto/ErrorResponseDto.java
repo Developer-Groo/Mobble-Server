@@ -12,7 +12,8 @@ public record ErrorResponseDto(
         String message,
         int status,
         String code,
-        Map<String, String> errors) {
+        Map<String, String> errors
+) {
 
     // Validation or Binding Error
     public static ErrorResponseDto toDto(ErrorCode errorCode, Map<String, String> errors) {
