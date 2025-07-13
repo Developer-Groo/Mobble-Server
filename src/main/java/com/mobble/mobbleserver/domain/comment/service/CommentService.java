@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
+import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
@@ -57,11 +57,11 @@ public class CommentService {
         return CommentResponseDto.toDto(commentRepository.save(comment));
     }
 
-    public List<CommentListResponseDto> getCommentListByArticle(Long articleId) {
+    public List<RootCommentResponseDto> getCommentListByArticle(Long articleId) {
         Article article = findArticleOrThrow(articleId);
         // Todo: 좋아요 갯수 반환 필요
         return commentRepository.findCommentsWithRepliesByArticleId(article.getId()).stream()
-                .map(CommentListResponseDto::toDto)
+                .map(RootCommentResponseDto::toDto)
                 .toList();
     }
 

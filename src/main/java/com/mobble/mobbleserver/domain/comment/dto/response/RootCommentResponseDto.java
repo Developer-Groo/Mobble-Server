@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record CommentListResponseDto(
+public record RootCommentResponseDto(
         Long commentId,
         Long memberId,
         Long articleId,
@@ -16,8 +16,8 @@ public record CommentListResponseDto(
         List<ReplyCommentDto> replies
 ) {
 
-    public static CommentListResponseDto toDto(Comment comment) {
-        return new CommentListResponseDto(
+    public static RootCommentResponseDto toDto(Comment comment) {
+        return new RootCommentResponseDto(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getArticle().getId(),

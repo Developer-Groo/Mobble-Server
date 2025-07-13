@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
+import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
@@ -149,7 +149,7 @@ class CommentServiceTest {
             given(mockComment.getArticle()).willReturn(mockArticle);
 
             // when
-            List<CommentListResponseDto> response = commentService.getCommentListByArticle(articleId);
+            List<RootCommentResponseDto> response = commentService.getCommentListByArticle(articleId);
 
             // then
             assertThat(response).isNotNull();
