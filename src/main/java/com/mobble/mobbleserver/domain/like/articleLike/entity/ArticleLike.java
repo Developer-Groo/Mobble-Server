@@ -30,17 +30,20 @@ public class ArticleLike {
 
     @Builder(access = AccessLevel.PRIVATE)
     private ArticleLike(Article article, Member member) {
+        validateCommon(article, member);
         this.article = article;
         this.member = member;
     }
 
     public static ArticleLike createArticleLike(Article article, Member member) {
-        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
-        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
-
         return ArticleLike.builder()
                 .article(article)
                 .member(member)
                 .build();
+    }
+
+    private void validateCommon(Article article, Member member) {
+        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
+        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
     }
 }

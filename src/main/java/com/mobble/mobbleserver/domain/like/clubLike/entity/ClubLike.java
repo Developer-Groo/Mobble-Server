@@ -27,17 +27,20 @@ public class ClubLike {
 //Todo Club 생성 후 import
 //    @Builder(access = AccessLevel.PRIVATE)
 //    private ClubLike(Club club, Member member) {
+//    validateCommon(club, member)
 //        this.club = club;
 //        this.member = member;
 //    }
 
 //    public static ClubLike createClubLike(Club club, Member member) {
-//        if (club == null) throw new DomainException(LikeErrorCode.CLUB_REQUIRED);
-//        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
-//
 //        return ClubLike.builder()
 //                .club(club)
 //                .member(member)
 //                .build();
+//    }
+
+//    private void validateCommon(Club club,Member member) {
+//        if (club == null) throw new DomainException(LikeErrorCode.CLUB_REQUIRED);
+//        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
 //    }
 }
