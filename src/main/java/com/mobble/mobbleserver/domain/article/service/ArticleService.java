@@ -88,7 +88,7 @@ public class ArticleService {
                 memberId);
 
         boolean likedByMe = checkLiked.isPresent();
-        boolean isMine = article.getMember().getId().equals(memberId);
+        boolean isMine =  isWriter(article.getMember().getId(),memberId);
 
         return ArticleResponseDto.toDto(
                 article,
@@ -101,6 +101,10 @@ public class ArticleService {
     private String summarize(String content) {
         if (content == null) return "";
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
+    }
+
+    private boolean isWriter(Long articleWriterId, Long memberId){
+        return articleWriterId.equals(memberId);
     }
 
     private Member findMemberOrThrow(Long memberId) {
