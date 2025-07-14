@@ -84,11 +84,9 @@ public class ArticleService {
         Article article = findArticleOrThrow(articleId);
 
         List<CommentListResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId);
-        Optional<ArticleLike> checkLiked = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(),
-                memberId);
 
-        boolean likedByMe = checkLiked.isPresent();
-        boolean isMine =  isWriter(article.getMember().getId(),memberId);
+        boolean likedByMe = isArticleLikedByMember(articleId, memberId);
+        boolean isMine = isWriter(article.getMember().getId(), memberId);
 
         return ArticleResponseDto.toDto(
                 article,
@@ -103,8 +101,12 @@ public class ArticleService {
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
     }
 
-    private boolean isWriter(Long articleWriterId, Long memberId){
+    private boolean isWriter(Long articleWriterId, Long memberId) {
         return articleWriterId.equals(memberId);
+    }
+
+    private boolean isArticleLikedByMember(Long articleId, Long memberId) {
+        return articleLikeRepository.findLikedByArticleIdAndMemberId(articleId, memberId).isPresent();
     }
 
     private Member findMemberOrThrow(Long memberId) {
