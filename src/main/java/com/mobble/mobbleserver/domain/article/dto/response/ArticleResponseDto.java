@@ -17,7 +17,8 @@ public record ArticleResponseDto(
         String memberName,
 
         // todo: 글작성 회원 프로필 사진 추가
-        int likeCount,
+        Long likeCount,
+        Long commentCount,
         boolean likedByMe,
         boolean isMine,
         LocalDateTime createdAt,
