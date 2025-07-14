@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.domain.article.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -67,5 +66,11 @@ public class Article extends BaseEntity {
                 .title(title)
                 .content(content)
                 .build();
+    }
+
+    public void updateArticle(ArticleType articleType, String title, String content) {
+        this.articleType = articleType;
+        this.title = title;
+        this.content = content;
     }
 }
