@@ -16,12 +16,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/clubs/articles")
 public class ArticleController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/{club-id}")
+    @PostMapping("/clubs/{club-id}/articles")
     public ResponseEntity<ArticleResponseDto> createArticle(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody @Valid ArticleRequestDto dto
@@ -32,7 +31,7 @@ public class ArticleController {
                 .body(articleService.createArticle(memberId, clubId, dto));
     }
 
-    @GetMapping("/{club-id}")
+    @GetMapping("/clubs/{club-id}/articles")
     public ResponseEntity<List<ArticleSummaryResponseDto>> findArticlesByClubId(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestParam(value = "articleType", required = false) ArticleType articleType
