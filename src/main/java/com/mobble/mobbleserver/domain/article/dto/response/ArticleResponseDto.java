@@ -38,7 +38,7 @@ public record ArticleResponseDto(
                 article.getArticleType(),
                 article.getClub().getId(),
                 article.getMember().getId(),
-                article.getMember().getName(), // memberName
+                article.getMember().getName(),
                 likeCount,
                 likedByMe,
                 isMine,
