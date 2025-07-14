@@ -15,21 +15,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        // CSRF 보호 비활성화 (CSRF:악의적인 사이트에서 사용자의 인증된 세션을 악용해 요청을 보내는 공격)
         http
                 .csrf(AbstractHttpConfigurer::disable);
 
+        // Form 로그인 방식 비활성화
         http
                 .formLogin(AbstractHttpConfigurer::disable);
 
+        // HTTP Basic 인증 방식 비활성화
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
+        // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
                         .anyRequest().permitAll()
                 );
 
+        // 세션 설정: STATELESS
         http
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
