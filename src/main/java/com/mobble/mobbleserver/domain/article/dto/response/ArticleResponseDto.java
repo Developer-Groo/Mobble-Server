@@ -45,6 +45,26 @@ public record ArticleResponseDto(
                 List.of()
         );
     }
+    public static ArticleResponseDto toDto(
+            ArticleDetailDto dto,
+            boolean likedByMe,
+            boolean isMine,
+            List<CommentListResponseDto> comments
+    ) {
+        return new ArticleResponseDto(
+                dto.articleId(),
+                dto.title(),
+                dto.content(),
+                dto.articleType(),
+                dto.clubId(),
+                dto.memberId(),
+                dto.memberName(),
+                dto.likeCount(),
+                dto.commentCount(),
+                likedByMe,
+                isMine,
+                dto.createdAt(),
+                dto.updatedAt(),
                 comments
         );
     }
