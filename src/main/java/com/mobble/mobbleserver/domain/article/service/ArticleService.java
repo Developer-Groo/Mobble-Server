@@ -51,12 +51,7 @@ public class ArticleService {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
 
-        return ArticleResponseDto.toDto(
-                articleRepository.save(article),
-                false,
-                true,
-                0,
-                List.of());
+        return ArticleResponseDto.toDto(articleRepository.save(article));
     }
 
     public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType) {
