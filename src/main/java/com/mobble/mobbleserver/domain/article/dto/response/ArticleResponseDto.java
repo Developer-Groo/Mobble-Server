@@ -26,11 +26,7 @@ public record ArticleResponseDto(
         List<CommentListResponseDto> comments
 ) {
     public static ArticleResponseDto toDto(
-            Article article,
-            boolean likedByMe,
-            boolean isMine,
-            int likeCount,
-            List<CommentListResponseDto> comments
+            Article article
     ) {
         return new ArticleResponseDto(
                 article.getId(),
@@ -40,11 +36,15 @@ public record ArticleResponseDto(
                 article.getClub().getId(),
                 article.getMember().getId(),
                 article.getMember().getName(),
-                likeCount,
-                likedByMe,
-                isMine,
+                0L,
+                0L,
+                false,
+                true,
                 article.getCreatedAt(),
                 article.getUpdatedAt(),
+                List.of()
+        );
+    }
                 comments
         );
     }
