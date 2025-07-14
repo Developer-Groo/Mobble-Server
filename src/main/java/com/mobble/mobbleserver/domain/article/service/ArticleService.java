@@ -91,6 +91,33 @@ public class ArticleService {
                 commentListByArticle);
     }
 
+    @Transactional
+    public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
+        Article article = findArticleOrThrow(articleId);
+        ClubMember clubMember = findClubMemberOrThrow(article.getClub().getId(), memberId);
+
+        boolean isMine = isWriter(article.getMember().getId(), memberId);
+
+        if (!isMine) {
+            throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
+        }
+        if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
+            throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
+        }
+
+        article.updateArticle(dto.articleType(), dto.title(), dto.content());
+
+        ArticleDetailDto detailDto = articleQueryDslRepository.findArticleDetailById(articleId);
+        boolean likedByMe = isArticleLikedByMember(articleId, memberId);
+        List<CommentListResponseDto> comments = commentService.getCommentListByArticle(articleId);
+
+        return ArticleResponseDto.toDto(
+                detailDto,
+                likedByMe,
+                true,
+                comments);
+    }
+
     private String summarize(String content) {
         if (content == null) return "";
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
