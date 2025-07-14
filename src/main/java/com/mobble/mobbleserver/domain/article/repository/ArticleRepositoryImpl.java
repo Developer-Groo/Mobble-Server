@@ -1,11 +1,13 @@
 package com.mobble.mobbleserver.domain.article.repository;
 
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.domain.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.article.entity.QArticle;
 import com.mobble.mobbleserver.domain.club.entity.QClub;
 import com.mobble.mobbleserver.domain.comment.entity.QComment;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.QArticleLike;
 import com.mobble.mobbleserver.domain.member.entity.QMember;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +22,18 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId) {
+    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType) {
         QArticle article = QArticle.article;
         QArticleLike like = QArticleLike.articleLike;
         QComment comment = QComment.comment;
         QClub club = QClub.club;
         QMember member = QMember.member;
 
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(article.club.id.eq(clubId));
+        if (articleType != null) {
+            builder.and(article.articleType.eq(articleType));
+        }
 
         return queryFactory
                 .select(Projections.constructor(ArticleSummaryResponseDto.class,
@@ -44,7 +51,7 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
                 .from(article)
                 .leftJoin(like).on(like.article.eq(article))
                 .leftJoin(comment).on(comment.article.eq(article))
-                .where(article.club.id.eq(clubId))
+                .where(builder)
                 .groupBy(
                         article.id,
                         article.title,
@@ -55,6 +62,7 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
                         article.createdAt,
                         article.updatedAt
                 )
+                .orderBy(article.createdAt.desc())
                 .fetch();
     }
 }
