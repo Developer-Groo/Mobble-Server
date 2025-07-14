@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.auth.controller;
 
 import com.mobble.mobbleserver.account.auth.dto.request.LoginRequestDto;
-import com.mobble.mobbleserver.account.auth.dto.response.LoginResponseDto;
+import com.mobble.mobbleserver.account.auth.dto.response.TokenResponseDto;
 import com.mobble.mobbleserver.account.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<TokenResponseDto> login(
             @RequestBody LoginRequestDto dto
     ) {
         return ResponseEntity.status(HttpStatus.OK)
