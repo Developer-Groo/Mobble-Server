@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
+import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -57,11 +60,22 @@ public class CommentService {
         return CommentResponseDto.toDto(commentRepository.save(comment));
     }
 
-    public List<RootCommentResponseDto> getCommentListByArticle(Long articleId) {
+    public List<RootCommentResponseDto> getCommentListByArticle(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-        // Todo: 좋아요 갯수 반환 필요
-        return commentRepository.findCommentsWithRepliesByArticleId(article.getId()).stream()
-                .map(RootCommentResponseDto::toDto)
+        List<Comment> comments = commentRepository.findCommentsWithRepliesByArticleId(article.getId());
+
+        List<Long> commentIds = comments.stream()
+                .flatMap(comment -> Stream.concat(
+                        Stream.of(comment.getId()),
+                        comment.getChildren().stream().map(Comment::getId)
+                ))
+                .distinct()
+                .toList();
+
+        Map<Long, CommentLikeInfoDto> likeInfoMap = commentRepository.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
+
+        return comments.stream()
+                .map(comment -> RootCommentResponseDto.toDto(comment, likeInfoMap))
                 .toList();
     }
 
