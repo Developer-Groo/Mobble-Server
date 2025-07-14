@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.comment.repository;
 
-import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfo;
+import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 
 import java.util.List;
@@ -10,5 +10,5 @@ public interface CommentQueryDslRepository {
 
     List<Comment> findCommentsWithRepliesByArticleId(Long articleId);
 
-    Map<Long, CommentLikeInfo> findLikeInfoByCommentIdsAndMemberId(List<Long> commentIds, Long memberId);
+    Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> commentIds, Long memberId);
 }
