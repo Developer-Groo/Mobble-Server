@@ -60,4 +60,15 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.updateArticle(articleId,memberId,dto));
     }
+
+    @DeleteMapping("/articles/{article-id}")
+    public ResponseEntity<Void> deleteArticle(
+            @PathVariable("article-id") @Positive Long articleId
+    ){
+        Long memberId = 1L; // Todo: 임시 member id
+        articleService.deleteArticle(articleId,memberId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

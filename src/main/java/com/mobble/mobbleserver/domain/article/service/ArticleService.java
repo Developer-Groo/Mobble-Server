@@ -15,7 +15,6 @@ import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
-import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -116,6 +114,18 @@ public class ArticleService {
                 likedByMe,
                 true,
                 comments);
+    }
+
+    @Transactional
+    public void deleteArticle(Long articleId, Long memberId) {
+        Article article = findArticleOrThrow(articleId);
+        ClubMember clubMember = findClubMemberOrThrow(article.getClub().getId(), memberId);
+        boolean isMine = isWriter(article.getMember().getId(), memberId);
+
+        if(!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)){
+            throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
+        }
+        articleRepository.delete(article);
     }
 
     private String summarize(String content) {
