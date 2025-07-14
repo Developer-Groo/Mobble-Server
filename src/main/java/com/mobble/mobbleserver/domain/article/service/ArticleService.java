@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.article.service;
 
 import com.mobble.mobbleserver.domain.article.dto.request.ArticleRequestDto;
+import com.mobble.mobbleserver.domain.article.dto.response.ArticleDetailDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
 import com.mobble.mobbleserver.domain.article.entity.Article;
@@ -77,17 +78,16 @@ public class ArticleService {
 
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-
+        ArticleDetailDto dto = articleQueryDslRepository.findArticleDetailById(articleId);
         List<CommentListResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId);
 
         boolean likedByMe = isArticleLikedByMember(articleId, memberId);
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
         return ArticleResponseDto.toDto(
-                article,
+                dto,
                 likedByMe,
                 isMine,
-                commentListByArticle.size(),
                 commentListByArticle);
     }
 
