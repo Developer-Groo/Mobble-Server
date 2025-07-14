@@ -25,5 +25,3 @@ spring:
 
 jwt:
   secret: 'U0dWc2JHOHNJRTVwWTJVZ2JXVmxkR2x1WnlCNWIzVXVJRmRsSUdGeVpTQk5UMEpDVEVVdUlGZGxiR052YldVZ2RHOGdiM1Z5SUhObGNuWnBZMlU9'
-  access-token-validity-in-seconds: 86400 # 1hour //Todo TokenProvider에 정의, refresh 토큰 삭제
-#  refresh-token-validity-in-seconds: 259200 # 7days
