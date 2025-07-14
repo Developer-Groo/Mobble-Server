@@ -12,6 +12,10 @@ import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
+import com.mobble.mobbleserver.domain.comment.service.CommentService;
+import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +23,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ArticleService {
 
+    private final CommentService commentService;
+
     private final ArticleRepository articleRepository;
     private final ArticleQueryDslRepository articleQueryDslRepository;
     private final MemberRepository memberRepository;
     private final ClubRepository clubRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ArticleLikeRepository articleLikeRepository;
+
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
@@ -71,6 +80,24 @@ public class ArticleService {
 
     }
 
+    public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
+        Article article = findArticleOrThrow(articleId);
+
+        List<CommentListResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId);
+        Optional<ArticleLike> checkLiked = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(),
+                memberId);
+
+        boolean likedByMe = checkLiked.isPresent();
+        boolean isMine = article.getMember().getId().equals(memberId);
+
+        return ArticleResponseDto.toDto(
+                article,
+                likedByMe,
+                isMine,
+                commentListByArticle.size(),
+                commentListByArticle);
+    }
+
     private String summarize(String content) {
         if (content == null) return "";
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
@@ -91,4 +118,8 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 
+    private Article findArticleOrThrow(long ArticleId) {
+        return articleRepository.findById(ArticleId)
+                .orElseThrow(() -> new IllegalArgumentException(""));// Todo: Custom 예외 적용 및 validator 접근
+    }
 }
