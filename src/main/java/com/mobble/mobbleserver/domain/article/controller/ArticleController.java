@@ -49,4 +49,15 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.findArticleById(articleId, memberId));
     }
+
+    @PatchMapping("/articles/{article-id}")
+    public ResponseEntity<ArticleResponseDto> updateArticle(
+            @PathVariable("article-id") @Positive Long articleId,
+            @RequestBody @Valid ArticleRequestDto dto
+    ){
+        Long memberId = 3L; // Todo: 임시 member id
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(articleService.updateArticle(articleId,memberId,dto));
+    }
 }
