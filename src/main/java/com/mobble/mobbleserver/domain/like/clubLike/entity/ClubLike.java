@@ -25,7 +25,7 @@ public class ClubLike {
     private Member member;
 
 //Todo Club 생성 후 import
-//    @Builder
+//    @Builder(access = AccessLevel.PRIVATE)
 //    private ClubLike(Club club, Member member) {
 //        this.club = club;
 //        this.member = member;

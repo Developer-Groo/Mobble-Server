@@ -28,7 +28,7 @@ public class ArticleLike {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private ArticleLike(Article article, Member member) {
         this.article = article;
         this.member = member;

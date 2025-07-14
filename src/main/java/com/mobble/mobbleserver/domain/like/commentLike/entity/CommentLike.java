@@ -28,7 +28,7 @@ public class CommentLike {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private CommentLike(Comment comment, Member member) {
         this.comment = comment;
         this.member = member;
