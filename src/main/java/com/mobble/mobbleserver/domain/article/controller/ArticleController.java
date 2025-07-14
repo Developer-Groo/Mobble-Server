@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.article.controller;
 import com.mobble.mobbleserver.domain.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.domain.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.article.service.ArticleService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -33,9 +34,10 @@ public class ArticleController {
 
     @GetMapping("/{club-id}")
     public ResponseEntity<List<ArticleSummaryResponseDto>> findArticlesByClubId(
-            @PathVariable("club-id") @Positive Long clubId
+            @PathVariable("club-id") @Positive Long clubId,
+            @RequestParam(value = "articleType", required = false) ArticleType articleType
     ){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(articleService.findArticlesByClubId(clubId));
+                .body(articleService.findArticlesByClubId(clubId,articleType));
     }
 }
