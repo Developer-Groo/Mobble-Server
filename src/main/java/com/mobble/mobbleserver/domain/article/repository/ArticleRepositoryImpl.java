@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.article.repository;
 
+import com.mobble.mobbleserver.domain.article.dto.response.ArticleDetailDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.article.entity.QArticle;
@@ -64,5 +65,35 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
                 )
                 .orderBy(article.createdAt.desc())
                 .fetch();
+    }
+
+    @Override
+    public ArticleDetailDto findArticleDetailById(Long articleId) {
+        QArticle article = QArticle.article;
+        QMember member = QMember.member;
+        QArticleLike like = QArticleLike.articleLike;
+        QComment comment = QComment.comment;
+
+        return queryFactory
+                .select(Projections.constructor(ArticleDetailDto.class,
+                        article.id,
+                        article.title,
+                        article.content,
+                        article.articleType,
+                        article.club.id,
+                        member.id,
+                        member.name,
+                        like.id.countDistinct(),
+                        comment.id.countDistinct(),
+                        article.createdAt,
+                        article.updatedAt
+                ))
+                .from(article)
+                .leftJoin(article.member, member)
+                .leftJoin(like).on(like.article.eq(article))
+                .leftJoin(comment).on(comment.article.eq(article))
+                .where(article.id.eq(articleId))
+                .groupBy(article.id, member.id, member.name, article.club.id)
+                .fetchOne();
     }
 }
