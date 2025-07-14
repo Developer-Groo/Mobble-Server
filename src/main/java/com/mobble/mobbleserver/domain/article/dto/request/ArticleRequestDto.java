@@ -6,6 +6,7 @@ import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record ArticleRequestDto(
@@ -14,7 +15,8 @@ public record ArticleRequestDto(
         @NotBlank(message = "ARTICLE:TITLE_NOT_BLANK")
         @Size(max = 30, message = "ARTICLE:TITLE_TOO_LONG")
         String title,
-        @NotBlank(message = "ARTICLE:ARTICLETYPE_NOT_BLANK")
+
+        @NotNull(message = "ARTICLE:ARTICLETYPE_NOT_NULL")
         ArticleType articleType,
 
         @NotBlank(message = "ARTICLE:CONTENT_NOT_BLANK")
