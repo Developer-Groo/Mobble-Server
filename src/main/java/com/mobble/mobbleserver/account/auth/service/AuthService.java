@@ -21,6 +21,7 @@ public class AuthService {
     public TokenResponseDto login(LoginRequestDto dto) {
         Member member = memberValidator.findMemberByEmailOrThrow(dto.email());
 
+        // Todo 소셜로그인 구현 전 까지 임시 사용
         if (!member.getPassword().equals(dto.password())) {
             throw new IllegalArgumentException("");
         }
