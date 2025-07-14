@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.like.articleLike.controller;
 
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeInfoResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberListResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleToggleLikeResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,13 @@ public class ArticleLikeController {
         Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(articleLikeService.toggleLike(articleId, memberId));
+    }
+
+    @GetMapping
+    public ResponseEntity<ArticleLikeMemberListResponseDto> getMemberList(
+            @PathVariable("article-id") @Positive Long articleId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(articleLikeService.getArticleLikedMembers(articleId));
     }
 }
