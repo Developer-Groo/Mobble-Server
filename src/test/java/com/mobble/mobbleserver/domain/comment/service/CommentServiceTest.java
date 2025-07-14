@@ -136,12 +136,14 @@ class CommentServiceTest {
         void success_when_get_comment_list_by_article() {
             // given
             Long articleId = 1L;
+            Long memberId = 2L;
 
             Article mockArticle = mock(Article.class);
             Member mockMember = mock(Member.class);
             Comment mockComment = mock(Comment.class);
 
             given(mockArticle.getId()).willReturn(articleId);
+            given(mockMember.getId()).willReturn(memberId);
             given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
 
             given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(List.of(mockComment));
@@ -149,7 +151,7 @@ class CommentServiceTest {
             given(mockComment.getArticle()).willReturn(mockArticle);
 
             // when
-            List<RootCommentResponseDto> response = commentService.getCommentListByArticle(articleId);
+            List<RootCommentResponseDto> response = commentService.getCommentListByArticle(articleId, memberId);
 
             // then
             assertThat(response).isNotNull();
