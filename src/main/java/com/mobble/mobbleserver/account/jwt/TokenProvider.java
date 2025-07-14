@@ -17,13 +17,11 @@ import java.util.Date;
 public class TokenProvider {
 
     private Key key;
-    private final long accessTokenValidityInMilliseconds;
     private final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24; // 토큰 유효시간 : 1day
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenValidityInMilliseconds = TOKEN_VALID_TIME;
     }
 
     /**
@@ -31,7 +29,7 @@ public class TokenProvider {
      */
     public String createAccessToken(Long memberId) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + this.accessTokenValidityInMilliseconds);
+        Date validity = new Date(now.getTime() + this.TOKEN_VALID_TIME);
 
         return Jwts.builder()
                 .setSubject(memberId.toString())
