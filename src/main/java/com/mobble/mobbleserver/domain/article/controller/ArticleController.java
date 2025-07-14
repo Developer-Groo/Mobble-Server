@@ -37,7 +37,7 @@ public class ArticleController {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestParam(value = "articleType", required = false) ArticleType articleType
     ){
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(articleService.findArticlesByClubId(clubId,articleType));
     }
 }
