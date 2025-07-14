@@ -49,9 +49,10 @@ public class ArticleService {
                 0,
                 List.of());
     }
-    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId) {
+
+    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType) {
         Club club = findClubOrThrow(clubId);
-        List<ArticleSummaryResponseDto> articles = articleQueryDslRepository.findArticlesByClubId(clubId);
+        List<ArticleSummaryResponseDto> articles = articleQueryDslRepository.findArticlesByClubId(clubId, articleType);
 
         return articles.stream()
                 .map(dto -> new ArticleSummaryResponseDto(
