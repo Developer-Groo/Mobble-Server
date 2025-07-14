@@ -1,7 +1,8 @@
 package com.mobble.mobbleserver.account.auth.service;
 
 import com.mobble.mobbleserver.account.auth.dto.request.LoginRequestDto;
-import com.mobble.mobbleserver.account.auth.dto.response.LoginResponseDto;
+import com.mobble.mobbleserver.account.auth.dto.response.TokenResponseDto;
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final MemberValidator memberValidator;
+    private final TokenProvider tokenProvider;
 
     @Transactional
-    public LoginResponseDto login(LoginRequestDto dto) {
+    public TokenResponseDto login(LoginRequestDto dto) {
         Member member = memberValidator.findMemberByEmailOrThrow(dto.email());
 
         if (!member.getPassword().equals(dto.password())) {
             throw new IllegalArgumentException("");
         }
 
-        return LoginResponseDto.toDto(member);
+        String accessToken = tokenProvider.createAccessToken(member.getId());
+
+        return TokenResponseDto.toDto(accessToken);
     }
 }
