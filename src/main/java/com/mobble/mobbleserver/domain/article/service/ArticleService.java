@@ -35,8 +35,8 @@ public class ArticleService {
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
         Member member = findMemberOrThrow(memberId);
         Club club = findClubOrThrow(clubId);
-        Article article = dto.toEntity(club,member);
-        ClubMember clubMember = findClubMemberOrThrow(clubId,memberId);
+        Article article = dto.toEntity(club, member);
+        ClubMember clubMember = findClubMemberOrThrow(clubId, memberId);
 
         if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
@@ -57,7 +57,7 @@ public class ArticleService {
                 .map(dto -> new ArticleSummaryResponseDto(
                         dto.articleId(),
                         dto.title(),
-                        summarize(dto.content()), // 요약 처리
+                        summarize(dto.content()),
                         dto.articleType(),
                         dto.clubId(),
                         dto.memberName(),
@@ -70,20 +70,24 @@ public class ArticleService {
 
     }
 
-    private Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
-    private Club findClubOrThrow(Long clubId) {
-        return clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
-    private ClubMember findClubMemberOrThrow(Long clubId, Long memberId) {
-        return clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
     private String summarize(String content) {
         if (content == null) return "";
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
     }
+
+    private Member findMemberOrThrow(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
+    }
+
+    private Club findClubOrThrow(Long clubId) {
+        return clubRepository.findById(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
+    }
+
+    private ClubMember findClubMemberOrThrow(Long clubId, Long memberId) {
+        return clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
+    }
+
 }
