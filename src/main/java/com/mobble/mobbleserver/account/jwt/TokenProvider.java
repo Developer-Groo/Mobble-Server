@@ -15,17 +15,12 @@ public class TokenProvider {
 
     private Key key;
     private final long accessTokenValidityInMilliseconds;
-    private final long refreshTokenValidityInMilliseconds;
+    private final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24; // 토큰 유효시간 : 1day
 
-    public TokenProvider(
-            @Value("${jwt.secret}") String secretKey,
-            @Value("${jwt.access-token-validity-in-seconds}") long accessTokenValidityInMilliseconds,
-            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds
-    ) {
+    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds * 1000;
-        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds * 1000;
+        this.accessTokenValidityInMilliseconds = TOKEN_VALID_TIME;
     }
 
     /**
