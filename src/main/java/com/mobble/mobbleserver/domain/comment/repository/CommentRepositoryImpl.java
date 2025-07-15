@@ -8,6 +8,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,19 +50,10 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
                 .where(commentLike.comment.id.in(commentIds))
                 .fetch();
 
-        Map<Long, Integer> likeCountMap = results.stream()
-                .collect(Collectors.groupingBy(
-                        CommentLikeProjection::commentId,
-                        Collectors.collectingAndThen(
-                                Collectors.toSet(),
-                                Set::size
-                        )
-                ));
-
-        Set<Long> likedCommentIds = results.stream()
-                .filter(projection -> projection.memberId().equals(memberId))
-                .map(CommentLikeProjection::commentId)
-                .collect(Collectors.toSet());
+        Map<Long, Integer> likeCountMap = createLikeCountMap(results);
+        Set<Long> likedCommentIds = (memberId == null)
+                ? Collections.emptySet()
+                : extractLikedCommentIds(results, memberId);
 
         return commentIds.stream()
                 .collect(Collectors.toMap(
@@ -71,5 +63,23 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
                                 likedCommentIds.contains(id)
                         )
                 ));
+    }
+
+    private Map<Long, Integer> createLikeCountMap(List<CommentLikeProjection> results) {
+        return results.stream()
+                .collect(Collectors.groupingBy(
+                        CommentLikeProjection::commentId,
+                        Collectors.collectingAndThen(
+                                Collectors.toSet(),
+                                Set::size
+                        )
+                ));
+    }
+
+    private Set<Long> extractLikedCommentIds(List<CommentLikeProjection> results, Long memberId) {
+        return results.stream()
+                .filter(projection -> projection.memberId().equals(memberId))
+                .map(CommentLikeProjection::commentId)
+                .collect(Collectors.toSet());
     }
 }
