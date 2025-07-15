@@ -29,4 +29,9 @@ public class MemberValidator {
             throw new DomainException(MemberErrorCode.FAILED_JOIN);
         }
     }
+
+    public Member findMemberByEmailOrThrow(String email) {
+        return memberRepository.findByEmailAndIsDeletedFalse(email)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER/*NOT_FOUND_ACCOUNT*/));
+    }
 }
