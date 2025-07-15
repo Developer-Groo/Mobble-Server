@@ -36,20 +36,9 @@ public class CommentLikeService {
             CommentLike commentLike = CommentLike.createcommentLike(comment, member);
             commentLikeRepository.save(commentLike);
         }
-
         boolean isLiked = checkLiked.isEmpty();
-        int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
 
-        return CommentLikeResponseDto.toDto(comment.getId(), isLiked, likeCount);
-    }
-
-    public CommentLikeResponseDto getCommentLikeCount(Long commentId, Long memberId) {
-        Comment comment = commentValidator.findCommentByCommentIdOrThrow(commentId);
-        Member member = findMemberOrThrow(memberId);
-        boolean isLiked = commentLikeRepository.existsByCommentIdAndMemberId(comment.getId(), member.getId());
-        int likeCount = commentLikeRepository.countCommentLikesByCommentId(comment.getId());
-
-        return CommentLikeResponseDto.toDto(comment.getId(), isLiked, likeCount);
+        return CommentLikeResponseDto.toDto(comment.getId(), isLiked);
     }
 
     private Member findMemberOrThrow(Long memberId) {
