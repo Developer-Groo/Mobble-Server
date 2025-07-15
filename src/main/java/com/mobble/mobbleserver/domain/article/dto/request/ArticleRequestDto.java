@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record ArticleRequestDto(
-
-
         @NotBlank(message = "ARTICLE:TITLE_NOT_BLANK")
         @Size(max = 30, message = "ARTICLE:TITLE_TOO_LONG")
         String title,
@@ -23,7 +21,6 @@ public record ArticleRequestDto(
         @Size(max = 800, message = "ARTICLE:CONTENT_TOO_LONG")
         String content
 ) {
-
     public Article toEntity(Club club, Member member) {
         return Article.createArticle(
                 club,
