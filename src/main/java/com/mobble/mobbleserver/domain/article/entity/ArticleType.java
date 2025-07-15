@@ -12,5 +12,4 @@ public enum ArticleType {
     FREE("자유");
 
     private final String displayName;
-
 }

@@ -18,8 +18,8 @@ public class MemberDeleteScheduler {
 
     private final MemberRepository memberRepository;
 
-    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
     public void deleteWithdrewMembers() {
         log.info("Delete the withdrew members.");
 
