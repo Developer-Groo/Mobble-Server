@@ -12,12 +12,13 @@ import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,18 +34,20 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ArticleQueryDslRepository articleQueryDslRepository;
-    private final MemberRepository memberRepository;
     private final ClubRepository clubRepository;
-    private final ClubMemberRepository clubMemberRepository;
     private final ArticleLikeRepository articleLikeRepository;
+
+    private final ClubMemberValidator clubMemberValidator;
+    private final MemberValidator memberValidator;
 
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
-        Member member = findMemberOrThrow(memberId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+
         Club club = findClubOrThrow(clubId);
         Article article = dto.toEntity(club, member);
-        ClubMember clubMember = findClubMemberOrThrow(clubId, memberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
@@ -88,7 +91,8 @@ public class ArticleService {
     @Transactional
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = findArticleOrThrow(articleId);
-        ClubMember clubMember = findClubMemberOrThrow(article.getClub().getId(), memberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
@@ -115,7 +119,8 @@ public class ArticleService {
     @Transactional
     public void deleteArticle(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-        ClubMember clubMember = findClubMemberOrThrow(article.getClub().getId(), memberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
         if (!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)) {
@@ -137,18 +142,8 @@ public class ArticleService {
         return articleLikeRepository.findLikedByArticleIdAndMemberId(articleId, memberId).isPresent();
     }
 
-    private Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
-
     private Club findClubOrThrow(Long clubId) {
         return clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
-    }
-
-    private ClubMember findClubMemberOrThrow(Long clubId, Long memberId) {
-        return clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 
