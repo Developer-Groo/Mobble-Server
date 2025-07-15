@@ -6,10 +6,11 @@ import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
+import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
+import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +22,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -128,38 +131,6 @@ class CommentServiceTest {
     }
 
     @Nested
-    @DisplayName("댓글 목록 조회")
-    class GetCommentList {
-
-        @Test
-        @DisplayName("특정 게시글의 댓글 리스트 조회 성공")
-        void success_when_get_comment_list_by_article() {
-            // given
-            Long articleId = 1L;
-            Long memberId = 2L;
-
-            Article mockArticle = mock(Article.class);
-            Member mockMember = mock(Member.class);
-            Comment mockComment = mock(Comment.class);
-
-            given(mockArticle.getId()).willReturn(articleId);
-            given(mockMember.getId()).willReturn(memberId);
-            given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
-
-            given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(List.of(mockComment));
-            given(mockComment.getMember()).willReturn(mockMember);
-            given(mockComment.getArticle()).willReturn(mockArticle);
-
-            // when
-            List<RootCommentResponseDto> response = commentService.getCommentListByArticle(articleId, memberId);
-
-            // then
-            assertThat(response).isNotNull();
-            verify(commentRepository).findCommentsWithRepliesByArticleId(articleId);
-        }
-    }
-
-    @Nested
     @DisplayName("댓글 수정")
     class UpdateComment {
 
@@ -212,6 +183,48 @@ class CommentServiceTest {
             // then
             verify(commentValidator).findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
             verify(commentRepository).delete(mockComment);
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 목록 조회")
+    class GetCommentList {
+
+        @Test
+        @DisplayName("특정 게시글의 댓글 리스트(좋아요 정보 포함) 조회 성공")
+        void success_when_get_comment_list_by_article() {
+            // given
+            Long articleId = 1L;
+            Long memberId = 2L;
+
+            Article mockArticle = mock(Article.class);
+            Member mockMember = mock(Member.class);
+            Comment mockComment = mock(Comment.class);
+
+            given(mockArticle.getId()).willReturn(articleId);
+            given(mockMember.getId()).willReturn(memberId);
+            given(mockComment.getId()).willReturn(100L);
+            given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
+
+            given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(List.of(mockComment));
+            given(mockComment.getMember()).willReturn(mockMember);
+            given(mockComment.getArticle()).willReturn(mockArticle);
+
+            CommentLikeInfoDto likeInfoDto = CommentLikeInfoDto.toDto(2, true);
+            given(commentRepository.findLikeInfoByCommentIdsAndMemberId(any(), eq(memberId))).willReturn(Map.of(100L, likeInfoDto));
+
+            // when
+            List<RootCommentResponseDto> response = commentService.getCommentListByArticle(articleId, memberId);
+
+            // then
+            assertThat(response).hasSize(1);
+
+            RootCommentResponseDto dto = response.get(0);
+            assertThat(dto.likeCount()).isEqualTo(2);
+            assertThat(dto.isLiked()).isTrue();
+
+            verify(commentRepository).findCommentsWithRepliesByArticleId(articleId);
+            verify(commentRepository).findLikeInfoByCommentIdsAndMemberId(any(), eq(memberId));
         }
     }
 }

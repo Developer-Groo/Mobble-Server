@@ -12,6 +12,7 @@ public record MemberResponseDto(
         String ground,
         String profileImage
 ) {
+
     public static MemberResponseDto toDto(Member member) {
         return new MemberResponseDto(
                 member.getId(),
