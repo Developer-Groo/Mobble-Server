@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.article.dto.response;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
+import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +23,7 @@ public record ArticleResponseDto(
         boolean isMine,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<CommentListResponseDto> comments
+        List<RootCommentResponseDto> comments
 ) {
     public static ArticleResponseDto toDto(
             Article article
@@ -49,7 +49,7 @@ public record ArticleResponseDto(
             ArticleDetailDto dto,
             boolean likedByMe,
             boolean isMine,
-            List<CommentListResponseDto> comments
+            List<RootCommentResponseDto> comments
     ) {
         return new ArticleResponseDto(
                 dto.articleId(),

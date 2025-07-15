@@ -30,20 +30,9 @@ public class ClubLikeService {
 //            ClubLike clubLike = ClubLike.createClubLike(club, member);
 //            clubLikeRepository.save(clubLike);
 //        }
-//
 //        boolean isLiked = checkLiked.isEmpty();
-//        int likeCount = clubLikeRepository.countClubLikesByClubId(club.getId());
 //
-//        return ClubLikeResponseDto.toDto(club.getId(), isLiked, likeCount);
-        return null;
-    }
-
-    public ClubLikeResponseDto getClubLikeCount(Long clubId, Long memberId) {
-//        Club club = findClubOrThrow(clubId);
-//        boolean isLiked = (memberId != null) && clubLikeRepository.existsByClubIdAndMemberId(club.getId(), memberId);
-//        int likeCount = clubLikeRepository.countClubLikesByClubId(club.getId());
-//
-//        return ClubLikeResponseDto.toDto(club.getId(), isLiked, likeCount);
+//        return ClubLikeResponseDto.toDto(club.getId(), isLiked);
         return null;
     }
 

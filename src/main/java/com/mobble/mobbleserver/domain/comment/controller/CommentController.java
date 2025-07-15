@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.comment.controller;
 
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.CommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Validated
 @RestController
@@ -45,14 +42,6 @@ public class CommentController {
                 .body(commentService.createReplyComment(memberId, articleId, parentCommentId, dto));
     }
 
-    @GetMapping("/{article-id}/comments")
-    public ResponseEntity<List<CommentListResponseDto>> getCommentList(
-            @PathVariable("article-id") @Positive Long articleId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.getCommentListByArticle(articleId));
-    }
-
     @PatchMapping("/comments/{comment-id}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @PathVariable("comment-id") @Positive Long commentId,
@@ -61,7 +50,7 @@ public class CommentController {
         Long memberId = 1L; // Todo: 임시 member id
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.updateComment(memberId, commentId, dto));
+                .body(commentService.updateComment(commentId, memberId, dto));
     }
 
     @DeleteMapping("/comments/{comment-id}")
@@ -69,7 +58,7 @@ public class CommentController {
             @PathVariable("comment-id") @Positive Long commentId
     ) {
         Long memberId = 1L; // Todo: 임시 member id
-        commentService.deleteComment(memberId, commentId);
+        commentService.deleteComment(commentId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

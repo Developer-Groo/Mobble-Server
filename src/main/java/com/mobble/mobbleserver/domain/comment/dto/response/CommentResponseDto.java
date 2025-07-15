@@ -21,7 +21,7 @@ public record CommentResponseDto(
                 comment.getMember().getId(),
                 comment.getArticle().getId(),
                 comment.getMember().getName(),
-                Boolean.TRUE.equals(comment.hasParent()) ? comment.getParent().getId() : null,
+                comment.hasParent() ? comment.getParent().getId() : null,
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()

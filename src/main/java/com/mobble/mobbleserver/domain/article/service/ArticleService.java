@@ -13,7 +13,7 @@ import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
-import com.mobble.mobbleserver.domain.comment.dto.response.CommentListResponseDto;
+import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -77,16 +77,12 @@ public class ArticleService {
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
         ArticleDetailDto dto = articleQueryDslRepository.findArticleDetailById(articleId);
-        List<CommentListResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId);
+        List<RootCommentResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId, memberId);
 
         boolean likedByMe = isArticleLikedByMember(articleId, memberId);
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
-        return ArticleResponseDto.toDto(
-                dto,
-                likedByMe,
-                isMine,
-                commentListByArticle);
+        return ArticleResponseDto.toDto(dto, likedByMe, isMine, commentListByArticle);
     }
 
     @Transactional
@@ -107,7 +103,7 @@ public class ArticleService {
 
         ArticleDetailDto detailDto = articleQueryDslRepository.findArticleDetailById(articleId);
         boolean likedByMe = isArticleLikedByMember(articleId, memberId);
-        List<CommentListResponseDto> comments = commentService.getCommentListByArticle(articleId);
+        List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(articleId, memberId);
 
         return ArticleResponseDto.toDto(
                 detailDto,
@@ -122,7 +118,7 @@ public class ArticleService {
         ClubMember clubMember = findClubMemberOrThrow(article.getClub().getId(), memberId);
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
-        if(!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)){
+        if (!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
         articleRepository.delete(article);
@@ -152,7 +148,7 @@ public class ArticleService {
     }
 
     private ClubMember findClubMemberOrThrow(Long clubId, Long memberId) {
-        return clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
+        return clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 
