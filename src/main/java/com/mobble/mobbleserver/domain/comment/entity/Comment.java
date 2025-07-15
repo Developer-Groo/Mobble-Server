@@ -38,8 +38,7 @@ public class Comment extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
-    // Todo: 부모 댓글 삭제 했을 때, 자식 댓글 처리
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> children;
 
     @Builder(access = AccessLevel.PRIVATE)
