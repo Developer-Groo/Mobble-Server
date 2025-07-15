@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,19 +56,19 @@ public class ArticleController {
     public ResponseEntity<ArticleResponseDto> updateArticle(
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid ArticleRequestDto dto
-    ){
+    ) {
         Long memberId = 3L; // Todo: 임시 member id
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleService.updateArticle(articleId,memberId,dto));
+                .body(articleService.updateArticle(articleId, memberId, dto));
     }
 
     @DeleteMapping("/articles/{article-id}")
     public ResponseEntity<Void> deleteArticle(
             @PathVariable("article-id") @Positive Long articleId
-    ){
+    ) {
         Long memberId = 1L; // Todo: 임시 member id
-        articleService.deleteArticle(articleId,memberId);
+        articleService.deleteArticle(articleId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
