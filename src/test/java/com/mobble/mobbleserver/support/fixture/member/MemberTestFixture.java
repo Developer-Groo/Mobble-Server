@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.support.fixture.member;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 
+import java.util.UUID;
+
 public class MemberTestFixture {
 
     public static Member createDefaultMember() {
@@ -10,7 +12,7 @@ public class MemberTestFixture {
                 "name",
                 1,
                 Gender.FEMALE,
-                "email",
+                UUID.randomUUID().toString(),
                 "password",
                 "phone",
                 "ground",
