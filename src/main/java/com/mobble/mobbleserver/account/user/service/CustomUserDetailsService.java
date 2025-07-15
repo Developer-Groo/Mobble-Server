@@ -1,5 +1,6 @@
-package com.mobble.mobbleserver.account.user;
+package com.mobble.mobbleserver.account.user.service;
 
+import com.mobble.mobbleserver.account.user.CustomUserDetails;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
