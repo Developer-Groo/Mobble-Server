@@ -25,9 +25,7 @@ public record ArticleResponseDto(
         LocalDateTime updatedAt,
         List<RootCommentResponseDto> comments
 ) {
-    public static ArticleResponseDto toDto(
-            Article article
-    ) {
+    public static ArticleResponseDto toDto(Article article) {
         return new ArticleResponseDto(
                 article.getId(),
                 article.getTitle(),
@@ -45,6 +43,7 @@ public record ArticleResponseDto(
                 List.of()
         );
     }
+
     public static ArticleResponseDto toDto(
             ArticleDetailDto dto,
             boolean likedByMe,
