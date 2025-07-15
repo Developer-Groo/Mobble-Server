@@ -4,6 +4,8 @@ import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
+import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
+import com.mobble.mobbleserver.domain.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,4 +72,47 @@ class CommentRepositoryImplTest {
                 .containsExactlyInAnyOrder(secondReplyComment.getContent());
     }
 
+    @Test
+    @DisplayName("댓글 좋아요 수와 사용자의 좋아요 여부를 함께 조회 성공")
+    void success_when_find_like_info_by_comment_ids_and_member_id() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        Member otherMember = MemberTestFixture.createDefaultMember();
+        Club club = ClubTestFixture.createDefaultClub();
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+        em.persist(member);
+        em.persist(otherMember);
+        em.persist(club);
+        em.persist(article);
+
+        Comment comment1 = Comment.createRootComment(member, article, "comment-1");
+        Comment comment2 = Comment.createRootComment(member, article, "comment-2");
+        em.persist(comment1);
+        em.persist(comment2);
+
+        CommentLike like1 = CommentLike.createcommentLike(comment1, member);
+        CommentLike like2 = CommentLike.createcommentLike(comment1, otherMember);
+        CommentLike like3 = CommentLike.createcommentLike(comment2, otherMember);
+        em.persist(like1);
+        em.persist(like2);
+        em.persist(like3);
+
+        em.flush();
+        em.clear();
+
+        // when
+        List<Long> commentsId = List.of(comment1.getId(), comment2.getId());
+        Map<Long, CommentLikeInfoDto> likeInfoMap = commentRepository.findLikeInfoByCommentIdsAndMemberId(commentsId, member.getId());
+
+        // then
+        assertThat(likeInfoMap).hasSize(2);
+
+        CommentLikeInfoDto info1 = likeInfoMap.get(comment1.getId());
+        assertThat(info1.likeCount()).isEqualTo(2);
+        assertThat(info1.isLiked()).isTrue();
+
+        CommentLikeInfoDto info2 = likeInfoMap.get(comment2.getId());
+        assertThat(info2.likeCount()).isEqualTo(1);
+        assertThat(info2.isLiked()).isFalse();
+    }
 }
