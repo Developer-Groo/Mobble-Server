@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface ArticleQueryDslRepository {
     List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType);
+
     ArticleDetailDto findArticleDetailById(Long articleId);
 }
