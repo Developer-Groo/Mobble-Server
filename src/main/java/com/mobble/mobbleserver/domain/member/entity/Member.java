@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
+import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
@@ -49,11 +50,11 @@ public class Member extends BaseEntity {
     @Column(name = "privacy_agreed")
     private boolean privacyAgreed;
 
-//    @Column(name = "social_provider")
-//    private String socialProvider;
-//
-//    @Column(name = "sicial_id")
-//    private String socialId;
+    @Column(name = "social_provider")
+    private SocialProvider socialProvider;
+
+    @Column(name = "social_id")
+    private String socialId;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -72,9 +73,9 @@ public class Member extends BaseEntity {
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
-            boolean isDeleted
-//            SocialProvider socialProvider,
-//            String socialId,
+            boolean isDeleted,
+            SocialProvider socialProvider,
+            String socialId
     ) {
         validateCommon(name, gender, phone, ground, termsAgreed, privacyAgreed);
         this.name = name;
@@ -87,8 +88,8 @@ public class Member extends BaseEntity {
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
         this.isDeleted = isDeleted;
-//        this.socialProvider = socialProvider;
-//        this.socialId = socialId;
+        this.socialProvider = socialProvider;
+        this.socialId = socialId;
     }
 
     /**
@@ -103,9 +104,9 @@ public class Member extends BaseEntity {
             String ground,
             String profileImage,
             boolean termsAgreed,
-            boolean privacyAgreed
-//            SocialProvider socialProvider,
-//            String socialId
+            boolean privacyAgreed,
+            SocialProvider socialProvider,
+            String socialId
     ) {
 
         return Member.builder()
@@ -119,8 +120,8 @@ public class Member extends BaseEntity {
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
                 .isDeleted(false)
-//                .socialProvider(socialProvider)
-//                .socialId(socialId)
+                .socialProvider(socialProvider)
+                .socialId(socialId)
                 .build();
     }
 

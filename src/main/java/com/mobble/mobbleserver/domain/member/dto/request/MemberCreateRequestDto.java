@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.dto.request;
 
+import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.*;
@@ -33,10 +34,10 @@ public record MemberCreateRequestDto(
         boolean termsAgreed,
 
         @AssertTrue(message = "MEMBER:REQUIRED_PRIVACY_AGREE")
-        boolean privacyAgreed
+        boolean privacyAgreed,
 
-//        SocialProvider socialProvider,
-//        String socialId
+        SocialProvider socialProvider,
+        String socialId
 ) {
 
     public Member toEntity() {
@@ -49,9 +50,9 @@ public record MemberCreateRequestDto(
                 this.ground,
                 this.profileImage,
                 this.termsAgreed,
-                this.privacyAgreed
-//                this.socialProvider,
-//                this.socialId
+                this.privacyAgreed,
+                this.socialProvider,
+                this.socialId
         );
     }
 }
