@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.account.jwt.JwtFilter;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.account.oauth2.service.CustomOAuth2UserService;
 import com.mobble.mobbleserver.account.oauth2.service.handler.OAuth2AuthenticationSuccessHandler;
+import com.mobble.mobbleserver.account.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider tokenProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService) throws Exception {
 
         // CSRF 보호 비활성화 (CSRF:악의적인 사이트에서 사용자의 인증된 세션을 악용해 요청을 보내는 공격)
         http
@@ -65,7 +66,7 @@ public class SecurityConfig {
 
         // JwtFilter 추가
         http
-                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(tokenProvider, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
