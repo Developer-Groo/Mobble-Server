@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.chat.chatMessageMention.entity;
 
+import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatMessageMention {
+public class ChatMessageMention extends CreatedAtEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
