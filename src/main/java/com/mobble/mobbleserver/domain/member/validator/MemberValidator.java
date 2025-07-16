@@ -32,7 +32,11 @@ public class MemberValidator {
         }
     }
 
-    public Optional<Member> findOptionalMemberByEmail(String email) {
+    public Optional<Member> findIsDeletedFalseMemberByEmail(String email) {
         return memberRepository.findByEmailAndIsDeletedFalse(email);
+    }
+
+    public Optional<Member> findOptionalMemberByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }

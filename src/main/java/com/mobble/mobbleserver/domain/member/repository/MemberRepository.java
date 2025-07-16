@@ -20,4 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate);
 
     boolean existsByEmailAndIsDeletedTrue(String email);
+
+    Optional<Member> findByEmail(String email);
 }
