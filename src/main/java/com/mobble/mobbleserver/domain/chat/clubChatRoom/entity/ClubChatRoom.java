@@ -27,7 +27,7 @@ public class ClubChatRoom {
     private ChatRoom chatRoom;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ClubChatRoom(Club club, ChatRoom chatRoom) {
+    private ClubChatRoom(Club club, ChatRoom chatRoom) {
         this.club = club;
         this.chatRoom = chatRoom;
     }
