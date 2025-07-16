@@ -7,6 +7,8 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
@@ -30,8 +32,7 @@ public class MemberValidator {
         }
     }
 
-    public Member findMemberByEmailOrThrow(String email) {
-        return memberRepository.findByEmailAndIsDeletedFalse(email)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER/*NOT_FOUND_ACCOUNT*/));
+    public Optional<Member> findOptionalMemberByEmail(String email) {
+        return memberRepository.findByEmailAndIsDeletedFalse(email);
     }
 }
