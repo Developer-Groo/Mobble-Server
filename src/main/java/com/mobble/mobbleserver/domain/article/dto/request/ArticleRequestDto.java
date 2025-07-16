@@ -21,6 +21,7 @@ public record ArticleRequestDto(
         @Size(max = 800, message = "ARTICLE:CONTENT_TOO_LONG")
         String content
 ) {
+
     public Article toEntity(Club club, Member member) {
         return Article.createArticle(
                 club,

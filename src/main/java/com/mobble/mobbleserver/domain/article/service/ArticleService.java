@@ -17,7 +17,6 @@ import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDt
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -92,7 +91,6 @@ public class ArticleService {
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = findArticleOrThrow(articleId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
-
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 

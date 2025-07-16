@@ -25,6 +25,7 @@ public record ArticleResponseDto(
         LocalDateTime updatedAt,
         List<RootCommentResponseDto> comments
 ) {
+
     public static ArticleResponseDto toDto(Article article) {
         return new ArticleResponseDto(
                 article.getId(),

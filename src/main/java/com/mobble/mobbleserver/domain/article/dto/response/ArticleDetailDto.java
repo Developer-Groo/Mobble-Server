@@ -16,4 +16,5 @@ public record ArticleDetailDto(
         Long commentCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) {}
+) {
+}
