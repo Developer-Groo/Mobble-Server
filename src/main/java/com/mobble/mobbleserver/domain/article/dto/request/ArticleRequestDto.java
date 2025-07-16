@@ -27,6 +27,7 @@ public record ArticleRequestDto(
                 member,
                 this.articleType,
                 this.title,
-                this.content);
+                this.content
+        );
     }
 }
