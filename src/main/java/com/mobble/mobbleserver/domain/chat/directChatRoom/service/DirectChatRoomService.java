@@ -7,16 +7,19 @@ import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DirectChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberValidator memberValidator;
 
+    @Transactional
     public void sendDirectMessage(DirectChatRoomRequestDto dto, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member targetMember = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
