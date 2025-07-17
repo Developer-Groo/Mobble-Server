@@ -50,6 +50,7 @@ public class Member extends BaseEntity {
     @Column(name = "privacy_agreed")
     private boolean privacyAgreed;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "social_provider")
     private SocialProvider socialProvider;
 
