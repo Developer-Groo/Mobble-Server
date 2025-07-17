@@ -51,7 +51,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     Map<String, Object> newAttributes = Map.of(
                             "email", oAuth2UserInfo.getEmail(),
                             "name", oAuth2UserInfo.getName(),
-                            "provider", registrationId
+                            "provider", registrationId,
+                            "socialId", oAuth2UserInfo.getProviderId()
                     );
                     return new CustomUserDetails(null, true, newAttributes);
                 });

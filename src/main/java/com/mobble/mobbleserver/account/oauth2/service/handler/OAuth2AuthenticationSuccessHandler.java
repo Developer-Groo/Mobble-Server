@@ -33,6 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("email", customUserDetails.getUsername())
                     .queryParam("name", customUserDetails.getName())
                     .queryParam("provider", customUserDetails.getAttributes().get("provider").toString())
+                    .queryParam("socialId", customUserDetails.getAttributes().get("socialId").toString())
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
