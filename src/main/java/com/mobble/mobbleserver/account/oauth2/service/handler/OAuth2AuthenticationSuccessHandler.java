@@ -32,7 +32,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             targetUrl = UriComponentsBuilder.fromUriString("/signup/details-info")
                     .queryParam("email", customUserDetails.getUsername())
                     .queryParam("name", customUserDetails.getName())
-                    .queryParam("provider", customUserDetails.getAttributes().get("provider").toString())
+                    .queryParam("socialProvider", customUserDetails.getAttributes().get("socialProvider").toString())
                     .queryParam("socialId", customUserDetails.getAttributes().get("socialId").toString())
                     .build()
                     .encode(StandardCharsets.UTF_8)
