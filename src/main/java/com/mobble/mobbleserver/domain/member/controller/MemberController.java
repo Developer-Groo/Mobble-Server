@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.member.controller;
 
-import com.mobble.mobbleserver.domain.member.dto.request.MemberCreateRequestDto;
+import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberCreateResponseDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
@@ -22,7 +22,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberCreateResponseDto> createMember(
-            @RequestBody @Valid MemberCreateRequestDto dto
+            @RequestBody @Valid SignUpRequestDto dto
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberService.createMember(dto));

@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.member.service;
 
-import com.mobble.mobbleserver.domain.member.dto.request.MemberCreateRequestDto;
+import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberCreateResponseDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
@@ -20,7 +20,7 @@ public class MemberService {
     private final MemberValidator memberValidator;
 
     @Transactional
-    public MemberCreateResponseDto createMember(MemberCreateRequestDto dto) {
+    public MemberCreateResponseDto createMember(SignUpRequestDto dto) {
         memberValidator.exitsEmailOrThrow(dto.email());
         memberValidator.existsIsDeletedEmailOrThrow(dto.email());
         Member member = memberRepository.save(dto.toEntity());
