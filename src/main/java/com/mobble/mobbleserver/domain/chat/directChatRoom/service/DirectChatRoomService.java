@@ -20,7 +20,7 @@ public class DirectChatRoomService {
     private final MemberValidator memberValidator;
 
     @Transactional
-    public void sendDirectMessage(DirectChatRoomRequestDto dto, Long memberId) {
+    public void sendDirectMessage(DirectChatMessageRequestDto dto, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member targetMember = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
 
