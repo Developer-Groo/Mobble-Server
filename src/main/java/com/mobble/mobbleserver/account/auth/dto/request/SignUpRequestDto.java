@@ -1,11 +1,11 @@
-package com.mobble.mobbleserver.domain.member.dto.request;
+package com.mobble.mobbleserver.account.auth.dto.request;
 
 import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.*;
 
-public record MemberCreateRequestDto(
+public record SignUpRequestDto(
         @NotBlank(message = "MEMBER:NAME_NOT_BLANK")
         @Size(max = 10, message = "MEMBER:NAME_TOO_LONG")
         String name,
@@ -36,7 +36,7 @@ public record MemberCreateRequestDto(
         @AssertTrue(message = "MEMBER:REQUIRED_PRIVACY_AGREE")
         boolean privacyAgreed,
 
-        SocialProvider socialProvider,
+        String socialProvider,
         String socialId
 ) {
 
@@ -51,7 +51,7 @@ public record MemberCreateRequestDto(
                 this.profileImage,
                 this.termsAgreed,
                 this.privacyAgreed,
-                this.socialProvider,
+                SocialProvider.fromString(this.socialProvider),
                 this.socialId
         );
     }
