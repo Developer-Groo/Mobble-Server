@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.chat.clubChatRoom.controller;
 
 import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatRoomRequestDto;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.service.ClubChatRoomService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,9 @@ public class ClubChatRoomController {
     private final ClubChatRoomService clubChatRoomService;
 
     @MessageMapping("/group/chat/send")
-    public void handleMessage(ClubChatRoomRequestDto dto) {
+    public void handleMessage(
+            ClubChatMessageRequestDto dto
+    ) {
         Long memberId = 1L;
 
         clubChatRoomService.sendGroupMessage(dto, memberId);
