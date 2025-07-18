@@ -26,12 +26,12 @@ public class ClubAgeGroup {
     private ClubAgeGroupType ageGroupType;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ClubAgeGroup(Club club,ClubAgeGroupType clubAgeGroupType){
+    private ClubAgeGroup(Club club, ClubAgeGroupType clubAgeGroupType) {
         this.club = club;
         this.ageGroupType = clubAgeGroupType;
     }
 
-    public static ClubAgeGroup createClubAgeGroup(Club club,ClubAgeGroupType clubAgeGroupType){
+    public static ClubAgeGroup createClubAgeGroup(Club club, ClubAgeGroupType clubAgeGroupType) {
         return ClubAgeGroup.builder()
                 .club(club)
                 .clubAgeGroupType(clubAgeGroupType)
