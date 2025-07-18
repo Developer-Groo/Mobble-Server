@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.chat.clubChatRoom.service;
 
 import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatRoomRequestDto;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
@@ -23,7 +23,7 @@ public class ClubChatRoomService {
     private final MemberValidator memberValidator;
 
     @Transactional(readOnly = true)
-    public void sendGroupMessage(ClubChatRoomRequestDto dto, Long memberId) {
+    public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
         ClubChatMessageResponseDto response = ClubChatMessageResponseDto.toDto(
@@ -38,9 +38,10 @@ public class ClubChatRoomService {
         messagingTemplate.convertAndSend("/topic/group/chatroom/" + dto.chatRoomId(), response);
     }
 
+    @Transactional
     public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
         // Todo: club 과 member 는 해당 메서드를 호출하는 createClub 에서 이미 객체를 가지고 있음(고민 필요)
-        
+
         // Todo: clubId 로 Club 엔티티 조회
         // Todo: Chatroom 엔티티 생성 후 저장
         // Todo: Member 엔티티 조회(연관 관계 주입)
