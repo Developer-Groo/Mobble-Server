@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.chat.directChatRoom.service;
 
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.request.DirectChatRoomRequestDto;
-import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.response.DirectChatRoomResponseDto;
+import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class DirectChatRoomService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member targetMember = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
 
-        DirectChatRoomResponseDto response = DirectChatRoomResponseDto.toDto(
+        DirectChatMessageResponseDto response = DirectChatMessageResponseDto.toDto(
                 dto.chatRoomId(),
                 dto.content(),
                 dto.type(),
