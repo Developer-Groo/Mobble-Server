@@ -23,5 +23,4 @@ public class AuthDetailsInfoController {
 
         return "signup-details";
     }
-
 }
