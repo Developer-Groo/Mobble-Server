@@ -63,28 +63,43 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
     }
 
     @Override
-    public ArticleDetailDto findArticleDetailById(Long articleId) {
-
-        return queryFactory
-                .select(Projections.constructor(ArticleDetailDto.class,
-                        article.id,
-                        article.title,
-                        article.content,
-                        article.articleType,
-                        article.club.id,
-                        member.id,
-                        member.name,
-                        articleLike.id.countDistinct(),
-                        comment.id.countDistinct(),
-                        article.createdAt,
-                        article.updatedAt
+    public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId) {
+        List<ArticleLikeProjection> results = queryFactory
+                .select(Projections.constructor(ArticleLikeProjection.class,
+                        articleLike.article.id,
+                        articleLike.member.id
                 ))
-                .from(article)
-                .leftJoin(article.member, member)
-                .leftJoin(articleLike).on(articleLike.article.eq(article))
-                .leftJoin(comment).on(comment.article.eq(article))
-                .where(article.id.eq(articleId))
-                .groupBy(article.id, member.id, member.name, article.club.id)
-                .fetchOne();
+                .from(articleLike)
+                .where(articleLike.article.id.in(articleIds))
+                .fetch();
+
+        Map<Long, Integer> likeCountMap = createLikeCountMap(results);
+        Set<Long> likedArticleIds = (memberId == null)
+                ? Collections.emptySet()
+                : extractLikedArticleIds(results, memberId);
+
+        return articleIds.stream()
+                .collect(Collectors.toMap(
+                        id -> id,
+                        id -> ArticleLikeInfoDto.toDto(
+                                likeCountMap.getOrDefault(id, 0),
+                                likedArticleIds.contains(id)
+                        )
+                ));
+    }
+
+    private Map<Long, Integer> createLikeCountMap(List<ArticleLikeProjection> results) {
+        return results.stream()
+                .collect(Collectors.groupingBy(
+                        ArticleLikeProjection::articleId,
+                        Collectors.collectingAndThen(Collectors.toSet(), Set::size)
+                ));
+    }
+
+    private Set<Long> extractLikedArticleIds(List<ArticleLikeProjection> results, Long memberId) {
+        return results.stream()
+                .filter(p -> p.memberId().equals(memberId))
+                .map(ArticleLikeProjection::articleId)
+                .collect(Collectors.toSet());
     }
 }
