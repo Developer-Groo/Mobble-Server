@@ -81,7 +81,8 @@ public class ArticleService {
     @Transactional
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = findArticleOrThrow(articleId);
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+        ClubMember clubMember =
+                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
