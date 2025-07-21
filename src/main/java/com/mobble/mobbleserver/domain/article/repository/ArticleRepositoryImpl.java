@@ -1,20 +1,23 @@
 package com.mobble.mobbleserver.domain.article.repository;
 
-import com.mobble.mobbleserver.domain.article.dto.response.ArticleDetailDto;
-import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
+import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeProjection;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.mobble.mobbleserver.domain.article.entity.QArticle.article;
-import static com.mobble.mobbleserver.domain.comment.entity.QComment.comment;
 import static com.mobble.mobbleserver.domain.like.articleLike.entity.QArticleLike.articleLike;
-import static com.mobble.mobbleserver.domain.member.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,8 +26,7 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType) {
-
+    public List<Article> findArticlesByClubId(Long clubId, ArticleType articleType) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(article.club.id.eq(clubId));
         if (articleType != null) {
@@ -32,32 +34,8 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
         }
 
         return queryFactory
-                .select(Projections.constructor(ArticleSummaryResponseDto.class,
-                        article.id,
-                        article.title,
-                        article.content,
-                        article.articleType,
-                        article.club.id,
-                        article.member.name,
-                        articleLike.id.countDistinct(),
-                        comment.id.countDistinct(),
-                        article.createdAt,
-                        article.updatedAt
-                ))
-                .from(article)
-                .leftJoin(articleLike).on(articleLike.article.eq(article))
-                .leftJoin(comment).on(comment.article.eq(article))
+                .selectFrom(article)
                 .where(builder)
-                .groupBy(
-                        article.id,
-                        article.title,
-                        article.content,
-                        article.articleType,
-                        article.club.id,
-                        article.member.name,
-                        article.createdAt,
-                        article.updatedAt
-                )
                 .orderBy(article.createdAt.desc())
                 .fetch();
     }
