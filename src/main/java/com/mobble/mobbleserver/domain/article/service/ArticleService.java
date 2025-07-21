@@ -92,18 +92,9 @@ public class ArticleService {
         if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
-
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
-        ArticleDetailDto detailDto = articleQueryDslRepository.findArticleDetailById(articleId);
-        boolean likedByMe = isArticleLikedByMember(articleId, memberId);
-        List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(articleId, memberId);
-
-        return ArticleResponseDto.toDto(
-                detailDto,
-                likedByMe,
-                true,
-                comments);
+        return convertToArticleResponseDto(article, memberId);
     }
 
     @Transactional
