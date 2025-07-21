@@ -65,6 +65,24 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
                 ));
     }
 
+    @Override
+    public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
+        QComment comment = QComment.comment;
+
+        return queryFactory
+                .select(comment.article.id, comment.count())
+                .from(comment)
+                .where(comment.article.id.in(articleIds))
+                .groupBy(comment.article.id)
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(0, Long.class),
+                        tuple -> tuple.get(1, Long.class).intValue()
+                ));
+    }
+
+
     private Map<Long, Integer> createLikeCountMap(List<CommentLikeProjection> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(
