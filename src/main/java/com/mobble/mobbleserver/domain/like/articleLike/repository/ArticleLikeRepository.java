@@ -2,6 +2,9 @@ package com.mobble.mobbleserver.domain.like.articleLike.repository;
 
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,4 +16,8 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
     List<ArticleLike> findAllByArticleId(Long articleId);
 
     boolean existsLikedByArticleIdAndMemberId(Long articleId, Long memberId);
+
+    @Modifying
+    @Query("delete from ArticleLike al where al.article.id = :articleId")
+    void deleteAllByArticleId(@Param("articleId") Long articleId);
 }
