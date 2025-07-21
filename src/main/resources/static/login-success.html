@@ -1,0 +1,71 @@
+<!--Todo: 테스트환경용 배포시 삭제-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Access Token 발급 성공</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 30px;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .token-box {
+      background: #f0f0f0;
+      padding: 20px;
+      font-family: monospace;
+      word-break: break-all;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>✅ 로그인 성공!</h1>
+  <p>아래의 Access Token을 Postman 등에 복사해서 사용하세요.</p>
+  <div id="token" class="token-box">로딩 중...</div>
+  <button onclick="copyToken()">📋 복사하기</button>
+</div>
+
+<script>
+  // ✅ 쿠키에서 accessToken 읽기 (HttpOnly=false 일 때만 가능)
+  function getCookie(name) {
+    const cookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith(name + '='));
+    return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
+  }
+
+  const token = getCookie("accessToken");
+  document.getElementById("token").textContent = token ?? "쿠키에서 토큰을 찾을 수 없습니다.";
+
+  // ✅ 복사 기능
+  function copyToken() {
+    const tokenText = document.getElementById("token").textContent;
+    if (!tokenText || tokenText === "쿠키에서 토큰을 찾을 수 없습니다.") {
+      alert("복사할 토큰이 없습니다.");
+      return;
+    }
+
+    navigator.clipboard.writeText(tokenText)
+            .then(() => alert("Access Token이 클립보드에 복사되었습니다!"))
+            .catch(err => alert("복사 실패: " + err));
+  }
+</script>
+</body>
+</html>
