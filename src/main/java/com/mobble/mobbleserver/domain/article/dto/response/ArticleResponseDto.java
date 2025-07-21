@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.article.dto.response;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
 
 import java.time.LocalDateTime;
@@ -15,18 +16,17 @@ public record ArticleResponseDto(
         Long clubId,
         Long memberId,
         String memberName,
-
         // todo: 글작성 회원 프로필 사진 추가
-        Long likeCount,
-        Long commentCount,
-        boolean likedByMe,
+        int likeCount,
+        boolean isLiked,
         boolean isMine,
+        int commentCount,
+        List<RootCommentResponseDto> comments,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        List<RootCommentResponseDto> comments
+        LocalDateTime updatedAt
 ) {
-
     public static ArticleResponseDto toDto(Article article) {
+
         return new ArticleResponseDto(
                 article.getId(),
                 article.getTitle(),
@@ -35,37 +35,39 @@ public record ArticleResponseDto(
                 article.getClub().getId(),
                 article.getMember().getId(),
                 article.getMember().getName(),
-                0L,
-                0L,
+                0,
                 false,
-                true,
+                false,
+                0,
+                List.of(),
                 article.getCreatedAt(),
-                article.getUpdatedAt(),
-                List.of()
+                article.getUpdatedAt()
         );
     }
 
     public static ArticleResponseDto toDto(
-            ArticleDetailDto dto,
-            boolean likedByMe,
+            Article article,
             boolean isMine,
+            ArticleLikeInfoDto likeInfo,
+            int commentCount,
             List<RootCommentResponseDto> comments
     ) {
+
         return new ArticleResponseDto(
-                dto.articleId(),
-                dto.title(),
-                dto.content(),
-                dto.articleType(),
-                dto.clubId(),
-                dto.memberId(),
-                dto.memberName(),
-                dto.likeCount(),
-                dto.commentCount(),
-                likedByMe,
+                article.getId(),
+                article.getTitle(),
+                article.getContent(),
+                article.getArticleType(),
+                article.getClub().getId(),
+                article.getMember().getId(),
+                article.getMember().getName(),
+                likeInfo.likeCount(),
+                likeInfo.isLiked(),
                 isMine,
-                dto.createdAt(),
-                dto.updatedAt(),
-                comments
+                commentCount,
+                comments,
+                article.getCreatedAt(),
+                article.getUpdatedAt()
         );
     }
 }
