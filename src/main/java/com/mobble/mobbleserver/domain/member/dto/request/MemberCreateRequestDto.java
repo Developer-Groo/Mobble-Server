@@ -40,6 +40,7 @@ public record MemberCreateRequestDto(
 //        SocialProvider socialProvider,
 //        String socialId
 ) {
+
     public Member toEntity() {
         return Member.createMember(
                 this.name,

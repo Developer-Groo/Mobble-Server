@@ -24,4 +24,4 @@ spring:
         format_sql: true
 
 jwt:
-  secret: 'U0dWc2JHOHNJRTVwWTJVZ2JXVmxkR2x1WnlCNWIzVXVJRmRsSUdGeVpTQk5UMEpDVEVVdUlGZGxiR052YldVZ2RHOGdiM1Z5SUhObGNuWnBZMlU9'
+  secret: ${JWT_SECRET_KEY}

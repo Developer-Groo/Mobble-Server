@@ -11,11 +11,22 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @Order(3)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * 존재하지 않는 정적 리소스 요청이 들어온 경우 처리
+     * 예: URL 오타 등으로 잘못된 요청 경로
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoResourceFoundException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponseDto.toDto(GlobalErrorCode.NOT_FOUND));
+    }
 
     /**
      * 클라이언트의 요청 본문이 JSON 형식이 아닐 경우 처리
