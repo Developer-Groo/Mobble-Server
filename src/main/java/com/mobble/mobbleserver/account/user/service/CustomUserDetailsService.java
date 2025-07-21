@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.account.user.service;
 import com.mobble.mobbleserver.account.user.CustomUserDetails;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,12 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberValidator.findOptionalMemberByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("가입된 사용자를 찾을 수 없습니다.")); //Todo ErrorCode 정의 필요
+        try {
+            Long memberId = Long.parseLong(username);
+            Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
-        if (member.isDeleted()) {
-            throw new UsernameNotFoundException("탈퇴한 회원은 7일 후 가입할 수 있습니다."); //Todo ErrorCode 적용 필요
+            return new CustomUserDetails(member, false, Collections.emptyMap());
+        } catch (NumberFormatException e) {
+            throw new UsernameNotFoundException("잘못된 사용자 ID 형식입니다: " + username);
+        } catch (DomainException e) {
+            throw new UsernameNotFoundException(e.getMessage());
         }
-        return new CustomUserDetails(member, false, Collections.emptyMap());
     }
 }
