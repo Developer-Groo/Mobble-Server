@@ -32,8 +32,9 @@ public class ArticleService {
     private final CommentService commentService;
 
     private final ArticleRepository articleRepository;
-    private final ArticleQueryDslRepository articleQueryDslRepository;
     private final ClubRepository clubRepository;
+    private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
 
     private final ClubMemberValidator clubMemberValidator;
@@ -100,13 +101,19 @@ public class ArticleService {
     @Transactional
     public void deleteArticle(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+        ClubMember clubMember =
+                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
         if (!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
+
+        commentLikeRepository.deleteAllByArticleId(articleId);
+        List<Comment> comments = commentRepository.findCommentsWithRepliesByArticleId(articleId);
+        commentRepository.deleteAll(comments);
+        articleLikeRepository.deleteAllByArticleId(articleId);
         articleRepository.delete(article);
     }
 
