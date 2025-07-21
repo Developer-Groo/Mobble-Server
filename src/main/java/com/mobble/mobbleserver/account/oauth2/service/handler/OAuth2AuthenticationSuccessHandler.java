@@ -3,11 +3,11 @@ package com.mobble.mobbleserver.account.oauth2.service.handler;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.account.user.CustomUserDetails;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -45,19 +45,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // 기존 사용자 → 토큰 생성 후 쿠키에 저장
             String accessToken = tokenProvider.createAccessToken(customUserDetails.member().getId());
 
-            Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-            accessTokenCookie.setHttpOnly(false); //Todo: 배포 시 true 필수 * 자바스크립트에서 접근 불가 (XSS 보호)
-            accessTokenCookie.setSecure(false);  // Todo: 배포 시 true 필수 * HTTPS에서만 전송
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge((int) Duration.ofDays(1).getSeconds()); // 1일 유효
-            response.addCookie(accessTokenCookie);
-            // Servlet Cookie API는 SameSite 설정 미지원 → 직접 헤더로 설정
-            // SameSite=None: 크로스 사이트 요청에서도 쿠키 전송 허용 (앱 또는 프론트 분리된 경우 필요)
-
-            //Todo: 배포 시 주석 해제
-//            response.addHeader("Set-Cookie",
-//                    "accessToken=" + accessToken +
-//                            "; Path=/; HttpOnly; Secure; SameSite=None");
+            ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
+                    .path("/")
+                    .httpOnly(false) //Todo 배포시 true 변경
+                    .secure(false) //Todo 배포시 true 변경
+                    .sameSite("Lax") //Todo 배포시 "None" 변경
+                    .maxAge(Duration.ofDays(1))
+                    .build();
+            response.addHeader("Set-Cookie", cookie.toString());
 
             // 기존 사용자는 메인 리다이렉트 페이지로 이동
             //Todo: 테스트용, 추후 url 수정
