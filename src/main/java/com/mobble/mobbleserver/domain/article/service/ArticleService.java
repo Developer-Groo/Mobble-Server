@@ -1,21 +1,23 @@
 package com.mobble.mobbleserver.domain.article.service;
 
 import com.mobble.mobbleserver.domain.article.dto.request.ArticleRequestDto;
-import com.mobble.mobbleserver.domain.article.dto.response.ArticleDetailDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.domain.article.dto.response.ArticleSummaryResponseDto;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
-import com.mobble.mobbleserver.domain.article.repository.ArticleQueryDslRepository;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.response.RootCommentResponseDto;
+import com.mobble.mobbleserver.domain.comment.entity.Comment;
+import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -140,10 +143,6 @@ public class ArticleService {
 
     private boolean isWriter(Long articleWriterId, Long memberId) {
         return articleWriterId.equals(memberId);
-    }
-
-    private boolean isArticleLikedByMember(Long articleId, Long memberId) {
-        return articleLikeRepository.findLikedByArticleIdAndMemberId(articleId, memberId).isPresent();
     }
 
     private Club findClubOrThrow(Long clubId) {
