@@ -75,13 +75,7 @@ public class ArticleService {
 
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
-        ArticleDetailDto dto = articleQueryDslRepository.findArticleDetailById(articleId);
-        List<RootCommentResponseDto> commentListByArticle = commentService.getCommentListByArticle(articleId, memberId);
-
-        boolean likedByMe = isArticleLikedByMember(articleId, memberId);
-        boolean isMine = isWriter(article.getMember().getId(), memberId);
-
-        return ArticleResponseDto.toDto(dto, likedByMe, isMine, commentListByArticle);
+        return convertToArticleResponseDto(article, memberId);
     }
 
     @Transactional
@@ -135,6 +129,17 @@ public class ArticleService {
 
         return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
     }
+
+    private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
+        Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
+        ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
+
+        List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(article.getId(), memberId);
+        int commentCount = comments.size();
+
+        boolean isMine = isWriter(article.getMember().getId(), memberId);
+
+        return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
     }
 
     private boolean isWriter(Long articleWriterId, Long memberId) {
