@@ -54,7 +54,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .build();
             response.addHeader("Set-Cookie", cookie.toString());
 
-            // 기존 사용자는 메인 리다이렉트 페이지로 이동
+            // 기존 사용자는 targetUrl로 리다이렉트 페이지로 이동
             //Todo: 테스트용, 추후 url 수정
             targetUrl = "http://localhost:8080/login-success.html";
             log.info("기존 사용자입니다. JWT Access Token: {}", accessToken);
