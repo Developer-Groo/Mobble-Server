@@ -38,8 +38,10 @@ public class ArticleController {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestParam(value = "articleType", required = false) ArticleType articleType
     ) {
+        Long memberId = 1L; // Todo: 임시 member id
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleService.findArticlesByClubId(clubId, articleType));
+                .body(articleService.findArticlesByClubId(clubId, articleType, memberId));
     }
 
     @GetMapping("/articles/{article-id}")
