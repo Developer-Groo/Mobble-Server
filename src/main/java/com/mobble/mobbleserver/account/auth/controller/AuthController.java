@@ -18,11 +18,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping
-    public ResponseEntity<String> loginAndSignup(
+    public ResponseEntity<String> signUp(
             @ModelAttribute SignUpRequestDto dto
     ) {
         authService.registerNewUser(dto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body("회원가입이 완료되었습니다.");
     }
 }
