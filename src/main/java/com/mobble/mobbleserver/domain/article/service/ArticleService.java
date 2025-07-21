@@ -55,23 +55,20 @@ public class ArticleService {
         return ArticleResponseDto.toDto(articleRepository.save(article));
     }
 
-    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType) {
+    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
         Club club = findClubOrThrow(clubId);
-        List<ArticleSummaryResponseDto> articles = articleQueryDslRepository.findArticlesByClubId(clubId, articleType);
+        List<Article> articles = articleRepository.findArticlesByClubId(clubId, articleType);
+        Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
+        Map<Long, Integer> commentCountMap = commentService.getArticleCommentCount(articles);
+
 
         return articles.stream()
-                .map(dto -> new ArticleSummaryResponseDto(
-                        dto.articleId(),
-                        dto.title(),
-                        summarize(dto.content()),
-                        dto.articleType(),
-                        dto.clubId(),
-                        dto.memberName(),
-                        dto.likeCount(),
-                        dto.commentCount(),
-                        dto.createdAt(),
-                        dto.updatedAt()
-                ))
+                .map(article -> {
+                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0,
+                            false));
+                    int commentCount = commentCountMap.getOrDefault(article.getId(), 0);
+                    return ArticleSummaryResponseDto.toDto(article, likeInfo, commentCount);
+                })
                 .toList();
 
     }
@@ -130,6 +127,14 @@ public class ArticleService {
     private String summarize(String content) {
         if (content == null) return "";
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
+    private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
+        List<Long> articleIds = articles.stream()
+                .map(Article::getId)
+                .distinct()
+                .toList();
+
+        return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
+    }
     }
 
     private boolean isWriter(Long articleWriterId, Long memberId) {
