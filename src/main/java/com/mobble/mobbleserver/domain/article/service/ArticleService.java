@@ -117,9 +117,6 @@ public class ArticleService {
         articleRepository.delete(article);
     }
 
-    private String summarize(String content) {
-        if (content == null) return "";
-        return content.length() > 50 ? content.substring(0, 50) + "..." : content;
     private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
         List<Long> articleIds = articles.stream()
                 .map(Article::getId)
