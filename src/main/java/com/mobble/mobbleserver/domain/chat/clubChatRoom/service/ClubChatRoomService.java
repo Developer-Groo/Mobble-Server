@@ -4,6 +4,8 @@ import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageR
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,9 @@ public class ClubChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberValidator memberValidator;
+    private final ClubMemberValidator clubMemberValidator;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
@@ -53,6 +56,17 @@ public class ClubChatRoomService {
     }
 
     public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(memberId);
+
+        List<Long> chatRoomIds = clubMembers.stream()
+                .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())
+                .toList();
+
+        // Todo: 마지막 메세지 조회
+        // Todo: 마지막 메세지 시간 조회
+        // Todo: 읽지 않은 메세지 갯수 조회
+
         return null;
     }
 
