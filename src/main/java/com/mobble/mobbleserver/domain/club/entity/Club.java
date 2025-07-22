@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.club.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,13 +38,12 @@ public class Club extends BaseEntity {
     @Column(name = "join_type")
     private boolean joinType;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "chat_room_id")
-//    private ChatRooom chatRooom;
+    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY)
+    private ClubChatRoom clubChatRoom;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
-            // Todo: ClubCategory,ChatRooom 주입 필요
+            // Todo: ClubCategory 주입 필요
             String name,
             String ground,
             int headCount,
@@ -56,7 +56,7 @@ public class Club extends BaseEntity {
     }
 
     public static Club createClub(
-            // Todo: ClubCategory,ChatRooom 주입 필요
+            // Todo: ClubCategory 주입 필요
             String name,
             String ground,
             int headCount,
