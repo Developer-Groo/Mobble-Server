@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import java.util.List;
 import java.util.Map;
 
-public interface CommentQueryDslRepository {
+public interface CommentQueryRepository {
 
     List<Comment> findCommentsWithRepliesByArticleId(Long articleId);
 
