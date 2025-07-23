@@ -51,8 +51,8 @@ public class ArticleService {
         Club club = findClubOrThrow(clubId);
         Article article = dto.toEntity(club, member);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
 
-        if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
 
@@ -85,16 +85,22 @@ public class ArticleService {
     @Transactional
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = findArticleOrThrow(articleId);
+        Long clubId = article.getClub().getId();
         ClubMember clubMember =
                 clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
+        Long writerId = article.getMember().getId();
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
+        boolean isMine = isWriter(writerId, memberId);
 
         if (!isMine) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
         }
         if (dto.articleType() == ArticleType.NOTICE && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
+        if (dto.articleType() == ArticleType.NOTICE && clubMemberRole == ClubMemberRole.MEMBER) {
         }
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
@@ -104,13 +110,18 @@ public class ArticleService {
     @Transactional
     public void deleteArticle(Long articleId, Long memberId) {
         Article article = findArticleOrThrow(articleId);
+        Long clubId = article.getClub().getId();
         ClubMember clubMember =
                 clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(article.getClub().getId(), memberId);
+                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
+        Long writerId = article.getMember().getId();
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
 
         if (!isMine && clubMember.getClubMemberRole().equals(ClubMemberRole.MEMBER)) {
             throw new IllegalArgumentException(""); // Todo: Custom 예외 적용 및 validator 접근
+        boolean isMine = isWriter(writerId, memberId);
         }
 
         commentLikeRepository.deleteAllByArticleId(articleId);
@@ -133,10 +144,12 @@ public class ArticleService {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
 
+        Long writerId = article.getMember().getId();
         List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(article.getId(), memberId);
         int commentCount = comments.size();
 
         boolean isMine = isWriter(article.getMember().getId(), memberId);
+        boolean isMine = isWriter(writerId, memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
     }
