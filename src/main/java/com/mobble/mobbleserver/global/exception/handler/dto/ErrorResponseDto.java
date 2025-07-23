@@ -1,10 +1,8 @@
 package com.mobble.mobbleserver.global.exception.handler.dto;
 
 import com.mobble.mobbleserver.global.exception.common.ErrorCode;
+import com.mobble.mobbleserver.util.DateTimeUtils;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public record ErrorResponseDto(
@@ -18,7 +16,7 @@ public record ErrorResponseDto(
     // Validation or Binding Error
     public static ErrorResponseDto toDto(ErrorCode errorCode, Map<String, String> errors) {
         return new ErrorResponseDto(
-                createDateTime(),
+                DateTimeUtils.now(),
                 errorCode.message(),
                 errorCode.httpStatus().value(),
                 errorCode.httpStatus().name(),
@@ -29,16 +27,11 @@ public record ErrorResponseDto(
     // Global or Domain Error
     public static ErrorResponseDto toDto(ErrorCode errorCode) {
         return new ErrorResponseDto(
-                createDateTime(),
+                DateTimeUtils.now(),
                 errorCode.message(),
                 errorCode.httpStatus().value(),
                 errorCode.httpStatus().name(),
                 null
         );
-    }
-
-    private static String createDateTime() {
-        return ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
-                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 }
