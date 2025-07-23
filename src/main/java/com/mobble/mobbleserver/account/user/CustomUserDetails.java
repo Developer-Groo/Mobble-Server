@@ -10,7 +10,6 @@ import java.util.Map;
 
 public record CustomUserDetails(Member member, boolean isNewUser, Map<String, Object> attributes) implements UserDetails, OAuth2User {
 
-
     @Override
     public String getName() {
         if (isNewUser) {
