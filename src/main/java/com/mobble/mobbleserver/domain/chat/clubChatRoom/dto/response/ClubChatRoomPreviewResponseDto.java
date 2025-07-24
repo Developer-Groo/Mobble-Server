@@ -8,6 +8,7 @@ public record ClubChatRoomPreviewResponseDto(
         String clubName,
         String lastMessage,
         LocalDateTime lastMessageTime,
-        int unreadCount
+        int unreadCount,
+        Long lastReadMessageId
 ) {
 }
