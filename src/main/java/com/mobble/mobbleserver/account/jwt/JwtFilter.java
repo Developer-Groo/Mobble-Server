@@ -42,9 +42,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION);
+
         if (bearerToken != null && bearerToken.startsWith(BEARER)) {
             return bearerToken.substring(BEARER.length());
         }
+
         return null;
     }
 }
