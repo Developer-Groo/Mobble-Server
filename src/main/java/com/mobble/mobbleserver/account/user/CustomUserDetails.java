@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 public record CustomUserDetails(Member member, boolean isNewUser, Map<String, Object> attributes) implements UserDetails, OAuth2User {
@@ -40,7 +41,7 @@ public record CustomUserDetails(Member member, boolean isNewUser, Map<String, Ob
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
