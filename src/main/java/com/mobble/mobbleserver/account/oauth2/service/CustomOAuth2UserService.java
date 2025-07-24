@@ -54,6 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             "socialProvider", registrationId,
                             "socialId", oAuth2UserInfo.getProviderId()
                     );
+                    
                     return new CustomUserDetails(null, true, newAttributes);
                 });
     }
