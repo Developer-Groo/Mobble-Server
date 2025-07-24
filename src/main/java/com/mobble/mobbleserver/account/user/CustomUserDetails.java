@@ -10,6 +10,21 @@ import java.util.Map;
 
 public record CustomUserDetails(Member member, boolean isNewUser, Map<String, Object> attributes) implements UserDetails, OAuth2User {
 
+    public static CustomUserDetails existingMember(Member member, Map<String, Object> attributes) {
+        return new CustomUserDetails(member, false, attributes);
+    }
+
+    public static CustomUserDetails newMember(String email, String name, String socialProvider, String socialId) {
+        Map<String, Object> attributes = Map.of(
+                "email", email,
+                "name", name,
+                "socialProvider", socialProvider,
+                "socialId", socialId
+        );
+
+        return new CustomUserDetails(null, true, attributes);
+    }
+
     @Override
     public String getName() {
         if (isNewUser) {

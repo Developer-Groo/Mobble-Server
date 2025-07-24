@@ -42,20 +42,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
 
         return memberValidator.findIsDeletedFalseMemberByEmail(email)
-                .map(member -> {
-                    log.info("기존 회원입니다. Member Entity: {}", member.getEmail());
-                    return new CustomUserDetails(member, false, attributes);
-                })
-                .orElseGet(() -> {
-                    log.info("신규 회원입니다. Email: {}", email);
-                    Map<String, Object> newAttributes = Map.of(
-                            "email", oAuth2UserInfo.getEmail(),
-                            "name", oAuth2UserInfo.getName(),
-                            "socialProvider", registrationId,
-                            "socialId", oAuth2UserInfo.getProviderId()
-                    );
-                    
-                    return new CustomUserDetails(null, true, newAttributes);
-                });
+                .map(member -> CustomUserDetails.existingMember(member, attributes))
+                .orElseGet(() -> CustomUserDetails.newMember(
+                        oAuth2UserInfo.getEmail(),
+                        oAuth2UserInfo.getName(),
+                        registrationId,
+                        oAuth2UserInfo.getProviderId()
+                ));
     }
 }
