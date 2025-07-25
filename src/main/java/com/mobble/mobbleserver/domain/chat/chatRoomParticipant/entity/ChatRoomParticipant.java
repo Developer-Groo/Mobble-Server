@@ -49,6 +49,7 @@ public class ChatRoomParticipant extends CreatedAtEntity {
     }
 
     public void updateLastReadMessage(ChatMessage chatMessage) {
+        if (lastReadMessage == null) throw new IllegalArgumentException(""); // Todo: ErrorCode 적용
         this.lastReadMessage = chatMessage;
     }
 
