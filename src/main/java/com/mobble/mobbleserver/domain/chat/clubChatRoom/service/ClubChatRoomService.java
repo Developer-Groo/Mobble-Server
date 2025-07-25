@@ -70,19 +70,9 @@ public class ClubChatRoomService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
         List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
-        List<Long> chatRoomIds = clubMembers.stream()
-                .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())
-                .toList();
+        List<Long> chatRoomIds = extractChatRomIds(clubMembers);
 
-        Map<Long, Long> lastReadMessageIdsByChatRoom = chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, member.getId())
-                .stream()
-                .collect(Collectors.toMap(
-                        p -> p.getChatRoom().getId(),
-                        p -> Optional.ofNullable(p.getLastReadMessage())
-                                .map(ChatMessage::getId)
-                                .orElse(0L)
-                ));
-
+        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
         Map<Long, ChatMessage> latestMessagesMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
         Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
 
@@ -96,15 +86,7 @@ public class ClubChatRoomService {
                     int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
                     Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
 
-                    return new ClubChatRoomPreviewResponseDto(
-                            chatRoomId,
-                            club.getId(),
-                            club.getName(),
-                            lastMessage != null ? lastMessage.getContent() : "",
-                            lastMessage != null ? lastMessage.getCreatedAt() : null,
-                            unreadCount,
-                            lastReadMessageId
-                    );
+                    return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, lastMessage, unreadCount, lastReadMessageId);
                 })
                 .toList();
     }
@@ -116,5 +98,22 @@ public class ClubChatRoomService {
     @Transactional
     public void updateLastReadMessage(Long clubId, Long memberId, Long lastMessageId) {
 
+    }
+
+    private List<Long> extractChatRomIds(List<ClubMember> clubMembers) {
+        return clubMembers.stream()
+                .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())
+                .toList();
+    }
+
+    private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
+        return chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
+                .stream()
+                .collect(Collectors.toMap(
+                        participant -> participant.getChatRoom().getId(),
+                        participant -> Optional.ofNullable(participant.getLastReadMessage())
+                                .map(ChatMessage::getId)
+                                .orElse(0L)
+                ));
     }
 }
