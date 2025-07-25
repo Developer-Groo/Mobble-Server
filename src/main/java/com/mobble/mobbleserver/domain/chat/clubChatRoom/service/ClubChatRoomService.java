@@ -95,11 +95,6 @@ public class ClubChatRoomService {
         return null;
     }
 
-    @Transactional
-    public void updateLastReadMessage(Long clubId, Long memberId, Long lastMessageId) {
-
-    }
-
     private List<Long> extractChatRomIds(List<ClubMember> clubMembers) {
         return clubMembers.stream()
                 .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())

@@ -47,16 +47,4 @@ public class ClubChatRoomController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubChatRoomService.getClubChatRoomMessages(clubId, lastMessageId));
     }
-
-    @PatchMapping("/clubs/{club-id}/chat-rooms/read")
-    public ResponseEntity<Void> updateLastReadMessage(
-            @PathVariable(name = "club-id") @Positive Long clubId,
-            @RequestParam(name = "message-id") @Positive Long messageId
-    ) {
-        Long memberId = 1L;
-        clubChatRoomService.updateLastReadMessage(clubId, memberId, messageId);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .build();
-    }
 }
