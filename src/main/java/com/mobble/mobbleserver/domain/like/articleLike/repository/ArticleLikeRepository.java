@@ -17,7 +17,5 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> 
 
     boolean existsLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 
-    @Modifying
-    @Query("delete from ArticleLike al where al.article.id = :articleId")
-    void deleteAllByArticleId(@Param("articleId") Long articleId);
+    void deleteAllByArticleId(Long articleId);
 }
