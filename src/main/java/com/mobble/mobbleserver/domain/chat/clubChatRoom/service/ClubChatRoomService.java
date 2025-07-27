@@ -53,17 +53,16 @@ public class ClubChatRoomService {
     }
 
     @Transactional
-    public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
-        // Todo: club 과 member 는 해당 메서드를 호출하는 createClub 에서 이미 객체를 가지고 있음(고민 필요)
+    public ClubChatRoomPreviewResponseDto createClubChatRoom(Club club, Member member) {
+        ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.GROUP);
+        ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
+        ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
 
-        // Todo: clubId 로 Club 엔티티 조회
-        // Todo: Chatroom 엔티티 생성 후 저장
-        // Todo: Member 엔티티 조회(연관 관계 주입)
-        // Todo: ChatRoomParticipant 엔티티 생성 후 저장
-        // Todo: ClubChatRoom 엔티티 생성(연관 관계 주입)
-        // Todo: ClubChatRoom 저장
+        chatRoomRepository.save(chatRoom);
+        chatRoomParticipantRepository.save(participant);
+        clubChatRoomRepository.save(clubChatRoom);
 
-        return null;
+        return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, null, 0, null);
     }
 
     public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
