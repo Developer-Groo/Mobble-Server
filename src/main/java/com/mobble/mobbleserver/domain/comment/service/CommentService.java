@@ -100,13 +100,4 @@ public class CommentService {
 
         return commentRepository.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
     }
-
-    public Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
-        List<Long> articleIds = articles.stream()
-                .map(Article::getId)
-                .distinct()
-                .toList();
-
-        return commentRepository.countCommentsByArticleIds(articleIds);
-    }
 }

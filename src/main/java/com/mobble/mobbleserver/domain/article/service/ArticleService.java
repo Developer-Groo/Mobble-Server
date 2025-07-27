@@ -68,8 +68,7 @@ public class ArticleService {
         Club club = findClubOrThrow(clubId);
         List<Article> articles = articleRepository.findArticlesByClubId(clubId, articleType);
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
-        Map<Long, Integer> commentCountMap = commentService.getArticleCommentCount(articles);
-
+        Map<Long, Integer> commentCountMap = getArticleCommentCount(articles);
 
         return articles.stream()
                 .map(article -> {
@@ -142,6 +141,15 @@ public class ArticleService {
         return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
     }
 
+    private Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
+        List<Long> articleIds = articles.stream()
+                .map(Article::getId)
+                .distinct()
+                .toList();
+
+        return commentRepository.countCommentsByArticleIds(articleIds);
+    }
+    
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
@@ -162,6 +170,4 @@ public class ArticleService {
         return clubRepository.findById(clubId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
-
-
 }
