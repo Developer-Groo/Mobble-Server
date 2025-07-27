@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
-
 public enum ArticleErrorCode implements ErrorCode {
     CLUB_REQUIRED("아티클이 속한 클럽은 필수입니다.", HttpStatus.BAD_REQUEST),
     MEMBER_REQUIRED("아티클 작성자는 필수입니다.", HttpStatus.BAD_REQUEST),
