@@ -17,7 +17,7 @@ public class AuthService {
     private final MemberValidator memberValidator;
 
     @Transactional
-    public Member registerNewMemberr(SignUpRequestDto dto) {
+    public Member registerNewMember(SignUpRequestDto dto) {
         memberValidator.exitsEmailOrThrow(dto.email());
         memberValidator.existsIsDeletedEmailOrThrow(dto.email());
         Member newMember = dto.toEntity();

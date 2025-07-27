@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<String> signUp(
             @ModelAttribute @Valid SignUpRequestDto dto
     ) {
-        authService.registerNewMemberr(dto);
+        authService.registerNewMember(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("회원가입이 완료되었습니다.");
     }
