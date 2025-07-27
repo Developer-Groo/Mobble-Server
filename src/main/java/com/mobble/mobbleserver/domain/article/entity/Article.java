@@ -73,6 +73,7 @@ public class Article extends BaseEntity {
     }
 
     public void updateArticle(ArticleType articleType, String title, String content) {
+        validateContent(articleType, title, content);
         this.articleType = articleType;
         this.title = title;
         this.content = content;
