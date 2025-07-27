@@ -85,7 +85,6 @@ public class Article extends BaseEntity {
             String title,
             String content
     ) {
-
         if (club == null) throw new DomainException(ArticleErrorCode.CLUB_REQUIRED);
         if (member == null) throw new DomainException(ArticleErrorCode.MEMBER_REQUIRED);
         validateContent(articleType, title, content);
