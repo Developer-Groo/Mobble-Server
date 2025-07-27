@@ -16,9 +16,6 @@ public enum ArticleErrorCode implements ErrorCode {
     NOTICE_NO_PERMISSION("일반 클럽 회원은 공지글을 작성 및 수정할 권한이 없습니다.", HttpStatus.FORBIDDEN),
     NO_PERMISSION("해당 아티클을 수정 또는 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
 
-
-
-
     private final String message;
     private final HttpStatus httpStatus;
 
