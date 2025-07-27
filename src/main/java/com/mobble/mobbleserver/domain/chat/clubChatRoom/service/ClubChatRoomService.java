@@ -4,21 +4,27 @@ import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageR
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoomType;
+import com.mobble.mobbleserver.domain.chat.chatRoom.repository.ChatRoomRepository;
+import com.mobble.mobbleserver.domain.chat.chatRoom.validator.ChatRoomValidator;
+import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.repository.ClubChatRoomRepository;
 import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,20 +39,28 @@ public class ClubChatRoomService {
 
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
+    private final ChatRoomValidator chatRoomValidator;
+
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ClubChatRoomRepository clubChatRoomRepository;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
+        ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(dto.chatRoomId());
+        ChatMessage chatMessage = ChatMessage.createChatMessage(chatRoom, member, dto.content(), dto.type());
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+
         ClubChatMessageResponseDto response = ClubChatMessageResponseDto.toDto(
-                dto.chatRoomId(),
-                dto.content(),
-                dto.type(),
+                savedMessage.getChatRoom().getId(),
+                savedMessage.getContent(),
+                savedMessage.getType(),
                 member.getId(),
                 member.getName(),
-                LocalDateTime.now()
+                DateTimeUtils.now()
         );
 
         messagingTemplate.convertAndSend("/topic/group/chatroom/" + dto.chatRoomId(), response);
