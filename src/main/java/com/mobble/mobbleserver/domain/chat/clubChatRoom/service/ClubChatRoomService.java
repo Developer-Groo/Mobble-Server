@@ -90,7 +90,15 @@ public class ClubChatRoomService {
                 .toList();
     }
 
-    public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long lastMessageId) {
+    public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long lastMessageId, Long memberId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        Club club = clubMember.getClub();
+        ClubChatRoom clubChatRoom = club.getClubChatRoom();
+        ChatRoom chatRoom = clubChatRoom.getChatRoom();
+        Long chatRoomId = chatRoom.getId();
+
+        // Todo: 메세지 조회(기준점 필요)
+
         return null;
     }
 
