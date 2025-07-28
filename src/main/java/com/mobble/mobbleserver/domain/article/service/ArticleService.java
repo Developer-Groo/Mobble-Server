@@ -47,7 +47,6 @@ public class ArticleService {
     private final ClubMemberValidator clubMemberValidator;
     private final MemberValidator memberValidator;
 
-
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
@@ -78,7 +77,6 @@ public class ArticleService {
                     return ArticleSummaryResponseDto.toDto(article, likeInfo, commentCount);
                 })
                 .toList();
-
     }
 
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
