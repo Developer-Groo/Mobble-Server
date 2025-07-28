@@ -67,8 +67,6 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
 
     @Override
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
-        QComment comment = QComment.comment;
-
         return queryFactory
                 .select(comment.article.id, comment.count())
                 .from(comment)
@@ -81,7 +79,6 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
                         tuple -> tuple.get(1, Long.class).intValue()
                 ));
     }
-
 
     private Map<Long, Integer> createLikeCountMap(List<CommentLikeProjection> results) {
         return results.stream()
