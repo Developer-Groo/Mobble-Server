@@ -80,7 +80,7 @@ public class ArticleService {
 
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
-        
+
         return convertToArticleResponseDto(article, memberId);
     }
 
@@ -140,15 +140,6 @@ public class ArticleService {
         return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
     }
 
-    private Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
-        List<Long> articleIds = articles.stream()
-                .map(Article::getId)
-                .distinct()
-                .toList();
-
-        return commentRepository.countCommentsByArticleIds(articleIds);
-    }
-    
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
@@ -159,6 +150,15 @@ public class ArticleService {
         boolean isMine = isWriter(writerId, memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
+    }
+
+    private Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
+        List<Long> articleIds = articles.stream()
+                .map(Article::getId)
+                .distinct()
+                .toList();
+
+        return commentRepository.countCommentsByArticleIds(articleIds);
     }
 
     private boolean isWriter(Long articleWriterId, Long memberId) {
