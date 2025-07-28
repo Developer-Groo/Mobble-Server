@@ -71,8 +71,7 @@ public class ArticleService {
 
         return articles.stream()
                 .map(article -> {
-                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0,
-                            false));
+                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(),ArticleLikeInfoDto.toDto(0,false));
                     int commentCount = commentCountMap.getOrDefault(article.getId(), 0);
                     return ArticleSummaryResponseDto.toDto(article, likeInfo, commentCount);
                 })
