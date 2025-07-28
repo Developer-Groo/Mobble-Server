@@ -31,6 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (customUserDetails.isNewUser()) {
             // 신규 사용자 → 추가 정보 입력 페이지로 이동
+            // Todo 보안상 문제로 QueryParam > 임시 토큰 방식 고려
             targetUrl = UriComponentsBuilder.fromUriString("/signup/details-info")
                     .queryParam("email", customUserDetails.getUsername())
                     .queryParam("name", customUserDetails.getName())
