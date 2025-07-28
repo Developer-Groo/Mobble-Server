@@ -80,6 +80,7 @@ public class ArticleService {
 
     public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        
         return convertToArticleResponseDto(article, memberId);
     }
 
@@ -97,9 +98,11 @@ public class ArticleService {
         if (!isMine) {
             throw new DomainException(ArticleErrorCode.NO_PERMISSION);
         }
+
         if (dto.articleType() == ArticleType.NOTICE && clubMemberRole == ClubMemberRole.MEMBER) {
             throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
         }
+
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
         return convertToArticleResponseDto(article, memberId);
