@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.repository;
 
+import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,10 +15,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmailAndIsDeletedFalse(String email);
 
-    boolean existsByEmailAndIsDeletedFalse(String email);
-
     // soft-delete(isDeleted = true) 회원을 포함한 모든 회원 조회
     List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate);
 
-    boolean existsByEmailAndIsDeletedTrue(String email);
+    Optional<Member> findBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId);
 }

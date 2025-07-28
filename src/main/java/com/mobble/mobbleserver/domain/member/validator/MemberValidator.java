@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.validator;
 
+import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -20,16 +21,14 @@ public class MemberValidator {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public void exitsEmailOrThrow(String email) {
-        if (memberRepository.existsByEmailAndIsDeletedFalse(email)) {
-            throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
-        }
-    }
-
-    public void existsIsDeletedEmailOrThrow(String email) {
-        if (memberRepository.existsByEmailAndIsDeletedTrue(email)) {
-            throw new DomainException(MemberErrorCode.FAILED_JOIN);
-        }
+    public void validateSignUpEmailOrThrow(SocialProvider socialProvider, String socialId) {
+        memberRepository.findBySocialProviderAndSocialId(socialProvider, socialId).ifPresent(member -> {
+            if (member.isDeleted()) {
+                throw new DomainException(MemberErrorCode.FAILED_JOIN);
+            } else {
+                throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
+            }
+        });
     }
 
     public Optional<Member> findIsDeletedFalseMemberByEmail(String email) {

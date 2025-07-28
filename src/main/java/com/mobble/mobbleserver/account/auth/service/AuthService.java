@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.account.auth.service;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
+import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
@@ -18,8 +19,8 @@ public class AuthService {
 
     @Transactional
     public Member registerNewMember(SignUpRequestDto dto) {
-        memberValidator.exitsEmailOrThrow(dto.email());
-        memberValidator.existsIsDeletedEmailOrThrow(dto.email());
+        SocialProvider socialProvider = SocialProvider.fromString(dto.socialProvider());
+        memberValidator.validateSignUpEmailOrThrow(socialProvider, dto.socialId());
         Member newMember = dto.toEntity();
 
         return memberRepository.save(newMember);
