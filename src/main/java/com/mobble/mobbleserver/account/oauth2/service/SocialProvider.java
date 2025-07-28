@@ -34,7 +34,7 @@ public enum SocialProvider {
      */
     public abstract OAuth2UserInfo getOAuth2UserInfo(Map<String, Object> attributes);
 
-    public static SocialProvider fromString(String providerName) {
-        return SocialProvider.valueOf(providerName.toUpperCase());
+    public static SocialProvider fromString(String socialProvider) {
+        return SocialProvider.valueOf(socialProvider.toUpperCase());
     }
 }
