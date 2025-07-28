@@ -131,15 +131,6 @@ public class ArticleService {
         articleRepository.delete(article);
     }
 
-    private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
-        List<Long> articleIds = articles.stream()
-                .map(Article::getId)
-                .distinct()
-                .toList();
-
-        return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
-    }
-
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
@@ -150,6 +141,15 @@ public class ArticleService {
         boolean isMine = isWriter(writerId, memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
+    }
+
+    private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
+        List<Long> articleIds = articles.stream()
+                .map(Article::getId)
+                .distinct()
+                .toList();
+
+        return articleRepository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
     }
 
     private Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
