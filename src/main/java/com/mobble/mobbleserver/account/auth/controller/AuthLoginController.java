@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.account.auth.controller;
 
-import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
+import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
+import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
 import com.mobble.mobbleserver.account.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,17 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/signup")
-public class AuthController {
+@RequestMapping("/api/auth")
+public class AuthLoginController {
 
     private final AuthService authService;
 
-    @PostMapping
-    public ResponseEntity<String> signUp(
-            @RequestBody @Valid SignUpRequestDto dto
+    @PostMapping("/social-login")
+    public ResponseEntity<SocialLoginResponseDto> socialLogin(
+            @RequestBody @Valid SocialLoginRequestDto dto
     ) {
-        authService.registerNewMember(dto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("회원가입이 완료되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.socialLoginAndSignUp(dto));
     }
 }
