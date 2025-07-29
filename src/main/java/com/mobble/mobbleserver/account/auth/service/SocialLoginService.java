@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuthService {
+public class SocialLoginService {
 
     private final TokenVerifierFactory verifierFactory;
     private final MemberValidator memberValidator;
