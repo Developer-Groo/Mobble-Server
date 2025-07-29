@@ -44,7 +44,9 @@ public class ClubChatRoomController {
             @PathVariable(name = "club-id") @Positive Long clubId,
             @RequestParam(name = "last-message-id", required = false) @Positive Long lastMessageId
     ) {
+        Long memberId = 1L;
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubChatRoomService.getClubChatRoomMessages(clubId, lastMessageId));
+                .body(clubChatRoomService.getClubChatRoomMessages(clubId, lastMessageId, memberId));
     }
 }
