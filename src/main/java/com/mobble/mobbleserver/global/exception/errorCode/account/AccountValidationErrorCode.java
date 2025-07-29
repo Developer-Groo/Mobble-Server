@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum AccountValidationErrorCode implements ErrorCode {
-WRONG_MEMBER_ID_TYPE("잘못된 사용자 ID 형식입니다.", HttpStatus.UNAUTHORIZED);
+    WRONG_MEMBER_ID_TYPE("잘못된 사용자 ID 형식입니다.", HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus httpStatus;
