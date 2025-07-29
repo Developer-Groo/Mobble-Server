@@ -39,9 +39,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .fromString(registrationId)
                 .getOAuth2UserInfo(attributes);
 
-        String email = oAuth2UserInfo.getEmail();
+        SocialProvider socialProvider = SocialProvider.fromString(registrationId);
+        String socialId = oAuth2UserInfo.getProviderId();
 
-        return memberValidator.findIsDeletedFalseMemberByEmail(email)
+        return memberValidator.findIsDeletedFalseMemberByProviderAndSocialId(socialProvider, socialId)
                 .map(member -> CustomUserDetails.existingMember(member, attributes))
                 .orElseGet(() -> CustomUserDetails.newMember(
                         oAuth2UserInfo.getEmail(),
