@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,15 +25,10 @@ public class SocialLoginService {
         TokenVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
         SocialUserInfo userInfo = verifier.verify(dto.accessToken());
 
-        Optional<Member> optionalMember = memberValidator.findIsDeletedFalseMemberByProviderAndSocialId(userInfo.socialProvider(), userInfo.socialId());
+        Member member = memberValidator.findIsDeletedFalseMemberByProviderAndSocialIdOrThrow(userInfo.socialProvider(), userInfo.socialId());
 
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-            String accessToken = tokenProvider.createAccessToken(member.getId());
+        String accessToken = tokenProvider.createAccessToken(member.getId());
 
-            return SocialLoginResponseDto.toDto(accessToken);
-        }
-        //Todo 회원가입 로직
-        return null;
+        return SocialLoginResponseDto.toDto(accessToken);
     }
 }
