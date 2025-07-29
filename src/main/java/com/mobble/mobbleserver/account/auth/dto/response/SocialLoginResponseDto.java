@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.auth.dto.response;
 
-public record SocialLoginResponse(
+public record SocialLoginResponseDto(
         String accessToken
 ) {
 }
