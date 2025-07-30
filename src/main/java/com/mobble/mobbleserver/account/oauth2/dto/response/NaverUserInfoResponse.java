@@ -1,17 +1,23 @@
 package com.mobble.mobbleserver.account.oauth2.dto.response;
 
 import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.oAuth2.OAuth2ErrorCode;
 
 import java.util.Map;
 
 public class NaverUserInfoResponse implements OAuth2UserInfo {
 
-    private final Map<String, Object> attribute;
+    private final Map<String, Object> response;
 
     private final SocialProvider socialProvider = SocialProvider.NAVER;
 
-    public NaverUserInfoResponse(Map<String, Object> attributes) {
-        this.attribute = (Map<String, Object>) attributes.get("response");
+    public NaverUserInfoResponse(Map<String, Object> rawResponse) {
+        this.response = (Map<String, Object>) rawResponse.get("response");
+
+        if (this.response == null) {
+            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+        }
     }
 
     @Override
@@ -21,16 +27,25 @@ public class NaverUserInfoResponse implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        return attribute.get("id").toString();
+        if (response.get("id") == null) {
+            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+        }
+        return response.get("id").toString();
     }
 
     @Override
     public String getName() {
-        return attribute.get("name").toString();
+        if (response.get("name") == null) {
+            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+        }
+        return response.get("name").toString();
     }
 
     @Override
     public String getEmail() {
-        return attribute.get("email").toString();
+        if (response.get("email") == null) {
+            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+        }
+        return response.get("email").toString();
     }
 }

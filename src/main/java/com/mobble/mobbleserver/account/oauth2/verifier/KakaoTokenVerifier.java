@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth2.OAuth2ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -18,14 +19,19 @@ public class KakaoTokenVerifier implements SocialVerifier {
 
     @Override
     public SocialUserInfo verify(String accessToken) {
-        Map<String, Object> response = kakaoRestClient.get()
-                .uri("/v2/user/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                .retrieve()
-                .body(Map.class);
+        Map<String, Object> response;
 
-        if (response == null || response.get("id") == null || response.get("kakao_account") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+        try {
+            response = kakaoRestClient.get()
+                    .uri("/v2/user/me")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, (httpRequest, httpResponse) -> {
+                        throw new DomainException(OAuth2ErrorCode.INVALID_ACCESS_TOKEN);
+                    })
+                    .body(Map.class);
+        } catch (Exception e) {
+            throw new DomainException(OAuth2ErrorCode.FAILED_TO_REQUEST_USER_INFO);
         }
 
         KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(response);
