@@ -27,15 +27,12 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
 
     @Override
     public List<Article> findArticlesByClubId(Long clubId, ArticleType articleType) {
-        BooleanBuilder builder = new BooleanBuilder();
-        builder.and(article.club.id.eq(clubId));
-        if (articleType != null) {
-            builder.and(article.articleType.eq(articleType));
-        }
-
         return queryFactory
                 .selectFrom(article)
-                .where(builder)
+                .where(
+                        article.club.id.eq(clubId),
+                        articleType != null ? article.articleType.eq(articleType) : null
+                )
                 .orderBy(article.createdAt.desc())
                 .fetch();
     }
