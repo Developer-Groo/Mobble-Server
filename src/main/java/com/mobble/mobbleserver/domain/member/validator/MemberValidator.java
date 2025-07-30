@@ -21,7 +21,7 @@ public class MemberValidator {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public void validateSignUpEmailOrThrow(SocialProvider socialProvider, String socialId) {
+    public void validateMemberBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId) {
         memberRepository.findBySocialProviderAndSocialId(socialProvider, socialId).ifPresent(member -> {
             if (member.isDeleted()) {
                 throw new DomainException(MemberErrorCode.FAILED_JOIN);
@@ -31,7 +31,12 @@ public class MemberValidator {
         });
     }
 
-    public Optional<Member> findIsDeletedFalseMemberByEmail(String email) {
-        return memberRepository.findByEmailAndIsDeletedFalse(email);
+    public Optional<Member> findIsDeletedFalseMemberByProviderAndSocialId(SocialProvider socialProvider, String socialId) {
+        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId);
+    }
+
+    public Member findIsDeletedFalseMemberByProviderAndSocialIdOrThrow(SocialProvider socialProvider, String socialId) {
+        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }
