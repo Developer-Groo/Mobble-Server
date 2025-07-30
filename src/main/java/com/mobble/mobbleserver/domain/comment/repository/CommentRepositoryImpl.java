@@ -68,21 +68,13 @@ public class CommentRepositoryImpl implements CommentQueryDslRepository {
 
     @Override
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
-        List<Tuple> resultTuples = fetchCommentCountsByArticleIds(articleIds);
-
-        return convertTuplesToMap(resultTuples);
-    }
-
-    private List<Tuple> fetchCommentCountsByArticleIds(List<Long> articleIds) {
-        return queryFactory
+        List<Tuple> tuples = queryFactory
                 .select(comment.article.id, comment.count())
                 .from(comment)
                 .where(comment.article.id.in(articleIds))
                 .groupBy(comment.article.id)
                 .fetch();
-    }
 
-    private Map<Long, Integer> convertTuplesToMap(List<Tuple> tuples) {
         return tuples.stream()
                 .collect(Collectors.toMap(
                         tuple -> tuple.get(0, Long.class),
