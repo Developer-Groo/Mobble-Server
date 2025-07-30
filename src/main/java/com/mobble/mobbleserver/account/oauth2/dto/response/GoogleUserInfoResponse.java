@@ -14,7 +14,7 @@ public class GoogleUserInfoResponse implements OAuth2UserInfo {
 
     public GoogleUserInfoResponse(Map<String, Object> attributes) {
         this.attributes = attributes;
-        if (attributes == null || attributes.get("id") == null) {
+        if (attributes == null || attributes.get("sub") == null) {
             throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
         }
     }
@@ -26,7 +26,7 @@ public class GoogleUserInfoResponse implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        return attributes.get("id").toString();
+        return attributes.get("sub").toString();
     }
 
     @Override
