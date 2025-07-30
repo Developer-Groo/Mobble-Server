@@ -2,10 +2,9 @@ package com.mobble.mobbleserver.config;
 
 import com.mobble.mobbleserver.account.jwt.JwtFilter;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
-import com.mobble.mobbleserver.account.oauth2.service.CustomOAuth2UserService;
-import com.mobble.mobbleserver.account.oauth2.service.handler.OAuth2AuthenticationSuccessHandler;
-import com.mobble.mobbleserver.account.user.service.CustomUserDetailsService;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,17 +14,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final MemberValidator memberValidator;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, CustomUserDetailsService customUserDetailsService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CSRF 보호 비활성화 (CSRF:악의적인 사이트에서 사용자의 인증된 세션을 악용해 요청을 보내는 공격)
         http
@@ -39,20 +38,15 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        // oauth2 Login
-        http
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                );
-
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signup/**").permitAll()
-                        .requestMatchers("/login-success.html").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/social-login.html",
+                                "/signup/details-info.html",
+                                "/login-success.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -64,7 +58,7 @@ public class SecurityConfig {
 
         // JwtFilter 추가
         http
-                .addFilterBefore(new JwtFilter(tokenProvider, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(tokenProvider, memberValidator), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
