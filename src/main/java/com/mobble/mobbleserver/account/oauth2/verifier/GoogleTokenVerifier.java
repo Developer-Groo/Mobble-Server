@@ -23,7 +23,7 @@ public class GoogleTokenVerifier implements SocialVerifier {
 
         try {
             response = googleRestClient.get()
-                    .uri("/oauth2/v2/userinfo")
+                    .uri("/oauth2/v3/userinfo")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (req, res) -> {
