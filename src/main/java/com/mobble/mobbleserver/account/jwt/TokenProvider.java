@@ -76,6 +76,21 @@ public class TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
+    public SocialUserInfo getSignupTokenInfo(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        String name = (String) claims.get("name");
+        String email = (String) claims.get("email");
+        SocialProvider socialProvider = SocialProvider.valueOf((String) claims.get("socialProvider"));
+        String socialId = (String) claims.get("socialId");
+
+        return new SocialUserInfo(name, email, socialProvider, socialId);
+    }
+
     /**
      * 토큰 유효성 검증
      * 현재 만료 여부만 검증. Security 적용 후 재발급 로직 구현 예정
