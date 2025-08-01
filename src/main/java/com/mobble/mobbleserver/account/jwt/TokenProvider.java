@@ -17,7 +17,6 @@ import java.util.Date;
 public class TokenProvider {
 
     private Key key;
-    private final long TOKEN_VALID_TIME = 1000L * 60 * 60 * 24; // 토큰 유효시간 : 1day
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -29,7 +28,7 @@ public class TokenProvider {
      */
     public String createAccessToken(Long memberId) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + this.TOKEN_VALID_TIME);
+        Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 10 minute
 
         return Jwts.builder()
                 .setSubject(memberId.toString())
