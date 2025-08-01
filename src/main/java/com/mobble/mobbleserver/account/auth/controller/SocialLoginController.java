@@ -1,10 +1,9 @@
 package com.mobble.mobbleserver.account.auth.controller;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
+import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
 import com.mobble.mobbleserver.account.auth.service.SocialLoginService;
 import com.mobble.mobbleserver.account.auth.util.CookieUtil;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,18 +25,11 @@ public class SocialLoginController {
     public ResponseEntity<Void> socialLogin(
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
-        try {
-            String accessToken = socialLoginService.socialLogin(dto);
-            ResponseCookie cookie = CookieUtil.createAccessTokenCookie(accessToken);
+        SocialLoginResponseDto result = socialLoginService.socialLogin(dto);
+        ResponseCookie cookie = CookieUtil.createAccessTokenCookie(result.accessToken());
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .header("Set-Cookie", cookie.toString())
-                    .body(null);
-        } catch (DomainException e) {
-            if (e.getErrorCode() == MemberErrorCode.NOT_FOUND_MEMBER) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-            throw e;
-        }
+        return ResponseEntity.status(result.isNewMember() ? HttpStatus.UNAUTHORIZED : HttpStatus.OK)
+                .header("Set-Cookie", cookie.toString())
+                .body(null);
     }
 }
