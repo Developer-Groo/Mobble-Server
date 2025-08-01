@@ -21,14 +21,15 @@ public class MemberValidator {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public void validateMemberBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId) {
-        memberRepository.findBySocialProviderAndSocialId(socialProvider, socialId).ifPresent(member -> {
-            if (member.isDeleted()) {
-                throw new DomainException(MemberErrorCode.FAILED_JOIN);
-            } else {
-                throw new DomainException(MemberErrorCode.MEMBER_ALREADY_EXISTS);
-            }
-        });
+    public Member validateMemberOrThrow(SocialProvider socialProvider, String socialId) {
+        return memberRepository.findBySocialProviderAndSocialId(socialProvider, socialId)
+                .map(member -> {
+                    if (member.isDeleted()) {
+                        throw new DomainException(MemberErrorCode.FAILED_JOIN);
+                    }
+                    return member;
+                })
+                .orElse(null); //신규 회원 이라면 null
     }
 
     public Optional<Member> findIsDeletedFalseMemberByProviderAndSocialId(SocialProvider socialProvider, String socialId) {
