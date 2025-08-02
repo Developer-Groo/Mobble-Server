@@ -1,6 +1,9 @@
 package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.GoogleTokenVerifier;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.KakaoTokenVerifier;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.NaverTokenVerifier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.oauth.verifier;
+package com.mobble.mobbleserver.account.auth.oauth.verifier.dto;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 
