@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.jwt;
 
-import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
-import com.mobble.mobbleserver.account.oauth2.verifier.SocialUserInfo;
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

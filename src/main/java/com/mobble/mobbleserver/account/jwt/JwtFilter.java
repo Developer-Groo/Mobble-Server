@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.jwt;
 
-import com.mobble.mobbleserver.account.user.CustomUserDetails;
+import com.mobble.mobbleserver.account.auth.principal.CustomUserDetails;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

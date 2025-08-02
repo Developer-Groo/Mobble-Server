@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.member.validator;
 
-import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

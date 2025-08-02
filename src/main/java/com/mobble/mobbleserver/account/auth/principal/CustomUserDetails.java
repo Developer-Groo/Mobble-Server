@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.user;
+package com.mobble.mobbleserver.account.auth.principal;
 
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;

@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.account.auth.service;
 import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SignUpDetailsInfoResponseDto;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
-import com.mobble.mobbleserver.account.oauth2.verifier.SocialUserInfo;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialUserInfo;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

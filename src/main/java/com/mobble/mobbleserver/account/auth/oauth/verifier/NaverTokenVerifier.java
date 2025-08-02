@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.account.oauth2.verifier;
+package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
-import com.mobble.mobbleserver.account.oauth2.dto.response.NaverUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.NaverUserInfoResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 

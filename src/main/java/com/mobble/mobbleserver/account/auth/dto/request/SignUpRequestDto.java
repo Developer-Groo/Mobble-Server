@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.auth.dto.request;
 
-import com.mobble.mobbleserver.account.oauth2.verifier.SocialUserInfo;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialUserInfo;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.*;

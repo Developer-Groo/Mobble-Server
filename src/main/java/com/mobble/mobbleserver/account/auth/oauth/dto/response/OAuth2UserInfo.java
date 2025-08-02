@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.account.oauth2.dto.response;
+package com.mobble.mobbleserver.account.auth.oauth.dto.response;
 
-import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 
 public interface OAuth2UserInfo {
 

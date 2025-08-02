@@ -1,26 +1,26 @@
-package com.mobble.mobbleserver.account.oauth2.verifier;
+package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
-import com.mobble.mobbleserver.account.oauth2.dto.response.KakaoUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.GoogleUserInfoResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
 @Component
-public class KakaoTokenVerifier extends AbstractSocialTokenVerifier {
+public class GoogleTokenVerifier extends AbstractSocialTokenVerifier {
 
-    public KakaoTokenVerifier(RestClient kakaoRestClient) {
-        super(kakaoRestClient);
+    public GoogleTokenVerifier(RestClient googleRestClient) {
+        super(googleRestClient);
     }
 
     @Override
     protected String getUserInfoUri() {
-        return "/v2/user/me";
+        return "/oauth2/v3/userinfo";
     }
 
     @Override
     protected SocialUserInfo parseUserInfo(Map<String, Object> attributes) {
-        KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(attributes);
+        GoogleUserInfoResponse userInfo = new GoogleUserInfoResponse(attributes);
 
         return new SocialUserInfo(
                 userInfo.getName(),

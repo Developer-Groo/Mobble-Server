@@ -1,9 +1,9 @@
-package com.mobble.mobbleserver.account.oauth2.service;
+package com.mobble.mobbleserver.account.auth.oauth.service;
 
-import com.mobble.mobbleserver.account.oauth2.dto.response.GoogleUserInfoResponse;
-import com.mobble.mobbleserver.account.oauth2.dto.response.KakaoUserInfoResponse;
-import com.mobble.mobbleserver.account.oauth2.dto.response.NaverUserInfoResponse;
-import com.mobble.mobbleserver.account.oauth2.dto.response.OAuth2UserInfo;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.GoogleUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.KakaoUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.NaverUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.OAuth2UserInfo;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.account.oauth2.verifier;
+package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
-import com.mobble.mobbleserver.account.oauth2.service.SocialProvider;
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
