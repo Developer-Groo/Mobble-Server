@@ -64,7 +64,7 @@ public class TokenProvider {
     }
 
     /**
-     * 토큰 검증, memberId 반환
+     * access 토큰 검증, memberId 반환
      */
     public Long getAccessTokenInfo(String token) {
         Claims claims = Jwts.parserBuilder()
@@ -76,6 +76,9 @@ public class TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
+    /**
+     * signup 토큰 검증
+     */
     public SocialUserInfo getSignupTokenInfo(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
