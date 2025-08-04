@@ -24,6 +24,7 @@ public class SignUpDetailsInfoService {
         return SignUpDetailsInfoResponseDto.toDto(userInfo);
     }
 
+    @Transactional
     public String signup(String signupToken, SignUpRequestDto dto) {
         SocialUserInfo userInfo = tokenProvider.getSignupTokenInfo(signupToken);
         Member member = dto.toEntity(userInfo);
