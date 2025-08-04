@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.support.fixture.member;
 
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 
@@ -13,12 +14,13 @@ public class MemberTestFixture {
                 1,
                 Gender.FEMALE,
                 UUID.randomUUID().toString(),
-                "password",
                 "phone",
                 "ground",
                 "profileImage",
                 true,
-                true
+                true,
+                SocialProvider.NAVER,
+                "1212"
         );
     }
 }
