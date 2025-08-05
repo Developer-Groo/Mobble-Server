@@ -32,5 +32,4 @@ public class ClubRepositoryImpl implements ClubQueryRepository {
                 isLiked != null && isLiked
         );
     }
-
 }
