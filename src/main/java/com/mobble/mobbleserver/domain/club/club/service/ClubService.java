@@ -73,8 +73,6 @@ public class ClubService {
 
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
-        // todo: 로그인 한 사용자가 가입안됬을때 공개여부 처리
-
         return buildClubResponse(club, member, leaderName);
     }
 
@@ -87,7 +85,7 @@ public class ClubService {
         ClubCategory category = findCategoryOrThrow(dto.category());
         club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
 
-        clubAgeGroupRepository.deleteAllByClubId(club.getId());
+        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
         List<ClubAgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
         clubAgeGroupRepository.saveAll(newAgeGroups);
 
@@ -100,17 +98,17 @@ public class ClubService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         validateLeader(clubId, memberId);
 
-        clubLikeRepository.deleteAllByClubId(clubId);
+        clubLikeRepository.deleteClubLikeAllByClubId(clubId);
 
         List<Long> articleIds = articleRepository.findIdsByClubId(clubId);
 
-        commentLikeRepository.deleteAllByArticleIds(articleIds);
-        commentRepository.deleteAllByArticleIds(articleIds);
-        articleLikeRepository.deleteAllByArticleIds(articleIds);
-        articleRepository.deleteAllByClubId(clubId);
+        commentLikeRepository.deleteAllCommentLikeByArticleIds(articleIds);
+        commentRepository.deleteAllCommentByArticleIds(articleIds);
+        articleLikeRepository.deleteAllArticleLikeByArticleIds(articleIds);
+        articleRepository.deleteAllArticleByClubId(clubId);
 
-        clubAgeGroupRepository.deleteAllByClubId(clubId);
-        clubMemberRepository.deleteAllByClubId(clubId);
+        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
+        clubMemberRepository.deleteAllClubMemberByClubId(clubId);
 
         entityManager.flush();
         entityManager.clear();
