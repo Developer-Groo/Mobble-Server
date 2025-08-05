@@ -31,9 +31,34 @@
 
         return buildClubResponse(club, member, leaderName);
     }
+
+    @Transactional
+    public ClubResponseDto updateClub(Long clubId, Long memberId, ClubRequestDto dto) {
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        validateLeader(clubId, memberId);
+
+        ClubCategory category = findCategoryOrThrow(dto.category());
+        club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
+
+        clubAgeGroupRepository.deleteAllByClubId(club.getId());
+        List<ClubAgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
+        clubAgeGroupRepository.saveAll(newAgeGroups);
+
+        return buildClubResponse(club, member, member.getName());
+    }
     private ClubCategory findCategoryOrThrow(String categoryName) {
         return clubCategoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    private void validateLeader(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("CLUB_MEMBER:NOT_FOUND"));
+
+        if (!clubMember.getClubMemberRole().equals(ClubMemberRole.LEADER)) {
+            throw new DomainException(ClubErrorCode.NO_PERMISSION);
+        }
     }
 
     private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
@@ -45,8 +70,10 @@
 
         return ClubResponseDto.toDto(club, leaderName, ageGroupList, likeInfo);
     }
+
     private List<ClubAgeGroup> createClubAgeGroups(Club club, List<ClubAgeGroupType> ageGroupTypes) {
         return ageGroupTypes.stream()
                 .map(age -> ClubAgeGroup.createClubAgeGroup(club, age))
                 .toList();
     }
+}
