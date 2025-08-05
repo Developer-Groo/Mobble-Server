@@ -13,7 +13,7 @@ public class ClubLikeRepositoryImpl implements ClubLikeQueryRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void deleteAllByClubId(Long clubId) {
+    public void deleteClubLikeAllByClubId(Long clubId) {
         queryFactory
                 .delete(clubLike)
                 .where(clubLike.club.id.eq(clubId))

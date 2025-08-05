@@ -22,7 +22,7 @@ public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository{
     }
 
     @Override
-    public void deleteAllByArticleIds(List<Long> articleIds) {
+    public void deleteAllCommentLikeByArticleIds(List<Long> articleIds) {
         queryFactory.delete(comment)
                 .where(
                         comment.article.id.in(articleIds),

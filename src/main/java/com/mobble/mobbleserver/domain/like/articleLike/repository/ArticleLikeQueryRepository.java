@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface ArticleLikeQueryRepository {
 
-    void deleteAllByArticleIds(List<Long> articleIds);
+    void deleteAllArticleLikeByArticleIds(List<Long> articleIds);
 }

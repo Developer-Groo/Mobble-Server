@@ -12,7 +12,7 @@ public class ClubAgeGroupRepositoryImpl implements ClubAgeGroupQueryDslRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void deleteAllByClubId(Long clubId) {
+    public void deleteAllClubAgeGroupByClubId(Long clubId) {
         queryFactory.delete(clubAgeGroup)
                 .where(clubAgeGroup.club.id.eq(clubId))
                 .execute();

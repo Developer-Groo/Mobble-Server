@@ -6,5 +6,5 @@ public interface CommentLikeQueryRepository {
 
     void deleteAllByArticleId(Long articleId);
 
-    void deleteAllByArticleIds(List<Long> articleIds);
+    void deleteAllCommentLikeByArticleIds(List<Long> articleIds);
 }

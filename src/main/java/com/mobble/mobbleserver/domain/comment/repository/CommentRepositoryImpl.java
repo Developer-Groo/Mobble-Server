@@ -83,7 +83,7 @@ public class CommentRepositoryImpl implements CommentQueryRepository {
     }
 
     @Override
-    public void deleteAllByArticleIds(List<Long> articleIds) {
+    public void deleteAllCommentByArticleIds(List<Long> articleIds) {
         queryFactory.delete(comment)
                 .where(
                         comment.article.id.in(articleIds),

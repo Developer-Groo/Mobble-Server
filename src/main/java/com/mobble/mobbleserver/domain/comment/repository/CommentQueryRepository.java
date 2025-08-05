@@ -14,5 +14,5 @@ public interface CommentQueryRepository {
 
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
 
-    void deleteAllByArticleIds(List<Long> articleIds);
+    void deleteAllCommentByArticleIds(List<Long> articleIds);
 }

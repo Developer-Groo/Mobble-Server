@@ -13,7 +13,7 @@ public class ClubMemberRepositoryImpl implements ClubMemberQueryRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void deleteAllByClubId(Long clubId) {
+    public void deleteAllClubMemberByClubId(Long clubId) {
         queryFactory.delete(clubMember)
                 .where(clubMember.club.id.eq(clubId))
                 .execute();

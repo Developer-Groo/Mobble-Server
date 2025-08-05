@@ -15,7 +15,7 @@ public class ArticleLikeRepositoryImpl implements ArticleLikeQueryRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void deleteAllByArticleIds(List<Long> articleIds) {
+    public void deleteAllArticleLikeByArticleIds(List<Long> articleIds) {
         queryFactory.delete(articleLike)
                 .where(articleLike.article.id.in(articleIds))
                 .execute();
