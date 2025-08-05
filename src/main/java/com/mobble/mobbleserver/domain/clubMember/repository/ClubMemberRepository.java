@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
 
+    Optional<ClubMember> findByClubIdAndClubMemberRole(Long clubId, ClubMemberRole clubMemberRole);
+
     Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId);
 }
