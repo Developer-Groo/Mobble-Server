@@ -19,6 +19,7 @@ import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.service.CommentService;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeQueryRepository;
+import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -40,7 +41,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ClubRepository clubRepository;
     private final CommentRepository commentRepository;
-    private final CommentLikeQueryRepository commentLikeQueryRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
 
     private final ArticleValidator articleValidator;
@@ -125,7 +126,7 @@ public class ArticleService {
 
         List<Comment> comments = commentRepository.findCommentsWithRepliesByArticleId(articleId);
 
-        commentLikeQueryRepository.deleteAllByArticleId(articleId);
+        commentLikeRepository.deleteAllByArticleId(articleId);
         commentRepository.deleteAll(comments);
         articleLikeRepository.deleteAllByArticleId(articleId);
         articleRepository.delete(article);
