@@ -5,11 +5,9 @@ import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 
 public class ClubTestFixture {
 
-    public static Club createDefaultClub() {
-        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-
+    public static Club createDefaultClub(ClubCategory clubCategory) {
         return Club.createClub(
-                category,
+                clubCategory,
                 "name",
                 "ground",
                 "address",
