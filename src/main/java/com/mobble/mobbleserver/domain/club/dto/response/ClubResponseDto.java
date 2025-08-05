@@ -25,13 +25,13 @@ public record ClubResponseDto(
 
     public static ClubResponseDto toDto(
             Club club,
-            Member member,
+            String leaderName,
             List<ClubAgeGroupType> ageGroup,
             ClubLikeInfoDto likeInfo
     ){
         return new ClubResponseDto(
                 club.getId(),
-                member.getName(),
+                leaderName,
                 club.getName(),
                 club.getClubCategory().getName(),
                 club.getGround(),
