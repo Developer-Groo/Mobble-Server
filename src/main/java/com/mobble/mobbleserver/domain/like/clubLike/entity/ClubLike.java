@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.like.clubLike.entity;
 
+import com.mobble.mobbleserver.domain.club.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,9 +17,9 @@ public class ClubLike {
     @Column(name = "club_like_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "club_id")
-//    private Club club;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
