@@ -1,6 +1,9 @@
 package com.mobble.mobbleserver.domain.club.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,9 +20,9 @@ public class Club extends BaseEntity {
     @Column(name = "club_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "club_category_id")
-//    private ClubCategory clubCategory;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "club_category_id")
+    private ClubCategory clubCategory;
 
     @Column(name = "name")
     private String name;
@@ -30,6 +33,9 @@ public class Club extends BaseEntity {
     // Todo: 지역관리를 위해 추후 Enum 또는 테이블로 관리해야함.
     @Column(name = "ground")
     private String ground;
+
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "head_count")
     private int headCount;
@@ -43,30 +49,39 @@ public class Club extends BaseEntity {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
-            // Todo: ClubCategory,ChatRooom 주입 필요
+            // Todo: ChatRooom 주입 필요
+            ClubCategory category,
             String name,
             String ground,
+            String address,
             int headCount,
-            boolean joinType
+            boolean isAutoJoin
     ) {
+        validateCommon(category, name, ground, address, headCount);
+        this.clubCategory = category;
         this.name = name;
         this.ground = ground;
+        this.address = address;
         this.headCount = headCount;
-        this.joinType = joinType;
+        this.isAutoJoin = isAutoJoin;
     }
 
     public static Club createClub(
-            // Todo: ClubCategory,ChatRooom 주입 필요
+            // Todo: ChatRooom 주입 필요
+            ClubCategory category,
             String name,
             String ground,
+            String address,
             int headCount,
-            boolean joinType
-    ){
+            boolean isAutoJoin
+    ) {
         return Club.builder()
+                .category(category)
                 .name(name)
                 .ground(ground)
+                .address(address)
                 .headCount(headCount)
-                .joinType(joinType)
+                .isAutoJoin(isAutoJoin)
                 .build();
     }
 }
