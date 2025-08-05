@@ -84,4 +84,35 @@ public class Club extends BaseEntity {
                 .isAutoJoin(isAutoJoin)
                 .build();
     }
+
+    public void updateClub(
+            ClubCategory category,
+            String name,
+            String ground,
+            String address,
+            int headCount,
+            boolean isAutoJoin
+    ) {
+        validateCommon(category, name, ground, address, headCount);
+        this.clubCategory = category;
+        this.name = name;
+        this.ground = ground;
+        this.address = address;
+        this.headCount = headCount;
+        this.isAutoJoin = isAutoJoin;
+    }
+
+    private void validateCommon(
+            ClubCategory category,
+            String name,
+            String ground,
+            String address,
+            int headCount
+    ) {
+        if (category == null) throw new DomainException(ClubErrorCode.CATEGORY_REQUIRED);
+        if (name == null || name.isBlank()) throw new DomainException(ClubErrorCode.NAME_REQUIRED);
+        if (ground == null || ground.isBlank()) throw new DomainException(ClubErrorCode.GROUND_REQUIRED);
+        if (address == null || address.isBlank()) throw new DomainException(ClubErrorCode.ADDRESS_REQUIRED);
+        if (headCount <= 0) throw new DomainException(ClubErrorCode.HEADCOUNT_REQUIRED);
+    }
 }
