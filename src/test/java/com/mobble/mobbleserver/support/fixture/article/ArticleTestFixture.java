@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.support.fixture.article;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -10,8 +11,11 @@ import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 public class ArticleTestFixture {
 
     public static Article createDefaultArticle() {
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(category);
+
         return Article.createArticle(
-                ClubTestFixture.createDefaultClub(),
+                club,
                 MemberTestFixture.createDefaultMember(),
                 ArticleType.FREE, "title",
                 "content"

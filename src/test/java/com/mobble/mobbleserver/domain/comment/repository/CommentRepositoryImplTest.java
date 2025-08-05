@@ -39,6 +39,7 @@ class CommentRepositoryImplTest {
         // given
         Member member = MemberTestFixture.createDefaultMember();
         ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
 
         Club club = ClubTestFixture.createDefaultClub(category);
         Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
@@ -81,7 +82,10 @@ class CommentRepositoryImplTest {
         // given
         Member member = MemberTestFixture.createDefaultMember();
         Member otherMember = MemberTestFixture.createDefaultMember();
-        Club club = ClubTestFixture.createDefaultClub();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
+
+        Club club = ClubTestFixture.createDefaultClub(category);
         Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
         em.persist(member);
         em.persist(otherMember);
