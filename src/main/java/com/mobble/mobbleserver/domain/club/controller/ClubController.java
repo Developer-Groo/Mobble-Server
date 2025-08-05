@@ -29,3 +29,13 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("CLUB:CREATED_SUCCESSFULLY");
     }
+
+    @GetMapping("/{club-id}")
+    public ResponseEntity<ClubResponseDto> findClubById(
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        Long memberId = 1L; // Todo: 임시 member id
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(clubService.findClubById(clubId, memberId));
+    }
