@@ -34,8 +34,8 @@ public class Club extends BaseEntity {
     @Column(name = "head_count")
     private int headCount;
 
-    @Column(name = "join_type")
-    private boolean joinType;
+    @Column(name = "isAutoJoin")
+    private boolean isAutoJoin;
 
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "chat_room_id")
