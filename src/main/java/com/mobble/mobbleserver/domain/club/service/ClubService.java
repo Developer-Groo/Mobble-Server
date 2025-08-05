@@ -18,6 +18,10 @@
         List<ClubAgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         clubAgeGroupRepository.saveAll(ageGroups);
     }
+    private ClubCategory findCategoryOrThrow(String categoryName) {
+        return clubCategoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
+    }
     private List<ClubAgeGroup> createClubAgeGroups(Club club, List<ClubAgeGroupType> ageGroupTypes) {
         return ageGroupTypes.stream()
                 .map(age -> ClubAgeGroup.createClubAgeGroup(club, age))
