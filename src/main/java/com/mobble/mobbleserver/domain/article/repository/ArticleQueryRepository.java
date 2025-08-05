@@ -12,4 +12,8 @@ public interface ArticleQueryRepository {
     List<Article> findArticlesByClubId(Long clubId, ArticleType articleType);
 
     public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId);
+
+    void deleteAllByClubId(Long clubId);
+
+    List<Long> findIdsByClubId(Long clubId);
 }

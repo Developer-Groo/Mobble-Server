@@ -63,6 +63,21 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
                 ));
     }
 
+    @Override
+    public void deleteAllByClubId(Long clubId) {
+        queryFactory.delete(article)
+                .where(article.club.id.eq(clubId))
+                .execute();
+    }
+
+    @Override
+    public List<Long> findIdsByClubId(Long clubId) {
+        return queryFactory.select(article.id)
+                .from(article)
+                .where(article.club.id.eq(clubId))
+                .fetch();
+    }
+
     private Map<Long, Integer> createLikeCountMap(List<ArticleLikeProjection> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(
