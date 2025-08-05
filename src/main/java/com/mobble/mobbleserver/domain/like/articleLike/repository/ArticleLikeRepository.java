@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
+public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long>, ArticleLikeQueryRepository {
 
     Optional<ArticleLike> findLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 

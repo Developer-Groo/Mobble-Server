@@ -8,7 +8,7 @@ import static com.mobble.mobbleserver.domain.like.clubLike.entity.QClubLike.club
 
 @Repository
 @RequiredArgsConstructor
-public class ClubLikeRepositoryImpl implements ClubLikeQueryDslRepository{
+public class ClubLikeRepositoryImpl implements ClubLikeQueryRepository{
 
     private final JPAQueryFactory queryFactory;
 

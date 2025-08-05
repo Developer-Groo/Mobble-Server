@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ClubMemberRepository extends JpaRepository<ClubMember, Long>, ClubMemberQueryDslRepository {
+public interface ClubMemberRepository extends JpaRepository<ClubMember, Long>, ClubMemberQueryRepository {
 
     Optional<ClubMember> findByClubIdAndClubMemberRole(Long clubId, ClubMemberRole clubMemberRole);
 

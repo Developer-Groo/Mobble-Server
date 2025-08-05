@@ -21,7 +21,7 @@ import static com.mobble.mobbleserver.domain.like.articleLike.entity.QArticleLik
 
 @Repository
 @RequiredArgsConstructor
-public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
+public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 

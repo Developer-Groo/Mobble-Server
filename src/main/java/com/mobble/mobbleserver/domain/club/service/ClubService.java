@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.club.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.domain.club.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.repository.ClubQueryDslRepository;
 import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.club.repository.dto.ClubLikeInfoDto;
 import com.mobble.mobbleserver.domain.club.validator.ClubValidator;
