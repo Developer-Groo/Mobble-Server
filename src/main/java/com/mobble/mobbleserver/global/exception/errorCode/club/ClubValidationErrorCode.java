@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum ClubValidationErrorCode implements ErrorCode {
-
     NAME_NOT_BLANK("클럽 이름을 입력해주세요.", HttpStatus.BAD_REQUEST),
     NAME_TOO_LONG("클럽 이름은 최대 20자 까지 입력 가능합니다.", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_BLANK("클럽 카테고리를 선택해주세요.", HttpStatus.BAD_REQUEST),

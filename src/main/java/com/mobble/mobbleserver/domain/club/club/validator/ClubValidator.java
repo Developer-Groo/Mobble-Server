@@ -17,5 +17,4 @@ public class ClubValidator {
         return clubRepository.findById(clubId)
                 .orElseThrow(() -> new DomainException(ClubErrorCode.NOT_FOUND));
     }
-
 }

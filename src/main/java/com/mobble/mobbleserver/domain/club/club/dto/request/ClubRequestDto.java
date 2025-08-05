@@ -37,7 +37,6 @@ public record ClubRequestDto(
         @NotEmpty(message = "CLUB:AGE_GROUP_NOT_EMPTY")
         List<ClubAgeGroupType> ageGroup,
 
-
         @NotNull(message = "CLUB:JOIN_TYPE_REQUIRED")
         Boolean isAutoJoin
 ) {
@@ -52,5 +51,4 @@ public record ClubRequestDto(
                 this.isAutoJoin
         );
     }
-
 }

@@ -12,6 +12,7 @@ import static com.mobble.mobbleserver.domain.like.commentLike.entity.QCommentLik
 @Repository
 @RequiredArgsConstructor
 public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository{
+
     private final JPAQueryFactory queryFactory;
 
     @Override

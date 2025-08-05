@@ -43,13 +43,8 @@ public class Club extends BaseEntity {
     @Column(name = "isAutoJoin")
     private boolean isAutoJoin;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "chat_room_id")
-//    private ChatRooom chatRooom;
-
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
-            // Todo: ChatRooom 주입 필요
             ClubCategory category,
             String name,
             String ground,
@@ -67,7 +62,6 @@ public class Club extends BaseEntity {
     }
 
     public static Club createClub(
-            // Todo: ChatRooom 주입 필요
             ClubCategory category,
             String name,
             String ground,
