@@ -18,3 +18,8 @@
         List<ClubAgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         clubAgeGroupRepository.saveAll(ageGroups);
     }
+    private List<ClubAgeGroup> createClubAgeGroups(Club club, List<ClubAgeGroupType> ageGroupTypes) {
+        return ageGroupTypes.stream()
+                .map(age -> ClubAgeGroup.createClubAgeGroup(club, age))
+                .toList();
+    }
