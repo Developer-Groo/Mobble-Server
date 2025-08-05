@@ -1,9 +1,56 @@
+package com.mobble.mobbleserver.domain.club.service;
+
+import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.club.dto.request.ClubRequestDto;
+import com.mobble.mobbleserver.domain.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.domain.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.repository.ClubQueryDslRepository;
+import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroup;
+import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroupType;
+import com.mobble.mobbleserver.domain.clubAgeGroup.repository.ClubAgeGroupRepository;
+import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
+import com.mobble.mobbleserver.domain.clubCategory.repository.ClubCategoryRepository;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
+import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepository;
+import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ClubService {
+
     private final ClubRepository clubRepository;
     private final ClubCategoryRepository clubCategoryRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final ClubAgeGroupRepository clubAgeGroupRepository;
+    private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final ArticleLikeRepository articleLikeRepository;
+    private final ClubLikeRepository clubLikeRepository;
+
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
+
+    private final EntityManager entityManager;
+
     @Transactional
     public void createClub(Long memberId, ClubRequestDto dto) {
         ClubCategory category = findCategoryOrThrow(dto.category());
@@ -27,7 +74,7 @@
 
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
-        // todo: 로그인 한 사용자가 가입안됬을때 공개여부 처리 질문
+        // todo: 로그인 한 사용자가 가입안됬을때 공개여부 처리
 
         return buildClubResponse(club, member, leaderName);
     }
@@ -47,6 +94,31 @@
 
         return buildClubResponse(club, member, member.getName());
     }
+
+    @Transactional
+    public void deleteClub(Long clubId, Long memberId) {
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        validateLeader(clubId, memberId);
+
+        clubLikeRepository.deleteAllByClubId(clubId);
+
+        List<Long> articleIds = articleRepository.findIdsByClubId(clubId);
+
+        commentLikeRepository.deleteAllByArticleIds(articleIds);
+        commentRepository.deleteAllByArticleIds(articleIds);
+        articleLikeRepository.deleteAllByArticleIds(articleIds);
+        articleRepository.deleteAllByClubId(clubId);
+
+        clubAgeGroupRepository.deleteAllByClubId(clubId);
+        clubMemberRepository.deleteAllByClubId(clubId);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        clubRepository.deleteById(clubId);
+    }
+
     private ClubCategory findCategoryOrThrow(String categoryName) {
         return clubCategoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
