@@ -1,15 +1,15 @@
-package com.mobble.mobbleserver.domain.club.service;
+package com.mobble.mobbleserver.domain.club.club.service;
 
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
-import com.mobble.mobbleserver.domain.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.domain.club.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
-import com.mobble.mobbleserver.domain.club.repository.dto.ClubLikeInfoDto;
-import com.mobble.mobbleserver.domain.club.validator.ClubValidator;
-import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroup;
-import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroupType;
-import com.mobble.mobbleserver.domain.clubAgeGroup.repository.ClubAgeGroupRepository;
+import com.mobble.mobbleserver.domain.club.club.dto.request.ClubRequestDto;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
+import com.mobble.mobbleserver.domain.club.clubAgeGroup.repository.ClubAgeGroupRepository;
+import com.mobble.mobbleserver.domain.club.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.domain.club.club.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroup;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.clubCategory.repository.ClubCategoryRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;

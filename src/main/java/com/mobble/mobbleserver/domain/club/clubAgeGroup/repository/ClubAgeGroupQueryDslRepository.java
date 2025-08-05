@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.clubAgeGroup.repository;
+package com.mobble.mobbleserver.domain.club.clubAgeGroup.repository;
 
 public interface ClubAgeGroupQueryDslRepository {
 

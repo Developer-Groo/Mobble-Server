@@ -1,9 +1,8 @@
-package com.mobble.mobbleserver.domain.club.dto.request;
+package com.mobble.mobbleserver.domain.club.club.dto.request;
 
-import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroupType;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
-import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

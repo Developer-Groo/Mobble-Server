@@ -1,9 +1,8 @@
-package com.mobble.mobbleserver.domain.club.dto.response;
+package com.mobble.mobbleserver.domain.club.club.dto.response;
 
-import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.repository.dto.ClubLikeInfoDto;
-import com.mobble.mobbleserver.domain.clubAgeGroup.entity.ClubAgeGroupType;
-import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.club.entity;
+package com.mobble.mobbleserver.domain.club.club.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;

@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.domain.club.validator;
+package com.mobble.mobbleserver.domain.club.club.validator;
 
-import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import lombok.RequiredArgsConstructor;
