@@ -50,3 +50,14 @@ public class ClubController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubService.updateClub(clubId, memberId, dto));
     }
+
+    @DeleteMapping("/{club-id}")
+    public ResponseEntity<Void> deleteClub(
+            @PathVariable("club-id") @Positive Long clubId
+    ){
+        Long memberId = 1L; // Todo: 임시 member id
+        clubService.deleteClub(clubId, memberId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+}
