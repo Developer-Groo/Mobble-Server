@@ -53,7 +53,7 @@ public class ClubService {
     private final EntityManager entityManager;
 
     @Transactional
-    public void createClub(Long memberId, ClubRequestDto dto) {
+    public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
         ClubCategory category = findCategoryOrThrow(dto.category());
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
@@ -65,6 +65,8 @@ public class ClubService {
 
         List<ClubAgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         clubAgeGroupRepository.saveAll(ageGroups);
+
+        return buildClubResponse(club, member, member.getName());
     }
 
     public ClubResponseDto findClubById(Long clubId, Long memberId) {

@@ -20,14 +20,13 @@ public class ClubController {
     private final ClubService clubService;
 
     @PostMapping
-    public ResponseEntity<String> createClub(
+    public ResponseEntity<ClubResponseDto> createClub(
             @RequestBody @Valid ClubRequestDto dto
     ) {
         Long memberId = 1L; // Todo: 임시 member id
-        clubService.createClub(memberId, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("CLUB:CREATED_SUCCESSFULLY");
+                .body(clubService.createClub(memberId, dto));
     }
 
     @GetMapping("/{club-id}")
