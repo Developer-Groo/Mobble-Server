@@ -15,6 +15,7 @@ import com.mobble.mobbleserver.domain.clubCategory.repository.ClubCategoryReposi
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepository;
@@ -47,6 +48,7 @@ public class ClubService {
 
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
+    private final ClubMemberValidator clubMemberValidator;
 
     private final EntityManager entityManager;
 
@@ -122,8 +124,7 @@ public class ClubService {
     }
 
     private void validateLeader(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("CLUB_MEMBER:NOT_FOUND"));
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         if (!clubMember.getClubMemberRole().equals(ClubMemberRole.LEADER)) {
             throw new DomainException(ClubErrorCode.NO_PERMISSION);
