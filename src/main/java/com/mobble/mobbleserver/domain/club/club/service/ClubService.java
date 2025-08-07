@@ -134,7 +134,7 @@ public class ClubService {
     }
 
     private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
-        List<ClubAgeGroupType> ageGroupList = clubAgeGroupRepository.findByClub(club).stream()
+        List<ClubAgeGroupType> ageGroupList = clubAgeGroupRepository.findByClubId(club.getId()).stream()
                 .map(ClubAgeGroup::getAgeGroupType)
                 .toList();
 

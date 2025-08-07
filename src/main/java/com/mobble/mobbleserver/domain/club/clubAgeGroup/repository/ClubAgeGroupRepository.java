@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ClubAgeGroupRepository extends JpaRepository<ClubAgeGroup, Long>, ClubAgeGroupQueryRepository {
 
-    List<ClubAgeGroup> findByClub(Club club);
+    List<ClubAgeGroup> findByClubId(Long clubId);
 }
