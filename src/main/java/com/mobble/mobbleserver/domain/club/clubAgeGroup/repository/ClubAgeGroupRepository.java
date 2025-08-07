@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ClubAgeGroupRepository extends JpaRepository<ClubAgeGroup, Long>, ClubAgeGroupQueryDslRepository {
+public interface ClubAgeGroupRepository extends JpaRepository<ClubAgeGroup, Long>, ClubAgeGroupQueryRepository {
 
     List<ClubAgeGroup> findByClub(Club club);
 }

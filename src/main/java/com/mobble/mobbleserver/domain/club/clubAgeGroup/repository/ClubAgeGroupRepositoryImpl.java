@@ -8,7 +8,7 @@ import static com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.QClubAgeGr
 
 @Repository
 @RequiredArgsConstructor
-public class ClubAgeGroupRepositoryImpl implements ClubAgeGroupQueryDslRepository{
+public class ClubAgeGroupRepositoryImpl implements ClubAgeGroupQueryRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
