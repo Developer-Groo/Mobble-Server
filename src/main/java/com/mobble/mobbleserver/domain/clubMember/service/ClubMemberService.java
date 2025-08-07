@@ -89,6 +89,25 @@ public class ClubMemberService {
         return ClubMemberUpsertResponseDto.toDto(clubMember);
     }
 
+    @Transactional
+    public ClubMemberUpsertResponseDto updateClubMemberStatus(Long clubId, Long loginedMemberId, UpdateClubMemberStatusDto dto) {
+        Long memberId = dto.memberId();
+        JoinStatus targetStatus = dto.status();
+
+        clubValidator.findClubByClubIdOrThrow(clubId);
+        memberValidator.findMemberByMemberIdOrThrow(memberId);
+
+        validateLeader(clubId, loginedMemberId);
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+
+        if (targetStatus == JoinStatus.APPROVED) {
+            validateClubNotFull(clubMember.getClub());
+        }
+
+        clubMember.updateStatus(targetStatus);
+
+        return ClubMemberUpsertResponseDto.toDto(clubMember);
+    }
     private void validateLeader(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 

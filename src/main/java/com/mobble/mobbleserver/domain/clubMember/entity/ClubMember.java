@@ -62,7 +62,12 @@ public class ClubMember extends BaseEntity {
                 .joinStatus(joinStatus)
                 .build();
     }
+
     public void updateStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;
+    }
+
+    public void updateRole(ClubMemberRole newRole) {
+        this.clubMemberRole = newRole;
     }
 }
