@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.clubMember.service;
 
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
@@ -108,6 +107,15 @@ public class ClubMemberService {
 
         return ClubMemberUpsertResponseDto.toDto(clubMember);
     }
+
+    public List<ClubMemberResponseDto> findClubMembers(Long clubId) {
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+
+        List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
+
+        return clubMembers.stream().map(ClubMemberResponseDto::toEntity).collect(Collectors.toList());
+    }
+
     private void validateLeader(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
@@ -115,9 +123,11 @@ public class ClubMemberService {
             throw new DomainException(ClubErrorCode.NO_PERMISSION);
         }
     }
+
     private JoinStatus determineJoinStatus(Club club) {
         return club.isAutoJoin() ? JoinStatus.APPROVED : JoinStatus.WAITING;
     }
+
     private boolean existsClubMember(Long clubId, Long memberId) {
         return clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId).isPresent();
     }
@@ -128,3 +138,4 @@ public class ClubMemberService {
             throw new DomainException(ClubMemberErrorCode.CLUB_IS_FULL);
         }
     }
+}
