@@ -31,3 +31,15 @@ public class ClubMemberController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(clubMemberService.joinClub(memberId, clubId));
     }
+
+    @DeleteMapping("/{club-id}/members/withdraw")
+    public ResponseEntity<ClubMemberUpsertResponseDto> withdrawClub(
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        Long memberId = 2L; // Todo: 임시 member id
+
+        clubMemberService.withdrawClub(memberId, clubId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
