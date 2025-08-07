@@ -67,6 +67,35 @@ public class ClubMemberService {
 
         clubMember.updateStatus(JoinStatus.WITHDRAWN);
     }
+
+    public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId, UpdateClubMemberRoleDto dto) {
+        Long targetMemberId = dto.memberId();
+        ClubMemberRole newRole = dto.newRole();
+
+        clubValidator.findClubByClubIdOrThrow(clubId);
+        memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
+        memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
+
+        validateLeader(clubId, loginedMemberId);
+
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
+
+        if (targetMemberId.equals(loginedMemberId)) {
+            throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
+        }
+
+        clubMember.updateRole(newRole);
+
+        return ClubMemberUpsertResponseDto.toDto(clubMember);
+    }
+
+    private void validateLeader(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+
+        if (!clubMember.getClubMemberRole().equals(ClubMemberRole.LEADER)) {
+            throw new DomainException(ClubErrorCode.NO_PERMISSION);
+        }
+    }
     private JoinStatus determineJoinStatus(Club club) {
         return club.isAutoJoin() ? JoinStatus.APPROVED : JoinStatus.WAITING;
     }
