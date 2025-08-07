@@ -1,0 +1,70 @@
+package com.mobble.mobbleserver.domain.clubMember.service;
+
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRoleDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
+import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ClubMemberService {
+
+    private final ClubMemberRepository clubMemberRepository;
+
+    private final ClubValidator clubValidator;
+    private final MemberValidator memberValidator;
+    private final ClubMemberValidator clubMemberValidator;
+
+    @Transactional
+    public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+
+        boolean existsClubMember = existsClubMember(clubId, memberId);
+        if (existsClubMember) {
+            throw new DomainException(ClubMemberErrorCode.ALREADY_JOINED);
+        }
+
+        validateClubNotFull(club);
+
+        JoinStatus joinStatus = determineJoinStatus(club);
+
+        ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, joinStatus);
+        clubMemberRepository.save(clubMember);
+
+        return ClubMemberUpsertResponseDto.toDto(clubMember);
+    }
+
+    private JoinStatus determineJoinStatus(Club club) {
+        return club.isAutoJoin() ? JoinStatus.APPROVED : JoinStatus.WAITING;
+    }
+    private boolean existsClubMember(Long clubId, Long memberId) {
+        return clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId).isPresent();
+    }
+
+    public void validateClubNotFull(Club club) {
+        long approvedCount = clubMemberRepository.countByClubIdAndJoinStatus(club.getId(), JoinStatus.APPROVED);
+        if (approvedCount >= club.getHeadCount()) {
+            throw new DomainException(ClubMemberErrorCode.CLUB_IS_FULL);
+        }
+    }

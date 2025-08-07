@@ -15,4 +15,6 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
 
     @Modifying
     void deleteAllClubMemberByClubId(Long clubId);
+
+    long countByClubIdAndJoinStatus(Long clubId, JoinStatus joinStatus);
 }
