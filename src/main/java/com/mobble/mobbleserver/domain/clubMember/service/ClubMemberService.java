@@ -55,6 +55,18 @@ public class ClubMemberService {
         return ClubMemberUpsertResponseDto.toDto(clubMember);
     }
 
+    @Transactional
+    public void withdrawClub(Long memberId, Long clubId) {
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+
+        boolean existsClubMember = existsClubMember(clubId, memberId);
+        if (!existsClubMember) throw new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB);
+
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+
+        clubMember.updateStatus(JoinStatus.WITHDRAWN);
+    }
     private JoinStatus determineJoinStatus(Club club) {
         return club.isAutoJoin() ? JoinStatus.APPROVED : JoinStatus.WAITING;
     }
