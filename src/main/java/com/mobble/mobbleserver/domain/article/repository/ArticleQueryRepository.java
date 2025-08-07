@@ -15,5 +15,5 @@ public interface ArticleQueryRepository {
 
     void deleteAllArticleByClubId(Long clubId);
 
-    List<Long> findIdsByClubId(Long clubId);
+    List<Long> findArticleIdsByClubId(Long clubId);
 }

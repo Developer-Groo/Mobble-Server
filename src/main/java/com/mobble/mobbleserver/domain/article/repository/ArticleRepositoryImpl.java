@@ -71,7 +71,7 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
     }
 
     @Override
-    public List<Long> findIdsByClubId(Long clubId) {
+    public List<Long> findArticleIdsByClubId(Long clubId) {
         return queryFactory.select(article.id)
                 .from(article)
                 .where(article.club.id.eq(clubId))

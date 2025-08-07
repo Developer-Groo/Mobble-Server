@@ -104,7 +104,7 @@ public class ClubService {
 
         clubLikeRepository.deleteClubLikeAllByClubId(clubId);
 
-        List<Long> articleIds = articleRepository.findIdsByClubId(clubId);
+        List<Long> articleIds = articleRepository.findArticleIdsByClubId(clubId);
 
         commentLikeRepository.deleteAllCommentLikeByArticleIds(articleIds);
         commentRepository.deleteAllCommentByArticleIds(articleIds);
