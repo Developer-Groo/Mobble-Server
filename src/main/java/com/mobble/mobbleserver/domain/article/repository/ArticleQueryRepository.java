@@ -7,9 +7,11 @@ import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import java.util.List;
 import java.util.Map;
 
-public interface ArticleQueryDslRepository {
+public interface ArticleQueryRepository {
 
     List<Article> findArticlesByClubId(Long clubId, ArticleType articleType);
 
     public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId);
+
+    List<Long> findArticleIdsByClubId(Long clubId);
 }

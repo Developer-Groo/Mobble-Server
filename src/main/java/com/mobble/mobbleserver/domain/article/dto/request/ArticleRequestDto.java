@@ -2,8 +2,7 @@ package com.mobble.mobbleserver.domain.article.dto.request;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
-import com.mobble.mobbleserver.domain.club.entity.Club;
-import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -2,7 +2,8 @@ package com.mobble.mobbleserver.domain.comment.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.article.entity.Article;
-import com.mobble.mobbleserver.domain.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.like.commentLike.entity.CommentLike;
@@ -37,7 +38,10 @@ class CommentRepositoryImplTest {
     void success_when_find_comments_with_replies_by_article_id() {
         // given
         Member member = MemberTestFixture.createDefaultMember();
-        Club club = ClubTestFixture.createDefaultClub();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
+
+        Club club = ClubTestFixture.createDefaultClub(category);
         Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
         em.persist(member);
         em.persist(club);
@@ -78,7 +82,10 @@ class CommentRepositoryImplTest {
         // given
         Member member = MemberTestFixture.createDefaultMember();
         Member otherMember = MemberTestFixture.createDefaultMember();
-        Club club = ClubTestFixture.createDefaultClub();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
+
+        Club club = ClubTestFixture.createDefaultClub(category);
         Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
         em.persist(member);
         em.persist(otherMember);

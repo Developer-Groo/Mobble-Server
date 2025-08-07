@@ -21,7 +21,7 @@ import static com.mobble.mobbleserver.domain.like.articleLike.entity.QArticleLik
 
 @Repository
 @RequiredArgsConstructor
-public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
+public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
@@ -61,6 +61,14 @@ public class ArticleRepositoryImpl implements ArticleQueryDslRepository {
                                 likedArticleIds.contains(id)
                         )
                 ));
+    }
+
+    @Override
+    public List<Long> findArticleIdsByClubId(Long clubId) {
+        return queryFactory.select(article.id)
+                .from(article)
+                .where(article.club.id.eq(clubId))
+                .fetch();
     }
 
     private Map<Long, Integer> createLikeCountMap(List<ArticleLikeProjection> results) {
