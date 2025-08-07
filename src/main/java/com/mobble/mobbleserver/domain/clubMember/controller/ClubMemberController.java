@@ -66,3 +66,13 @@ public class ClubMemberController {
                 clubMemberService.updateClubMemberRole(clubId, loginedMemberId, dto)
         );
     }
+
+    @GetMapping("/{club-id}/members")
+    public ResponseEntity<List<ClubMemberResponseDto>> findClubMembers(
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(clubMemberService.findClubMembers(clubId));
+    }
+}
+
