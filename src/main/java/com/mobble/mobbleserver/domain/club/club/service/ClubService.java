@@ -14,6 +14,7 @@ import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.clubCategory.repository.ClubCategoryRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
@@ -60,7 +61,7 @@ public class ClubService {
         Club club = dto.toEntity(category);
         clubRepository.save(club);
 
-        ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, true);
+        ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
         clubMemberRepository.save(clubMember);
 
         List<ClubAgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
