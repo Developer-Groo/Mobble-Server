@@ -43,3 +43,14 @@ public class ClubMemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
+    @PatchMapping("/{club-id}/members/status")
+    public ResponseEntity<ClubMemberUpsertResponseDto> updateClubMemberStatus(
+            @PathVariable("club-id") @Positive Long clubId,
+            @RequestBody UpdateClubMemberStatusDto dto
+    ) {
+        Long loginedMemberId = 2L; // Todo: 임시 member id
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(clubMemberService.updateClubMemberStatus(clubId, loginedMemberId, dto));
+    }
