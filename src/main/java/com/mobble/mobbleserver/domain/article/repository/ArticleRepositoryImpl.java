@@ -64,13 +64,6 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
     }
 
     @Override
-    public void deleteAllArticleByClubId(Long clubId) {
-        queryFactory.delete(article)
-                .where(article.club.id.eq(clubId))
-                .execute();
-    }
-
-    @Override
     public List<Long> findArticleIdsByClubId(Long clubId) {
         return queryFactory.select(article.id)
                 .from(article)

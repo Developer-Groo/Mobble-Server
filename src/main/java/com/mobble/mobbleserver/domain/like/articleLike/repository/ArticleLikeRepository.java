@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long>, ArticleLikeQueryRepository {
+public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
 
     Optional<ArticleLike> findLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 
@@ -18,4 +18,7 @@ public interface ArticleLikeRepository extends JpaRepository<ArticleLike, Long>,
     boolean existsLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 
     void deleteAllByArticleId(Long articleId);
+
+    @Modifying
+    void deleteAllArticleLikeByArticle_IdIn(List<Long> articleIds);
 }

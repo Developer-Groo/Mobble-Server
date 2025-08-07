@@ -82,22 +82,6 @@ public class CommentRepositoryImpl implements CommentQueryRepository {
                 ));
     }
 
-    @Override
-    public void deleteAllCommentByArticleIds(List<Long> articleIds) {
-        queryFactory.delete(comment)
-                .where(
-                        comment.article.id.in(articleIds),
-                        comment.parent.isNotNull()
-                )
-                .execute();
-        queryFactory.delete(comment)
-                .where(
-                        comment.article.id.in(articleIds),
-                        comment.parent.isNull()
-                )
-                .execute();
-    }
-
     private Map<Long, Integer> createLikeCountMap(List<CommentLikeProjection> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(

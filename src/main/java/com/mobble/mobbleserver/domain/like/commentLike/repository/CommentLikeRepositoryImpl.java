@@ -21,11 +21,4 @@ public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository{
                 .where(commentLike.comment.article.id.eq(articleId))
                 .execute();
     }
-
-    @Override
-    public void deleteAllCommentLikeByArticleIds(List<Long> articleIds) {
-        queryFactory.delete(commentLike)
-                .where(commentLike.comment.article.id.in(articleIds))
-                .execute();
-    }
 }

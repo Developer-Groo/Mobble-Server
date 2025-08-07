@@ -102,20 +102,18 @@ public class ClubService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         validateLeader(clubId, memberId);
 
-        clubLikeRepository.deleteClubLikeAllByClubId(clubId);
+        clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
 
         List<Long> articleIds = articleRepository.findArticleIdsByClubId(clubId);
 
-        commentLikeRepository.deleteAllCommentLikeByArticleIds(articleIds);
-        commentRepository.deleteAllCommentByArticleIds(articleIds);
-        articleLikeRepository.deleteAllArticleLikeByArticleIds(articleIds);
-        articleRepository.deleteAllArticleByClubId(clubId);
-
-        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
+        commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+        commentRepository.deleteAllCommentByArticle_IdIn(articleIds);
+        articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
+        articleRepository.deleteAllArticleByClub_Id(clubId);
         clubMemberRepository.deleteAllClubMemberByClubId(clubId);
 
-        entityManager.flush();
-        entityManager.clear();
+        clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
+        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
 
         clubRepository.deleteById(clubId);
     }

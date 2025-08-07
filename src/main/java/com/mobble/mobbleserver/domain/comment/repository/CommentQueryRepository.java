@@ -13,6 +13,4 @@ public interface CommentQueryRepository {
     Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> commentIds, Long memberId);
 
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
-
-    void deleteAllCommentByArticleIds(List<Long> articleIds);
 }
