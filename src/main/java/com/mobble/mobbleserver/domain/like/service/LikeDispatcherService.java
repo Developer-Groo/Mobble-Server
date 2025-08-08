@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.like.service;
 
 import com.mobble.mobbleserver.domain.like.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.entity.LikeType;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
@@ -28,7 +30,7 @@ public class LikeDispatcherService {
     public LikeToggleResponseDto toggleLike(LikeType likeType, Long targetId, Long memberId) {
         LikeStrategy strategy = strategyMap.get(likeType);
         if (strategy == null) {
-            throw new IllegalArgumentException("지원하지 않는 LikeType: " + likeType);
+            throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
         }
         return strategy.toggleLike(targetId, memberId);
     }
