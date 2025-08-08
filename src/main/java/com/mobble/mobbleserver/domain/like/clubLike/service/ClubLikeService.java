@@ -1,48 +1,56 @@
 package com.mobble.mobbleserver.domain.like.clubLike.service;
 
-import com.mobble.mobbleserver.domain.like.clubLike.dto.response.ClubLikeResponseDto;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepository;
+import com.mobble.mobbleserver.domain.like.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.service.AbstractLikeService;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class ClubLikeService {
+public class ClubLikeService extends AbstractLikeService<Club, ClubLike> {
 
-    private final MemberRepository memberRepository;
-//    private final ClubRepository clubRepository;
     private final ClubLikeRepository clubLikeRepository;
+    private final ClubValidator clubValidator;
 
-    @Transactional
-    public ClubLikeResponseDto toggleLike(Long clubId, Long memberId) {
-        Member member = findMemberOrThrow(memberId);
-//        Club club = findClubOrThrow(clubId)
-//
-//        Optional<ClubLike> checkLiked = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
-//
-//        if (checkLiked.isPresent()) {
-//            clubLikeRepository.delete(checkLiked.get());
-//        } else {
-//            ClubLike clubLike = ClubLike.createClubLike(club, member);
-//            clubLikeRepository.save(clubLike);
-//        }
-//        boolean isLiked = checkLiked.isEmpty();
-//
-//        return ClubLikeResponseDto.toDto(club.getId(), isLiked);
-        return null;
+    public ClubLikeService(MemberValidator memberValidator, ClubLikeRepository clubLikeRepository, ClubValidator clubValidator) {
+        super(memberValidator);
+        this.clubLikeRepository = clubLikeRepository;
+        this.clubValidator = clubValidator;
     }
 
-    private Member findMemberOrThrow(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용
+    @Override
+    public LikeType getType() {
+        return LikeType.CLUB;
     }
 
-//    private Club findClubOrThrow(Long clubId) {
-//        return clubRepository.findById(clubId)
-//                .orElseThrow(() -> new IllegalArgumentException(""));
-//    }
+    @Override
+    protected Club getTarget(Long targetId) {
+        return clubValidator.findClubByClubIdOrThrow(targetId);
+    }
+
+    @Override
+    protected Optional<ClubLike> findExistingLike(Club club, Member member) {
+        return clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+    }
+
+    @Override
+    protected ClubLike createLike(Club club, Member member) {
+        return ClubLike.createClubLike(club, member);
+    }
+
+    @Override
+    protected void saveLike(ClubLike entity) {
+        clubLikeRepository.save(entity);
+    }
+
+    @Override
+    protected void deleteLike(ClubLike entity) {
+        clubLikeRepository.delete(entity);
+    }
 }
