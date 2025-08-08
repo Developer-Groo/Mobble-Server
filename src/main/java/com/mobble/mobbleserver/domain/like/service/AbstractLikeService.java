@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.like.service;
 
 import com.mobble.mobbleserver.domain.like.dto.response.LikeToggleResponseDto;
-import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +43,4 @@ public abstract class AbstractLikeService<T, E> implements LikeStrategy {
 
     /** 대상 엔티티 로드 (Validator 호출 등) */
     protected abstract T getTarget(Long targetId);
-
-    /** 이 전략이 처리할 타입 */
-    @Override
-    public abstract LikeType getType();
 }
