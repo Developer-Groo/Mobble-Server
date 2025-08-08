@@ -1,10 +1,8 @@
 package com.mobble.mobbleserver.domain.like.controller;
 
-import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
-import com.mobble.mobbleserver.domain.like.clubLike.service.ClubLikeService;
-import com.mobble.mobbleserver.domain.like.commentLike.service.CommentLikeService;
 import com.mobble.mobbleserver.domain.like.dto.response.LikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.service.LikeDispatcherService;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
@@ -20,8 +18,6 @@ public class LikeController {
 
     private final LikeDispatcherService likeDispatcherService;
     private final ArticleLikeService articleLikeService;
-    private final CommentLikeService commentLikeService;
-    private final ClubLikeService clubLikeService;
 
     @PostMapping
     public ResponseEntity<LikeToggleResponseDto> toggleLike(
