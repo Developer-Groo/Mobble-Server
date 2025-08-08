@@ -113,7 +113,9 @@ public class ClubMemberService {
 
         List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
 
-        return clubMembers.stream().map(ClubMemberResponseDto::toEntity).collect(Collectors.toList());
+        return clubMembers.stream()
+                .map(ClubMemberResponseDto::toEntity)
+                .collect(Collectors.toList());
     }
 
     private void validateLeader(Long clubId, Long memberId) {
