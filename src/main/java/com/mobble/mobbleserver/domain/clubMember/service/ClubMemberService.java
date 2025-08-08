@@ -66,19 +66,21 @@ public class ClubMemberService {
     }
 
     @Transactional
-    public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId, UpdateClubMemberRoleDto dto) {
+    public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId,
+                                                            UpdateClubMemberRoleDto dto) {
         Long targetMemberId = dto.memberId();
         ClubMemberRole newRole = dto.newRole();
 
-        clubValidator.findClubByClubIdOrThrow(clubId);
-        memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
-        memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
+        Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
 
-        validateLeader(clubId, loginedMemberId);
+        validateLeader(club.getId(), loginedMember.getId());
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
 
-        if (targetMemberId.equals(loginedMemberId)) throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
+        if (targetMemberId.equals(loginedMemberId))
+            throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
 
         clubMember.updateRole(newRole);
 
@@ -86,18 +88,21 @@ public class ClubMemberService {
     }
 
     @Transactional
-    public ClubMemberUpsertResponseDto updateClubMemberStatus(Long clubId, Long loginedMemberId, UpdateClubMemberStatusDto dto) {
+    public ClubMemberUpsertResponseDto updateClubMemberStatus(Long clubId, Long loginedMemberId,
+                                                              UpdateClubMemberStatusDto dto) {
         Long memberId = dto.memberId();
         JoinStatus targetStatus = dto.status();
 
-        clubValidator.findClubByClubIdOrThrow(clubId);
-        memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
 
-        validateLeader(clubId, loginedMemberId);
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        validateLeader(club.getId(), loginedMember.getId());
+
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
 
         if (targetStatus == JoinStatus.APPROVED) {
-            validateClubNotFull(clubMember.getClub());
+            validateClubNotFull(club);
         }
 
         clubMember.updateStatus(targetStatus);
