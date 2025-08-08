@@ -4,14 +4,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-import static com.mobble.mobbleserver.domain.comment.entity.QComment.comment;
 import static com.mobble.mobbleserver.domain.like.commentLike.entity.QCommentLike.commentLike;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository{
+public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
