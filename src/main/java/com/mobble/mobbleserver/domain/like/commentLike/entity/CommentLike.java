@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.like.commentLike.entity;
 
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
+import com.mobble.mobbleserver.domain.like.entity.BaseLike;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
@@ -13,37 +14,28 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentLike {
+@AttributeOverride(name = "id", column = @Column(name = "comment_like_id"))
+public class CommentLike extends BaseLike {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_like_id")
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)
     private CommentLike(Comment comment, Member member) {
-        validateCommon(comment, member);
+        validateComment(comment);
         this.comment = comment;
-        this.member = member;
+        assignMember(member);
     }
 
-    public static CommentLike createcommentLike(Comment comment, Member member) {
+    public static CommentLike createCommentLike(Comment comment, Member member) {
         return CommentLike.builder()
                 .comment(comment)
                 .member(member)
                 .build();
     }
 
-    private void validateCommon(Comment comment, Member member) {
+    private void validateComment(Comment comment) {
         if (comment == null) throw new DomainException(LikeErrorCode.COMMENT_REQUIRED);
-        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
     }
 }

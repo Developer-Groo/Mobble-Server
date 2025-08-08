@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.like.articleLike.entity;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
+import com.mobble.mobbleserver.domain.like.entity.BaseLike;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
@@ -13,26 +14,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArticleLike {
+@AttributeOverride(name = "id", column = @Column(name = "article_like_id"))
+public class ArticleLike extends BaseLike {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "article_like_id")
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "article_id", nullable = false)
     private Article article;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)
     private ArticleLike(Article article, Member member) {
-        validateCommon(article, member);
+        validateArticle(article);
         this.article = article;
-        this.member = member;
+        assignMember(member);
     }
 
     public static ArticleLike createArticleLike(Article article, Member member) {
@@ -42,8 +35,7 @@ public class ArticleLike {
                 .build();
     }
 
-    private void validateCommon(Article article, Member member) {
+    private void validateArticle(Article article) {
         if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
-        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
     }
 }
