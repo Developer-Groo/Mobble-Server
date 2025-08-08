@@ -9,12 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public abstract class AbstractLikeService<T, E> implements LikeStrategy {
 
     protected final MemberValidator memberValidator;
 
     @Override
+    @Transactional
     public LikeToggleResponseDto toggleLike(Long targetId, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
