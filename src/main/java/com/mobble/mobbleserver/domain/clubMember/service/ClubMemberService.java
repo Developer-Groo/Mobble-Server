@@ -65,6 +65,7 @@ public class ClubMemberService {
         clubMember.updateStatus(JoinStatus.WITHDRAWN);
     }
 
+    @Transactional
     public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId, UpdateClubMemberRoleDto dto) {
         Long targetMemberId = dto.memberId();
         ClubMemberRole newRole = dto.newRole();
