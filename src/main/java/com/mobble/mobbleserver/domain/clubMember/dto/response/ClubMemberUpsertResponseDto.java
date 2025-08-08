@@ -9,6 +9,7 @@ public record ClubMemberUpsertResponseDto(
         String memberRole,
         JoinStatus joinStatus
 ) {
+
     public static ClubMemberUpsertResponseDto toDto(ClubMember clubMember) {
         return new ClubMemberUpsertResponseDto(
                 clubMember.getClub().getId(),

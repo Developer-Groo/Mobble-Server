@@ -40,9 +40,7 @@ public class ClubMemberService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
         boolean existsClubMember = existsClubMember(clubId, memberId);
-        if (existsClubMember) {
-            throw new DomainException(ClubMemberErrorCode.ALREADY_JOINED);
-        }
+        if (existsClubMember) throw new DomainException(ClubMemberErrorCode.ALREADY_JOINED);
 
         validateClubNotFull(club);
 
@@ -79,9 +77,7 @@ public class ClubMemberService {
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
 
-        if (targetMemberId.equals(loginedMemberId)) {
-            throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
-        }
+        if (targetMemberId.equals(loginedMemberId)) throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
 
         clubMember.updateRole(newRole);
 
