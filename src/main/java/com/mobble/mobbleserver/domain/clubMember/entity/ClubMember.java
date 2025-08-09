@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.clubMember.entity;
 
+import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubMember extends CreatedAtEntity {
+public class ClubMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +32,16 @@ public class ClubMember extends CreatedAtEntity {
     @Column(name = "club_member_role")
     private ClubMemberRole clubMemberRole;
 
-    @Column(name = "join_status")
-    private boolean joinStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "join_status", nullable = false)
+    private JoinStatus joinStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
     private ClubMember(
             Member member,
             Club club,
             ClubMemberRole clubMemberRole,
-            boolean joinStatus
+            JoinStatus joinStatus
     ) {
         this.member = member;
         this.club = club;
@@ -51,7 +53,7 @@ public class ClubMember extends CreatedAtEntity {
             Member member,
             Club club,
             ClubMemberRole clubMemberRole,
-            boolean joinStatus
+            JoinStatus joinStatus
     ) {
         return ClubMember.builder()
                 .member(member)
@@ -59,5 +61,13 @@ public class ClubMember extends CreatedAtEntity {
                 .clubMemberRole(clubMemberRole)
                 .joinStatus(joinStatus)
                 .build();
+    }
+
+    public void updateStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
+    }
+
+    public void updateRole(ClubMemberRole newRole) {
+        this.clubMemberRole = newRole;
     }
 }
