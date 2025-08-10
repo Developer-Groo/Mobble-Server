@@ -13,11 +13,8 @@ public class NaverUserInfoResponse implements OAuth2UserInfo {
     private final SocialProvider socialProvider = SocialProvider.NAVER;
 
     public NaverUserInfoResponse(Map<String, Object> rawResponse) {
+        if (rawResponse == null || rawResponse.get("response") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
         this.response = (Map<String, Object>) rawResponse.get("response");
-
-        if (this.response == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
     }
 
     @Override
@@ -27,25 +24,22 @@ public class NaverUserInfoResponse implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        if (response.get("id") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
+        if (response.get("id") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+
         return response.get("id").toString();
     }
 
     @Override
     public String getName() {
-        if (response.get("name") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
+        if (response.get("name") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+
         return response.get("name").toString();
     }
 
     @Override
     public String getEmail() {
-        if (response.get("email") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
+        if (response.get("email") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
+
         return response.get("email").toString();
     }
 }
