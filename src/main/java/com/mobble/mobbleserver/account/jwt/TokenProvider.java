@@ -66,11 +66,11 @@ public class TokenProvider {
     /**
      * access 토큰 검증, memberId 반환
      */
-    public Long getAccessTokenInfo(String token) {
+    public Long getAccessTokenInfo(String accessToken) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(accessToken)
                 .getBody();
 
         return Long.parseLong(claims.getSubject());
@@ -79,11 +79,11 @@ public class TokenProvider {
     /**
      * signup 토큰 검증
      */
-    public SocialUserInfo getSignupTokenInfo(String token) {
+    public SocialUserInfo getSignupTokenInfo(String signupToken) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(signupToken)
                 .getBody();
 
         String name = (String) claims.get("name");
@@ -98,12 +98,12 @@ public class TokenProvider {
      * 토큰 유효성 검증
      * 현재 만료 여부만 검증. Security 적용 후 재발급 로직 구현 예정
      */
-    public boolean validateToken(String token) {
+    public boolean validateToken(String accessToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(accessToken);
             return true;
         } catch (Exception e) {
             // MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException
