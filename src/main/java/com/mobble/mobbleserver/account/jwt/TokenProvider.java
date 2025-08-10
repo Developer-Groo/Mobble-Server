@@ -29,7 +29,7 @@ public class TokenProvider {
     /**
      * Access Token 생성
      */
-    public String createAccessToken(Long memberId) {
+    public String createAccessJwtToken(Long memberId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 10 minute
 

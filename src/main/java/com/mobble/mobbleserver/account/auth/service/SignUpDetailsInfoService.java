@@ -30,6 +30,6 @@ public class SignUpDetailsInfoService {
         Member member = dto.toEntity(userInfo);
         memberRepository.save(member);
 
-        return tokenProvider.createAccessToken(member.getId());
+        return tokenProvider.createAccessJwtToken(member.getId());
     }
 }

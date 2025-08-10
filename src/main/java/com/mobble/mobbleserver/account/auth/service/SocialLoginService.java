@@ -28,11 +28,13 @@ public class SocialLoginService {
         Member member = memberValidator.validateMemberOrThrow(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
-            String accessToken = tokenProvider.createAccessToken(member.getId());
+            String accessToken = tokenProvider.createAccessJwtToken(member.getId());
+
             return SocialLoginResponseDto.existMember(accessToken);
         }
 
         String signupToken = tokenProvider.createSignupToken(userInfo.name(), userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
+
         return SocialLoginResponseDto.newMember(signupToken);
     }
 }
