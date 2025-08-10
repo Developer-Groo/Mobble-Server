@@ -13,8 +13,7 @@ public enum ClubErrorCode implements ErrorCode {
     GROUND_REQUIRED("클럽 활동지역은 필수 입니다.", HttpStatus.BAD_REQUEST),
     ADDRESS_REQUIRED("클럽 주소는 필수 입니다.", HttpStatus.BAD_REQUEST),
     HEADCOUNT_REQUIRED("클럽 정원 수는 2명 이상이어야 합니다.", HttpStatus.BAD_REQUEST),
-    CATEGORY_NOT_FOUND("알수 없는 클럽 카테고리입니다.", HttpStatus.BAD_REQUEST),
-    NO_PERMISSION("해당 클럽을 수정 또는 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    CATEGORY_NOT_FOUND("알수 없는 클럽 카테고리입니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;

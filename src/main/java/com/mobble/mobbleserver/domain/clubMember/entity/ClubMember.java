@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -74,7 +75,7 @@ public class ClubMember extends BaseEntity {
 
     public void assertLeaderOrThrow() {
         if (this.clubMemberRole != ClubMemberRole.LEADER) {
-            throw new DomainException(ClubErrorCode.NO_PERMISSION);
+            throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
         }
     }
 }
