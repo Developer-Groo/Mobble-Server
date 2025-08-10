@@ -13,10 +13,8 @@ public class GoogleUserInfoResponse implements OAuth2UserInfo {
     private final SocialProvider socialProvider = SocialProvider.GOOGLE;
 
     public GoogleUserInfoResponse(Map<String, Object> attributes) {
+        if (attributes == null || attributes.get("sub") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
         this.attributes = attributes;
-        if (attributes == null || attributes.get("sub") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
     }
 
     @Override
@@ -31,18 +29,14 @@ public class GoogleUserInfoResponse implements OAuth2UserInfo {
 
     @Override
     public String getName() {
-        if (attributes.get("name") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
+        if (attributes.get("name") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
 
         return attributes.get("name").toString();
     }
 
     @Override
     public String getEmail() {
-        if (attributes.get("email") == null) {
-            throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
-        }
+        if (attributes.get("email") == null) throw new DomainException(OAuth2ErrorCode.NO_USER_INFO);
 
         return attributes.get("email").toString();
     }
