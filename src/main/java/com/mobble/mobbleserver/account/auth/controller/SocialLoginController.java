@@ -3,11 +3,9 @@ package com.mobble.mobbleserver.account.auth.controller;
 import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
 import com.mobble.mobbleserver.account.auth.service.SocialLoginService;
-import com.mobble.mobbleserver.account.auth.util.CookieUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +24,9 @@ public class SocialLoginController {
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
         SocialLoginResponseDto result = socialLoginService.socialLogin(dto);
-        ResponseCookie cookie = CookieUtil.createAccessTokenCookie(result.accessToken());
 
         return ResponseEntity.status(result.isNewMember() ? HttpStatus.UNAUTHORIZED : HttpStatus.OK)
-                .header("Set-Cookie", cookie.toString())
-                .body(null);
+                .header("Authorization", "Bearer " + result.accessToken())
+                .build();
     }
 }
