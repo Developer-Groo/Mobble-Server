@@ -34,6 +34,7 @@ public abstract class AbstractSocialTokenVerifier implements SocialVerifier {
         } catch (Exception e) {
             throw new DomainException(OAuth2ErrorCode.FAILED_TO_REQUEST_USER_INFO);
         }
+        
         return parseUserInfo(response);
     }
 }
