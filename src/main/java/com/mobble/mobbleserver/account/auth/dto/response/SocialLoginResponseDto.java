@@ -6,8 +6,8 @@ public record SocialLoginResponseDto(String accessToken, boolean isNewMember) {
         return new SocialLoginResponseDto(accessToken, false);
     }
 
-    public static SocialLoginResponseDto newMember(String accessToken) {
-        return new SocialLoginResponseDto(accessToken, true);
+    public static SocialLoginResponseDto newMember(String signupToken) {
+        return new SocialLoginResponseDto(signupToken, true);
     }
 }
 
