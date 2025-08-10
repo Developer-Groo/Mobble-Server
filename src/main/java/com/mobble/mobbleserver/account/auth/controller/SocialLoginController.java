@@ -26,7 +26,7 @@ public class SocialLoginController {
         SocialLoginResponseDto result = socialLoginService.socialLogin(dto);
 
         return ResponseEntity.status(result.isNewMember() ? HttpStatus.UNAUTHORIZED : HttpStatus.OK)
-                .header("Authorization", "Bearer " + result.accessToken())
+                .header("Authorization", "Bearer " + result.accessJwtToken())
                 .build();
     }
 }

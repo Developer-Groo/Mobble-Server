@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.auth.dto.response;
 
-public record SocialLoginResponseDto(String accessToken, boolean isNewMember) {
+public record SocialLoginResponseDto(String accessJwtToken, boolean isNewMember) {
 
     public static SocialLoginResponseDto existMember(String accessToken) {
         return new SocialLoginResponseDto(accessToken, false);
