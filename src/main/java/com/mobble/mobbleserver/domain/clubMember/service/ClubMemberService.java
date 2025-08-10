@@ -14,7 +14,6 @@ import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,8 +73,8 @@ public class ClubMemberService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
-
-        validateLeader(club.getId(), loginedMember.getId());
+        ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
+        clubLeader.assertLeaderOrThrow();
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
 
@@ -96,8 +95,8 @@ public class ClubMemberService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
-
-        validateLeader(club.getId(), loginedMember.getId());
+        ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
+        clubLeader.assertLeaderOrThrow();
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
 
@@ -118,14 +117,6 @@ public class ClubMemberService {
         return clubMembers.stream()
                 .map(ClubMemberResponseDto::toEntity)
                 .collect(Collectors.toList());
-    }
-
-    private void validateLeader(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
-        if (!clubMember.getClubMemberRole().equals(ClubMemberRole.LEADER)) {
-            throw new DomainException(ClubErrorCode.NO_PERMISSION);
-        }
     }
 
     private JoinStatus determineJoinStatus(Club club) {
