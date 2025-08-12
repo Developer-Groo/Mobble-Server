@@ -31,7 +31,7 @@ public class TokenProvider {
      */
     public String createAccessJwtToken(Long memberId) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 10 minute
+        Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 1day
 
         return Jwts.builder()
                 .setSubject(memberId.toString())
