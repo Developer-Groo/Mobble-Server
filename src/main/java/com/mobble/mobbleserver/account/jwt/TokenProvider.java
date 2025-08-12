@@ -55,8 +55,8 @@ public class TokenProvider {
         claims.put("socialId", socialId);
 
         return Jwts.builder()
-                .setSubject(socialProvider.name() + ":" + socialId)
                 .setClaims(claims)
+                .setSubject(socialProvider.name() + ":" + socialId)
                 .setIssuedAt(now)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
