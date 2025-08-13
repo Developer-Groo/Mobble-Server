@@ -39,4 +39,14 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
+
+    @GetMapping("/api/meetings/{meeting-id}")
+    public ResponseEntity<MeetingResponseDto> findMeeting(
+            @PathVariable("meeting-id") @Positive Long meetingId
+    ) {
+        Long memberId = 1L;
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(meetingService.findMeetingById(meetingId, memberId));
+    }
 }
