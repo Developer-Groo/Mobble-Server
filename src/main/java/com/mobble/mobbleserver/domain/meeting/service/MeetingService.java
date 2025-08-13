@@ -82,6 +82,20 @@ public class MeetingService {
         return MeetingResponseDto.toDto(meetingRepository.save(meeting));
     }
 
+    public void deleteMeeting(Long memberId, Long meetingId) {
+        Meeting meeting = findMeetingByMeetingId(meetingId);
+
+        Long clubId = meeting.getClubMember().getClub().getId();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
+
+        if (clubMemberRole == ClubMemberRole.MEMBER) {
+            throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용?
+        }
+
+        meetingRepository.delete(meeting);
+    }
+
     private Meeting findMeetingByMeetingId(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
