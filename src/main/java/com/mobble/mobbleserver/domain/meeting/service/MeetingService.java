@@ -8,7 +8,6 @@ import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDt
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ import java.util.List;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
-    private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
 
     @Transactional
