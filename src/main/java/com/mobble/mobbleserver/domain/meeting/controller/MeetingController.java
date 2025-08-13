@@ -60,4 +60,14 @@ public class MeetingController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
+
+    @DeleteMapping("/api/meetings/{meeting-id}")
+    public ResponseEntity<Void> deleteMeeting(
+            @PathVariable("meeting-id") @Positive Long meetingId
+    ) {
+        Long memberId = 1L;
+        meetingService.deleteMeeting(memberId, meetingId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }
