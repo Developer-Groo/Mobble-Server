@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -29,5 +28,15 @@ public class MeetingController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingService.createMeeting(memberId, clubId, dto));
+    }
+
+    @GetMapping("/api/clubs/{club-id}/meetings")
+    public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        Long memberId = 1L;
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
 }
