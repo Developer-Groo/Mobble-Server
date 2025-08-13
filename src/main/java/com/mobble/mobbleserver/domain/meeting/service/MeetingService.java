@@ -47,4 +47,18 @@ public class MeetingService {
                 .map(meeting -> MeetingResponseDto.toDto(meeting))
                 .toList();
     }
+
+    public MeetingResponseDto findMeetingById(Long meetingId, Long memberId) {
+        Meeting meeting = findMeetingByMeetingId(meetingId); //Todo 커스텀 예외 적용
+
+        Long clubId = meeting.getClubMember().getClub().getId();
+        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+
+        return MeetingResponseDto.toDto(meeting);
+    }
+
+    private Meeting findMeetingByMeetingId(Long meetingId) {
+        return meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new IllegalArgumentException(""));
+    }
 }
