@@ -75,4 +75,21 @@ public class Meeting {
                 .type(type)
                 .build();
     }
+
+    public void updateMeeting(
+            String title,
+            LocalDateTime dateTime,
+            String location,
+            String cost,
+            Integer memberLimit,
+            MeetingType type
+    ) {
+        //Todo null 검증 로직 추가
+        this.title = title;
+        this.datetime = dateTime;
+        this.location = location;
+        this.cost = cost;
+        this.memberLimit = memberLimit;
+        this.type = type;
+    }
 }
