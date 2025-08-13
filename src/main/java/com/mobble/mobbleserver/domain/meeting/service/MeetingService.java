@@ -23,15 +23,15 @@ public class MeetingService {
 
     @Transactional
     public MeetingResponseDto createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
-        ClubMember host = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember hostMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        ClubMemberRole clubMemberRole = host.getClubMemberRole();
+        ClubMemberRole clubMemberRole = hostMember.getClubMemberRole();
 
         if (clubMemberRole == ClubMemberRole.MEMBER) {
             throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
         }
 
-        Meeting meeting = dto.toEntity(host);
+        Meeting meeting = dto.toEntity(hostMember);
         //Todo d-day 표시 추가
 
         return MeetingResponseDto.toDto(meetingRepository.save(meeting));

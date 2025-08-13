@@ -16,9 +16,9 @@ public record MeetingRequestDto(
         Integer memberLimit,
         MeetingType type
 ) {
-    public Meeting toEntity(ClubMember host) {
+    public Meeting toEntity(ClubMember hostMember) {
         return Meeting.createMeeting(
-                host,
+                hostMember,
                 this.title,
                 this.dateTime,
                 this.location,
