@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,5 +37,14 @@ public class MeetingService {
         //Todo d-day 표시 추가
 
         return MeetingResponseDto.toDto(meetingRepository.save(meeting));
+    }
+
+    public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
+
+        return meetings.stream()
+                .map(meeting -> MeetingResponseDto.toDto(meeting))
+                .toList();
     }
 }
