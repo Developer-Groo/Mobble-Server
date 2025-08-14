@@ -80,6 +80,7 @@ public class MeetingService {
         return MeetingResponseDto.toDto(meetingRepository.save(meeting));
     }
 
+    @Transactional
     public void deleteMeeting(Long memberId, Long meetingId) {
         Meeting meeting = findMeetingByMeetingId(meetingId);
 
