@@ -1,9 +1,5 @@
 package com.mobble.mobbleserver.account.jwt;
 
-import com.mobble.mobbleserver.account.auth.principal.CustomUserDetails;
-import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +16,6 @@ import java.util.Collections;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private final MemberValidator memberValidator;
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
@@ -33,18 +28,10 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null && tokenProvider.validateToken(token)) {
             Long memberId = tokenProvider.getAccessTokenInfo(token);
 
-            try {
-                Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-
-                CustomUserDetails userDetails = CustomUserDetails.existingMember(member, Collections.emptyMap());
-
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (DomainException e) {
-                // 인증 실패 → 무시하고 다음 필터로 넘김
-            }
         }
 
         filterChain.doFilter(request, response);
