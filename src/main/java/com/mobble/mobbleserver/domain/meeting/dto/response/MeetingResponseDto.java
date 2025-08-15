@@ -16,6 +16,7 @@ public record MeetingResponseDto(
         MeetingType type
 //        String dDay //Todo d-day 추가
 ) {
+    
     public static MeetingResponseDto toDto(Meeting meeting) {
         return new MeetingResponseDto(
                 meeting.getId(),
