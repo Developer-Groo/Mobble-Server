@@ -51,7 +51,7 @@ public class MeetingController {
                 .body(meetingService.findMeetingById(meetingId, memberId));
     }
 
-    @PatchMapping("/api/meetings/{meeting-id}")
+    @PatchMapping("/api/clubs/{club-id}/meetings/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
@@ -61,7 +61,7 @@ public class MeetingController {
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
 
-    @DeleteMapping("/api/meetings/{meeting-id}")
+    @DeleteMapping("/api/clubs/{club-id}/meetings/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
