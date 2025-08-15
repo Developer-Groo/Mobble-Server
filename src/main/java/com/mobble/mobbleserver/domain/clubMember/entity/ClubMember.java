@@ -73,7 +73,7 @@ public class ClubMember extends BaseEntity {
         this.clubMemberRole = newRole;
     }
 
-    public void assertLeaderOrThrow() {
+    public void assertLeader() {
         if (this.clubMemberRole != ClubMemberRole.LEADER) {
             throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
         }

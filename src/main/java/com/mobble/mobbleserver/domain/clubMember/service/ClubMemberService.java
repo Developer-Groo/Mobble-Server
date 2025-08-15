@@ -74,7 +74,7 @@ public class ClubMemberService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        clubLeader.assertLeaderOrThrow();
+        clubLeader.assertLeader();
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
 
@@ -96,7 +96,7 @@ public class ClubMemberService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        clubLeader.assertLeaderOrThrow();
+        clubLeader.assertLeader();
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
 

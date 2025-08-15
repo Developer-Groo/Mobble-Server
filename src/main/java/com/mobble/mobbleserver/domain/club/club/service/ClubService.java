@@ -83,7 +83,7 @@ public class ClubService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        clubMember.assertLeaderOrThrow();
+        clubMember.assertLeader();
 
         ClubCategory category = findCategoryOrThrow(dto.category());
         club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
@@ -100,7 +100,7 @@ public class ClubService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        clubMember.assertLeaderOrThrow();
+        clubMember.assertLeader();
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
 
