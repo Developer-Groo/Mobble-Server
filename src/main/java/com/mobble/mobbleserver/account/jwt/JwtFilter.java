@@ -1,17 +1,21 @@
 package com.mobble.mobbleserver.account.jwt;
 
 import com.mobble.mobbleserver.account.auth.principal.AuthMember;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -27,12 +31,16 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if (token != null && tokenProvider.validateToken(token)) {
-            Long memberId = tokenProvider.getAccessTokenInfo(token);
+            Long memberId = tokenProvider.getMemberIdByJwtToken(token);
+            List<ClubMemberRole> roles = tokenProvider.getRolesByJwtToken(token);
+            Collection<? extends GrantedAuthority> authorities = roles.stream()
+                    .map(clubMemberRole -> new SimpleGrantedAuthority(clubMemberRole.name()))
+                    .toList();
 
             AuthMember authMember = new AuthMember(memberId);
 
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(authMember, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(authMember, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
