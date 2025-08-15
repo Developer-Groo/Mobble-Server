@@ -41,15 +41,6 @@ public class MeetingService {
                 .toList();
     }
 
-    public MeetingResponseDto findMeetingById(Long meetingId, Long memberId) {
-        Meeting meeting = findMeetingByMeetingId(meetingId); //Todo 커스텀 예외 적용
-
-        Long clubId = meeting.getClubMember().getClub().getId();
-        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
-        return MeetingResponseDto.toDto(meeting);
-    }
-
     @Transactional
     public MeetingResponseDto updateMeeting(Long memberId, Long meetingId, MeetingUpdateRequestDto dto) {
         Meeting meeting = findMeetingByMeetingId(meetingId);
