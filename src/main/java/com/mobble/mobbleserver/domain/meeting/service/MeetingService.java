@@ -49,9 +49,7 @@ public class MeetingService {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
 
-        if (clubMemberRole == ClubMemberRole.MEMBER) {
-            throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용?
-        }
+        if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meeting.updateMeeting(
                 dto.title(),
@@ -73,9 +71,7 @@ public class MeetingService {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
 
-        if (clubMemberRole == ClubMemberRole.MEMBER) {
-            throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용?
-        }
+        if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meetingRepository.delete(meeting);
     }
