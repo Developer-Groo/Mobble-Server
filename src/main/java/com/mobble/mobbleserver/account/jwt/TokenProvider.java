@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.account.jwt;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,41 +15,52 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class TokenProvider {
 
-    private Key key;
+    private final Key key;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
-     * Access Token 생성
-     */
-    public String createAccessJwtToken(Long memberId) {
+    /* =======================
+     *  Create Token
+     * ======================= */
+
+    // Access Jwt Token 생성
+    public String createAccessJwtToken(Long memberId, List<ClubMemberRole> roles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 1day
 
+        Map<String, Object> claims = new HashMap<>();
+        if (roles != null && !roles.isEmpty()) claims.put("roles", roles.stream().map(Enum::name).toList());
+
         return Jwts.builder()
                 .setSubject(memberId.toString())
+                .addClaims(claims)
                 .setIssuedAt(now)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
 
-    /**
-     * 회원가입용 Signup Token 생성
-     */
+    // roles 없이 토큰 생성 (클럽 미가입 유저용)
+    public String createAccessJwtToken(Long memberId) {
+        return createAccessJwtToken(memberId, List.of());
+    }
+
+    // 회원가입용 Signup Token 생성
     public String createSignupToken(String name, String email, SocialProvider socialProvider, String socialId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 10); // Valid Time: 10 minute
 
-        HashMap<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("name", name);
         claims.put("email", email);
         claims.put("socialProvider", String.valueOf(socialProvider));
@@ -63,28 +75,28 @@ public class TokenProvider {
                 .compact();
     }
 
-    /**
-     * access 토큰 검증, memberId 반환
-     */
-    public Long getAccessTokenInfo(String accessJwtToken) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(accessJwtToken)
-                .getBody();
+    /* =======================
+     *  Parse / Validate
+     * ======================= */
 
-        return Long.parseLong(claims.getSubject());
+    // Access Token -> memberId
+    public Long getMemberIdByJwtToken(String accessJwtToken) {
+        return Long.valueOf(parse(accessJwtToken).getSubject());
     }
 
-    /**
-     * signup 토큰 검증
-     */
+    // Access Token -> roles (없으면 빈 리스트)
+    public List<ClubMemberRole> getRolesByJwtToken(String token) {
+        List<?> roles = parse(token).get("roles", List.class);
+        if (roles == null) return List.of();
+        return roles.stream()
+                .map(String::valueOf)          // Object -> String
+                .map(ClubMemberRole::valueOf)  // String -> Enum
+                .toList();
+    }
+
+    // Signup Token -> SocialUserInfo
     public SocialUserInfo getSignupTokenInfo(String signupToken) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(signupToken)
-                .getBody();
+        Claims claims = parse(signupToken);
 
         String name = (String) claims.get("name");
         String email = (String) claims.get("email");
@@ -94,21 +106,30 @@ public class TokenProvider {
         return new SocialUserInfo(name, email, socialProvider, socialId);
     }
 
-    /**
-     * 토큰 유효성 검증
-     * 현재 만료 여부만 검증. Security 적용 후 재발급 로직 구현 예정
-     */
+    /* =======================
+     *  Validate
+     * ======================= */
+
     public boolean validateToken(String accessJwtToken) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(accessJwtToken);
+            parse(accessJwtToken);
             return true;
         } catch (Exception e) {
             // MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException
             log.warn("Invalid JWT token. reason: {}", e.getMessage());
             return false;
         }
+    }
+
+    /* =======================
+     *  Internal
+     * ======================= */
+
+    private Claims parse(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
