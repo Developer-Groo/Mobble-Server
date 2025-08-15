@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.domain.clubAgeGroup.entity;
+package com.mobble.mobbleserver.domain.club.clubAgeGroup.entity;
 
-import com.mobble.mobbleserver.domain.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

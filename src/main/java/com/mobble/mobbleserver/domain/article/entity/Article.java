@@ -1,11 +1,10 @@
 package com.mobble.mobbleserver.domain.article.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
-import com.mobble.mobbleserver.domain.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

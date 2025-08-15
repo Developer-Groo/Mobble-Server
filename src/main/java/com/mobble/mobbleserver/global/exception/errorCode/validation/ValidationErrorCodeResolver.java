@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.global.exception.errorCode.validation;
 
 import com.mobble.mobbleserver.global.exception.common.ErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleValidationErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberValidationErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberValidationErrorCode;
 
@@ -20,6 +22,8 @@ public class ValidationErrorCodeResolver {
             case "COMMENT" -> resolveEnum(code, CommentValidationErrorCode.values());
             case "MEMBER" -> resolveEnum(code, MemberValidationErrorCode.values());
             case "ARTICLE" -> resolveEnum(code, ArticleValidationErrorCode.values());
+            case "CLUB" -> resolveEnum(code, ClubValidationErrorCode.values());
+            case "CLUB_MEMBER" -> resolveEnum(code, ClubMemberValidationErrorCode.values());
             default -> "알 수 없는 도메인 메세지입니다.";
         };
     }
