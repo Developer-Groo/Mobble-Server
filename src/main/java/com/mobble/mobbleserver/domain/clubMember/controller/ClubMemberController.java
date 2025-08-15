@@ -52,7 +52,7 @@ public class ClubMemberController {
         Long loginedMemberId = 2L; // Todo: 임시 member id
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubMemberService.updateClubMemberStatus(clubId, loginedMemberId, dto));
+                .body(clubMemberService.updateClubMemberJoinStatus(clubId, loginedMemberId, dto));
     }
 
     @PatchMapping("/{club-id}/members/role")
