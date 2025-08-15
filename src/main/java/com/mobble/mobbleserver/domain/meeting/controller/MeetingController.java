@@ -16,11 +16,12 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/clubs/{club-id}/meetings")
 public class MeetingController {
 
     private final MeetingService meetingService;
 
-    @PostMapping("/api/clubs/{club-id}/meetings")
+    @PostMapping
     public ResponseEntity<MeetingResponseDto> createMeeting(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
@@ -31,7 +32,7 @@ public class MeetingController {
                 .body(meetingService.createMeeting(memberId, clubId, dto));
     }
 
-    @GetMapping("/api/clubs/{club-id}/meetings")
+    @GetMapping
     public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
             @PathVariable("club-id") @Positive Long clubId
     ) {
@@ -41,7 +42,7 @@ public class MeetingController {
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
 
-    @PatchMapping("/api/clubs/{club-id}/meetings/{meeting-id}")
+    @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
@@ -51,7 +52,7 @@ public class MeetingController {
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
 
-    @DeleteMapping("/api/clubs/{club-id}/meetings/{meeting-id}")
+    @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
