@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.account.jwt;
 
+import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,8 +29,10 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null && tokenProvider.validateToken(token)) {
             Long memberId = tokenProvider.getAccessTokenInfo(token);
 
+            AuthMember authMember = new AuthMember(memberId);
+
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(authMember, null, Collections.emptyList());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
