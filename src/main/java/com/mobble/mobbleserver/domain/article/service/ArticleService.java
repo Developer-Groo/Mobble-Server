@@ -64,7 +64,7 @@ public class ArticleService {
     }
 
     public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
-        Club club = findClubOrThrow(clubId);
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         List<Article> articles = articleRepository.findArticlesByClubId(clubId, articleType);
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
         Map<Long, Integer> commentCountMap = getArticleCommentCount(articles);
@@ -163,10 +163,5 @@ public class ArticleService {
 
     private boolean isWriter(Long articleWriterId, Long memberId) {
         return articleWriterId.equals(memberId);
-    }
-
-    private Club findClubOrThrow(Long clubId) {
-        return clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 }
