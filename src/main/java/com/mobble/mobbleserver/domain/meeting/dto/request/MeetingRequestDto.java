@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 public record MeetingRequestDto(
         String title,
+
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime dateTime,
         String location,
