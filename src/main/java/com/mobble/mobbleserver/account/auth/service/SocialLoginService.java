@@ -2,15 +2,19 @@ package com.mobble.mobbleserver.account.auth.service;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
-import com.mobble.mobbleserver.account.jwt.TokenProvider;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory;
+import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class SocialLoginService {
     private final SocialVerifierFactory verifierFactory;
     private final MemberValidator memberValidator;
     private final TokenProvider tokenProvider;
+    private final ClubMemberRepository clubMemberRepository;
 
     public SocialLoginResponseDto socialLogin(SocialLoginRequestDto dto) {
         SocialVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
@@ -28,7 +33,8 @@ public class SocialLoginService {
         Member member = memberValidator.validateMemberOrThrow(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
-            String accessToken = tokenProvider.createAccessJwtToken(member.getId());
+            List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
+            String accessToken = tokenProvider.createAccessJwtToken(member.getId(), roles);
 
             return SocialLoginResponseDto.existMember(accessToken);
         }
