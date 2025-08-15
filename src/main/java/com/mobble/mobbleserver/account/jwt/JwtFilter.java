@@ -28,10 +28,10 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null && tokenProvider.validateToken(token)) {
             Long memberId = tokenProvider.getAccessTokenInfo(token);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(memberId, null, Collections.emptyList());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
