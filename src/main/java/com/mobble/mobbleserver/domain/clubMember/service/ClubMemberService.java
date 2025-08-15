@@ -87,7 +87,7 @@ public class ClubMemberService {
     }
 
     @Transactional
-    public ClubMemberUpsertResponseDto updateClubMemberStatus(Long clubId, Long loginedMemberId,
+    public ClubMemberUpsertResponseDto updateClubMemberJoinStatus(Long clubId, Long loginedMemberId,
                                                               UpdateClubMemberStatusDto dto) {
         Long memberId = dto.memberId();
         JoinStatus targetStatus = dto.status();
