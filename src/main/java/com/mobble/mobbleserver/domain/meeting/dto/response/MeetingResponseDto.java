@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.entity.MeetingType;
 
@@ -9,6 +10,8 @@ public record MeetingResponseDto(
         Long meetingId,
         Long clubId,
         String title,
+
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime dateTime,
         String location,
         String cost,
