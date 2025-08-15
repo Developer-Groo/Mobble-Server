@@ -10,6 +10,7 @@ import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
@@ -44,21 +45,18 @@ public class ArticleService {
     private final ArticleLikeRepository articleLikeRepository;
 
     private final ArticleValidator articleValidator;
+    private final ClubValidator clubValidator;
     private final ClubMemberValidator clubMemberValidator;
     private final MemberValidator memberValidator;
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-
-        Club club = findClubOrThrow(clubId);
-        Article article = dto.toEntity(club, member);
+        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
 
-        if (dto.articleType() == ArticleType.NOTICE && clubMemberRole == ClubMemberRole.MEMBER) {
-            throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
-        }
+        clubMember.assertCanPost(dto.articleType());
+        Article article = dto.toEntity(club, member);
 
         return ArticleResponseDto.toDto(articleRepository.save(article));
     }
@@ -88,20 +86,10 @@ public class ArticleService {
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
-        ClubMember clubMember =
-                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
-        Long writerId = article.getMember().getId();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        boolean isMine = isWriter(writerId, memberId);
-
-        if (!isMine) {
-            throw new DomainException(ArticleErrorCode.NO_PERMISSION);
-        }
-
-        if (dto.articleType() == ArticleType.NOTICE && clubMemberRole == ClubMemberRole.MEMBER) {
-            throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
-        }
+        article.assertOwnedBy(memberId);
+        clubMember.assertCanPost(dto.articleType());
 
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
@@ -112,14 +100,9 @@ public class ArticleService {
     public void deleteArticle(Long articleId, Long memberId) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
-        ClubMember clubMember =
-                clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
-        Long writerId = article.getMember().getId();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        boolean isMine = isWriter(writerId, memberId);
-
-        if (!isMine && clubMemberRole.equals(ClubMemberRole.MEMBER)) {
+        if (!article.isWrittenBy(memberId) && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new DomainException(ArticleErrorCode.NO_PERMISSION);
         }
 
