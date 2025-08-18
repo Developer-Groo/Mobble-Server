@@ -50,7 +50,7 @@ public class TokenProvider {
                 .compact();
     }
 
-    // roles 없이 토큰 생성 (클럽 미가입 유저용)
+    // roles 없이 토큰 생성 (클럽 미가입, 일반 유저용)
     public String createAccessJwtToken(Long memberId) {
         return createAccessJwtToken(memberId, List.of());
     }
