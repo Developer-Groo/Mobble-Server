@@ -143,7 +143,5 @@ public class ArticleService {
         return commentRepository.countCommentsByArticleIds(articleIds);
     }
 
-    private boolean isWriter(Long articleWriterId, Long memberId) {
-        return articleWriterId.equals(memberId);
     }
 }
