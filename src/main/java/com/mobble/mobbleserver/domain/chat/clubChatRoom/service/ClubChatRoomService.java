@@ -93,7 +93,9 @@ public class ClubChatRoomService {
     }
 
     @Transactional
-    public void joinClubChatRoom(Club club, Member member) {
+    public void joinClubChatRoom(ClubMember clubMember) {
+        Member member = clubMember.getMember();
+        Club club = clubMember.getClub();
         ClubChatRoom clubChatRoom = club.getClubChatRoom();
         ChatRoom chatRoom = clubChatRoom.getChatRoom();
 
