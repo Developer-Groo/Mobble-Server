@@ -92,6 +92,17 @@ public class ClubChatRoomService {
         return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, null, 0, null);
     }
 
+    @Transactional
+    public void joinClubChatRoom(Club club, Member member) {
+        ClubChatRoom clubChatRoom = club.getClubChatRoom();
+        ChatRoom chatRoom = clubChatRoom.getChatRoom();
+
+        if (!chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoom.getId(), member.getId())) {
+            ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
+            chatRoomParticipantRepository.save(participant);
+        }
+    }
+
     public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
