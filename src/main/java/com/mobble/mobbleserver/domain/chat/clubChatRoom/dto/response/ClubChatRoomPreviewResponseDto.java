@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response;
 
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 
 import java.time.LocalDateTime;
 

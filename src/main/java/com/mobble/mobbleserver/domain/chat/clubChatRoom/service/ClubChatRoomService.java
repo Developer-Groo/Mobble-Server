@@ -18,7 +18,7 @@ import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoo
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.repository.ClubChatRoomRepository;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.validator.ClubChatRoomValidator;
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;

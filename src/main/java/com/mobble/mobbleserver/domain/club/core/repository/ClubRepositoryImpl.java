@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.domain.club.club.repository;
+package com.mobble.mobbleserver.domain.club.core.repository;
 
-import com.mobble.mobbleserver.domain.club.club.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.core.repository.dto.ClubLikeInfoDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

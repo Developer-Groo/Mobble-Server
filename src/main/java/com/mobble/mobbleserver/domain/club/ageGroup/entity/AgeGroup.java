@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.domain.club.clubAgeGroup.entity;
+package com.mobble.mobbleserver.domain.club.ageGroup.entity;
 
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubAgeGroup {
+public class AgeGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,18 +23,18 @@ public class ClubAgeGroup {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "club_age_group_type")
-    private ClubAgeGroupType ageGroupType;
+    private AgeGroupType ageGroupType;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ClubAgeGroup(Club club, ClubAgeGroupType clubAgeGroupType) {
+    private AgeGroup(Club club, AgeGroupType ageGroupType) {
         this.club = club;
-        this.ageGroupType = clubAgeGroupType;
+        this.ageGroupType = ageGroupType;
     }
 
-    public static ClubAgeGroup createClubAgeGroup(Club club, ClubAgeGroupType clubAgeGroupType) {
-        return ClubAgeGroup.builder()
+    public static AgeGroup createAgeGroup(Club club, AgeGroupType ageGroupType) {
+        return AgeGroup.builder()
                 .club(club)
-                .clubAgeGroupType(clubAgeGroupType)
+                .ageGroupType(ageGroupType)
                 .build();
     }
 }

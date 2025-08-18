@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.club.clubAgeGroup.entity;
+package com.mobble.mobbleserver.domain.club.ageGroup.entity;
 
 
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ClubAgeGroupType {
+public enum AgeGroupType {
     TEEN("10대"),
     TWENTIES("20대"),
     THIRTIES("30대"),

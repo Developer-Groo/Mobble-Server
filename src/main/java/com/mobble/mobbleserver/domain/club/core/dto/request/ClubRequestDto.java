@@ -1,14 +1,9 @@
-package com.mobble.mobbleserver.domain.club.club.dto.request;
+package com.mobble.mobbleserver.domain.club.core.dto.request;
 
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
+import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
@@ -34,7 +29,7 @@ public record ClubRequestDto(
         int headcount,
 
         @NotEmpty(message = "CLUB:AGE_GROUP_NOT_EMPTY")
-        List<ClubAgeGroupType> ageGroup,
+        List<AgeGroupType> ageGroup,
 
         @NotNull(message = "CLUB:JOIN_TYPE_REQUIRED")
         Boolean isAutoJoin

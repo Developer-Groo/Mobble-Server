@@ -1,15 +1,15 @@
-package com.mobble.mobbleserver.domain.club.club.service;
+package com.mobble.mobbleserver.domain.club.core.service;
 
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
-import com.mobble.mobbleserver.domain.club.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.domain.club.club.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
-import com.mobble.mobbleserver.domain.club.club.repository.dto.ClubLikeInfoDto;
-import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
-import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroup;
-import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
-import com.mobble.mobbleserver.domain.club.clubAgeGroup.repository.ClubAgeGroupRepository;
+import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroup;
+import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
+import com.mobble.mobbleserver.domain.club.ageGroup.repository.AgeGroupRepository;
+import com.mobble.mobbleserver.domain.club.core.dto.request.ClubRequestDto;
+import com.mobble.mobbleserver.domain.club.core.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.core.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.clubCategory.repository.ClubCategoryRepository;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
@@ -39,7 +39,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final ClubCategoryRepository clubCategoryRepository;
     private final ClubMemberRepository clubMemberRepository;
-    private final ClubAgeGroupRepository clubAgeGroupRepository;
+    private final AgeGroupRepository ageGroupRepository;
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
@@ -61,8 +61,8 @@ public class ClubService {
         ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
         clubMemberRepository.save(clubMember);
 
-        List<ClubAgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
-        clubAgeGroupRepository.saveAll(ageGroups);
+        List<AgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
+        ageGroupRepository.saveAll(ageGroups);
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -88,9 +88,9 @@ public class ClubService {
         ClubCategory category = findCategoryOrThrow(dto.category());
         club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
 
-        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
-        List<ClubAgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
-        clubAgeGroupRepository.saveAll(newAgeGroups);
+        ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
+        List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
+        ageGroupRepository.saveAll(newAgeGroups);
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -113,7 +113,7 @@ public class ClubService {
         clubMemberRepository.deleteAllClubMemberByClubId(clubId);
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
-        clubAgeGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
+        ageGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
 
         clubRepository.deleteById(clubId);
     }
@@ -124,8 +124,8 @@ public class ClubService {
     }
 
     private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
-        List<ClubAgeGroupType> ageGroupList = clubAgeGroupRepository.findByClubId(club.getId()).stream()
-                .map(ClubAgeGroup::getAgeGroupType)
+        List<AgeGroupType> ageGroupList = ageGroupRepository.findByClubId(club.getId()).stream()
+                .map(AgeGroup::getAgeGroupType)
                 .toList();
 
         ClubLikeInfoDto likeInfo = clubRepository.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
@@ -133,9 +133,9 @@ public class ClubService {
         return ClubResponseDto.toDto(club, leaderName, ageGroupList, likeInfo);
     }
 
-    private List<ClubAgeGroup> createClubAgeGroups(Club club, List<ClubAgeGroupType> ageGroupTypes) {
+    private List<AgeGroup> createClubAgeGroups(Club club, List<AgeGroupType> ageGroupTypes) {
         return ageGroupTypes.stream()
-                .map(age -> ClubAgeGroup.createClubAgeGroup(club, age))
+                .map(age -> AgeGroup.createAgeGroup(club, age))
                 .toList();
     }
 }

@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.domain.club.club.controller;
+package com.mobble.mobbleserver.domain.club.core.controller;
 
-import com.mobble.mobbleserver.domain.club.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.domain.club.club.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.domain.club.club.service.ClubService;
+import com.mobble.mobbleserver.domain.club.core.dto.request.ClubRequestDto;
+import com.mobble.mobbleserver.domain.club.core.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.domain.club.core.service.ClubService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;

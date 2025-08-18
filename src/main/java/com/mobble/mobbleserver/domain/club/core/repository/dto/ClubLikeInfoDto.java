@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.club.club.repository.dto;
+package com.mobble.mobbleserver.domain.club.core.repository.dto;
 
 public record ClubLikeInfoDto(int likeCount, boolean isLiked) {
 

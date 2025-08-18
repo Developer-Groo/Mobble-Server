@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.domain.club.club.dto.response;
+package com.mobble.mobbleserver.domain.club.core.dto.response;
 
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.club.repository.dto.ClubLikeInfoDto;
-import com.mobble.mobbleserver.domain.club.clubAgeGroup.entity.ClubAgeGroupType;
+import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.repository.dto.ClubLikeInfoDto;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public record ClubResponseDto(
         String ground,
         String address,
         int headcount,
-        List<ClubAgeGroupType> ageGroup,
+        List<AgeGroupType> ageGroup,
 //        String profileImage,
 //        List<String> infoImage,
         int likeCount,
@@ -25,7 +25,7 @@ public record ClubResponseDto(
     public static ClubResponseDto toDto(
             Club club,
             String leaderName,
-            List<ClubAgeGroupType> ageGroup,
+            List<AgeGroupType> ageGroup,
             ClubLikeInfoDto likeInfo
     ){
         return new ClubResponseDto(
