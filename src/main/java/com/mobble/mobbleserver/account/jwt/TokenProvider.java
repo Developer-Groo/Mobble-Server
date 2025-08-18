@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.account.jwt;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,10 +25,12 @@ import java.util.Map;
 public class TokenProvider {
 
     private final Key key;
+    private final MemberValidator memberValidator;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, MemberValidator memberValidator) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.memberValidator = memberValidator;
     }
 
     /* =======================
@@ -35,11 +39,14 @@ public class TokenProvider {
 
     // Access Jwt Token 생성
     public String createAccessJwtToken(Long memberId, List<ClubMemberRole> roles) {
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 1day
 
         Map<String, Object> claims = new HashMap<>();
         if (roles != null && !roles.isEmpty()) claims.put("roles", roles.stream().map(Enum::name).toList());
+        claims.put("tokenVersion", member.getTokenVersion());
 
         return Jwts.builder()
                 .setSubject(memberId.toString())
@@ -104,6 +111,24 @@ public class TokenProvider {
         String socialId = (String) claims.get("socialId");
 
         return new SocialUserInfo(name, email, socialProvider, socialId);
+    }
+
+    public int getTokenVersionByJwtToken(String accessJwtToken) {
+        Object tokenVersion = parse(accessJwtToken).get("tokenVersion");
+
+        if (tokenVersion == null) {
+            throw new IllegalArgumentException("Missing tokenVersion in JWT"); //Todo 에러메시지 정의
+        }
+
+        if (tokenVersion instanceof Integer intValue) {
+            return intValue;
+        }
+
+        if (tokenVersion instanceof String stringValue) {
+            return Integer.parseInt(stringValue);
+        }
+
+        throw new IllegalArgumentException("Invalid tokenVersion type in JWT");
     }
 
     /* =======================
