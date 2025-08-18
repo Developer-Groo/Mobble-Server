@@ -83,7 +83,7 @@ public class ClubChatRoomService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
         List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
-        List<Long> chatRoomIds = extractChatRomIds(clubMembers);
+        List<Long> chatRoomIds = extractChatRoomIds(clubMembers);
 
         Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
         Map<Long, ChatMessage> latestMessagesMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
@@ -116,7 +116,7 @@ public class ClubChatRoomService {
         return null;
     }
 
-    private List<Long> extractChatRomIds(List<ClubMember> clubMembers) {
+    private List<Long> extractChatRoomIds(List<ClubMember> clubMembers) {
         return clubMembers.stream()
                 .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())
                 .toList();
