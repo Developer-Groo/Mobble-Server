@@ -53,7 +53,7 @@ public class ArticleService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        clubMember.assertCanPost(dto.articleType());
+        assertCanPost(clubMember ,dto.articleType());
         Article article = dto.toEntity(club, member);
 
         return ArticleResponseDto.toDto(articleRepository.save(article));
@@ -87,8 +87,7 @@ public class ArticleService {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         assertOwnedBy(article, clubMember);
-        clubMember.assertCanPost(dto.articleType());
-
+        assertCanPost(clubMember ,dto.articleType());
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
         return convertToArticleResponseDto(article, memberId);
@@ -144,5 +143,11 @@ public class ArticleService {
     private void assertOwnedBy(Article article, ClubMember clubMember) {
         boolean owner = article.isWrittenBy(clubMember.getMember().getId());
         if (!owner) throw new DomainException(ArticleErrorCode.NO_PERMISSION);
+    }
+
+    private void assertCanPost(ClubMember clubMember, ArticleType articleType) {
+        if (!clubMember.canPost(articleType)) {
+            throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
+        }
     }
 }
