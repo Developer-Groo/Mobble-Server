@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.club.club.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
@@ -42,6 +43,9 @@ public class Club extends BaseEntity {
 
     @Column(name = "isAutoJoin")
     private boolean isAutoJoin;
+
+    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY)
+    private ClubChatRoom clubChatRoom;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
