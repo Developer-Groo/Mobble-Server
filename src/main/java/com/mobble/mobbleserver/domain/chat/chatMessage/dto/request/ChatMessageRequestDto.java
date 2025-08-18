@@ -1,0 +1,15 @@
+package com.mobble.mobbleserver.domain.chat.chatMessage.dto.request;
+
+import jakarta.validation.constraints.Positive;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+
+public record ChatMessageRequestDto(
+        @Positive
+        Long lastMessageId,
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        LocalDateTime lastCreatedAt
+) {
+}
