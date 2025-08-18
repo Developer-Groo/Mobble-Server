@@ -130,7 +130,16 @@ public class ClubChatRoomService {
 
     public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long lastMessageId, Long memberId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+    @Transactional
+    public void leaveClubChatRoom(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        Long findMemberId = clubMember.getMember().getId();
         Club club = clubMember.getClub();
+        ChatRoom chatRoom = club.getClubChatRoom().getChatRoom();
+
+        chatRoomParticipantRepository.deleteByChatRoomIdAndMemberId(chatRoom.getId(), findMemberId);
+    }
+
     @Transactional
     public void deleteClubChatRoom(Club club) {
         ClubChatRoom clubChatRoom = club.getClubChatRoom();
