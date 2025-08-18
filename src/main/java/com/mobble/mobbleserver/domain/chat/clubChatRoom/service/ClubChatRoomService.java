@@ -130,12 +130,21 @@ public class ClubChatRoomService {
                 .toList();
     }
 
-    public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long lastMessageId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-    @Transactional
-    public void leaveClubChatRoom(Long clubId, Long memberId) {
+    public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long memberId, ChatMessageRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Long findMemberId = clubMember.getMember().getId();
+        ClubChatRoom clubChatRoom = clubMember.getClub().getClubChatRoom();
+        Long chatRoomId = clubChatRoom.getChatRoom().getId();
+
+        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(chatRoomId, findMemberId);
+        LocalDateTime joinedAt = participant.getJoinedAt();
+
+        Long lastMessageId = dto.lastMessageId();
+        LocalDateTime lastCreatedAt = dto.lastCreatedAt();
+
+        return chatMessageService.getMessagesForParticipant(chatRoomId, joinedAt, lastMessageId, lastCreatedAt);
+    }
+
     @Transactional
     public void leaveClubChatRoom(ClubMember clubMember) {
         Member member = clubMember.getMember();
