@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/chat-rooms/{chat-room-id}")
 public class ChatRoomParticipantController {
 
     private final ChatRoomParticipantService chatRoomParticipantService;
 
-    @PatchMapping("/chat-rooms/{chat-room-id}/read")
+    @PatchMapping("/read")
     public ResponseEntity<Void> updateLastReadMessage(
             @PathVariable("chat-room-id") @Positive Long chatRoomId,
             @RequestParam("message-id") @Positive Long messageId
@@ -24,7 +24,19 @@ public class ChatRoomParticipantController {
         Long memberId = 1L;
         chatRoomParticipantService.updateLastReadMessage(memberId, chatRoomId, messageId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+    @PatchMapping("/notification")
+    public ResponseEntity<Void> updateNotification(
+            @PathVariable("chat-room-id") @Positive Long chatRoomId,
+            @RequestParam("enabled") @Positive boolean enabled
+    ) {
+        Long memberId = 1L;
+        chatRoomParticipantService.updateNotificationStatus(chatRoomId, memberId, enabled);
+
+        return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
 }
