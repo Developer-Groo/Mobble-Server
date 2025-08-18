@@ -8,7 +8,7 @@ import java.util.List;
 
 import static com.mobble.mobbleserver.domain.chat.chatRoom.entity.QChatRoom.chatRoom;
 import static com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.QClubChatRoom.clubChatRoom;
-import static com.mobble.mobbleserver.domain.club.entity.QClub.club;
+import static com.mobble.mobbleserver.domain.club.club.entity.QClub.club;
 import static com.mobble.mobbleserver.domain.clubMember.entity.QClubMember.clubMember;
 
 @RequiredArgsConstructor
