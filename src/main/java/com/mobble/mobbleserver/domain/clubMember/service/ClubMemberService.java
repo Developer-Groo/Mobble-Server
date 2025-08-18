@@ -64,6 +64,9 @@ public class ClubMemberService {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         clubMember.updateStatus(JoinStatus.WITHDRAWN);
+        // Todo: 클럽 탈퇴 시 역할(ClubMemberRole) 처리 방식 확정 후 반영
+        // - 현재는 역할 유지 상태
+        // - 추후 권한 초기화 or tokenVersion 증가 필요 여부 판단
     }
 
     @Transactional
