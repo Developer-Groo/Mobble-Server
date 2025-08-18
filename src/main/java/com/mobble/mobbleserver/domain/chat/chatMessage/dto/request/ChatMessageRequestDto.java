@@ -9,7 +9,7 @@ public record ChatMessageRequestDto(
         @Positive
         Long lastMessageId,
 
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // Todo: error message 적용 필요
         LocalDateTime lastCreatedAt
 ) {
 }
