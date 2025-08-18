@@ -60,7 +60,7 @@ public class ClubChatRoomService {
                 savedMessage.getType(),
                 member.getId(),
                 member.getName(),
-                DateTimeUtils.now()
+                DateTimeUtils.toKST(savedMessage.getCreatedAt())
         );
 
         messagingTemplate.convertAndSend("/topic/group/chatroom/" + dto.chatRoomId(), response);
