@@ -79,6 +79,8 @@ public class ClubChatRoomService {
 
     @Transactional
     public ClubChatRoomPreviewResponseDto createClubChatRoom(Club club, Member member) {
+        clubChatRoomValidator.existsClubChatRoomByClubId(club.getId());
+
         ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.GROUP);
         ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
         ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
