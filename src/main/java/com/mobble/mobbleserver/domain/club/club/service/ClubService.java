@@ -25,6 +25,7 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,7 @@ public class ClubService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        clubMember.assertLeader();
+        assertLeader(clubMember);
 
         ClubCategory category = findCategoryOrThrow(dto.category());
         club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
@@ -100,7 +101,7 @@ public class ClubService {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        clubMember.assertLeader();
+        assertLeader(clubMember);
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
 
@@ -137,5 +138,9 @@ public class ClubService {
         return ageGroupTypes.stream()
                 .map(age -> ClubAgeGroup.createClubAgeGroup(club, age))
                 .toList();
+    }
+
+    private void assertLeader(ClubMember clubMember) {
+        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
 }
