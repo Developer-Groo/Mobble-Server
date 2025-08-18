@@ -99,6 +99,7 @@ public class Article extends BaseEntity {
     public boolean isWrittenBy(Long memberId) {
         return this.getMember().getId().equals(memberId);
     }
+    
     public void assertOwnedBy(Long memberId) {
         if (!isWrittenBy(memberId)) throw new DomainException(ArticleErrorCode.NO_PERMISSION);
     }
