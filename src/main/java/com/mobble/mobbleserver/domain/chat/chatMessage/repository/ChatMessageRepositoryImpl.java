@@ -26,6 +26,36 @@ public class ChatMessageRepositoryImpl implements ChatMessageQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<ChatMessage> findMessagesFrom(
+            Long chatroomId,
+            LocalDateTime startDate,
+            Long lastMessageId,
+            LocalDateTime lastCreatedAt
+    ) {
+        BooleanBuilder conditions = new BooleanBuilder();
+        conditions.and(chatMessage.chatRoom.id.eq(chatroomId));
+        conditions.and(chatMessage.createdAt.goe(startDate));
+
+        if (lastMessageId != null && lastCreatedAt != null) {
+            conditions.and(
+                    chatMessage.createdAt.lt(lastCreatedAt)
+                            .or(chatMessage.createdAt.eq(lastCreatedAt))
+                            .and(chatMessage.id.lt(lastMessageId))
+            );
+        }
+
+        return queryFactory
+                .selectFrom(chatMessage)
+                .where(conditions)
+                .orderBy(
+                        chatMessage.createdAt.desc(),
+                        chatMessage.id.desc()
+                )
+                .limit(50)
+                .fetch();
+    }
+
+    @Override
     public Map<Long, ChatMessage> findLatestMessagesByChatRoomIds(List<Long> chatRoomIds) {
         QChatMessage subChatMessage = new QChatMessage("subChatMessage");
 
@@ -97,12 +127,10 @@ public class ChatMessageRepositoryImpl implements ChatMessageQueryRepository {
 
     private BooleanBuilder buildCreatedAtCondition(Map<Long, LocalDateTime> createdAtMap) {
         BooleanBuilder conditions = new BooleanBuilder();
-        createdAtMap.forEach((chatRoomId, createdAt) -> {
-            conditions.or(
-                    chatMessage.chatRoom.id.eq(chatRoomId)
-                            .and(chatMessage.createdAt.gt(createdAt))
-            );
-        });
+        createdAtMap.forEach((chatRoomId, createdAt) -> conditions.or(
+                chatMessage.chatRoom.id.eq(chatRoomId)
+                        .and(chatMessage.createdAt.gt(createdAt))
+        ));
 
         return conditions;
     }
