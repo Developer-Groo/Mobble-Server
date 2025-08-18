@@ -85,8 +85,8 @@ public class TokenProvider {
     }
 
     // Access Token -> roles (없으면 빈 리스트)
-    public List<ClubMemberRole> getRolesByJwtToken(String token) {
-        List<?> roles = parse(token).get("roles", List.class);
+    public List<ClubMemberRole> getRolesByJwtToken(String accessJwtToken) {
+        List<?> roles = parse(accessJwtToken).get("roles", List.class);
         if (roles == null) return List.of();
         return roles.stream()
                 .map(String::valueOf)          // Object -> String
