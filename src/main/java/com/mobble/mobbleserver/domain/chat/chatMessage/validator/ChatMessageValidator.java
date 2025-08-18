@@ -11,7 +11,7 @@ public class ChatMessageValidator {
 
     private final ChatMessageRepository chatMessageRepository;
 
-    public ChatMessage findChatMessageByChatMessageId(Long chatMessageId) {
+    public ChatMessage findChatMessageByChatMessageIdOrThrow(Long chatMessageId) {
         return chatMessageRepository.findById(chatMessageId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: ErrorCode 적용
     }
