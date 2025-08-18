@@ -156,4 +156,8 @@ public class Member extends BaseEntity {
         if (!termsAgreed) throw new DomainException(MemberErrorCode.TERMS_AGREED_REQUIRED);
         if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
     }
+
+    public void increaseTokenVersion() {
+        this.tokenVersion++;
+    }
 }
