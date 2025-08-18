@@ -39,7 +39,6 @@ public class ArticleService {
     private final CommentService commentService;
 
     private final ArticleRepository articleRepository;
-    private final ClubRepository clubRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
