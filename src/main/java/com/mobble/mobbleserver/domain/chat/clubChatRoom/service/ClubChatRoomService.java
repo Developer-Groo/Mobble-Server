@@ -134,10 +134,13 @@ public class ClubChatRoomService {
     public void leaveClubChatRoom(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Long findMemberId = clubMember.getMember().getId();
+    @Transactional
+    public void leaveClubChatRoom(ClubMember clubMember) {
+        Member member = clubMember.getMember();
         Club club = clubMember.getClub();
         ChatRoom chatRoom = club.getClubChatRoom().getChatRoom();
 
-        chatRoomParticipantRepository.deleteByChatRoomIdAndMemberId(chatRoom.getId(), findMemberId);
+        chatRoomParticipantRepository.deleteByChatRoomIdAndMemberId(chatRoom.getId(), member.getId());
     }
 
     @Transactional
