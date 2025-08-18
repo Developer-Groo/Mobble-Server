@@ -63,6 +63,9 @@ public class Member extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "token_version", nullable = false)
+    private int tokenVersion = 1;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Member(
             String name,
