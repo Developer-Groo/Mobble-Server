@@ -5,6 +5,8 @@ import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -117,7 +119,7 @@ public class TokenProvider {
         Object tokenVersion = parse(accessJwtToken).get("tokenVersion");
 
         if (tokenVersion == null) {
-            throw new IllegalArgumentException("Missing tokenVersion in JWT"); //Todo 에러메시지 정의
+            throw new DomainException(OAuthErrorCode.MISSING_TOKEN_VERSION);
         }
 
         if (tokenVersion instanceof Integer intValue) {
@@ -128,7 +130,7 @@ public class TokenProvider {
             return Integer.parseInt(stringValue);
         }
 
-        throw new IllegalArgumentException("Invalid tokenVersion type in JWT");
+        throw new DomainException(OAuthErrorCode.INVALID_TOKEN_VERSION);
     }
 
     /* =======================
