@@ -30,7 +30,7 @@ public class Article extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "article_type")
+    @Column(name = "article_type")
     private ArticleType articleType;
 
     @Column(name = "title")
