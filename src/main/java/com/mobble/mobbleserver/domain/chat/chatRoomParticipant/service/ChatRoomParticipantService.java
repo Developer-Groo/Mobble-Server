@@ -24,7 +24,14 @@ public class ChatRoomParticipantService {
         participant.updateLastReadMessage(lastReadMessage);
     }
 
+    @Transactional
+    public void updateNotificationStatus(Long chatRoomId, Long memberId, boolean enabled) {
+        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(chatRoomId, memberId);
 
-        participant.updateLastReadMessage(lastReadMessage);
+        if (enabled) {
+            participant.enableNotified();
+        } else {
+            participant.disableNotified();
+        }
     }
 }
