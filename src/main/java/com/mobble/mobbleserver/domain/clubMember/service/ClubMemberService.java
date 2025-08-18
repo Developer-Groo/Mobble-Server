@@ -12,6 +12,7 @@ import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -32,6 +33,7 @@ public class ClubMemberService {
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
@@ -82,6 +84,10 @@ public class ClubMemberService {
             throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
 
         clubMember.updateRole(newRole);
+
+        // 권한 변경으로 tokenVersion 증가 (기존 토큰 무효화)
+        member.increaseTokenVersion();
+        memberRepository.save(member);
 
         return ClubMemberUpsertResponseDto.toDto(clubMember);
     }
