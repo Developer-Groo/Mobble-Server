@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.entity.QComment;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeProjection;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,22 @@ public class CommentRepositoryImpl implements CommentQueryRepository {
                                 likeCountMap.getOrDefault(id, 0),
                                 likedCommentIds.contains(id)
                         )
+                ));
+    }
+
+    @Override
+    public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
+        List<Tuple> tuples = queryFactory
+                .select(comment.article.id, comment.count())
+                .from(comment)
+                .where(comment.article.id.in(articleIds))
+                .groupBy(comment.article.id)
+                .fetch();
+
+        return tuples.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(0, Long.class),
+                        tuple -> tuple.get(1, Long.class).intValue()
                 ));
     }
 

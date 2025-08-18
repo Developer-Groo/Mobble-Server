@@ -1,8 +1,6 @@
 package com.mobble.mobbleserver.domain.clubCategory.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ClubCategory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "club_category_id")
     private Long id;
 
