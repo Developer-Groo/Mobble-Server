@@ -9,7 +9,6 @@ import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.club.repository.ClubRepository;
 import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
@@ -87,7 +86,7 @@ public class ArticleService {
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        article.assertOwnedBy(memberId);
+        assertOwnedBy(article, clubMember);
         clubMember.assertCanPost(dto.articleType());
 
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
@@ -116,11 +115,10 @@ public class ArticleService {
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
-        Long writerId = article.getMember().getId();
         List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(article.getId(), memberId);
         int commentCount = comments.size();
 
-        boolean isMine = isWriter(writerId, memberId);
+        boolean isMine = article.isWrittenBy(memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
     }
@@ -143,5 +141,8 @@ public class ArticleService {
         return commentRepository.countCommentsByArticleIds(articleIds);
     }
 
+    private void assertOwnedBy(Article article, ClubMember clubMember) {
+        boolean owner = article.isWrittenBy(clubMember.getMember().getId());
+        if (!owner) throw new DomainException(ArticleErrorCode.NO_PERMISSION);
     }
 }
