@@ -131,13 +131,16 @@ public class ClubChatRoomService {
     public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long lastMessageId, Long memberId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Club club = clubMember.getClub();
+    @Transactional
+    public void deleteClubChatRoom(Club club) {
         ClubChatRoom clubChatRoom = club.getClubChatRoom();
+        if (clubChatRoom == null) return;
         ChatRoom chatRoom = clubChatRoom.getChatRoom();
-        Long chatRoomId = chatRoom.getId();
 
-        // Todo: 메세지 조회(기준점 필요)
-
-        return null;
+        chatRoomParticipantRepository.deleteByChatRoomId(chatRoom.getId());
+        chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
+        clubChatRoomRepository.deleteById(clubChatRoom.getId());
+        chatRoomRepository.deleteById(chatRoom.getId());
     }
 
     private List<Long> extractChatRoomIds(List<ClubMember> clubMembers) {
