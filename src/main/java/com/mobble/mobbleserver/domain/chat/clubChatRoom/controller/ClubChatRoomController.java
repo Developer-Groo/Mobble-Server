@@ -1,9 +1,11 @@
 package com.mobble.mobbleserver.domain.chat.clubChatRoom.controller;
 
+import com.mobble.mobbleserver.domain.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
-import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.service.ClubChatRoomService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,11 +44,11 @@ public class ClubChatRoomController {
     @GetMapping("/clubs/{club-id}/chat-rooms/messages")
     public ResponseEntity<List<ChatMessageResponseDto>> getClubChatRoomMessages(
             @PathVariable(name = "club-id") @Positive Long clubId,
-            @RequestParam(name = "last-message-id", required = false) @Positive Long lastMessageId
+            @RequestBody @Valid ChatMessageRequestDto dto
     ) {
         Long memberId = 1L;
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubChatRoomService.getClubChatRoomMessages(clubId, lastMessageId, memberId));
+                .body(clubChatRoomService.getClubChatRoomMessages(clubId, memberId, dto));
     }
 }
