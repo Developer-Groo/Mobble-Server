@@ -21,7 +21,7 @@ public class SocialLoginController {
 
     private final SocialLoginService socialLoginService;
 
-    @PostMapping("/social-login")
+    @PostMapping("/login")
     public ResponseEntity<Void> socialLogin(
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
