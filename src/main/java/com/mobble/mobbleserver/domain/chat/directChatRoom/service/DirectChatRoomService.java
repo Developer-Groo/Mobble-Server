@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.domain.chat.directChatRoom.service;
 
+import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.chatMessage.service.ChatMessageService;
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.request.DirectChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
@@ -19,6 +21,9 @@ import java.time.LocalDateTime;
 public class DirectChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
+
+    private final ChatMessageService chatMessageService;
+
     private final MemberValidator memberValidator;
 
     @Transactional
@@ -41,5 +46,22 @@ public class DirectChatRoomService {
     @Transactional
     public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
         return null;
+    }
+
+    public void getDirectChatRooms(Long memberId) {
+
+    }
+
+    public void getDirectChatRoomMessages(Long memberId, Long chatRoomId) {
+
+    }
+
+    @Transactional
+    public void leaveDirectChatRoom(Long memberId, Long chatRoomId) {
+
+    }
+    
+    private void deleteDirectChatRoom(Long chatRoomId) {
+
     }
 }
