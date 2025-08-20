@@ -90,7 +90,13 @@ public class TokenProvider {
 
     // Access Token -> memberId
     public Long getMemberIdByJwtToken(String accessJwtToken) {
-        return Long.valueOf(parse(accessJwtToken).getSubject());
+        String subject = parse(accessJwtToken).getSubject();
+
+        if (!subject.matches("\\d+")) {
+            throw new DomainException(OAuthErrorCode.INVALID_TOKEN_SUBJECT);
+        }
+
+        return Long.valueOf(subject);
     }
 
     // Access Token -> roles (없으면 빈 리스트)
@@ -152,7 +158,7 @@ public class TokenProvider {
      *  Internal
      * ======================= */
 
-    private Claims parse(String token) {
+    Claims parse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

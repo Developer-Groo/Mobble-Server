@@ -32,8 +32,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
 
+        // memberId 형태(Long)가 아니면 인증 대상 아님 (ex. signupToken)
         if (token != null && tokenProvider.validateToken(token)) {
-            Long memberId = tokenProvider.getMemberIdByJwtToken(token); // memberId 추출
+            String subject = tokenProvider.parse(token).getSubject();
+
+            if (!subject.matches("\\d+")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Long memberId = Long.valueOf(subject); // memberId 추출
 
             int tokenVersionFromToken = tokenProvider.getTokenVersionByJwtToken(token); // JWT Token Version
             int currentVersion = memberValidator.findMemberByMemberIdOrThrow(memberId).getTokenVersion(); // DB Token Version
