@@ -30,7 +30,7 @@ public class Article extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "article_type")
+    @Column(name = "article_type")
     private ArticleType articleType;
 
     @Column(name = "title")
@@ -94,5 +94,9 @@ public class Article extends BaseEntity {
         if (articleType == null) throw new DomainException(ArticleErrorCode.TYPE_REQUIRED);
         if (title == null || title.isBlank()) throw new DomainException(ArticleErrorCode.TITLE_REQUIRED);
         if (content == null || content.isBlank()) throw new DomainException(ArticleErrorCode.CONTENT_REQUIRED);
+    }
+
+    public boolean isWrittenBy(Long memberId) {
+        return this.getMember().getId().equals(memberId);
     }
 }

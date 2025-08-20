@@ -79,7 +79,7 @@ public class ClubMemberService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        clubLeader.assertLeader();
+        assertLeader(clubLeader);
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
 
@@ -105,7 +105,7 @@ public class ClubMemberService {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        clubLeader.assertLeader();
+        assertLeader(clubLeader);
 
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
 
@@ -141,5 +141,9 @@ public class ClubMemberService {
         if (approvedCount >= club.getHeadCount()) {
             throw new DomainException(ClubMemberErrorCode.CLUB_IS_FULL);
         }
+    }
+
+    private void assertLeader(ClubMember clubMember) {
+        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
 }
