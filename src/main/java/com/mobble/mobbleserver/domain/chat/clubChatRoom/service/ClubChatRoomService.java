@@ -8,7 +8,6 @@ import com.mobble.mobbleserver.domain.chat.chatMessage.service.ChatMessageServic
 import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoomType;
 import com.mobble.mobbleserver.domain.chat.chatRoom.repository.ChatRoomRepository;
-import com.mobble.mobbleserver.domain.chat.chatRoom.validator.ChatRoomValidator;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
@@ -42,35 +41,28 @@ public class ClubChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
 
+    private final ChatMessageService chatMessageService;
+
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
-    private final ChatRoomValidator chatRoomValidator;
     private final ChatRoomParticipantValidator chatRoomParticipantValidator;
+    private final ClubChatRoomValidator clubChatRoomValidator;
 
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ClubChatRoomRepository clubChatRoomRepository;
-    private final ChatMessageService chatMessageService;
-    private final ClubChatRoomValidator clubChatRoomValidator;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-        ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(dto.chatRoomId());
-        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(dto.chatRoomId(), member.getId());
-
-        ChatMessage chatMessage = ChatMessage.createChatMessage(chatRoom, member, dto.content(), dto.type());
-        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
-
-        participant.updateLastReadMessage(savedMessage);
+        ChatMessage savedMessage = chatMessageService.saveChatMessageAndUpdateLastRead(dto.chatRoomId(), memberId, dto.content(), dto.type());
 
         ClubChatMessageResponseDto response = ClubChatMessageResponseDto.toDto(
                 savedMessage.getChatRoom().getId(),
                 savedMessage.getContent(),
                 savedMessage.getType(),
-                member.getId(),
-                member.getName(),
+                savedMessage.getSender().getId(),
+                savedMessage.getSender().getName(),
                 DateTimeUtils.toKST(savedMessage.getCreatedAt())
         );
 

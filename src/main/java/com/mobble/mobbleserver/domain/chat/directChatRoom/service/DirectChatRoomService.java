@@ -23,15 +23,15 @@ public class DirectChatRoomService {
 
     @Transactional
     public void sendDirectMessage(DirectChatMessageRequestDto dto, Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         Member targetMember = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
+        ChatMessage savedMessage = chatMessageService.saveChatMessageAndUpdateLastRead(dto.chatRoomId(), memberId, dto.content(), dto.type());
 
         DirectChatMessageResponseDto response = DirectChatMessageResponseDto.toDto(
-                dto.chatRoomId(),
-                dto.content(),
-                dto.type(),
-                member.getId(),
-                member.getName(),
+                savedMessage.getChatRoom().getId(),
+                savedMessage.getContent(),
+                savedMessage.getType(),
+                savedMessage.getSender().getId(),
+                savedMessage.getSender().getName(),
                 LocalDateTime.now()
         );
 

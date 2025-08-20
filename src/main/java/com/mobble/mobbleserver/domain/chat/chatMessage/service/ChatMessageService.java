@@ -2,7 +2,14 @@ package com.mobble.mobbleserver.domain.chat.chatMessage.service;
 
 import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.chatMessage.entity.MessageType;
 import com.mobble.mobbleserver.domain.chat.chatMessage.repository.ChatMessageRepository;
+import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.chatRoom.validator.ChatRoomValidator;
+import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +22,30 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatMessageService {
 
+    private final MemberValidator memberValidator;
+    private final ChatRoomParticipantValidator chatRoomParticipantValidator;
+    private final ChatRoomValidator chatRoomValidator;
+
     private final ChatMessageRepository chatMessageRepository;
+
+    @Transactional
+    public ChatMessage saveChatMessageAndUpdateLastRead(
+            Long chatRoomId,
+            Long senderId,
+            String content,
+            MessageType messageType
+    ) {
+        Member sender = memberValidator.findMemberByMemberIdOrThrow(senderId);
+        ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(chatRoomId);
+
+        ChatMessage chatMessage = ChatMessage.createChatMessage(chatRoom, sender, content, messageType);
+        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+
+        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(chatRoom.getId(), sender.getId());
+        participant.updateLastReadMessage(savedMessage);
+
+        return savedMessage;
+    }
 
     public List<ChatMessageResponseDto> getMessagesForParticipant(
             Long chatRoomId,
