@@ -23,7 +23,7 @@ public class ClubLike extends BaseLike {
 
     @Builder(access = AccessLevel.PRIVATE)
     private ClubLike(Club club, Member member) {
-        validateCommon(club);
+        if (club == null) throw new DomainException(LikeErrorCode.CLUB_REQUIRED);
         this.club = club;
         assignMember(member);
     }
@@ -33,9 +33,5 @@ public class ClubLike extends BaseLike {
                 .club(club)
                 .member(member)
                 .build();
-    }
-
-    private void validateCommon(Club club) {
-        if (club == null) throw new DomainException(LikeErrorCode.CLUB_REQUIRED);
     }
 }

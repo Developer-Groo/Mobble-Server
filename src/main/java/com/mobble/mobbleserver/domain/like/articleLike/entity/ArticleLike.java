@@ -23,7 +23,7 @@ public class ArticleLike extends BaseLike {
 
     @Builder(access = AccessLevel.PRIVATE)
     private ArticleLike(Article article, Member member) {
-        validateArticle(article);
+        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
         this.article = article;
         assignMember(member);
     }
@@ -33,9 +33,5 @@ public class ArticleLike extends BaseLike {
                 .article(article)
                 .member(member)
                 .build();
-    }
-
-    private void validateArticle(Article article) {
-        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
     }
 }

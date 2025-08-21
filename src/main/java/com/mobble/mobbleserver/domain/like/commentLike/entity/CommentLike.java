@@ -23,7 +23,7 @@ public class CommentLike extends BaseLike {
 
     @Builder(access = AccessLevel.PRIVATE)
     private CommentLike(Comment comment, Member member) {
-        validateComment(comment);
+        if (comment == null) throw new DomainException(LikeErrorCode.COMMENT_REQUIRED);
         this.comment = comment;
         assignMember(member);
     }
@@ -33,9 +33,5 @@ public class CommentLike extends BaseLike {
                 .comment(comment)
                 .member(member)
                 .build();
-    }
-
-    private void validateComment(Comment comment) {
-        if (comment == null) throw new DomainException(LikeErrorCode.COMMENT_REQUIRED);
     }
 }
