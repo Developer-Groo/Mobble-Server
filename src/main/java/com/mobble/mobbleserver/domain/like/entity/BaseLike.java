@@ -22,9 +22,8 @@ public abstract class BaseLike {
     private Member member;
 
     protected void assignMember(Member member) {
-        if (member == null) {
-            throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
-        }
+        if (member == null) throw new DomainException(LikeErrorCode.MEMBER_REQUIRED);
+
         this.member = member;
     }
 }
