@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 public class LikeDispatcherService {
 
     private final MemberValidator memberValidator;
-    private final Map<LikeType, AbstractLikeService<?, ?>> strategyMap;
+    private final Map<LikeType, AbstractLikeService<?, ?>> serviceMap;
 
     public LikeDispatcherService(MemberValidator memberValidator, List<AbstractLikeService<?, ?>> services) {
         this.memberValidator = memberValidator;
-        this.strategyMap = services.stream()
+        this.serviceMap = services.stream()
                 .collect(Collectors.toMap(
                         AbstractLikeService::getType,
                         Function.identity(),
@@ -37,7 +37,7 @@ public class LikeDispatcherService {
     public LikeToggleResponseDto toggleLike(LikeType likeType, Long targetId, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
-        AbstractLikeService<?, ?> service = strategyMap.get(likeType);
+        AbstractLikeService<?, ?> service = serviceMap.get(likeType);
 
         if (service == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
 
