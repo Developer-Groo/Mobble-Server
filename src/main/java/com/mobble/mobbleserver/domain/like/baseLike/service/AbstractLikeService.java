@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.domain.like.service;
+package com.mobble.mobbleserver.domain.like.baseLike.service;
 
-import com.mobble.mobbleserver.domain.like.dto.response.LikeToggleResponseDto;
-import com.mobble.mobbleserver.domain.like.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;

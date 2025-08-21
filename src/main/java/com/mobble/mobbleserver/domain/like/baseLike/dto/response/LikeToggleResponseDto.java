@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.like.dto.response;
+package com.mobble.mobbleserver.domain.like.baseLike.dto.response;
 
 public record LikeToggleResponseDto(Long targetId, boolean isLiked) {
 
