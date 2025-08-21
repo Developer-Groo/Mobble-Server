@@ -9,25 +9,19 @@ import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRep
 import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.service.AbstractLikeService;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike> {
 
     private final ArticleLikeRepository articleLikeRepository;
     private final ArticleValidator articleValidator;
     private final ClubMemberValidator clubMemberValidator;
-
-    public ArticleLikeService(MemberValidator memberValidator, ArticleLikeRepository articleLikeRepository, ArticleValidator articleValidator, ClubMemberValidator clubMemberValidator) {
-        super(memberValidator);
-        this.articleLikeRepository = articleLikeRepository;
-        this.articleValidator = articleValidator;
-        this.clubMemberValidator = clubMemberValidator;
-    }
 
     @Override
     public LikeType getType() {

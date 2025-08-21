@@ -7,22 +7,17 @@ import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepositor
 import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.service.AbstractLikeService;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ClubLikeService extends AbstractLikeService<Club, ClubLike> {
 
     private final ClubLikeRepository clubLikeRepository;
     private final ClubValidator clubValidator;
-
-    public ClubLikeService(MemberValidator memberValidator, ClubLikeRepository clubLikeRepository, ClubValidator clubValidator) {
-        super(memberValidator);
-        this.clubLikeRepository = clubLikeRepository;
-        this.clubValidator = clubValidator;
-    }
 
     @Override
     public LikeType getType() {
