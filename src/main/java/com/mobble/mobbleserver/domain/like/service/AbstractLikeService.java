@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.like.service;
 
 import com.mobble.mobbleserver.domain.like.dto.response.LikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,25 +10,29 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public abstract class AbstractLikeService<T, E> implements LikeStrategy {
+public abstract class AbstractLikeService<T, E> {
 
-    protected final MemberValidator memberValidator;
-
-    @Override
     @Transactional
-    public LikeToggleResponseDto toggleLike(Long targetId, Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+    public LikeToggleResponseDto toggleLike(Long targetId, Member member) {
 
         T target = getTarget(targetId);
 
-        Optional<E> existing = findExistingLike(target, member);
-        boolean isLiked = existing.isEmpty();
-
-        if (isLiked) saveLike(createLike(target, member));
-        else deleteLike(existing.get());
+        Boolean isLiked = findExistingLike(target, member)
+                .map(existing -> {
+                    deleteLike(existing);
+                    return false;
+                })
+                .orElseGet(() -> {
+                    E like = createLike(target, member);
+                    saveLike(like);
+                    return true;
+                });
 
         return LikeToggleResponseDto.toDto(targetId, isLiked);
     }
+
+    /** Dispatcher 매핑용 식별자*/
+    public abstract LikeType getType();
 
     /** 도메인별 Like 존재 조회 */
     protected abstract Optional<E> findExistingLike(T target, Member member);
