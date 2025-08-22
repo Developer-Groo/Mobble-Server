@@ -31,6 +31,6 @@ public class ArticleLikeQueryServiceImpl implements LikeQueryService {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
 
-        return LikeMemberListResponseDto.toDto(article.getId(), articleLikes);
+        return LikeMemberListResponseDto.toDto(article.getId(), articleLikes, ArticleLike::getMember);
     }
 }
