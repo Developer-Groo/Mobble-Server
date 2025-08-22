@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.like.baseLike.service;
 
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -52,7 +53,7 @@ public class LikeDispatcherService {
         return service.toggleLike(targetId, member);
     }
 
-    public Object getMemberList(LikeType likeType, Long targetId) {
+    public LikeMemberListResponseDto getMemberList(LikeType likeType, Long targetId) {
         LikeQueryService queryService = queryServiceMap.get(likeType);
 
         if (queryService == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
