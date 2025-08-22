@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.like.articleLike.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberListResponseDto;
+import com.mobble.mobbleserver.domain.like.articleLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
@@ -27,10 +27,10 @@ public class ArticleLikeQueryServiceImpl implements LikeQueryService {
     }
 
     @Override
-    public ArticleLikeMemberListResponseDto getLikedMemberList(Long articleId) {
+    public LikeMemberListResponseDto getLikedMemberList(Long articleId) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
 
-        return ArticleLikeMemberListResponseDto.toDto(article.getId(), articleLikes);
+        return LikeMemberListResponseDto.toDto(article.getId(), articleLikes);
     }
 }
