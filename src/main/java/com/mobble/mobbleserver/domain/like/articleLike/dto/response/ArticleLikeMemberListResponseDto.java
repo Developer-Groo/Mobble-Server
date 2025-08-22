@@ -6,12 +6,12 @@ import java.util.List;
 
 public record ArticleLikeMemberListResponseDto(
         Long articleId,
-        List<ArticleLikeMemberResponseDto> likedMembers
+        List<LikeMemberResponseDto> likedMembers
 ) {
 
     public static ArticleLikeMemberListResponseDto toDto(Long articleId, List<ArticleLike> articleLikes) {
-        List<ArticleLikeMemberResponseDto> likedMembers = articleLikes.stream()
-                .map(articleLike -> ArticleLikeMemberResponseDto.toDto(articleLike.getMember()))
+        List<LikeMemberResponseDto> likedMembers = articleLikes.stream()
+                .map(articleLike -> LikeMemberResponseDto.toDto(articleLike.getMember()))
                 .toList();
 
         return new ArticleLikeMemberListResponseDto(
