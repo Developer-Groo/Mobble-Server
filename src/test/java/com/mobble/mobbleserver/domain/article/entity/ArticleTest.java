@@ -50,3 +50,65 @@ class ArticleTest {
             assertThat(article.getTitle()).isEqualTo(title);
             assertThat(article.getContent()).isEqualTo(content);
         }
+        @Test
+        @DisplayName("club == null → 예외")
+        void create_fail_when_club_null() {
+            assertThatThrownBy(() ->
+                    Article.createArticle(null, mockMember, articleType, title, content)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.CLUB_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("member == null → 예외")
+        void create_fail_when_member_null() {
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, null, articleType, title, content)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.MEMBER_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("articleType == null → 예외")
+        void create_fail_when_type_null() {
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, mockMember, null, title, content)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TYPE_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("title null/blank → 예외")
+        void create_fail_when_title_invalid() {
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, mockMember, articleType, null, content)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
+
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, mockMember, articleType, "   ", content)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("content null/blank → 예외")
+        void create_fail_when_content_invalid() {
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, mockMember, articleType, title, null)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
+
+            assertThatThrownBy(() ->
+                    Article.createArticle(mockClub, mockMember, articleType, title, "   ")
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
+        }
+    }
