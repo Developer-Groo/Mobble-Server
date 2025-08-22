@@ -50,6 +50,7 @@ class ArticleTest {
             assertThat(article.getTitle()).isEqualTo(title);
             assertThat(article.getContent()).isEqualTo(content);
         }
+
         @Test
         @DisplayName("club == null → 예외")
         void create_fail_when_club_null() {
@@ -173,3 +174,22 @@ class ArticleTest {
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
         }
     }
+
+    @Nested
+    @DisplayName("소유자 검증")
+    class Ownership {
+
+        @Test
+        @DisplayName("isWrittenBy: 작성자 일치/불일치")
+        void isWrittenBy_checks() {
+            // given
+            Article article = Article.createArticle(
+                    mockClub, mockMember, articleType, title, content
+            );
+
+            // when & then
+            assertThat(article.isWrittenBy(mockMember.getId())).isTrue();
+            assertThat(article.isWrittenBy(9999L)).isFalse();
+        }
+    }
+}
