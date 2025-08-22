@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.like.articleLike.dto.response;
+package com.mobble.mobbleserver.domain.like.baseLike.dto.response;
 
 import com.mobble.mobbleserver.domain.member.entity.Member;
 
