@@ -14,7 +14,6 @@ public abstract class AbstractLikeService<T, E> {
 
     @Transactional
     public LikeToggleResponseDto toggleLike(Long targetId, Member member) {
-
         T target = getTarget(targetId);
 
         Boolean isLiked = findExistingLike(target, member)
