@@ -21,12 +21,20 @@ public class LikeDispatcherService {
 
     private final MemberValidator memberValidator;
     private final Map<LikeType, AbstractLikeService<?, ?>> serviceMap;
+    private final Map<LikeType, LikeQueryService> queryServiceMap;
 
-    public LikeDispatcherService(MemberValidator memberValidator, List<AbstractLikeService<?, ?>> services) {
+    public LikeDispatcherService(MemberValidator memberValidator, List<AbstractLikeService<?, ?>> services, List<LikeQueryService> queryServices) {
         this.memberValidator = memberValidator;
         this.serviceMap = services.stream()
                 .collect(Collectors.toMap(
                         AbstractLikeService::getType,
+                        Function.identity(),
+                        (a, b) -> a,
+                        () -> new EnumMap<>(LikeType.class)
+                ));
+        this.queryServiceMap = queryServices.stream()
+                .collect(Collectors.toMap(
+                        LikeQueryService::getType,
                         Function.identity(),
                         (a, b) -> a,
                         () -> new EnumMap<>(LikeType.class)
@@ -42,5 +50,13 @@ public class LikeDispatcherService {
         if (service == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
 
         return service.toggleLike(targetId, member);
+    }
+
+    public Object getMemberList(LikeType likeType, Long targetId) {
+        LikeQueryService queryService = queryServiceMap.get(likeType);
+
+        if (queryService == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
+
+        return queryService.getLikedMemberList(targetId);
     }
 }
