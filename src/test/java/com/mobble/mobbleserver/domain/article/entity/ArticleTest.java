@@ -112,3 +112,19 @@ class ArticleTest {
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
         }
     }
+
+    @Nested
+    @DisplayName("아티클 수정 테스트")
+    class UpdateArticle {
+
+        @Test
+        @DisplayName("아티클 수정 성공")
+        void update_success() {
+            // given & when
+            mockArticle.updateArticle(ArticleType.REVIEW, "new_title", "new_content");
+
+            // then
+            assertThat(mockArticle.getArticleType()).isEqualTo(ArticleType.REVIEW);
+            assertThat(mockArticle.getTitle()).isEqualTo("new_title");
+            assertThat(mockArticle.getContent()).isEqualTo("new_content");
+        }
