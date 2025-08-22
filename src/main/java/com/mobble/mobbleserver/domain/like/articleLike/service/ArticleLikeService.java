@@ -3,7 +3,6 @@ package com.mobble.mobbleserver.domain.like.articleLike.service;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.domain.like.articleLike.dto.response.ArticleLikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
@@ -12,7 +11,6 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -54,12 +52,5 @@ public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike
     @Override
     protected void deleteLike(ArticleLike entity) {
         articleLikeRepository.delete(entity);
-    }
-
-    public ArticleLikeMemberListResponseDto getArticleLikedMembers(Long articleId) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
-        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
-
-        return ArticleLikeMemberListResponseDto.toDto(article.getId(), articleLikes);
     }
 }
