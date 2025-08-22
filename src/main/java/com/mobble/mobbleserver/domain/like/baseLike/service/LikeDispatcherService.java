@@ -45,7 +45,6 @@ public class LikeDispatcherService {
     @Transactional
     public LikeToggleResponseDto toggleLike(LikeType likeType, Long targetId, Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-
         AbstractLikeService<?, ?> service = serviceMap.get(likeType);
 
         if (service == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
