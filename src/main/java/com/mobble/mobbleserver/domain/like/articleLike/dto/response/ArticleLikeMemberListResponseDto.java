@@ -4,10 +4,7 @@ import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 
 import java.util.List;
 
-public record ArticleLikeMemberListResponseDto(
-        Long articleId,
-        List<LikeMemberResponseDto> likedMembers
-) {
+public record ArticleLikeMemberListResponseDto(Long articleId, List<LikeMemberResponseDto> likedMembers) {
 
     public static ArticleLikeMemberListResponseDto toDto(Long articleId, List<ArticleLike> articleLikes) {
         List<LikeMemberResponseDto> likedMembers = articleLikes.stream()
