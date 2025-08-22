@@ -128,3 +128,48 @@ class ArticleTest {
             assertThat(mockArticle.getTitle()).isEqualTo("new_title");
             assertThat(mockArticle.getContent()).isEqualTo("new_content");
         }
+
+        @Test
+        @DisplayName("type == null → 예외")
+        void update_fail_when_type_null() {
+            // when & then
+            assertThatThrownBy(() ->
+                    mockArticle.updateArticle(null, "new_title", "new_content")
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TYPE_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("title null/blank → 예외")
+        void update_fail_when_title_invalid() {
+            assertThatThrownBy(() ->
+                    mockArticle.updateArticle(ArticleType.REVIEW, null, "new_content")
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
+
+            assertThatThrownBy(() ->
+                    mockArticle.updateArticle(ArticleType.REVIEW, "   ", "new_content")
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
+        }
+
+        @Test
+        @DisplayName("content null/blank → 예외")
+        void update_fail_when_content_invalid() {
+            // when & then
+            assertThatThrownBy(() ->
+                    mockArticle.updateArticle(ArticleType.REVIEW, "new_title", null)
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
+
+            assertThatThrownBy(() ->
+                    mockArticle.updateArticle(ArticleType.REVIEW, "new_title", "   ")
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
+        }
+    }
