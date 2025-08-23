@@ -11,8 +11,6 @@ public class ClubChatRoomValidator {
     private final ClubChatRoomRepository clubChatRoomRepository;
 
     public void existsClubChatRoomByClubId(Long clubId) {
-        if (clubChatRoomRepository.existsClubChatRoomByClubId(clubId)) {
-            throw new IllegalArgumentException("");
-        }
+        if (clubChatRoomRepository.existsClubChatRoomByClubId(clubId)) throw new IllegalArgumentException("");
     }
 }
