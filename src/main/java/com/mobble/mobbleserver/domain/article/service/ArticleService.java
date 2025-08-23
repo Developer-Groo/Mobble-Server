@@ -9,7 +9,7 @@ import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
-import com.mobble.mobbleserver.domain.club.core.repository.ClubRepository;
+import com.mobble.mobbleserver.domain.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;

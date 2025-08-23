@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.clubMember.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.persistence.*;
