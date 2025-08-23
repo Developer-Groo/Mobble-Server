@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.domain.chat.directChatRoom.service;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.domain.chat.chatMessage.service.ChatMessageService;
+import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoomType;
 import com.mobble.mobbleserver.domain.chat.chatRoom.repository.ChatRoomRepository;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
@@ -11,6 +13,9 @@ import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.request.DirectChat
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.directChatRoom.dto.response.DirectChatRoomPreviewResponseDto;
+import com.mobble.mobbleserver.domain.chat.directChatRoom.entity.DirectChatRoom;
+import com.mobble.mobbleserver.domain.chat.directChatRoom.repository.DirectChatRoomRepository;
+import com.mobble.mobbleserver.domain.chat.directChatRoom.validator.DirectChatRoomValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +36,9 @@ public class DirectChatRoomService {
 
     private final MemberValidator memberValidator;
     private final ChatRoomParticipantValidator chatRoomParticipantValidator;
+    private final DirectChatRoomValidator directChatRoomValidator;
 
+    private final DirectChatRoomRepository directChatRoomRepository;
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
@@ -55,7 +62,22 @@ public class DirectChatRoomService {
 
     @Transactional
     public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
-        return null;
+        directChatRoomValidator.existsDirectChatRoomByBetweenMembersOrThrow(memberId, dto.receiverId());
+
+        Member sender = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member receiver = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
+
+        ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.DIRECT);
+        ChatRoomParticipant senderParticipant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, sender);
+        ChatRoomParticipant receiverParticipant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, receiver);
+        DirectChatRoom directChatRoom = DirectChatRoom.createDirectChatRoom(chatRoom, sender, receiver);
+
+        chatRoomRepository.save(chatRoom);
+        chatRoomParticipantRepository.save(senderParticipant);
+        chatRoomParticipantRepository.save(receiverParticipant);
+        directChatRoomRepository.save(directChatRoom);
+
+        return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, null, 0);
     }
 
     public void getDirectChatRooms(Long memberId) {
@@ -75,7 +97,7 @@ public class DirectChatRoomService {
 
         if (!hasRemainingParticipant) deleteDirectChatRoom(chatRoomId);
     }
-    
+
     private void deleteDirectChatRoom(Long chatRoomId) {
         chatMessageRepository.deleteByChatRoomId(chatRoomId);
         chatRoomParticipantRepository.deleteByChatRoomId(chatRoomId);
