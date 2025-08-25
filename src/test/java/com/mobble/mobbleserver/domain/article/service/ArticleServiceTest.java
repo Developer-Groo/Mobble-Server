@@ -130,3 +130,47 @@ class ArticleServiceTest {
                     .hasMessage(ArticleErrorCode.NOTICE_NO_PERMISSION.message());
         }
     }
+    @Nested
+    @DisplayName("게시글 조회")
+    class GetArticle {
+
+        @Test
+        @DisplayName("해당 클럽의 게시글 목록 조회")
+        void success_when_find_by_clubId() {
+            Long clubId = 1L;
+            Long memberId = 2L;
+            ArticleType articleType = ArticleType.FREE;
+
+            Club mockClub = mock(Club.class);
+            Article mockArticle = mock(Article.class);
+            Member mockMember = mock(Member.class);
+
+            // validator
+            given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(mockClub);
+
+            given(articleRepository.findArticlesByClubId(clubId, articleType))
+                    .willReturn(List.of(mockArticle));
+            given(mockArticle.getId()).willReturn(10L);
+
+            given(mockArticle.getMember()).willReturn(mockMember);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+
+            given(articleRepository.findLikeInfoByArticleIdsAndMemberId(anyList(), eq(memberId)))
+                    .willReturn(Map.of(10L, new ArticleLikeInfoDto(5, true)));
+            given(commentRepository.countCommentsByArticleIds(anyList()))
+                    .willReturn(Map.of(10L, 3));
+
+            List<ArticleSummaryResponseDto> response =
+                    articleService.findArticlesByClubId(clubId, articleType, memberId);
+
+            assertThat(response).hasSize(1);
+            ArticleSummaryResponseDto dto = response.get(0);
+            assertThat(dto.likeCount()).isEqualTo(5);
+            assertThat(dto.isLiked()).isTrue();
+            assertThat(dto.commentCount()).isEqualTo(3);
+
+            verify(articleRepository).findArticlesByClubId(clubId, articleType);
+            verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(anyList(), eq(memberId));
+            verify(commentRepository).countCommentsByArticleIds(anyList());
+        }
