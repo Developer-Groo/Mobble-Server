@@ -45,11 +45,4 @@ public class SocialLoginService {
 
         return SocialLoginResponseDto.newMember(signupToken);
     }
-
-    public void socialLogout(Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-
-        member.increaseTokenVersion();
-        memberRepository.save(member);
-    }
 }
