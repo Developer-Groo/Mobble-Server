@@ -9,7 +9,6 @@ import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class SocialLoginService {
     private final MemberValidator memberValidator;
     private final TokenProvider tokenProvider;
     private final ClubMemberRepository clubMemberRepository;
-    private final MemberRepository memberRepository;
 
     public SocialLoginResponseDto socialLogin(SocialLoginRequestDto dto) {
         SocialVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
