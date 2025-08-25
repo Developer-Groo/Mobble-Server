@@ -82,11 +82,10 @@ public class ArticleService {
 
     @Transactional
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        assertOwnedBy(article, clubMember);
         assertCanPost(clubMember ,dto.articleType());
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
@@ -95,11 +94,13 @@ public class ArticleService {
 
     @Transactional
     public void deleteArticle(Long articleId, Long memberId) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        if (!article.isWrittenBy(memberId) && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
+        boolean isOwner = articleRepository.findArticleByArticleIdAndMemberId(articleId, memberId).isPresent();
+
+        if (!isOwner && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new DomainException(ArticleErrorCode.NO_PERMISSION);
         }
 
@@ -117,7 +118,7 @@ public class ArticleService {
         List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(article.getId(), memberId);
         int commentCount = comments.size();
 
-        boolean isMine = article.isWrittenBy(memberId);
+        boolean isMine = articleRepository.findArticleByArticleIdAndMemberId(article.getId(), memberId).isPresent();
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
     }
@@ -138,11 +139,6 @@ public class ArticleService {
                 .toList();
 
         return commentRepository.countCommentsByArticleIds(articleIds);
-    }
-
-    private void assertOwnedBy(Article article, ClubMember clubMember) {
-        boolean owner = article.isWrittenBy(clubMember.getMember().getId());
-        if (!owner) throw new DomainException(ArticleErrorCode.NO_PERMISSION);
     }
 
     private void assertCanPost(ClubMember clubMember, ArticleType articleType) {
