@@ -10,7 +10,7 @@ public class ClubChatRoomValidator {
 
     private final ClubChatRoomRepository clubChatRoomRepository;
 
-    public void existsClubChatRoomByClubId(Long clubId) {
+    public void existsClubChatRoomByClubIdOrThrow(Long clubId) {
         if (clubChatRoomRepository.existsClubChatRoomByClubId(clubId)) throw new IllegalArgumentException("");
     }
 }
