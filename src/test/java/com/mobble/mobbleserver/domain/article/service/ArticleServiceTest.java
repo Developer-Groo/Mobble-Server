@@ -68,6 +68,7 @@ class ArticleServiceTest {
 
     @InjectMocks
     private ArticleService articleService;
+
     @Nested
     @DisplayName("게시글 생성")
     class CreateArticle {
@@ -104,3 +105,28 @@ class ArticleServiceTest {
             assertThat(articleResponseDto).isNotNull();
             verify(articleRepository).save(any());
         }
+
+        @Test
+        @DisplayName("공지글 생성 실패 - MEMBER 권한")
+        void fail_when_member_creates_notice() {
+            // given
+            Long memberId = 1L;
+            Long clubId = 2L;
+            ArticleRequestDto reqDto = new ArticleRequestDto("title", ArticleType.NOTICE, "content");
+
+            Member mockMember = mock(Member.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(mockMember);
+            given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(mockClub);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+
+            given(mockClubMember.canPost(ArticleType.NOTICE)).willReturn(false);
+
+            // when & then
+            assertThatThrownBy(() -> articleService.createArticle(memberId, clubId, reqDto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.NOTICE_NO_PERMISSION.message());
+        }
+    }
