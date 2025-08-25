@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.chat.directChatRoom.repository;
 
+import com.mobble.mobbleserver.domain.chat.directChatRoom.entity.DirectChatRoom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,7 @@ import static com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.QCh
 import static com.mobble.mobbleserver.domain.chat.directChatRoom.entity.QDirectChatRoom.directChatRoom;
 
 @RequiredArgsConstructor
-public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryRepository{
+public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
@@ -25,9 +26,18 @@ public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryReposito
 
         return queryFactory
                 .selectFrom(directChatRoom)
-                .where(
-                        directChatRoom.chatRoom.id.in(chatRoomIds)
-                )
+                .where(directChatRoom.chatRoom.id.in(chatRoomIds))
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public List<DirectChatRoom> findDirectChatRoomsAllByMemberId(Long memberId) {
+        return queryFactory
+                .selectFrom(directChatRoom)
+                .where(
+                        directChatRoom.memberA.id.eq(memberId)
+                                .or(directChatRoom.memberB.id.eq(memberId))
+                )
+                .fetch();
     }
 }
