@@ -4,11 +4,13 @@ import com.mobble.mobbleserver.domain.article.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>,  ArticleQueryRepository {
-    
-    List<Article> findArticlesByClubId(Long clubId);
+
+    Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
+
+    boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
     @Modifying
     void deleteAllArticleByClub_Id(Long clubId);

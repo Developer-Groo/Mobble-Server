@@ -95,8 +95,4 @@ public class Article extends BaseEntity {
         if (title == null || title.isBlank()) throw new DomainException(ArticleErrorCode.TITLE_REQUIRED);
         if (content == null || content.isBlank()) throw new DomainException(ArticleErrorCode.CONTENT_REQUIRED);
     }
-
-    public boolean isWrittenBy(Long memberId) {
-        return this.getMember().getId().equals(memberId);
-    }
 }
