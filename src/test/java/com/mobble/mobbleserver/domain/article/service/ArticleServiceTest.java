@@ -130,6 +130,7 @@ class ArticleServiceTest {
                     .hasMessage(ArticleErrorCode.NOTICE_NO_PERMISSION.message());
         }
     }
+
     @Nested
     @DisplayName("게시글 조회")
     class GetArticle {
@@ -173,4 +174,51 @@ class ArticleServiceTest {
             verify(articleRepository).findArticlesByClubId(clubId, articleType);
             verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(anyList(), eq(memberId));
             verify(commentRepository).countCommentsByArticleIds(anyList());
+        }
+
+        @Test
+        @DisplayName("게시글 단건 조회 성공")
+        void success_when_find_by_articleId() {
+            // given
+            Long articleId = 1L;
+            Long memberId = 2L;
+
+            Article mockArticle = mock(Article.class);
+            Club mockClub = mock(Club.class);
+            Member mockMember = mock(Member.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId))
+                    .willReturn(mockArticle);
+            given(mockArticle.getId()).willReturn(articleId);
+
+            given(articleRepository.existsArticleByIdAndMemberId(articleId, memberId))
+                    .willReturn(true);
+
+            Map<Long, ArticleLikeInfoDto> likeInfoMap =
+                    Map.of(articleId, new ArticleLikeInfoDto(3, true));
+            given(articleRepository.findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId))
+                    .willReturn(likeInfoMap);
+
+            RootCommentResponseDto mockComment = mock(RootCommentResponseDto.class);
+            given(commentService.getCommentListByArticle(articleId, memberId))
+                    .willReturn(List.of(mockComment, mockComment));
+
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(100L);
+            given(mockArticle.getMember()).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(memberId);
+            given(mockArticle.getTitle()).willReturn("title");
+            given(mockArticle.getContent()).willReturn("content");
+
+            ArticleResponseDto response = articleService.findArticleById(articleId, memberId);
+
+            assertThat(response).isNotNull();
+            assertThat(response.likeCount()).isEqualTo(3);
+            assertThat(response.isLiked()).isTrue();
+            assertThat(response.commentCount()).isEqualTo(2);
+            assertThat(response.isMine()).isTrue();
+
+            verify(articleValidator).findArticleByArticleIdOrThrow(articleId);
+            verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId);
+            verify(commentService).getCommentListByArticle(articleId, memberId);
         }
