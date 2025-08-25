@@ -407,3 +407,35 @@ class ArticleServiceTest {
             verify(articleLikeRepository).deleteAllByArticleId(articleId);
             verify(articleRepository).delete(mockArticle);
         }
+
+        @Test
+        @DisplayName("게시글 삭제 성공 - 리더가 타인 글 삭제")
+        void success_when_leader_deletes_others_article() {
+            // given
+            Long memberId = 10L;
+            Long articleId = 20L;
+            Long clubId = 30L;
+
+            Article mockArticle = mock(Article.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+
+            given(articleRepository.existsArticleByIdAndMemberId(articleId, memberId))
+                    .willReturn(false);
+            given(mockClubMember.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+
+            List<Comment> comments = List.of();
+            given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(comments);
+
+            articleService.deleteArticle(articleId, memberId);
+
+            verify(commentLikeRepository).deleteAllByArticleId(articleId);
+            verify(commentRepository).deleteAll(comments);
+            verify(articleLikeRepository).deleteAllByArticleId(articleId);
+            verify(articleRepository).delete(mockArticle);
+        }
