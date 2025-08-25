@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.like.clubLike.entity;
 
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.BaseLike;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
