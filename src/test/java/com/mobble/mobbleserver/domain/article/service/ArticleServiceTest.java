@@ -222,3 +222,22 @@ class ArticleServiceTest {
             verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId);
             verify(commentService).getCommentListByArticle(articleId, memberId);
         }
+
+        @Test
+        @DisplayName("해당 클럽의 게시글 목록 조회 실패 - 클럽 없음")
+        void fail_when_find_by_clubId_not_found_club() {
+            //given
+            Long clubId = 1L;
+            Long memberId = 2L;
+            ArticleType articleType = ArticleType.FREE;
+
+            DomainException ex = new DomainException(ClubErrorCode.NOT_FOUND);
+            willThrow(ex).given(clubValidator).findClubByClubIdOrThrow(clubId);
+
+            assertThatThrownBy(() -> articleService.findArticlesByClubId(clubId, articleType, memberId))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.NOT_FOUND.message());
+
+            // when & then
+            verify(articleRepository, never()).findArticlesByClubId(anyLong(), any());
+        }
