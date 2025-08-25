@@ -314,3 +314,23 @@ class ArticleServiceTest {
             verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId);
             verify(commentService).getCommentListByArticle(articleId, memberId);
         }
+
+        @Test
+        @DisplayName("수정 실패 - 타인이 수정")
+        void fail_when_not_owner() {
+            Long memberId = 10L;
+            Long articleId = 20L;
+
+            willThrow(new DomainException(ArticleErrorCode.NOT_FOUND_TO_MEMBER))
+                    .given(articleValidator)
+                    .findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
+
+            ArticleRequestDto reqDto = new ArticleRequestDto("t", ArticleType.FREE, "c");
+
+            assertThatThrownBy(() -> articleService.updateArticle(articleId, memberId, reqDto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.NOT_FOUND_TO_MEMBER.message());
+
+            verifyNoInteractions(clubMemberValidator, commentService);
+            verify(articleRepository, never()).findLikeInfoByArticleIdsAndMemberId(anyList(), anyLong());
+        }
