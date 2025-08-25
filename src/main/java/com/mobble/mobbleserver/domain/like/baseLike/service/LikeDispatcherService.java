@@ -26,20 +26,8 @@ public class LikeDispatcherService {
 
     public LikeDispatcherService(MemberValidator memberValidator, List<AbstractLikeService<?, ?>> services, List<LikeQueryService> queryServices) {
         this.memberValidator = memberValidator;
-        this.serviceMap = services.stream()
-                .collect(Collectors.toMap(
-                        AbstractLikeService::getType,
-                        Function.identity(),
-                        (a, b) -> a,
-                        () -> new EnumMap<>(LikeType.class)
-                ));
-        this.queryServiceMap = queryServices.stream()
-                .collect(Collectors.toMap(
-                        LikeQueryService::getType,
-                        Function.identity(),
-                        (a, b) -> a,
-                        () -> new EnumMap<>(LikeType.class)
-                ));
+        this.serviceMap = toEnumMap(services, AbstractLikeService::getType);
+        this.queryServiceMap = toEnumMap(queryServices, LikeQueryService::getType);
     }
 
     @Transactional
@@ -58,5 +46,16 @@ public class LikeDispatcherService {
         if (queryService == null) throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
 
         return queryService.getLikedMemberList(targetId);
+    }
+
+    // 생성자 중복 로직 메서드 분리
+    private static <T> Map<LikeType, T> toEnumMap(List<T> beans, Function<T, LikeType> keyFn) {
+        return beans.stream()
+                .collect(Collectors.toMap(
+                        keyFn,
+                        Function.identity(),
+                        (a, b) -> a,
+                        () -> new EnumMap<>(LikeType.class)
+                ));
     }
 }
