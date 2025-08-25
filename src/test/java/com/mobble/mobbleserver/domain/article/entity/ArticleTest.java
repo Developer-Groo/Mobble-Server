@@ -47,9 +47,7 @@ class ArticleTest {
         @Test
         @DisplayName("club == null → 예외")
         void create_fail_when_club_null() {
-            assertThatThrownBy(() ->
-                    Article.createArticle(null, mockMember, articleType, title, content)
-            )
+            assertThatThrownBy(() -> Article.createArticle(null, mockMember, articleType, title, content))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.CLUB_REQUIRED.message());
         }
@@ -57,9 +55,7 @@ class ArticleTest {
         @Test
         @DisplayName("member == null → 예외")
         void create_fail_when_member_null() {
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, null, articleType, title, content)
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, null, articleType, title, content))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.MEMBER_REQUIRED.message());
         }
@@ -67,9 +63,7 @@ class ArticleTest {
         @Test
         @DisplayName("articleType == null → 예외")
         void create_fail_when_type_null() {
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, mockMember, null, title, content)
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, mockMember, null, title, content))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TYPE_REQUIRED.message());
         }
@@ -77,15 +71,11 @@ class ArticleTest {
         @Test
         @DisplayName("title null/blank → 예외")
         void create_fail_when_title_invalid() {
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, mockMember, articleType, null, content)
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, mockMember, articleType, null, content))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
 
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, mockMember, articleType, "   ", content)
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, mockMember, articleType, "   ", content))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
         }
@@ -93,15 +83,11 @@ class ArticleTest {
         @Test
         @DisplayName("content null/blank → 예외")
         void create_fail_when_content_invalid() {
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, mockMember, articleType, title, null)
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, mockMember, articleType, title, null))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
 
-            assertThatThrownBy(() ->
-                    Article.createArticle(mockClub, mockMember, articleType, title, "   ")
-            )
+            assertThatThrownBy(() -> Article.createArticle(mockClub, mockMember, articleType, title, "   "))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
         }
@@ -127,9 +113,7 @@ class ArticleTest {
         @DisplayName("type == null → 예외")
         void update_fail_when_type_null() {
             // when & then
-            assertThatThrownBy(() ->
-                    mockArticle.updateArticle(null, "new_title", "new_content")
-            )
+            assertThatThrownBy(() -> mockArticle.updateArticle(null, "new_title", "new_content"))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TYPE_REQUIRED.message());
         }
@@ -137,15 +121,11 @@ class ArticleTest {
         @Test
         @DisplayName("title null/blank → 예외")
         void update_fail_when_title_invalid() {
-            assertThatThrownBy(() ->
-                    mockArticle.updateArticle(ArticleType.REVIEW, null, "new_content")
-            )
+            assertThatThrownBy(() -> mockArticle.updateArticle(ArticleType.REVIEW, null, "new_content"))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
 
-            assertThatThrownBy(() ->
-                    mockArticle.updateArticle(ArticleType.REVIEW, "   ", "new_content")
-            )
+            assertThatThrownBy(() -> mockArticle.updateArticle(ArticleType.REVIEW, "   ", "new_content"))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.TITLE_REQUIRED.message());
         }
@@ -154,18 +134,13 @@ class ArticleTest {
         @DisplayName("content null/blank → 예외")
         void update_fail_when_content_invalid() {
             // when & then
-            assertThatThrownBy(() ->
-                    mockArticle.updateArticle(ArticleType.REVIEW, "new_title", null)
-            )
+            assertThatThrownBy(() -> mockArticle.updateArticle(ArticleType.REVIEW, "new_title", null))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
 
-            assertThatThrownBy(() ->
-                    mockArticle.updateArticle(ArticleType.REVIEW, "new_title", "   ")
-            )
+            assertThatThrownBy(() -> mockArticle.updateArticle(ArticleType.REVIEW, "new_title", "   "))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.CONTENT_REQUIRED.message());
         }
     }
-
 }
