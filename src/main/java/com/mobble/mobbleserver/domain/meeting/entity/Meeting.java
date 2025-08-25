@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.entity;
 
+import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,9 +19,9 @@ public class Meeting {
     @Column(name = "meeting_id")
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "club_member_id")
-//    private ClubMember clubMemberId;
+    @ManyToOne
+    @JoinColumn(name = "club_member_id")
+    private ClubMember clubMember;
 
     private String title;
 
@@ -36,10 +37,9 @@ public class Meeting {
     @Enumerated(EnumType.STRING)
     private MeetingType type;
 
-    //TODO ClubMember 필요
     @Builder
     private Meeting(
-            /*ClubMember clubMember, */
+            ClubMember clubMember,
             String title,
             LocalDateTime datetime,
             String location,
@@ -47,7 +47,7 @@ public class Meeting {
             int memberLimit,
             MeetingType type
     ) {
-        //this.clubMember = clubMember
+        this.clubMember = clubMember;
         this.title = title;
         this.datetime = datetime;
         this.location = location;
@@ -56,9 +56,8 @@ public class Meeting {
         this.type = type;
     }
 
-    //TODO ClubMember 필요
     public static Meeting createMeeting(
-//            ClubMember clubMember,
+            ClubMember clubMember,
             String title,
             LocalDateTime datetime,
             String location,
@@ -67,6 +66,7 @@ public class Meeting {
             MeetingType type
     ) {
         return Meeting.builder()
+                .clubMember(clubMember)
                 .title(title)
                 .datetime(datetime)
                 .location(location)
@@ -74,5 +74,22 @@ public class Meeting {
                 .memberLimit(memberLimit)
                 .type(type)
                 .build();
+    }
+
+    public void updateMeeting(
+            String title,
+            LocalDateTime dateTime,
+            String location,
+            String cost,
+            Integer memberLimit,
+            MeetingType type
+    ) {
+        //Todo null 검증 로직 추가
+        this.title = title;
+        this.datetime = dateTime;
+        this.location = location;
+        this.cost = cost;
+        this.memberLimit = memberLimit;
+        this.type = type;
     }
 }
