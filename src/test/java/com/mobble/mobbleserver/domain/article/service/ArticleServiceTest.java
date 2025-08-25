@@ -366,3 +366,44 @@ class ArticleServiceTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("게시글 삭제")
+    class DeleteArticle {
+
+        @Test
+        @DisplayName("게시글 삭제 성공 - 작성자 본인")
+        void success_when_delete_article_by_author() {
+            // given
+            Long memberId = 1L;
+            Long articleId = 2L;
+            Long clubId = 3L;
+
+            Article mockArticle = mock(Article.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+
+            given(articleRepository.existsArticleByIdAndMemberId(articleId, memberId))
+                    .willReturn(true);
+
+            Comment c1 = mock(Comment.class);
+            Comment c2 = mock(Comment.class);
+            List<Comment> comments = List.of(c1, c2);
+            given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(comments);
+
+            articleService.deleteArticle(articleId, memberId);
+
+            verify(articleValidator).findArticleByArticleIdOrThrow(articleId);
+            verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+            verify(commentRepository).findCommentsWithRepliesByArticleId(articleId);
+
+            verify(commentLikeRepository).deleteAllByArticleId(articleId);
+            verify(commentRepository).deleteAll(comments);
+            verify(articleLikeRepository).deleteAllByArticleId(articleId);
+            verify(articleRepository).delete(mockArticle);
+        }
