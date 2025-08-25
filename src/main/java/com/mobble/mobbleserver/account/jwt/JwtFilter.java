@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             Long memberId = Long.valueOf(subject); // memberId 추출
             List<ClubMemberRole> roles = tokenProvider.getRolesByJwtToken(token);
-            
+
             Collection<? extends GrantedAuthority> authorities = roles.stream()
                     .map(clubMemberRole -> new SimpleGrantedAuthority(clubMemberRole.name()))
                     .toList();
