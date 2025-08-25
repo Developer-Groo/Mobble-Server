@@ -97,9 +97,9 @@ class CommentRepositoryImplTest {
         em.persist(comment1);
         em.persist(comment2);
 
-        CommentLike like1 = CommentLike.createcommentLike(comment1, member);
-        CommentLike like2 = CommentLike.createcommentLike(comment1, otherMember);
-        CommentLike like3 = CommentLike.createcommentLike(comment2, otherMember);
+        CommentLike like1 = CommentLike.createCommentLike(comment1, member);
+        CommentLike like2 = CommentLike.createCommentLike(comment1, otherMember);
+        CommentLike like3 = CommentLike.createCommentLike(comment2, otherMember);
         em.persist(like1);
         em.persist(like2);
         em.persist(like3);

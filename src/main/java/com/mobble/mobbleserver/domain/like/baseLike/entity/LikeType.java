@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.like;
+package com.mobble.mobbleserver.domain.like.baseLike.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
