@@ -10,7 +10,6 @@ import com.mobble.mobbleserver.domain.chat.chatRoom.entity.ChatRoomType;
 import com.mobble.mobbleserver.domain.chat.chatRoom.repository.ChatRoomRepository;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
-import com.mobble.mobbleserver.domain.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
@@ -28,7 +27,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +43,6 @@ public class ClubChatRoomService {
 
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
-    private final ChatRoomParticipantValidator chatRoomParticipantValidator;
     private final ClubChatRoomValidator clubChatRoomValidator;
 
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
@@ -124,17 +121,9 @@ public class ClubChatRoomService {
 
     public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long memberId, ChatMessageRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        Long findMemberId = clubMember.getMember().getId();
-        ClubChatRoom clubChatRoom = clubMember.getClub().getClubChatRoom();
-        Long chatRoomId = clubChatRoom.getChatRoom().getId();
+        Member member = clubMember.getMember();
 
-        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(chatRoomId, findMemberId);
-        LocalDateTime joinedAt = participant.getJoinedAt();
-
-        Long lastMessageId = dto.lastMessageId();
-        LocalDateTime lastCreatedAt = dto.lastCreatedAt();
-
-        return chatMessageService.getMessagesForParticipant(chatRoomId, joinedAt, lastMessageId, lastCreatedAt);
+        return chatMessageService.getMessagesForParticipant(member.getId(), dto);
     }
 
     @Transactional
