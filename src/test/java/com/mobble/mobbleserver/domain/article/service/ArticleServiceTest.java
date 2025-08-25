@@ -259,3 +259,58 @@ class ArticleServiceTest {
             verify(commentService, never()).getCommentListByArticle(anyLong(), anyLong());
         }
     }
+
+    @Nested
+    @DisplayName("게시글 수정")
+    class UpdateArticle {
+
+        @Test
+        @DisplayName("게시글 수정")
+        void success_when_update_article() {
+            //given
+            Long memberId = 1L;
+            Long articleId = 2L;
+            Long clubId = 3L;
+
+            Article mockArticle = mock(Article.class);
+            Member mockMember = mock(Member.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+            ArticleRequestDto reqDto = new ArticleRequestDto("newTitle", ArticleType.FREE, "newContent");
+
+            given(articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockArticle.getMember()).willReturn(mockMember);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+            given(mockClubMember.canPost(ArticleType.FREE)).willReturn(true);
+            given(mockMember.getId()).willReturn(memberId);
+
+            given(mockArticle.getId()).willReturn(articleId);
+            given(mockArticle.getTitle()).willReturn("newTitle");
+            given(mockArticle.getContent()).willReturn("newContent");
+            given(mockArticle.getArticleType()).willReturn(ArticleType.FREE);
+
+            given(articleRepository.findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId))
+                    .willReturn(Map.of(articleId, new ArticleLikeInfoDto(7, true)));
+            given(commentService.getCommentListByArticle(articleId, memberId)).willReturn(List.of());
+
+            given(articleRepository.existsArticleByIdAndMemberId(articleId, memberId)).willReturn(true);
+
+            // when
+            ArticleResponseDto response = articleService.updateArticle(articleId, memberId, reqDto);
+
+            // then
+            assertThat(response).isNotNull();
+            assertThat(response.likeCount()).isEqualTo(7);
+            assertThat(response.isLiked()).isTrue();
+            assertThat(response.commentCount()).isEqualTo(0);
+            assertThat(response.isMine()).isTrue();
+
+            verify(articleValidator).findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
+            verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+            verify(mockClubMember).canPost(ArticleType.FREE);
+            verify(mockArticle).updateArticle(ArticleType.FREE, "newTitle", "newContent");
+            verify(articleRepository).findLikeInfoByArticleIdsAndMemberId(List.of(articleId), memberId);
+            verify(commentService).getCommentListByArticle(articleId, memberId);
+        }
