@@ -10,7 +10,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long>,  Articl
 
     Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
 
-    Boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
+    boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
     @Modifying
     void deleteAllArticleByClub_Id(Long clubId);
