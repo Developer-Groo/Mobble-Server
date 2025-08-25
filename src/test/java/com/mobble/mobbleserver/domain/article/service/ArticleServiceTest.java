@@ -334,3 +334,35 @@ class ArticleServiceTest {
             verifyNoInteractions(clubMemberValidator, commentService);
             verify(articleRepository, never()).findLikeInfoByArticleIdsAndMemberId(anyList(), anyLong());
         }
+
+
+        @Test
+        @DisplayName("수정 실패 - 작성자 본인이 NOTICE로 수정하려 하나 권한 없음")
+        void fail_when_owner_updates_to_notice_without_permission() {
+            Long memberId = 1L;
+            Long articleId = 2L;
+            Long clubId = 3L;
+
+            Article mockArticle = mock(Article.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            ArticleRequestDto reqDto = new ArticleRequestDto("newTitle", ArticleType.NOTICE, "newContent");
+
+            given(articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId))
+                    .willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId))
+                    .willReturn(mockClubMember);
+
+            given(mockClubMember.canPost(ArticleType.NOTICE)).willReturn(false);
+
+            assertThatThrownBy(() -> articleService.updateArticle(articleId, memberId, reqDto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.NOTICE_NO_PERMISSION.message());
+
+            verify(mockArticle, never()).updateArticle(any(), anyString(), anyString());
+        }
+
+    }
