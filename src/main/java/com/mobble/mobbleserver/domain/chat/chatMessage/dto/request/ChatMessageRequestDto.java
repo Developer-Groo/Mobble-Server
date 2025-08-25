@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 
 public record ChatMessageRequestDto(
         @Positive
+        Long chatRoomId,
+
+        @Positive
         Long lastMessageId,
 
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // Todo: error message 적용 필요
