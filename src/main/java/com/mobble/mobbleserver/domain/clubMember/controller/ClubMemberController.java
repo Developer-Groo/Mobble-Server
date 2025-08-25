@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRol
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberResponseDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberRoleUpdateResultDto;
 import com.mobble.mobbleserver.domain.clubMember.service.ClubMemberService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -55,16 +56,18 @@ public class ClubMemberController {
                 .body(clubMemberService.updateClubMemberJoinStatus(clubId, loginedMemberId, dto));
     }
 
+    // Todo 클라이언트에서 기존 accessToken 제거 필요
     @PatchMapping("/{club-id}/members/role")
     public ResponseEntity<ClubMemberUpsertResponseDto> updateClubMemberRole(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody UpdateClubMemberRoleDto dto
     ) {
         Long loginedMemberId = 2L; // Todo: 임시 member id
+        ClubMemberRoleUpdateResultDto result = clubMemberService.updateClubMemberRole(clubId, loginedMemberId, dto);
 
-        return ResponseEntity.ok(
-                clubMemberService.updateClubMemberRole(clubId, loginedMemberId, dto)
-        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", "Bearer " + result.accessToken())
+                .body(result.dto());
     }
 
     @GetMapping("/{club-id}/members")

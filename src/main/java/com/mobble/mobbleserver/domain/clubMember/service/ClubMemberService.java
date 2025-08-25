@@ -1,18 +1,19 @@
 package com.mobble.mobbleserver.domain.clubMember.service;
 
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.domain.club.club.entity.Club;
 import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberResponseDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberRoleUpdateResultDto;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -33,7 +34,8 @@ public class ClubMemberService {
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
-    private final MemberRepository memberRepository;
+
+    private final TokenProvider tokenProvider;
 
     @Transactional
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
@@ -70,8 +72,8 @@ public class ClubMemberService {
     }
 
     @Transactional
-    public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId,
-                                                            UpdateClubMemberRoleDto dto) {
+    public ClubMemberRoleUpdateResultDto updateClubMemberRole(Long clubId, Long loginedMemberId,
+                                                              UpdateClubMemberRoleDto dto) {
         Long targetMemberId = dto.memberId();
         ClubMemberRole newRole = dto.newRole();
 
@@ -88,11 +90,12 @@ public class ClubMemberService {
 
         clubMember.updateRole(newRole);
 
-        // 권한 변경으로 tokenVersion 증가 (기존 토큰 무효화)
-        member.increaseTokenVersion();
-        memberRepository.save(member);
+        // 권한 변경으로 Access Token 재발급
+        List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
+        String accessToken = tokenProvider.createAccessJwtToken(member.getId(), roles);
 
-        return ClubMemberUpsertResponseDto.toDto(clubMember);
+        ClubMemberUpsertResponseDto responseDto = ClubMemberUpsertResponseDto.toDto(clubMember);
+        return ClubMemberUpsertRoleResponseDto(responseDto, accessToken);
     }
 
     @Transactional
