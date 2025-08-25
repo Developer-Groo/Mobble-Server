@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ArticleLikeQueryServiceImpl implements LikeQueryService {
+public class ArticleLikeQueryService implements LikeQueryService {
 
     private final ArticleValidator articleValidator;
     private final ArticleLikeRepository articleLikeRepository;
