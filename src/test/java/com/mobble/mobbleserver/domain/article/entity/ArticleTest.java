@@ -9,11 +9,9 @@ import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,11 +25,6 @@ class ArticleTest {
     private final ArticleType articleType = ArticleType.FREE;
     private final String title = "title";
     private final String content = "content";
-
-    @BeforeEach
-    void setUp() {
-        ReflectionTestUtils.setField(mockMember, "id", 1L);
-    }
 
     @Nested
     @DisplayName("게시글 생성 테스트")
