@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.domain.chat.directChatRoom.service;
 
+import com.mobble.mobbleserver.domain.chat.chatMessage.dto.request.ChatMessageRequestDto;
+import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.domain.chat.chatMessage.service.ChatMessageService;
@@ -24,6 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,15 +83,37 @@ public class DirectChatRoomService {
         chatRoomParticipantRepository.save(receiverParticipant);
         directChatRoomRepository.save(directChatRoom);
 
-        return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, null, 0);
+        return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, null, 0, null);
     }
 
-    public void getDirectChatRooms(Long memberId) {
+    public List<DirectChatRoomPreviewResponseDto> getDirectChatRooms(Long memberId) {
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
+        List<DirectChatRoom> directChatRooms = directChatRoomValidator.findDirectChatRoomsAllByMemberId(memberId);
+        List<Long> chatRoomIds = extractChatRoomIds(directChatRooms);
+
+        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
+        Map<Long, ChatMessage> latestMessageMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
+        Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
+
+        return directChatRooms.stream()
+                .map(directChatRoom -> {
+                    ChatRoom chatRoom = directChatRoom.getChatRoom();
+                    Long chatRoomId = chatRoom.getId();
+
+                    ChatMessage lastMessage = latestMessageMap.get(chatRoomId);
+                    int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
+                    Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
+
+                    return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, lastMessage, unreadCount, lastReadMessageId);
+                })
+                .toList();
     }
 
-    public void getDirectChatRoomMessages(Long memberId, Long chatRoomId) {
+    public List<ChatMessageResponseDto> getDirectChatRoomMessages(Long memberId, ChatMessageRequestDto dto) {
+        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
+        return chatMessageService.getMessagesForParticipant(member.getId(), dto);
     }
 
     @Transactional
@@ -102,5 +130,22 @@ public class DirectChatRoomService {
         chatMessageRepository.deleteByChatRoomId(chatRoomId);
         chatRoomParticipantRepository.deleteByChatRoomId(chatRoomId);
         chatRoomRepository.deleteById(chatRoomId);
+    }
+
+    private List<Long> extractChatRoomIds(List<DirectChatRoom> directChatRooms) {
+        return directChatRooms.stream()
+                .map(chatRoom -> chatRoom.getChatRoom().getId())
+                .toList();
+    }
+
+    private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
+        return chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
+                .stream()
+                .collect(Collectors.toMap(
+                        participant -> participant.getChatRoom().getId(),
+                        participant -> Optional.ofNullable(participant.getLastReadMessage())
+                                .map(ChatMessage::getId)
+                                .orElse(0L)
+                ));
     }
 }
