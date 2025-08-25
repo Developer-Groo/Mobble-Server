@@ -241,3 +241,21 @@ class ArticleServiceTest {
             // when & then
             verify(articleRepository, never()).findArticlesByClubId(anyLong(), any());
         }
+
+        @Test
+        @DisplayName("게시글 단건 조회 실패 - 게시글 없음")
+        void fail_when_find_by_articleId_not_found() {
+            Long articleId = 1L;
+            Long memberId = 2L;
+
+            willThrow(new DomainException(ArticleErrorCode.NOT_FOUND))
+                    .given(articleValidator).findArticleByArticleIdOrThrow(articleId);
+
+            assertThatThrownBy(() -> articleService.findArticleById(articleId, memberId))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.NOT_FOUND.message());
+
+            verify(articleRepository, never()).findLikeInfoByArticleIdsAndMemberId(anyList(), anyLong());
+            verify(commentService, never()).getCommentListByArticle(anyLong(), anyLong());
+        }
+    }
