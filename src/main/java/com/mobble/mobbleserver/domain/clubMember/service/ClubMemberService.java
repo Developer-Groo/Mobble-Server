@@ -94,8 +94,7 @@ public class ClubMemberService {
         List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
         String accessToken = tokenProvider.createAccessJwtToken(member.getId(), roles);
 
-        ClubMemberUpsertResponseDto responseDto = ClubMemberUpsertResponseDto.toDto(clubMember);
-        return ClubMemberUpsertRoleResponseDto(responseDto, accessToken);
+        return ClubMemberRoleUpdateResultDto.toDto(clubMember, accessToken);
     }
 
     @Transactional

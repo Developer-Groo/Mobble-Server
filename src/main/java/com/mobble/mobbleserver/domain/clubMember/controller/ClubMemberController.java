@@ -67,7 +67,7 @@ public class ClubMemberController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", "Bearer " + result.accessToken())
-                .body(result.dto());
+                .body(result.clubMember());
     }
 
     @GetMapping("/{club-id}/members")
