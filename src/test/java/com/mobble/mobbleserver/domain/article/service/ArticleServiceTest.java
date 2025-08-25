@@ -68,3 +68,39 @@ class ArticleServiceTest {
 
     @InjectMocks
     private ArticleService articleService;
+    @Nested
+    @DisplayName("게시글 생성")
+    class CreateArticle {
+
+        @Test
+        @DisplayName("게시글 생성 성공")
+        void success_when_create_article() {
+            // given
+            Long memberId = 1L;
+            Long clubId = 2L;
+            ArticleRequestDto reqDto = new ArticleRequestDto("title", ArticleType.FREE, "content");
+
+            Member mockMember = mock(Member.class);
+            given(mockMember.getId()).willReturn(memberId);
+            given(mockMember.getName()).willReturn("작성자");
+
+            Club mockClub = mock(Club.class);
+            given(mockClub.getId()).willReturn(clubId);
+
+            ClubMember mockClubMember = mock(ClubMember.class);
+            given(mockClubMember.canPost(ArticleType.FREE)).willReturn(true);
+
+            given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(mockMember);
+            given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(mockClub);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+
+            given(articleRepository.save(any()))
+                    .willAnswer(inv -> inv.getArgument(0));
+
+            // when
+            ArticleResponseDto articleResponseDto = articleService.createArticle(memberId, clubId, reqDto);
+
+            // then
+            assertThat(articleResponseDto).isNotNull();
+            verify(articleRepository).save(any());
+        }
