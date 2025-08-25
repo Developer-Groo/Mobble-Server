@@ -63,9 +63,6 @@ public class Member extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "token_version", nullable = false)
-    private int tokenVersion = 1;
-
     @Builder(access = AccessLevel.PRIVATE)
     private Member(
             String name,
@@ -155,9 +152,5 @@ public class Member extends BaseEntity {
         if (ground == null) throw new DomainException(MemberErrorCode.GROUND_REQUIRED);
         if (!termsAgreed) throw new DomainException(MemberErrorCode.TERMS_AGREED_REQUIRED);
         if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
-    }
-
-    public void increaseTokenVersion() {
-        this.tokenVersion++;
     }
 }
