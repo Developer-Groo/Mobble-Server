@@ -13,8 +13,13 @@ public class ArticleValidator {
 
     private final ArticleRepository articleRepository;
 
-    public Article findArticleByArticleIdOrThrow(Long ArticleId) {
-        return articleRepository.findById(ArticleId)
+    public Article findArticleByArticleIdOrThrow(Long articleId) {
+        return articleRepository.findById(articleId)
                 .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
+    }
+
+    public  Article findArticleByArticleIdAndMemberIdOrThrow(Long articleId, Long memberId) {
+        return articleRepository.findArticleByArticleIdAndMemberId(articleId, memberId)
+                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND_TO_MEMBER));
     }
 }
