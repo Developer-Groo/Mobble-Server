@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.chat.chatMessage.service;
 
+import com.mobble.mobbleserver.domain.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.domain.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.chatMessage.entity.MessageType;
@@ -48,11 +49,16 @@ public class ChatMessageService {
     }
 
     public List<ChatMessageResponseDto> getMessagesForParticipant(
-            Long chatRoomId,
-            LocalDateTime joinedAt,
-            Long lastMessageId,
-            LocalDateTime lastCreatedAt
+            Long memberId,
+            ChatMessageRequestDto dto
     ) {
+        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(dto.chatRoomId(), memberId);
+        Long chatRoomId = participant.getChatRoom().getId();
+        LocalDateTime joinedAt = participant.getJoinedAt();
+
+        Long lastMessageId = dto.lastMessageId();
+        LocalDateTime lastCreatedAt = dto.lastCreatedAt();
+
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime maxPeriod = now.minusDays(30);
         LocalDateTime startDate = joinedAt.isAfter(maxPeriod) ? joinedAt : maxPeriod;
