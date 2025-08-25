@@ -94,7 +94,7 @@ public class ArticleService {
 
     @Transactional
     public void deleteArticle(Long articleId, Long memberId) {
-        Article article = articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
