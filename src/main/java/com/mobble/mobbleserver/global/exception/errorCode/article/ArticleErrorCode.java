@@ -12,6 +12,7 @@ public enum ArticleErrorCode implements ErrorCode {
     TITLE_REQUIRED("아티클 제목은 필수입니다.", HttpStatus.BAD_REQUEST),
     CONTENT_REQUIRED("아티클 내용은 필수입니다.", HttpStatus.BAD_REQUEST),
     NOT_FOUND("아티클을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_TO_MEMBER("해당 작성자의 아티클을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOTICE_NO_PERMISSION("일반 클럽 회원은 공지글을 작성 및 수정할 권한이 없습니다.", HttpStatus.FORBIDDEN),
     NO_PERMISSION("해당 아티클을 수정 또는 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
 
