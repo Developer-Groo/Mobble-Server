@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>,  ArticleQueryRepository {
 
-    Optional<Article> findArticleByArticleIdAndMemberId(Long articleId, Long memberId);
+    Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
 
     Boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
