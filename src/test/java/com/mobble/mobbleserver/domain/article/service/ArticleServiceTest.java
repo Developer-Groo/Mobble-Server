@@ -439,3 +439,38 @@ class ArticleServiceTest {
             verify(articleLikeRepository).deleteAllByArticleId(articleId);
             verify(articleRepository).delete(mockArticle);
         }
+
+        @Test
+        @DisplayName("게시글 삭제 실패 - 멤버가 타인 글 삭제 시 권한 없음")
+        void fail_when_member_deletes_others_article() {
+            // given
+            Long memberId = 100L;
+            Long articleId = 200L;
+            Long clubId = 300L;
+
+            Article mockArticle = mock(Article.class);
+            Club mockClub = mock(Club.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+
+            given(articleRepository.existsArticleByIdAndMemberId(articleId, memberId))
+                    .willReturn(false);
+            given(mockClubMember.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
+
+            // when & then
+            assertThatThrownBy(() -> articleService.deleteArticle(articleId, memberId))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ArticleErrorCode.NO_PERMISSION.message());
+
+            verify(commentRepository, never()).findCommentsWithRepliesByArticleId(anyLong());
+            verify(commentLikeRepository, never()).deleteAllByArticleId(anyLong());
+            verify(commentRepository, never()).deleteAll(anyList());
+            verify(articleLikeRepository, never()).deleteAllByArticleId(anyLong());
+            verify(articleRepository, never()).delete(any());
+        }
+    }
+}
