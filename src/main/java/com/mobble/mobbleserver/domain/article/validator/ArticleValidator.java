@@ -19,7 +19,7 @@ public class ArticleValidator {
     }
 
     public  Article findArticleByArticleIdAndMemberIdOrThrow(Long articleId, Long memberId) {
-        return articleRepository.findArticleByArticleIdAndMemberId(articleId, memberId)
+        return articleRepository.findArticleByIdAndMemberId(articleId, memberId)
                 .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND_TO_MEMBER));
     }
 }
