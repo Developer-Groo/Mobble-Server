@@ -98,7 +98,7 @@ public class ArticleService {
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        boolean isOwner = articleRepository.findArticleByArticleIdAndMemberId(articleId, memberId).isPresent();
+        boolean isOwner = articleRepository.existsArticleByIdAndMemberId(articleId, memberId);
 
         if (!isOwner && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
             throw new DomainException(ArticleErrorCode.NO_PERMISSION);
@@ -118,7 +118,7 @@ public class ArticleService {
         List<RootCommentResponseDto> comments = commentService.getCommentListByArticle(article.getId(), memberId);
         int commentCount = comments.size();
 
-        boolean isMine = articleRepository.findArticleByArticleIdAndMemberId(article.getId(), memberId).isPresent();
+        boolean isMine = articleRepository.existsArticleByIdAndMemberId(article.getId(), memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
     }
