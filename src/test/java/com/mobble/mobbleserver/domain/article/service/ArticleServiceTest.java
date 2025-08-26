@@ -88,8 +88,6 @@ class ArticleServiceTest {
             ArticleRequestDto reqDto = new ArticleRequestDto("title", ArticleType.FREE, "content");
 
             Member mockMember = mock(Member.class);
-            given(mockMember.getId()).willReturn(memberId);
-            given(mockMember.getName()).willReturn("작성자");
 
             Club mockClub = mock(Club.class);
             given(mockClub.getId()).willReturn(clubId);
@@ -212,11 +210,7 @@ class ArticleServiceTest {
                     .willReturn(List.of(mockComment, mockComment));
 
             given(mockArticle.getClub()).willReturn(mockClub);
-            given(mockClub.getId()).willReturn(100L);
             given(mockArticle.getMember()).willReturn(mockMember);
-            given(mockMember.getId()).willReturn(memberId);
-            given(mockArticle.getTitle()).willReturn("title");
-            given(mockArticle.getContent()).willReturn("content");
 
             // when
             ArticleResponseDto response = articleService.findArticleById(articleId, memberId);
