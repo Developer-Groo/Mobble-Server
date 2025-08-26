@@ -19,7 +19,7 @@ public class Notification extends CreatedAtEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_id")
+    @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver;
 
     @Enumerated(EnumType.STRING)
@@ -61,7 +61,7 @@ public class Notification extends CreatedAtEntity {
         this.targetId = targetId;
     }
 
-    public Notification createNotification(
+    public static Notification create(
             Member receiver,
             NotificationType type,
             String title,
