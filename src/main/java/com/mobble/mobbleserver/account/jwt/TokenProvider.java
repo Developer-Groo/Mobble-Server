@@ -35,7 +35,7 @@ public class TokenProvider {
      *  Create Token
      * ======================= */
 
-    // Access Jwt Token 생성
+    // Jwt Token 생성
     public String createJwtToken(Long memberId, List<ClubMemberRole> roles) {
 
         Date now = new Date();
