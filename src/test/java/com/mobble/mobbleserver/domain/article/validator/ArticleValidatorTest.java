@@ -26,3 +26,17 @@ class ArticleValidatorTest {
 
     @InjectMocks
     private ArticleValidator articleValidator;
+    @Test
+    @DisplayName("게시글 ID로 조회 성공")
+    void success_when_find_article_or_throw() {
+        // given
+        Long articleId = 1L;
+        Article mockArticle = mock(Article.class);
+        given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
+
+        // when
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+
+        // then
+        assertThat(article).isEqualTo(mockArticle);
+    }
