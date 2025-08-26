@@ -31,11 +31,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwtToken = resolveToken(request);
 
-        // memberId 형태(Long)가 아니면 인증 대상 아님 (ex. signupToken)
         if (jwtToken != null && tokenProvider.validateToken(jwtToken)) {
 
+            // Jwt 에서 memberId 추출 (subject 가 Long 이 아니면 Optional.empty 반환)
             Optional<Long> optionalMemberId = tokenProvider.getMemberIdByJwtToken(jwtToken);
 
+            // memberId 형태(Long)가 아니면 인증 대상이 아니므로 필터 체인 통과 (ex.signupToken)
             if (optionalMemberId.isEmpty()) {
                 filterChain.doFilter(request, response);
                 return;
