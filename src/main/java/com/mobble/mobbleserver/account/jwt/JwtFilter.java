@@ -32,6 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // memberId 형태(Long)가 아니면 인증 대상 아님 (ex. signupToken)
         if (token != null && tokenProvider.validateToken(token)) {
+
             String subject = tokenProvider.parse(token).getSubject();
 
             if (!subject.matches("\\d+")) {
