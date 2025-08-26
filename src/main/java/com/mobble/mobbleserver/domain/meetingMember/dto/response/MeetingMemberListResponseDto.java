@@ -11,7 +11,6 @@ public record MeetingMemberListResponseDto(Long meetingId, List<MeetingMemberRes
                 .map(meetingMember -> MeetingMemberResponseDto.toDto(meetingMember.getMember()))
                 .toList();
 
-
         return new MeetingMemberListResponseDto(meetingId, meetingMembers);
     }
 }
