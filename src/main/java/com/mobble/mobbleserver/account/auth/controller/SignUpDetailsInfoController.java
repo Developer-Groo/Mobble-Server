@@ -31,10 +31,10 @@ public class SignUpDetailsInfoController {
             @RequestBody SignUpRequestDto dto
     ) {
         String signupToken = authHeader.replace("Bearer ", "");
-        String accessToken = signUpDetailsInfoService.signup(signupToken, dto);
+        String JwtToken = signUpDetailsInfoService.signup(signupToken, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Authorization", "Bearer " + accessToken)
+                .header("Authorization", "Bearer " + JwtToken)
                 .build();
     }
 }
