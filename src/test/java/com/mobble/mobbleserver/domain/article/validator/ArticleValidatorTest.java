@@ -40,3 +40,16 @@ class ArticleValidatorTest {
         // then
         assertThat(article).isEqualTo(mockArticle);
     }
+
+    @Test
+    @DisplayName("게시글 ID로 조회 실패 시 예외 발생")
+    void fails_when_find_article_or_throw() {
+        // given
+        Long articleId = 1L;
+        given(articleRepository.findById(articleId)).willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> articleValidator.findArticleByArticleIdOrThrow(articleId))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ArticleErrorCode.NOT_FOUND.message());
+    }
