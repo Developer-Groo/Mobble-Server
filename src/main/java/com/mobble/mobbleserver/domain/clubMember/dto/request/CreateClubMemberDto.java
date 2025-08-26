@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.clubMember.dto.request;
 
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;

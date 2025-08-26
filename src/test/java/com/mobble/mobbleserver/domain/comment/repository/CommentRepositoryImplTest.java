@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.comment.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.article.entity.Article;
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;

@@ -4,4 +4,6 @@ import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClubChatRoomRepository extends JpaRepository<ClubChatRoom, Long> {
+
+    boolean existsClubChatRoomByClubId(Long clubId);
 }
