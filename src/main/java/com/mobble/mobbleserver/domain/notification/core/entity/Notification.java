@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.notification.entity;
+package com.mobble.mobbleserver.domain.notification.core.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -23,49 +23,64 @@ public class Notification extends CreatedAtEntity {
     private Member receiver;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private NotificationType type;
 
-    @Column(name = "content")
+    @Column(name = "title", length = 60, nullable = false)
+    private String title;
+
+    @Column(name = "content", length = 300, nullable = false)
     private String content;
 
-    @Column(name = "is_read")
+    @Column(name = "is_read", nullable = false)
     private boolean isRead;
 
-    @Column(name = "related")
-    private Long related;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_type", nullable = false)
+    private NotificationTargetType targetType;
+
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Notification(
             Member receiver,
             NotificationType type,
+            String title,
             String content,
             boolean isRead,
-            Long related
+            NotificationTargetType targetType,
+            Long targetId
     ) {
         this.receiver = receiver;
         this.type = type;
+        this.title = title;
         this.content = content;
         this.isRead = isRead;
-        this.related = related;
+        this.targetType = targetType;
+        this.targetId = targetId;
     }
 
     public Notification createNotification(
             Member receiver,
             NotificationType type,
+            String title,
             String content,
-            Long related
+            NotificationTargetType targetType,
+            Long targetId
     ) {
         return Notification.builder()
                 .receiver(receiver)
                 .type(type)
+                .title(title)
                 .content(content)
                 .isRead(false)
-                .related(related)
+                .targetType(targetType)
+                .targetId(targetId)
                 .build();
     }
 
-    public void marksAsRead() {
+    public void markAsRead() {
         this.isRead = true;
     }
 }
