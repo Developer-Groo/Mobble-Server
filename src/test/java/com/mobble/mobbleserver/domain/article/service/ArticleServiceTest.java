@@ -50,19 +50,25 @@ class ArticleServiceTest {
 
     @Mock
     private ArticleRepository articleRepository;
+
     @Mock
     private CommentRepository commentRepository;
+
     @Mock
     private CommentLikeRepository commentLikeRepository;
+
     @Mock
     private ArticleLikeRepository articleLikeRepository;
 
     @Mock
     private ArticleValidator articleValidator;
+
     @Mock
     private ClubValidator clubValidator;
+
     @Mock
     private ClubMemberValidator clubMemberValidator;
+
     @Mock
     private MemberValidator memberValidator;
 
