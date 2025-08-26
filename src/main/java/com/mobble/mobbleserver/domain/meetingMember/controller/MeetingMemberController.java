@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/meetings/{meeting-id}")
+@RequestMapping("/api/meetings/{meeting-id}/members")
 public class MeetingMemberController {
 
     private final MeetingMemberService meetingMemberService;
 
-    @PostMapping("/attend")
+    @PostMapping
     public ResponseEntity<MeetingAttendanceResponseDto> toggleAttendanceMeeting(
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
