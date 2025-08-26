@@ -7,6 +7,8 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberValidat
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class ClubMemberValidator {
@@ -16,5 +18,9 @@ public class ClubMemberValidator {
     public ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
         return clubMemberRepository.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
+    }
+
+    public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
+        return clubMemberRepository.findAllClubMemberByMemberId(memberId);
     }
 }

@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.clubMember.service;
 
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
-import com.mobble.mobbleserver.domain.club.club.entity.Club;
-import com.mobble.mobbleserver.domain.club.club.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberResponseDto;

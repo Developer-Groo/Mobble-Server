@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,7 +51,12 @@ public class ChatRoomParticipant extends CreatedAtEntity {
     }
 
     public void updateLastReadMessage(ChatMessage chatMessage) {
+        if (lastReadMessage == null) throw new IllegalArgumentException(""); // Todo: ErrorCode 적용
         this.lastReadMessage = chatMessage;
+    }
+
+    public LocalDateTime getJoinedAt() {
+        return this.createdAt;
     }
 
     public void enableNotified() {
