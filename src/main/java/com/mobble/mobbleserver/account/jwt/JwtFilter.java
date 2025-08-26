@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -33,14 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
         // memberId 형태(Long)가 아니면 인증 대상 아님 (ex. signupToken)
         if (jwtToken != null && tokenProvider.validateToken(jwtToken)) {
 
-            String subject = tokenProvider.parse(jwtToken).getSubject();
+            Optional<Long> optionalMemberId = tokenProvider.getMemberIdByJwtToken(jwtToken);
 
-            if (!subject.matches("\\d+")) {
+            if (optionalMemberId.isEmpty()) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            Long memberId = Long.valueOf(subject); // memberId 추출
+            Long memberId = optionalMemberId.get();
             List<ClubMemberRole> roles = tokenProvider.getRolesByJwtToken(jwtToken);
 
             Collection<? extends GrantedAuthority> authorities = roles.stream()

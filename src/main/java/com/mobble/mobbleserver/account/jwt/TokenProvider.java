@@ -3,8 +3,6 @@ package com.mobble.mobbleserver.account.jwt;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -83,14 +78,14 @@ public class TokenProvider {
      * ======================= */
 
     // Access Token -> memberId
-    public Long getMemberIdByJwtToken(String jwtToken) {
-        String subject = parse(jwtToken).getSubject();
+    public Optional<Long> getMemberIdByJwtToken(String token) {
+        String subject = parse(token).getSubject();
 
         if (!subject.matches("\\d+")) {
-            throw new DomainException(OAuthErrorCode.INVALID_TOKEN_SUBJECT);
+            return Optional.empty();
         }
 
-        return Long.valueOf(subject);
+        return Optional.of(Long.valueOf(subject));
     }
 
     // Access Token -> roles (없으면 빈 리스트)
