@@ -350,7 +350,6 @@ class ArticleServiceTest {
             verify(articleRepository, never()).findLikeInfoByArticleIdsAndMemberId(anyList(), anyLong());
         }
 
-
         @Test
         @DisplayName("수정 실패 - 작성자 본인이 NOTICE로 수정하려 하나 권한 없음")
         void fail_when_owner_updates_to_notice_without_permission() {
@@ -381,7 +380,6 @@ class ArticleServiceTest {
 
             verify(mockArticle, never()).updateArticle(any(), anyString(), anyString());
         }
-
     }
 
     @Nested
