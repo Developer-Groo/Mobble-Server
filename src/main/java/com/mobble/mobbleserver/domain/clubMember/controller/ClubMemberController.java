@@ -66,7 +66,7 @@ public class ClubMemberController {
         ClubMemberRoleUpdateResultDto result = clubMemberService.updateClubMemberRole(clubId, loginedMemberId, dto);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", "Bearer " + result.accessToken())
+                .header("Authorization", "Bearer " + result.jwtToken())
                 .body(result.clubMember());
     }
 
