@@ -35,6 +35,10 @@ public class MeetingMemberService {
                     return false;
                 })
                 .orElseGet(() -> {
+                    int currentCount = meetingMemberRepository.countByMeetingId(meeting.getId());
+
+                    if (currentCount >= meeting.getMemberLimit()) throw new IllegalArgumentException("모임 정원 초과");
+
                     MeetingMember attendedMember = MeetingMember.createMeetingMember(meeting, member);
                     meetingMemberRepository.save(attendedMember);
                     return true;
