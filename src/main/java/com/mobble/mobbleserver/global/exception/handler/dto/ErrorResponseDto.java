@@ -3,10 +3,11 @@ package com.mobble.mobbleserver.global.exception.handler.dto;
 import com.mobble.mobbleserver.global.exception.common.ErrorCode;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public record ErrorResponseDto(
-        String timestamp,
+        LocalDateTime timestamp,
         String message,
         int status,
         String code,
