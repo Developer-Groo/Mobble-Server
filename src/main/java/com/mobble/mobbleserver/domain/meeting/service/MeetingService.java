@@ -29,9 +29,10 @@ public class MeetingService {
         Meeting meeting = dto.toEntity(hostMember);
         //Todo d-day 표시 추가
 
+        Meeting saveMeeting = meetingRepository.save(meeting);
         int attendeeCount = 0;
 
-        return MeetingResponseDto.toDto(meetingRepository.save(meeting), attendeeCount);
+        return MeetingResponseDto.toDto(saveMeeting, attendeeCount);
     }
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
@@ -63,9 +64,10 @@ public class MeetingService {
                 dto.type()
         );
 
+        Meeting updateMeeting = meetingRepository.save(meeting);
         int attendeeCount = meeting.getMeetingMembers().size();
 
-        return MeetingResponseDto.toDto(meetingRepository.save(meeting), attendeeCount);
+        return MeetingResponseDto.toDto(updateMeeting, attendeeCount);
     }
 
     @Transactional
