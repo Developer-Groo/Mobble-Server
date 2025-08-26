@@ -144,6 +144,7 @@ class ArticleServiceTest {
         @Test
         @DisplayName("해당 클럽의 게시글 목록 조회")
         void success_when_find_by_clubId() {
+            // given
             Long clubId = 1L;
             Long memberId = 2L;
             ArticleType articleType = ArticleType.FREE;
@@ -152,7 +153,6 @@ class ArticleServiceTest {
             Article mockArticle = mock(Article.class);
             Member mockMember = mock(Member.class);
 
-            // validator
             given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(mockClub);
 
             given(articleRepository.findArticlesByClubId(clubId, articleType))
@@ -168,9 +168,11 @@ class ArticleServiceTest {
             given(commentRepository.countCommentsByArticleIds(anyList()))
                     .willReturn(Map.of(10L, 3));
 
+            // when
             List<ArticleSummaryResponseDto> response =
                     articleService.findArticlesByClubId(clubId, articleType, memberId);
 
+            // then
             assertThat(response).hasSize(1);
             ArticleSummaryResponseDto dto = response.get(0);
             assertThat(dto.likeCount()).isEqualTo(5);
@@ -216,8 +218,10 @@ class ArticleServiceTest {
             given(mockArticle.getTitle()).willReturn("title");
             given(mockArticle.getContent()).willReturn("content");
 
+            // when
             ArticleResponseDto response = articleService.findArticleById(articleId, memberId);
 
+            // then
             assertThat(response).isNotNull();
             assertThat(response.likeCount()).isEqualTo(3);
             assertThat(response.isLiked()).isTrue();
@@ -240,23 +244,25 @@ class ArticleServiceTest {
             DomainException ex = new DomainException(ClubErrorCode.NOT_FOUND);
             willThrow(ex).given(clubValidator).findClubByClubIdOrThrow(clubId);
 
+            // when & then
             assertThatThrownBy(() -> articleService.findArticlesByClubId(clubId, articleType, memberId))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ClubErrorCode.NOT_FOUND.message());
 
-            // when & then
             verify(articleRepository, never()).findArticlesByClubId(anyLong(), any());
         }
 
         @Test
         @DisplayName("게시글 단건 조회 실패 - 게시글 없음")
         void fail_when_find_by_articleId_not_found() {
+            // given
             Long articleId = 1L;
             Long memberId = 2L;
 
             willThrow(new DomainException(ArticleErrorCode.NOT_FOUND))
                     .given(articleValidator).findArticleByArticleIdOrThrow(articleId);
 
+            // when & then
             assertThatThrownBy(() -> articleService.findArticleById(articleId, memberId))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.NOT_FOUND.message());
@@ -310,7 +316,7 @@ class ArticleServiceTest {
             assertThat(response).isNotNull();
             assertThat(response.likeCount()).isEqualTo(7);
             assertThat(response.isLiked()).isTrue();
-            assertThat(response.commentCount()).isEqualTo(0);
+            assertThat(response.commentCount()).isZero();
             assertThat(response.isMine()).isTrue();
 
             verify(articleValidator).findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
@@ -324,6 +330,7 @@ class ArticleServiceTest {
         @Test
         @DisplayName("수정 실패 - 타인이 수정")
         void fail_when_not_owner() {
+            // given
             Long memberId = 10L;
             Long articleId = 20L;
 
@@ -331,8 +338,10 @@ class ArticleServiceTest {
                     .given(articleValidator)
                     .findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
 
+            // when
             ArticleRequestDto reqDto = new ArticleRequestDto("t", ArticleType.FREE, "c");
 
+            // then
             assertThatThrownBy(() -> articleService.updateArticle(articleId, memberId, reqDto))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.NOT_FOUND_TO_MEMBER.message());
@@ -345,6 +354,7 @@ class ArticleServiceTest {
         @Test
         @DisplayName("수정 실패 - 작성자 본인이 NOTICE로 수정하려 하나 권한 없음")
         void fail_when_owner_updates_to_notice_without_permission() {
+            // given
             Long memberId = 1L;
             Long articleId = 2L;
             Long clubId = 3L;
@@ -364,6 +374,7 @@ class ArticleServiceTest {
 
             given(mockClubMember.canPost(ArticleType.NOTICE)).willReturn(false);
 
+            // when & then
             assertThatThrownBy(() -> articleService.updateArticle(articleId, memberId, reqDto))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ArticleErrorCode.NOTICE_NO_PERMISSION.message());
@@ -402,8 +413,10 @@ class ArticleServiceTest {
             List<Comment> comments = List.of(c1, c2);
             given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(comments);
 
+            // when
             articleService.deleteArticle(articleId, memberId);
 
+            // then
             verify(articleValidator).findArticleByArticleIdOrThrow(articleId);
             verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
             verify(commentRepository).findCommentsWithRepliesByArticleId(articleId);
@@ -438,8 +451,10 @@ class ArticleServiceTest {
             List<Comment> comments = List.of();
             given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(comments);
 
+            // then
             articleService.deleteArticle(articleId, memberId);
 
+            // then
             verify(commentLikeRepository).deleteAllByArticleId(articleId);
             verify(commentRepository).deleteAll(comments);
             verify(articleLikeRepository).deleteAllByArticleId(articleId);
