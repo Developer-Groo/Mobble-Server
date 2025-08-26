@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.meetingMember.service;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
 import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingAttendanceResponseDto;
+import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +43,13 @@ public class MeetingMemberService {
         return MeetingAttendanceResponseDto.toDto(meeting.getId(), isAttended);
     }
 
+    public MeetingMemberListResponseDto getMeetingMembers(Long meetingId) {
+        Meeting meeting = findMeetingById(meetingId);
+
+        List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
+
+        return MeetingMemberListResponseDto.toDto(meeting.getId(), meetingMembers);
+    }
 
     private Meeting findMeetingById(Long meetingId) {
         return meetingRepository.findById(meetingId)
