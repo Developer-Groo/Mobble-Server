@@ -28,6 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -413,10 +414,12 @@ class ArticleServiceTest {
             verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
             verify(commentRepository).findCommentsWithRepliesByArticleId(articleId);
 
-            verify(commentLikeRepository).deleteAllByArticleId(articleId);
-            verify(commentRepository).deleteAll(comments);
-            verify(articleLikeRepository).deleteAllByArticleId(articleId);
-            verify(articleRepository).delete(mockArticle);
+            InOrder inOrder = inOrder(commentLikeRepository, commentRepository, articleLikeRepository, articleRepository);
+
+            inOrder.verify(commentLikeRepository).deleteAllByArticleId(articleId);
+            inOrder.verify(commentRepository).deleteAll(comments);
+            inOrder.verify(articleLikeRepository).deleteAllByArticleId(articleId);
+            inOrder.verify(articleRepository).delete(mockArticle);
         }
 
         @Test
@@ -443,14 +446,16 @@ class ArticleServiceTest {
             List<Comment> comments = List.of();
             given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(comments);
 
-            // then
+            // when
             articleService.deleteArticle(articleId, memberId);
 
             // then
-            verify(commentLikeRepository).deleteAllByArticleId(articleId);
-            verify(commentRepository).deleteAll(comments);
-            verify(articleLikeRepository).deleteAllByArticleId(articleId);
-            verify(articleRepository).delete(mockArticle);
+            InOrder inOrder = inOrder(commentLikeRepository, commentRepository, articleLikeRepository, articleRepository);
+
+            inOrder.verify(commentLikeRepository).deleteAllByArticleId(articleId);
+            inOrder.verify(commentRepository).deleteAll(comments);
+            inOrder.verify(articleLikeRepository).deleteAllByArticleId(articleId);
+            inOrder.verify(articleRepository).delete(mockArticle);
         }
 
         @Test
