@@ -34,7 +34,7 @@ public class SocialLoginService {
 
         if (member != null) {
             List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
-            String jwtToken = tokenProvider.createAccessJwtToken(member.getId(), roles);
+            String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
 
             return SocialLoginResponseDto.existMember(jwtToken);
         }

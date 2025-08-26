@@ -36,7 +36,7 @@ public class TokenProvider {
      * ======================= */
 
     // Access Jwt Token 생성
-    public String createAccessJwtToken(Long memberId, List<ClubMemberRole> roles) {
+    public String createJwtToken(Long memberId, List<ClubMemberRole> roles) {
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 1day
@@ -54,8 +54,8 @@ public class TokenProvider {
     }
 
     // roles 없이 토큰 생성 (클럽 미가입, 일반 유저용)
-    public String createAccessJwtToken(Long memberId) {
-        return createAccessJwtToken(memberId, List.of());
+    public String createJwtToken(Long memberId) {
+        return createJwtToken(memberId, List.of());
     }
 
     // 회원가입용 Signup Token 생성

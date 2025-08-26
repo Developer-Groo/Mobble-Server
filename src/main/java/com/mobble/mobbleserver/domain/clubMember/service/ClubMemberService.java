@@ -92,7 +92,7 @@ public class ClubMemberService {
 
         // 권한 변경으로 Access Token 재발급
         List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
-        String jwtToken = tokenProvider.createAccessJwtToken(member.getId(), roles);
+        String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
 
         return ClubMemberRoleUpdateResultDto.toDto(clubMember, jwtToken);
     }
