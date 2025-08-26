@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.account.jwt;
 
 import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private final MemberValidator memberValidator;
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
