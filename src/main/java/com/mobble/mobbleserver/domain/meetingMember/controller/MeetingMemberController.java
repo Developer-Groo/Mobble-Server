@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,9 @@ public class MeetingMemberController {
 
     @PostMapping
     public ResponseEntity<MeetingAttendanceResponseDto> toggleAttendanceMeeting(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingMemberService.attendMeeting(meetingId, memberId));
     }

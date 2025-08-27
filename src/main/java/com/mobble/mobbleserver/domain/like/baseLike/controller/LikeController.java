@@ -1,11 +1,13 @@
 package com.mobble.mobbleserver.domain.like.baseLike.controller;
 
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.baseLike.service.LikeDispatcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,16 +19,16 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<LikeToggleResponseDto> toggleLike(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {
-        Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeDispatcherService.toggleLike(likeType, targetId, memberId));
     }
 
     @GetMapping("/members")
-    public ResponseEntity<?> getMemberList(
+    public ResponseEntity<LikeMemberListResponseDto> getMemberList(
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {

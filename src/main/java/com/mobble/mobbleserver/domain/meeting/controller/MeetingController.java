@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,40 +24,38 @@ public class MeetingController {
 
     @PostMapping
     public ResponseEntity<MeetingResponseDto> createMeeting(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        Long memberId = 1L;
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingService.createMeeting(memberId, clubId, dto));
     }
 
     @GetMapping
     public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        Long memberId = 1L;
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
 
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
     ) {
-        Long memberId = 1L;
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
 
     @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        Long memberId = 1L;
         meetingService.deleteMeeting(memberId, meetingId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
