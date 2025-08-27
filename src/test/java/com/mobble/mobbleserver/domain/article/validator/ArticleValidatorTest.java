@@ -72,3 +72,20 @@ class ArticleValidatorTest {
         // then
         assertThat(article).isEqualTo(mockArticle);
     }
+
+    @Test
+    @DisplayName("게시글 ID와 작성자 ID로 조회 실패 시 예외 발생")
+    void fails_when_find_article_by_article_id_and_member_id_or_throw() {
+        // given
+        Long articleId = 10L;
+        Long memberId = 20L;
+
+        given(articleRepository.findArticleByIdAndMemberId(articleId, memberId))
+                .willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ArticleErrorCode.NOT_FOUND_TO_MEMBER.message());
+    }
+}
