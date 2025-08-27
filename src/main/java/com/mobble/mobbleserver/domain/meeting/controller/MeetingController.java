@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.controller;
 
+import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +25,11 @@ public class MeetingController {
 
     @PostMapping
     public ResponseEntity<MeetingResponseDto> createMeeting(
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        Long memberId = 1L;
+        Long memberId = authMember.memberId();
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingService.createMeeting(memberId, clubId, dto));
@@ -34,9 +37,10 @@ public class MeetingController {
 
     @GetMapping
     public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        Long memberId = 1L;
+        Long memberId = authMember.memberId();
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
@@ -44,19 +48,23 @@ public class MeetingController {
 
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
     ) {
-        Long memberId = 1L;
+        Long memberId = authMember.memberId();
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
 
     @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        Long memberId = 1L;
+        Long memberId = authMember.memberId();
+
         meetingService.deleteMeeting(memberId, meetingId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
