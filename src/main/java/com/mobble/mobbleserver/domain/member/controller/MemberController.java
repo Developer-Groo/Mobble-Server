@@ -22,30 +22,25 @@ public class MemberController {
 
     @GetMapping
     public ResponseEntity<MemberResponseDto> getMember(
-            @AuthenticationPrincipal AuthMember authMember
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.getMember(memberId));
     }
 
     @PatchMapping
     public ResponseEntity<MemberResponseDto> updateMember(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody @Valid MemberUpdateRequestDto dto
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberService.updateMember(memberId, dto));
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteMember(
-            @AuthenticationPrincipal AuthMember authMember
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
     ) {
-        Long memberId = authMember.memberId();
         memberService.deleteMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

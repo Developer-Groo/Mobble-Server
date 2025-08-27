@@ -48,23 +48,19 @@ public class MeetingController {
 
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.updateMeeting(memberId, meetingId, dto));
     }
 
     @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        Long memberId = authMember.memberId();
-
         meetingService.deleteMeeting(memberId, meetingId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

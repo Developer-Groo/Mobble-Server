@@ -1,6 +1,5 @@
 package com.mobble.mobbleserver.domain.like.baseLike.controller;
 
-import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
@@ -20,12 +19,10 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<LikeToggleResponseDto> toggleLike(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(likeDispatcherService.toggleLike(likeType, targetId, memberId));
     }
