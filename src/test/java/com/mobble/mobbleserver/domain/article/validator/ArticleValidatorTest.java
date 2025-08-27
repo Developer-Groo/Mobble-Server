@@ -26,6 +26,7 @@ class ArticleValidatorTest {
 
     @InjectMocks
     private ArticleValidator articleValidator;
+
     @Test
     @DisplayName("게시글 ID로 조회 성공")
     void success_when_find_article_or_throw() {
@@ -52,4 +53,22 @@ class ArticleValidatorTest {
         assertThatThrownBy(() -> articleValidator.findArticleByArticleIdOrThrow(articleId))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(ArticleErrorCode.NOT_FOUND.message());
+    }
+
+    @Test
+    @DisplayName("게시글 ID와 작성자 ID로 조회 성공")
+    void success_when_find_article_by_article_id_and_member_id_or_throw() {
+        // given
+        Long articleId = 10L;
+        Long memberId = 20L;
+        Article mockArticle = mock(Article.class);
+
+        given(articleRepository.findArticleByIdAndMemberId(articleId, memberId))
+                .willReturn(Optional.of(mockArticle));
+
+        // when
+        Article article = articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
+
+        // then
+        assertThat(article).isEqualTo(mockArticle);
     }
