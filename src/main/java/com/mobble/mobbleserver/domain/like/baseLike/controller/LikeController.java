@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.like.baseLike.controller;
 
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.baseLike.service.LikeDispatcherService;
@@ -26,7 +27,7 @@ public class LikeController {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<?> getMemberList(
+    public ResponseEntity<LikeMemberListResponseDto> getMemberList(
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {
