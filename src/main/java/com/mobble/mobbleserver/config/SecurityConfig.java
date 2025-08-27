@@ -1,0 +1,65 @@
+package com.mobble.mobbleserver.config;
+
+import com.mobble.mobbleserver.account.jwt.JwtFilter;
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Slf4j
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final TokenProvider tokenProvider;
+    private final MemberValidator memberValidator;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        // CSRF 보호 비활성화 (CSRF:악의적인 사이트에서 사용자의 인증된 세션을 악용해 요청을 보내는 공격)
+        http
+                .csrf(AbstractHttpConfigurer::disable);
+
+        // Form 로그인 방식 비활성화
+        http
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        // HTTP Basic 인증 방식 비활성화
+        http
+                .httpBasic(AbstractHttpConfigurer::disable);
+
+        // 경로별 인가 작업
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/social-login.html",
+                                "/signup/details-info.html",
+                                "/login-success.html"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                );
+
+        // 세션 설정: STATELESS
+        http
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+
+        // JwtFilter 추가
+        http
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}

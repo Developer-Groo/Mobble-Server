@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
@@ -34,10 +35,6 @@ public class Member extends BaseEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    // Todo 소셜 로그인 구현 후 삭제
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "phone")
     private String phone;
 
@@ -53,11 +50,12 @@ public class Member extends BaseEntity {
     @Column(name = "privacy_agreed")
     private boolean privacyAgreed;
 
-//    @Column(name = "social_provider")
-//    private String socialProvider;
-//
-//    @Column(name = "sicial_id")
-//    private String socialId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "social_provider")
+    private SocialProvider socialProvider;
+
+    @Column(name = "social_id")
+    private String socialId;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -71,30 +69,28 @@ public class Member extends BaseEntity {
             int age,
             Gender gender,
             String email,
-            String password, // Todo 소셜 로그인 구현 후 삭제
             String phone,
             String ground,
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
-            boolean isDeleted
-//            SocialProvider socialProvider,
-//            String socialId,
+            boolean isDeleted,
+            SocialProvider socialProvider,
+            String socialId
     ) {
         validateCommon(name, gender, phone, ground, termsAgreed, privacyAgreed);
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.email = email;
-        this.password = password; // Todo 소셜 로그인 구현 후 삭제
         this.phone = phone;
         this.ground = ground;
         this.profileImage = profileImage;
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
         this.isDeleted = isDeleted;
-//        this.socialProvider = socialProvider;
-//        this.socialId = socialId;
+        this.socialProvider = socialProvider;
+        this.socialId = socialId;
     }
 
     /**
@@ -105,14 +101,13 @@ public class Member extends BaseEntity {
             int age,
             Gender gender,
             String email,
-            String password, // Todo 소셜 로그인 구현 후 삭제
             String phone,
             String ground,
             String profileImage,
             boolean termsAgreed,
-            boolean privacyAgreed
-//            SocialProvider socialProvider,
-//            String socialId
+            boolean privacyAgreed,
+            SocialProvider socialProvider,
+            String socialId
     ) {
 
         return Member.builder()
@@ -120,15 +115,14 @@ public class Member extends BaseEntity {
                 .age(age)
                 .gender(gender)
                 .email(email)
-                .password(password) // Todo 소셜 로그인 구현 후 삭제
                 .phone(phone)
                 .ground(ground)
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
                 .isDeleted(false)
-//                .socialProvider(socialProvider)
-//                .socialId(socialId)
+                .socialProvider(socialProvider)
+                .socialId(socialId)
                 .build();
     }
 
