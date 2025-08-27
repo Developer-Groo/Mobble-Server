@@ -1,6 +1,5 @@
 package com.mobble.mobbleserver.domain.meeting.controller;
 
-import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
@@ -25,23 +24,19 @@ public class MeetingController {
 
     @PostMapping
     public ResponseEntity<MeetingResponseDto> createMeeting(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(meetingService.createMeeting(memberId, clubId, dto));
     }
 
     @GetMapping
     public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
-            @AuthenticationPrincipal AuthMember authMember,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        Long memberId = authMember.memberId();
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
