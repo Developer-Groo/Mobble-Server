@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.meeting.entity;
 
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
+import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +36,9 @@ public class Meeting {
 
     @Column(name = "member_limit")
     private int memberLimit;
+
+    @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY)
+    private List<MeetingMember> meetingMembers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private MeetingType type;

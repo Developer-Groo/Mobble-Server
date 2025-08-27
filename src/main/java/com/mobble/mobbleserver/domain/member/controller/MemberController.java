@@ -1,8 +1,6 @@
 package com.mobble.mobbleserver.domain.member.controller;
 
-import com.mobble.mobbleserver.domain.member.dto.request.MemberCreateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
-import com.mobble.mobbleserver.domain.member.dto.response.MemberCreateResponseDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -19,14 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-
-    @PostMapping
-    public ResponseEntity<MemberCreateResponseDto> createMember(
-            @RequestBody @Valid MemberCreateRequestDto dto
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(memberService.createMember(dto));
-    }
 
     @GetMapping
     public ResponseEntity<MemberResponseDto> getMember() {

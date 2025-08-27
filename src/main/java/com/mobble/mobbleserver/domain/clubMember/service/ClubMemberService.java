@@ -1,11 +1,13 @@
 package com.mobble.mobbleserver.domain.clubMember.service;
 
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberResponseDto;
 import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.domain.clubMember.dto.response.ClubMemberRoleUpdateResultDto;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
@@ -32,6 +34,8 @@ public class ClubMemberService {
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
+
+    private final TokenProvider tokenProvider;
 
     @Transactional
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
@@ -62,11 +66,14 @@ public class ClubMemberService {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         clubMember.updateStatus(JoinStatus.WITHDRAWN);
+        // Todo: 클럽 탈퇴 시 역할(ClubMemberRole) 처리 방식 확정 후 반영
+        // - 현재는 역할 유지 상태
+        // - 추후 권한 초기화 or tokenVersion 증가 필요 여부 판단
     }
 
     @Transactional
-    public ClubMemberUpsertResponseDto updateClubMemberRole(Long clubId, Long loginedMemberId,
-                                                            UpdateClubMemberRoleDto dto) {
+    public ClubMemberRoleUpdateResultDto updateClubMemberRole(Long clubId, Long loginedMemberId,
+                                                              UpdateClubMemberRoleDto dto) {
         Long targetMemberId = dto.memberId();
         ClubMemberRole newRole = dto.newRole();
 
@@ -83,7 +90,11 @@ public class ClubMemberService {
 
         clubMember.updateRole(newRole);
 
-        return ClubMemberUpsertResponseDto.toDto(clubMember);
+        // 권한 변경으로 Access Token 재발급
+        List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
+        String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
+
+        return ClubMemberRoleUpdateResultDto.toDto(clubMember, jwtToken);
     }
 
     @Transactional

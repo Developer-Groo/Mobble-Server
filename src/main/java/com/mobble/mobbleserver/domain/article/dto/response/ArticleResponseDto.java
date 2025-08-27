@@ -25,8 +25,8 @@ public record ArticleResponseDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-
     public static ArticleResponseDto toDto(Article article) {
+
         return new ArticleResponseDto(
                 article.getId(),
                 article.getTitle(),
@@ -52,6 +52,7 @@ public record ArticleResponseDto(
             int commentCount,
             List<RootCommentResponseDto> comments
     ) {
+
         return new ArticleResponseDto(
                 article.getId(),
                 article.getTitle(),
