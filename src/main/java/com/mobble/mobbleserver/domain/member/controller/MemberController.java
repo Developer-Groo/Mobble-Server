@@ -1,6 +1,5 @@
 package com.mobble.mobbleserver.domain.member.controller;
 
-import com.mobble.mobbleserver.account.auth.principal.AuthMember;
 import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.service.MemberService;
@@ -39,7 +38,7 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteMember(
-            @AuthenticationPrincipal(expression = "memberId") Long memberId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         memberService.deleteMember(memberId);
 
