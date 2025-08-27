@@ -133,3 +133,33 @@ class ArticleRepositoryImplTest {
         assertThat(a2InfoNull.likeCount()).isEqualTo(1);
         assertThat(a2InfoNull.isLiked()).isFalse();
     }
+
+    @Test
+    @DisplayName("클럽 ID로 게시글 ID 목록 조회 성공")
+    void success_when_find_article_ids_by_club_id() {
+        // given
+        Member writer = MemberTestFixture.createDefaultMember();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(category);
+
+        em.persist(category);
+        em.persist(writer);
+        em.persist(club);
+
+        Article a1 = ArticleTestFixture.createWithMemberAndClub(writer, club);
+        a1.updateArticle(ArticleType.FREE, "a1", "c1");
+        Article a2 = ArticleTestFixture.createWithMemberAndClub(writer, club);
+        a2.updateArticle(ArticleType.NOTICE, "a2", "c2");
+
+        em.persist(a1);
+        em.persist(a2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Long> ids = articleRepository.findArticleIdsByClubId(club.getId());
+
+        // then
+        assertThat(ids).containsExactlyInAnyOrder(a1.getId(), a2.getId());
+    }
+}
