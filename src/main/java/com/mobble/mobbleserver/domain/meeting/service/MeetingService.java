@@ -29,15 +29,19 @@ public class MeetingService {
         Meeting meeting = dto.toEntity(hostMember);
         //Todo d-day 표시 추가
 
-        return MeetingResponseDto.toDto(meetingRepository.save(meeting));
+        Meeting saveMeeting = meetingRepository.save(meeting);
+        int attendeeCount = 0;
+
+        return MeetingResponseDto.toDto(saveMeeting, attendeeCount);
     }
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
 
+
         return meetings.stream()
-                .map(meeting -> MeetingResponseDto.toDto(meeting))
+                .map(meeting -> MeetingResponseDto.toDto(meeting, meeting.getMeetingMembers().size()))
                 .toList();
     }
 
@@ -60,7 +64,10 @@ public class MeetingService {
                 dto.type()
         );
 
-        return MeetingResponseDto.toDto(meetingRepository.save(meeting));
+        Meeting updateMeeting = meetingRepository.save(meeting);
+        int attendeeCount = meeting.getMeetingMembers().size();
+
+        return MeetingResponseDto.toDto(updateMeeting, attendeeCount);
     }
 
     @Transactional
