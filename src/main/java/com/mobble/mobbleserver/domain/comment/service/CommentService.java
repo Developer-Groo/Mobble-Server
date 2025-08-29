@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.comment.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
-import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
@@ -25,14 +25,15 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 public class CommentService {
 
-    private final CommentRepository commentRepository;
     private final CommentValidator commentValidator;
     private final ClubMemberValidator clubMemberValidator;
-    private final ArticleRepository articleRepository;
+    private final ArticleValidator articleValidator;
+
+    private final CommentRepository commentRepository;
 
     @Transactional
     public CommentResponseDto createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
-        Article article = findArticleOrThrow(articleId);
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
@@ -49,7 +50,7 @@ public class CommentService {
             Long parentCommentId,
             CommentRequestDto dto
     ) {
-        Article article = findArticleOrThrow(articleId);
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Comment parentComment = commentValidator.findCommentByCommentIdOrThrow(parentCommentId);
@@ -75,18 +76,13 @@ public class CommentService {
     }
 
     public List<RootCommentResponseDto> getCommentListByArticle(Long articleId, Long memberId) {
-        Article article = findArticleOrThrow(articleId);
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         List<Comment> comments = commentRepository.findCommentsWithRepliesByArticleId(article.getId());
         Map<Long, CommentLikeInfoDto> likeInfoMap = getCommentLikeInfo(comments, memberId);
 
         return comments.stream()
                 .map(comment -> RootCommentResponseDto.toDto(comment, likeInfoMap))
                 .toList();
-    }
-
-    private Article findArticleOrThrow(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Custom 예외 적용 및 validator 접근
     }
 
     private Map<Long, CommentLikeInfoDto> getCommentLikeInfo(List<Comment> comments, Long memberId) {
