@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.club.core.service;
 
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.service.ClubChatRoomService;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.ageGroup.repository.AgeGroupRepository;
@@ -51,6 +52,8 @@ public class ClubService {
     private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
 
+    private final ClubChatRoomService clubChatRoomService;
+
     @Transactional
     public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
         ClubCategory category = findCategoryOrThrow(dto.category());
@@ -64,6 +67,8 @@ public class ClubService {
 
         List<AgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         ageGroupRepository.saveAll(ageGroups);
+
+        clubChatRoomService.createClubChatRoom(club, member);
 
         return buildClubResponse(club, member, member.getName());
     }
