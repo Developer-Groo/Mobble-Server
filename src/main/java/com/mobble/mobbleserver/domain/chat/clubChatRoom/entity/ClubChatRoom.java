@@ -38,4 +38,17 @@ public class ClubChatRoom {
                 .chatRoom(chatRoom)
                 .build();
     }
+
+    public void attachTo(Club club) {
+        if (this.club != club) throw new IllegalArgumentException("");
+
+        club.setClubChatRoomInternal(this);
+    }
+
+    public void detach() {
+        if (this.club == null) return;
+
+        this.club.setClubChatRoomInternal(null);
+        this.club = null;
+    }
 }
