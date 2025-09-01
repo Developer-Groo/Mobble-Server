@@ -83,6 +83,10 @@ public class Club extends BaseEntity {
                 .build();
     }
 
+    public void setClubChatRoomInternal(ClubChatRoom chatRoom) {
+        this.clubChatRoom = chatRoom;
+    }
+
     public void updateClub(
             ClubCategory category,
             String name,
