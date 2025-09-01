@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,22 +42,26 @@ public class MeetingController {
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
 
+    @PreAuthorize("@clubRolePermissionChecker.isLeaderOrManager(#clubId)")
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingService.updateMeeting(memberId, meetingId, dto));
+                .body(meetingService.updateMeeting(memberId, clubId, meetingId, dto));
     }
 
+    @PreAuthorize("@clubRolePermissionChecker.isLeaderOrManager(#clubId)")
     @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        meetingService.deleteMeeting(memberId, meetingId);
+        meetingService.deleteMeeting(memberId, clubId, meetingId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
