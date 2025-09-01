@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.service;
 
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDto;
@@ -39,21 +38,15 @@ public class MeetingService {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
 
-
         return meetings.stream()
                 .map(meeting -> MeetingResponseDto.toDto(meeting, meeting.getMeetingMembers().size()))
                 .toList();
     }
 
     @Transactional
-    public MeetingResponseDto updateMeeting(Long memberId, Long meetingId, MeetingUpdateRequestDto dto) {
+    public MeetingResponseDto updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
+        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Meeting meeting = findMeetingByMeetingId(meetingId);
-
-        Long clubId = meeting.getClubMember().getClub().getId();
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
-
-        if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meeting.updateMeeting(
                 dto.title(),
@@ -71,14 +64,9 @@ public class MeetingService {
     }
 
     @Transactional
-    public void deleteMeeting(Long memberId, Long meetingId) {
+    public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
+        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Meeting meeting = findMeetingByMeetingId(meetingId);
-
-        Long clubId = meeting.getClubMember().getClub().getId();
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubMemberRole clubMemberRole = clubMember.getClubMemberRole();
-
-        if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meetingRepository.delete(meeting);
     }
