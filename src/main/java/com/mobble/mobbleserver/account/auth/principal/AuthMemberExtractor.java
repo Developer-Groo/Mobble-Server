@@ -13,7 +13,7 @@ public class AuthMemberExtractor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !(authentication.getPrincipal() instanceof AuthMember authMember))
-            throw new DomainException(SecurityErrorCode.ACCESS_DENIED);
+            throw new DomainException(SecurityErrorCode.INVALID_AUTH_MEMBER);
 
         return authMember.memberId();
     }
