@@ -4,12 +4,10 @@ import com.mobble.mobbleserver.account.auth.principal.AuthMemberExtractor;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class ClubRolePermissionChecker {
 
     private final AuthMemberExtractor authMemberExtractor;
