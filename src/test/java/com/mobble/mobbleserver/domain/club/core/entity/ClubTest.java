@@ -135,3 +135,15 @@ class ClubTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ClubErrorCode.CATEGORY_REQUIRED.message());
         }
+
+        @Test
+        @DisplayName("name null/blank → 예외")
+        void update_fail_when_name_invalid() {
+            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, null, ground, address, headCount, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.NAME_REQUIRED.message());
+
+            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, "   ", ground, address, headCount, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.NAME_REQUIRED.message());
+        }
