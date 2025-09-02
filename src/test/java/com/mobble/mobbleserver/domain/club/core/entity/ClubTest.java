@@ -87,3 +87,16 @@ class ClubTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ClubErrorCode.ADDRESS_REQUIRED.message());
         }
+
+        @Test
+        @DisplayName("headCount <= 0 → 예외")
+        void create_fail_when_headcount_invalid() {
+            assertThatThrownBy(() -> Club.createClub(mockCategory, name, ground, address, 0, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
+
+            assertThatThrownBy(() -> Club.createClub(mockCategory, name, ground, address, -1, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
+        }
+    }
