@@ -184,3 +184,23 @@ class ClubTest {
                     .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
         }
     }
+
+    @Nested
+    @DisplayName("연관 관계 편의 메서드")
+    class AssociationHelper {
+
+        @Test
+        @DisplayName("setClubChatRoomInternal 정상 동작")
+        void setClubChatRoomInternal_success() {
+            // given
+            Club club = Club.createClub(mockCategory, name, ground, address, headCount, isAutoJoin);
+            ClubChatRoom chatRoom = mock(ClubChatRoom.class);
+
+            // when
+            club.setClubChatRoomInternal(chatRoom);
+
+            // then
+            assertThat(club.getClubChatRoom()).isSameAs(chatRoom);
+        }
+    }
+}
