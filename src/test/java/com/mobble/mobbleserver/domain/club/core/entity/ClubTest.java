@@ -127,3 +127,11 @@ class ClubTest {
             assertThat(mockClub.getHeadCount()).isEqualTo(newHeadCount);
             assertThat(mockClub.isAutoJoin()).isFalse();
         }
+
+        @Test
+        @DisplayName("category == null → 예외")
+        void update_fail_when_category_null() {
+            assertThatThrownBy(() -> mockClub.updateClub(null, name, ground, address, headCount, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.CATEGORY_REQUIRED.message());
+        }
