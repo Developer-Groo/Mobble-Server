@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.comment.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
-import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
@@ -23,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
-    // Todo: Article -> Validator 로 전환 필요
 
     @Mock
     private CommentRepository commentRepository;
@@ -46,7 +44,7 @@ class CommentServiceTest {
     private ClubMemberValidator clubMemberValidator;
 
     @Mock
-    private ArticleRepository articleRepository;
+    private ArticleValidator articleValidator;
 
     @InjectMocks
     private CommentService commentService;
@@ -76,7 +74,7 @@ class CommentServiceTest {
             given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
             given(mockClubMember.getMember()).willReturn(mockMember);
 
-            given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
 
             given(commentRepository.save(any())).willReturn(mockRootComment);
             given(mockRootComment.getMember()).willReturn(mockMember);
@@ -113,7 +111,7 @@ class CommentServiceTest {
             given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
             given(mockClubMember.getMember()).willReturn(mockMember);
 
-            given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
 
             given(commentValidator.findCommentByCommentIdOrThrow(parentId)).willReturn(mockParentComment);
 
@@ -204,7 +202,7 @@ class CommentServiceTest {
             given(mockArticle.getId()).willReturn(articleId);
             given(mockMember.getId()).willReturn(memberId);
             given(mockComment.getId()).willReturn(100L);
-            given(articleRepository.findById(articleId)).willReturn(Optional.of(mockArticle));
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
 
             given(commentRepository.findCommentsWithRepliesByArticleId(articleId)).willReturn(List.of(mockComment));
             given(mockComment.getMember()).willReturn(mockMember);

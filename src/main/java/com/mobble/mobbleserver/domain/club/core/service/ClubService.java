@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.domain.club.core.service;
 
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
+import com.mobble.mobbleserver.domain.chat.clubChatRoom.service.ClubChatRoomService;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.ageGroup.repository.AgeGroupRepository;
@@ -37,6 +39,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ClubService {
 
+    private final ClubChatRoomService clubChatRoomService;
+
     private final ClubRepository clubRepository;
     private final ClubCategoryRepository clubCategoryRepository;
     private final ClubMemberRepository clubMemberRepository;
@@ -64,6 +68,9 @@ public class ClubService {
 
         List<AgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         ageGroupRepository.saveAll(ageGroups);
+
+        // Todo: 반환값이 Club 채팅방의 preview 에 필요한 데이터이기 때문에 반환 DTO에 포함 되어야 함
+        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomService.createClubChatRoom(club.getId(), member.getId());
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -98,25 +105,27 @@ public class ClubService {
 
     @Transactional
     public void deleteClub(Long clubId, Long memberId) {
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        Club club = clubMember.getClub();
+
         assertLeader(clubMember);
 
-        clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
+        clubChatRoomService.deleteClubChatRoom(club.getId());
 
-        List<Long> articleIds = articleRepository.findArticleIdsByClubId(clubId);
+        clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+
+        List<Long> articleIds = articleRepository.findArticleIdsByClubId(club.getId());
 
         commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
         commentRepository.deleteAllCommentByArticle_IdIn(articleIds);
         articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
-        articleRepository.deleteAllArticleByClub_Id(clubId);
-        clubMemberRepository.deleteAllClubMemberByClubId(clubId);
+        articleRepository.deleteAllArticleByClub_Id(club.getId());
+        clubMemberRepository.deleteAllClubMemberByClubId(club.getId());
 
-        clubLikeRepository.deleteClubLikeAllByClub_Id(clubId);
-        ageGroupRepository.deleteAllClubAgeGroupByClubId(clubId);
+        clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+        ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
 
-        clubRepository.deleteById(clubId);
+        clubRepository.deleteById(club.getId());
     }
 
     private ClubCategory findCategoryOrThrow(String categoryName) {

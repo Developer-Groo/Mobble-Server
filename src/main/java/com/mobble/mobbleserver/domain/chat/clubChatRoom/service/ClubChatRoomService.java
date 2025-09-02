@@ -41,14 +41,14 @@ public class ClubChatRoomService {
 
     private final ChatMessageService chatMessageService;
 
-    private final MemberValidator memberValidator;
-    private final ClubMemberValidator clubMemberValidator;
-    private final ClubChatRoomValidator clubChatRoomValidator;
-
     private final ChatRoomParticipantRepository chatRoomParticipantRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ClubChatRoomRepository clubChatRoomRepository;
+
+    private final MemberValidator memberValidator;
+    private final ClubMemberValidator clubMemberValidator;
+    private final ClubChatRoomValidator clubChatRoomValidator;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
@@ -67,16 +67,23 @@ public class ClubChatRoomService {
     }
 
     @Transactional
-    public ClubChatRoomPreviewResponseDto createClubChatRoom(Club club, Member member) {
+    public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        Club club = clubMember.getClub();
+        Member member = clubMember.getMember();
+
         clubChatRoomValidator.existsClubChatRoomByClubIdOrThrow(club.getId());
 
         ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.GROUP);
-        ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
-        ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
-
         chatRoomRepository.save(chatRoom);
+
+        ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
         chatRoomParticipantRepository.save(participant);
+
+        ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
         clubChatRoomRepository.save(clubChatRoom);
+
+        clubChatRoom.attachTo(club);
 
         return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, null, 0, null);
     }
@@ -136,10 +143,11 @@ public class ClubChatRoomService {
     }
 
     @Transactional
-    public void deleteClubChatRoom(Club club) {
-        ClubChatRoom clubChatRoom = club.getClubChatRoom();
-        if (clubChatRoom == null) return;
+    public void deleteClubChatRoom(Long clubId) {
+        ClubChatRoom clubChatRoom = clubChatRoomValidator.findClubChatRoomByClubIdOrThrow(clubId);
         ChatRoom chatRoom = clubChatRoom.getChatRoom();
+
+        clubChatRoom.detach();
 
         chatRoomParticipantRepository.deleteByChatRoomId(chatRoom.getId());
         chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
