@@ -100,3 +100,30 @@ class ClubTest {
                     .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
         }
     }
+
+    @Nested
+    @DisplayName("클럽 수정 테스트")
+    class UpdateClub {
+
+        @Test
+        @DisplayName("정상 수정")
+        void update_success() {
+            // given
+            ClubCategory newCategory = ClubCategoryTestFixture.createDefaultCategory();
+            String newName = "서울 주말 풋살 클럽";
+            String newGround = "상암 월드컵경기장 풋살장";
+            String newAddress = "서울시 마포구 월드컵로 240";
+            int newHeadCount = 30;
+            boolean newIsAutoJoin = false;
+
+            // when
+            mockClub.updateClub(newCategory, newName, newGround, newAddress, newHeadCount, newIsAutoJoin);
+
+            // then
+            assertThat(mockClub.getClubCategory()).isEqualTo(newCategory);
+            assertThat(mockClub.getName()).isEqualTo(newName);
+            assertThat(mockClub.getGround()).isEqualTo(newGround);
+            assertThat(mockClub.getAddress()).isEqualTo(newAddress);
+            assertThat(mockClub.getHeadCount()).isEqualTo(newHeadCount);
+            assertThat(mockClub.isAutoJoin()).isFalse();
+        }
