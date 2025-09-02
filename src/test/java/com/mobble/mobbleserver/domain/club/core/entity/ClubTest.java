@@ -43,3 +43,11 @@ class ClubTest {
             assertThat(club.getHeadCount()).isEqualTo(headCount);
             assertThat(club.isAutoJoin()).isTrue();
         }
+
+        @Test
+        @DisplayName("category == null → 예외")
+        void create_fail_when_category_null() {
+            assertThatThrownBy(() -> Club.createClub(null, name, ground, address, headCount, isAutoJoin))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.CATEGORY_REQUIRED.message());
+        }
