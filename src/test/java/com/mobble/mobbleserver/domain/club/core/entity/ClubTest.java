@@ -24,3 +24,22 @@ class ClubTest {
     private final String address = "서울시 송파구 올림픽로 25";
     private final int headCount = 20;
     private final boolean isAutoJoin = true;
+
+    @Nested
+    @DisplayName("클럽 생성 테스트")
+    class CreateClub {
+
+        @Test
+        @DisplayName("정상 생성")
+        void create_success() {
+            // given & when
+            Club club = Club.createClub(mockCategory, name, ground, address, headCount, isAutoJoin);
+
+            // then
+            assertThat(club.getClubCategory()).isEqualTo(mockCategory);
+            assertThat(club.getName()).isEqualTo(name);
+            assertThat(club.getGround()).isEqualTo(ground);
+            assertThat(club.getAddress()).isEqualTo(address);
+            assertThat(club.getHeadCount()).isEqualTo(headCount);
+            assertThat(club.isAutoJoin()).isTrue();
+        }
