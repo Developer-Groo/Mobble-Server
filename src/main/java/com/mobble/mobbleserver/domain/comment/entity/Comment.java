@@ -3,14 +3,15 @@ package com.mobble.mobbleserver.domain.comment.entity;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.member.entity.Member;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,7 +40,7 @@ public class Comment extends BaseEntity {
     private String content;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> children;
+    private List<Comment> children =  new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Comment(

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,20 +22,18 @@ public class ClubController {
 
     @PostMapping
     public ResponseEntity<ClubResponseDto> createClub(
-            @RequestBody @Valid ClubRequestDto dto
+            @RequestBody @Valid ClubRequestDto dto,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Long memberId = 1L; // Todo: 임시 member id
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(clubService.createClub(memberId, dto));
     }
 
     @GetMapping("/{club-id}")
     public ResponseEntity<ClubResponseDto> findClubById(
-            @PathVariable("club-id") @Positive Long clubId
+            @PathVariable("club-id") @Positive Long clubId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Long memberId = 1L; // Todo: 임시 member id
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubService.findClubById(clubId, memberId));
     }
@@ -42,20 +41,20 @@ public class ClubController {
     @PatchMapping("/{club-id}")
     public ResponseEntity<ClubResponseDto> updateClub(
             @PathVariable("club-id") @Positive Long clubId,
-            @RequestBody @Valid ClubRequestDto dto
+            @RequestBody @Valid ClubRequestDto dto,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Long memberId = 1L; // Todo: 임시 member id
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(clubService.updateClub(clubId, memberId, dto));
     }
 
     @DeleteMapping("/{club-id}")
     public ResponseEntity<Void> deleteClub(
-            @PathVariable("club-id") @Positive Long clubId
+            @PathVariable("club-id") @Positive Long clubId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
     ){
-        Long memberId = 1L; // Todo: 임시 member id
         clubService.deleteClub(clubId, memberId);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
