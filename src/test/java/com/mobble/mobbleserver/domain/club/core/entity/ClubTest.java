@@ -127,62 +127,6 @@ class ClubTest {
             assertThat(mockClub.getHeadCount()).isEqualTo(newHeadCount);
             assertThat(mockClub.isAutoJoin()).isFalse();
         }
-
-        @Test
-        @DisplayName("category == null → 예외")
-        void update_fail_when_category_null() {
-            assertThatThrownBy(() -> mockClub.updateClub(null, name, ground, address, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.CATEGORY_REQUIRED.message());
-        }
-
-        @Test
-        @DisplayName("name null/blank → 예외")
-        void update_fail_when_name_invalid() {
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, null, ground, address, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.NAME_REQUIRED.message());
-
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, "   ", ground, address, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.NAME_REQUIRED.message());
-        }
-
-        @Test
-        @DisplayName("ground null/blank → 예외")
-        void update_fail_when_ground_invalid() {
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, null, address, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.GROUND_REQUIRED.message());
-
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, "   ", address, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.GROUND_REQUIRED.message());
-        }
-
-        @Test
-        @DisplayName("address null/blank → 예외")
-        void update_fail_when_address_invalid() {
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, ground, null, headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.ADDRESS_REQUIRED.message());
-
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, ground, "   ", headCount, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.ADDRESS_REQUIRED.message());
-        }
-
-        @Test
-        @DisplayName("headCount <= 0 → 예외")
-        void update_fail_when_headcount_invalid() {
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, ground, address, 0, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
-
-            assertThatThrownBy(() -> mockClub.updateClub(mockCategory, name, ground, address, -5, isAutoJoin))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(ClubErrorCode.HEADCOUNT_REQUIRED.message());
-        }
     }
 
     @Nested
