@@ -87,4 +87,21 @@ public class MeetingService {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
     }
+
+    /**
+     * D-day 계산용 메서드
+     */
+    private String calculateDDay(LocalDateTime meetingDateTime) {
+        LocalDate today = LocalDate.now();
+        LocalDate meetingDate = meetingDateTime.toLocalDate();
+        long days = Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
+
+        if (days > 0) {
+            return "D-" + days;
+        } else if (days == 0) {
+            return "D-Day";
+        } else {
+            return "D+" + Math.abs(days);
+        }
+    }
 }
