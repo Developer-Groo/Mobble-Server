@@ -93,9 +93,6 @@ public class MeetingService {
         meetingRepository.delete(meeting);
     }
 
-    /**
-     * D-day 계산용 메서드
-     */
     private String calculateDDay(LocalDateTime meetingDateTime) {
         LocalDate today = LocalDate.now();
         LocalDate meetingDate = meetingDateTime.toLocalDate();
