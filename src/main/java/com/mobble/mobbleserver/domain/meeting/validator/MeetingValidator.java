@@ -7,6 +7,8 @@ import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class MeetingValidator {
@@ -16,5 +18,9 @@ public class MeetingValidator {
     public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+    }
+
+    public List<Meeting> findMeetingsByClubIdOrThrow(Long clubId) {
+        return meetingRepository.findByClubMember_Club_Id(clubId);
     }
 }
