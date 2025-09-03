@@ -18,10 +18,10 @@ public record MeetingResponseDto(
         Integer memberLimit,
         int attendeeCount,
         MeetingType type,
-        String dDay
+        int dDay
 ) {
     
-    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount, String dDay) {
+    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount, int dDay) {
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
