@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,21 +32,25 @@ public class MeetingService {
         ClubMember hostMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         Meeting meeting = dto.toEntity(hostMember);
-        //Todo d-day 표시 추가
 
         Meeting saveMeeting = meetingRepository.save(meeting);
-        int attendeeCount = 0;
 
-        return MeetingResponseDto.toDto(saveMeeting, attendeeCount);
+        int attendeeCount = 0;
+        int dDay = calculateDDay(saveMeeting.getDatetime());
+
+        return MeetingResponseDto.toDto(saveMeeting, attendeeCount, dDay);
     }
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         List<Meeting> meetings = meetingValidator.findMeetingsByClubId(clubId);
 
-
         return meetings.stream()
-                .map(meeting -> MeetingResponseDto.toDto(meeting, meeting.getMeetingMembers().size()))
+                .map(meeting -> {
+                    int attendeeCount = meeting.getMeetingMembers().size();
+                    int dDay = calculateDDay(meeting.getDatetime());
+                    return MeetingResponseDto.toDto(meeting, attendeeCount, dDay);
+                })
                 .toList();
     }
 
@@ -68,8 +75,9 @@ public class MeetingService {
 
         Meeting updateMeeting = meetingRepository.save(meeting);
         int attendeeCount = meeting.getMeetingMembers().size();
+        int dDay = calculateDDay(updateMeeting.getDatetime());
 
-        return MeetingResponseDto.toDto(updateMeeting, attendeeCount);
+        return MeetingResponseDto.toDto(updateMeeting, attendeeCount, dDay);
     }
 
     @Transactional
@@ -83,5 +91,12 @@ public class MeetingService {
         if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meetingRepository.delete(meeting);
+    }
+
+    private int calculateDDay(LocalDateTime meetingDateTime) {
+        LocalDate today = LocalDate.now();
+        LocalDate meetingDate = meetingDateTime.toLocalDate();
+
+        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
