@@ -39,7 +39,7 @@ public class MeetingService {
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
+        List<Meeting> meetings = meetingValidator.findMeetingsByClubIdOrThrow(clubId);
 
 
         return meetings.stream()
