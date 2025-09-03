@@ -42,7 +42,7 @@ public class MeetingController {
                 .body(meetingService.findMeetingsByClubId(memberId, clubId));
     }
 
-    @PreAuthorize("@clubRolePermissionChecker.isLeaderOrManager(#clubId)")
+    @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
@@ -54,7 +54,7 @@ public class MeetingController {
                 .body(meetingService.updateMeeting(memberId, clubId, meetingId, dto));
     }
 
-    @PreAuthorize("@clubRolePermissionChecker.isLeaderOrManager(#clubId)")
+    @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
     @DeleteMapping("/{meeting-id}")
     public ResponseEntity<Void> deleteMeeting(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
