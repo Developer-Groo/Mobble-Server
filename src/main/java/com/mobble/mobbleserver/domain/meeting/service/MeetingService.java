@@ -58,7 +58,7 @@ public class MeetingService {
     public MeetingResponseDto updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         new ClubPermissionPolicy(clubMember).validateLeaderOrManager();
-        Meeting meeting = findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meeting.updateMeeting(
                 dto.title(),
