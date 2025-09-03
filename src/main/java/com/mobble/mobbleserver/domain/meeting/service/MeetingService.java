@@ -8,6 +8,7 @@ import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDt
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.List;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
+    private final MeetingValidator meetingValidator;
     private final ClubMemberValidator clubMemberValidator;
 
     @Transactional
@@ -41,7 +43,7 @@ public class MeetingService {
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
+        List<Meeting> meetings = meetingValidator.findMeetingsByClubId(clubId);
 
         return meetings.stream()
                 .map(meeting -> {
@@ -54,7 +56,7 @@ public class MeetingService {
 
     @Transactional
     public MeetingResponseDto updateMeeting(Long memberId, Long meetingId, MeetingUpdateRequestDto dto) {
-        Meeting meeting = findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         Long clubId = meeting.getClubMember().getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
@@ -80,7 +82,7 @@ public class MeetingService {
 
     @Transactional
     public void deleteMeeting(Long memberId, Long meetingId) {
-        Meeting meeting = findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         Long clubId = meeting.getClubMember().getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
@@ -89,11 +91,6 @@ public class MeetingService {
         if (clubMemberRole == ClubMemberRole.MEMBER) throw new IllegalArgumentException(""); //Todo 커스텀 예외 적용
 
         meetingRepository.delete(meeting);
-    }
-
-    private Meeting findMeetingByMeetingId(Long meetingId) {
-        return meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
     }
 
     /**
