@@ -9,6 +9,8 @@ import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepo
 import com.mobble.mobbleserver.domain.meetingMember.validator.MeetingMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +40,7 @@ public class MeetingMemberService {
                 .orElseGet(() -> {
                     int currentCount = meetingMemberRepository.countByMeetingId(meeting.getId());
 
-                    if (currentCount >= meeting.getMemberLimit()) throw new IllegalArgumentException("모임 정원 초과");
+                    if (currentCount >= meeting.getMemberLimit()) throw new DomainException(MeetingMemberErrorCode.FULL_CAPACITY);
 
                     MeetingMember attendedMember = MeetingMember.createMeetingMember(meeting, member);
                     meetingMemberRepository.save(attendedMember);

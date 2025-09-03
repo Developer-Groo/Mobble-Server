@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum MeetingMemberErrorCode implements ErrorCode {
-    EXCEED_MEETING_MEMBER("더 이상 참석할 수 없습니다.", HttpStatus.CONFLICT);
+    FULL_CAPACITY("더 이상 참석할 수 없습니다.", HttpStatus.CONFLICT);
 
     private final String message;
     private final HttpStatus httpStatus;
