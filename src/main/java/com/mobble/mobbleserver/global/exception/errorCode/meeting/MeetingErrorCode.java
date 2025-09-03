@@ -11,7 +11,6 @@ public enum MeetingErrorCode implements ErrorCode {
     private final String message;
     private final HttpStatus httpStatus;
 
-
     @Override
     public String message() {
         return message;
