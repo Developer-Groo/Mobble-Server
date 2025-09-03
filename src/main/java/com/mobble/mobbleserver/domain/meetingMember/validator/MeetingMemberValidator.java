@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -15,5 +16,9 @@ public class MeetingMemberValidator {
 
     public Optional<MeetingMember> findMeetingByMeetingIdAndMemberId(Long meetingId, Long memberId) {
         return meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(meetingId, memberId);
+    }
+
+    public List<MeetingMember> findByMeetingId(Long meetingId) {
+        return meetingMemberRepository.findByMeetingId(meetingId);
     }
 }
