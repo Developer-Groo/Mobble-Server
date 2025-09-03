@@ -1,19 +1,21 @@
 package com.mobble.mobbleserver.domain.meetingMember.service;
 
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
-import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepository;
+import com.mobble.mobbleserver.domain.meetingMember.validator.MeetingMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +23,16 @@ import java.util.Optional;
 public class MeetingMemberService {
 
     private final MeetingMemberRepository meetingMemberRepository;
-    private final MeetingRepository meetingRepository;
+    private final MeetingValidator meetingValidator;
+    private final MeetingMemberValidator meetingMemberValidator;
     private final MemberValidator memberValidator;
 
     @Transactional
     public MeetingAttendanceResponseDto attendMeeting(Long meetingId, Long memberId) {
-        Meeting meeting = findMeetingById(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
 
-        Boolean isAttended = findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId())
+        Boolean isAttended = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId())
                 .map(attending -> {
                     meetingMemberRepository.delete(attending);
                     return false;
@@ -37,7 +40,7 @@ public class MeetingMemberService {
                 .orElseGet(() -> {
                     int currentCount = meetingMemberRepository.countByMeetingId(meeting.getId());
 
-                    if (currentCount >= meeting.getMemberLimit()) throw new IllegalArgumentException("모임 정원 초과");
+                    if (currentCount >= meeting.getMemberLimit()) throw new DomainException(MeetingMemberErrorCode.FULL_CAPACITY);
 
                     MeetingMember attendedMember = MeetingMember.createMeetingMember(meeting, member);
                     meetingMemberRepository.save(attendedMember);
@@ -48,19 +51,10 @@ public class MeetingMemberService {
     }
 
     public MeetingMemberListResponseDto getMeetingMembers(Long meetingId) {
-        Meeting meeting = findMeetingById(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
-        List<MeetingMember> meetingMembers = meetingMemberRepository.findByMeetingId(meeting.getId());
+        List<MeetingMember> meetingMembers = meetingMemberValidator.findByMeetingId(meeting.getId());
 
         return MeetingMemberListResponseDto.toDto(meeting.getId(), meetingMembers);
-    }
-
-    private Meeting findMeetingById(Long meetingId) {
-        return meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
-    }
-
-    private Optional<MeetingMember> findMeetingByMeetingIdAndMemberId(Long meetingId, Long memberId) {
-        return meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(meetingId, memberId);
     }
 }
