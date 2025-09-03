@@ -20,7 +20,7 @@ public class MeetingValidator {
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
     }
 
-    public List<Meeting> findMeetingsByClubIdOrThrow(Long clubId) {
+    public List<Meeting> findMeetingsByClubId(Long clubId) {
         return meetingRepository.findByClubMember_Club_Id(clubId);
     }
 }
