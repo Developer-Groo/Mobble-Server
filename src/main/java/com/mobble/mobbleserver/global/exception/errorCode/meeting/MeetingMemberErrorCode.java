@@ -13,11 +13,11 @@ public enum MeetingMemberErrorCode implements ErrorCode {
 
     @Override
     public String message() {
-        return message();
+        return message;
     }
 
     @Override
     public HttpStatus httpStatus() {
-        return httpStatus();
+        return httpStatus;
     }
 }
