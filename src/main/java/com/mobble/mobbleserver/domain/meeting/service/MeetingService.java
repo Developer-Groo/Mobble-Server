@@ -8,10 +8,14 @@ import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDt
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +24,7 @@ import java.util.List;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
+    private final MeetingValidator meetingValidator;
     private final ClubMemberValidator clubMemberValidator;
 
     @Transactional
@@ -27,20 +32,25 @@ public class MeetingService {
         ClubMember hostMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         Meeting meeting = dto.toEntity(hostMember);
-        //Todo d-day 표시 추가
 
         Meeting saveMeeting = meetingRepository.save(meeting);
-        int attendeeCount = 0;
 
-        return MeetingResponseDto.toDto(saveMeeting, attendeeCount);
+        int attendeeCount = 0;
+        int dDay = calculateDDay(saveMeeting.getDatetime());
+
+        return MeetingResponseDto.toDto(saveMeeting, attendeeCount, dDay);
     }
 
     public List<MeetingResponseDto> findMeetingsByClubId(Long memberId, Long clubId) {
         clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        List<Meeting> meetings = meetingRepository.findByClubMember_Club_Id(clubId);
+        List<Meeting> meetings = meetingValidator.findMeetingsByClubId(clubId);
 
         return meetings.stream()
-                .map(meeting -> MeetingResponseDto.toDto(meeting, meeting.getMeetingMembers().size()))
+                .map(meeting -> {
+                    int attendeeCount = meeting.getMeetingMembers().size();
+                    int dDay = calculateDDay(meeting.getDatetime());
+                    return MeetingResponseDto.toDto(meeting, attendeeCount, dDay);
+                })
                 .toList();
     }
 
@@ -61,21 +71,24 @@ public class MeetingService {
 
         Meeting updateMeeting = meetingRepository.save(meeting);
         int attendeeCount = meeting.getMeetingMembers().size();
+        int dDay = calculateDDay(updateMeeting.getDatetime());
 
-        return MeetingResponseDto.toDto(updateMeeting, attendeeCount);
+        return MeetingResponseDto.toDto(updateMeeting, attendeeCount, dDay);
     }
 
     @Transactional
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         new ClubPermissionPolicy(clubMember).validateLeaderOrManager();
-        Meeting meeting = findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meetingRepository.delete(meeting);
     }
 
-    private Meeting findMeetingByMeetingId(Long meetingId) {
-        return meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new IllegalArgumentException(""));
+    private int calculateDDay(LocalDateTime meetingDateTime) {
+        LocalDate today = LocalDate.now();
+        LocalDate meetingDate = meetingDateTime.toLocalDate();
+
+        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
