@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
      * #   @PreAuthorize 조건이 false를 반환한 경우
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<ErrorResponseDto> handleAccessDeniedException() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ErrorResponseDto.toDto(SecurityErrorCode.ACCESS_DENIED));
     }
