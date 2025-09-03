@@ -49,7 +49,7 @@ public class MeetingService {
 
     @Transactional
     public MeetingResponseDto updateMeeting(Long memberId, Long meetingId, MeetingUpdateRequestDto dto) {
-        Meeting meeting = meetingValidator.findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         Long clubId = meeting.getClubMember().getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
@@ -74,7 +74,7 @@ public class MeetingService {
 
     @Transactional
     public void deleteMeeting(Long memberId, Long meetingId) {
-        Meeting meeting = meetingValidator.findMeetingByMeetingId(meetingId);
+        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         Long clubId = meeting.getClubMember().getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);

@@ -13,7 +13,7 @@ public class MeetingValidator {
 
     private final MeetingRepository meetingRepository;
 
-    public Meeting findMeetingByMeetingId(Long meetingId) {
+    public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
     }
