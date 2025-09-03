@@ -17,11 +17,11 @@ public record MeetingResponseDto(
         String cost,
         Integer memberLimit,
         int attendeeCount,
-        MeetingType type
-//        String dDay //Todo d-day 추가
+        MeetingType type,
+        String dDay
 ) {
     
-    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount) {
+    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount, String dDay) {
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
@@ -31,8 +31,8 @@ public record MeetingResponseDto(
                 meeting.getCost(),
                 meeting.getMemberLimit(),
                 attendeeCount,
-                meeting.getType()
-//                dDay
+                meeting.getType(),
+                dDay
         );
     }
 }
