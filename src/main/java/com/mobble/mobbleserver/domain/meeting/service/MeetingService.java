@@ -36,7 +36,7 @@ public class MeetingService {
         Meeting saveMeeting = meetingRepository.save(meeting);
 
         int attendeeCount = 0;
-        String dDay = calculateDDay(saveMeeting.getDatetime());
+        int dDay = calculateDDay(saveMeeting.getDatetime());
 
         return MeetingResponseDto.toDto(saveMeeting, attendeeCount, dDay);
     }
@@ -48,7 +48,7 @@ public class MeetingService {
         return meetings.stream()
                 .map(meeting -> {
                     int attendeeCount = meeting.getMeetingMembers().size();
-                    String dDay = calculateDDay(meeting.getDatetime());
+                    int dDay = calculateDDay(meeting.getDatetime());
                     return MeetingResponseDto.toDto(meeting, attendeeCount, dDay);
                 })
                 .toList();
@@ -75,7 +75,7 @@ public class MeetingService {
 
         Meeting updateMeeting = meetingRepository.save(meeting);
         int attendeeCount = meeting.getMeetingMembers().size();
-        String dDay = calculateDDay(updateMeeting.getDatetime());
+        int dDay = calculateDDay(updateMeeting.getDatetime());
 
         return MeetingResponseDto.toDto(updateMeeting, attendeeCount, dDay);
     }
@@ -93,17 +93,10 @@ public class MeetingService {
         meetingRepository.delete(meeting);
     }
 
-    private String calculateDDay(LocalDateTime meetingDateTime) {
+    private int calculateDDay(LocalDateTime meetingDateTime) {
         LocalDate today = LocalDate.now();
         LocalDate meetingDate = meetingDateTime.toLocalDate();
-        long days = Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
 
-        if (days > 0) {
-            return "D-" + days;
-        } else if (days == 0) {
-            return "D-Day";
-        } else {
-            return "D+" + Math.abs(days);
-        }
+        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
