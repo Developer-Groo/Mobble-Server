@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.service;
 
-import com.mobble.mobbleserver.domain.club.core.policy.ClubPermissionPolicy;
+import com.mobble.mobbleserver.domain.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;

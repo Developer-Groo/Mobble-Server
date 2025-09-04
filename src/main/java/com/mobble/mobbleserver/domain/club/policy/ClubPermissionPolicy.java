@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.club.core.policy;
+package com.mobble.mobbleserver.domain.club.policy;
 
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
