@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -136,27 +137,112 @@ class CommentServiceTest {
         @DisplayName("댓글 수정 성공")
         void success_when_update_comment() {
             // given
-            Long memberId = 1L;
-            Long commentId = 2L;
+            Long clubId = 1L;
+            Long articleId = 2L;
+            Long memberId = 3L;
+            Long commentId = 4L;
             CommentRequestDto dto = new CommentRequestDto("update content");
 
-            Member mockMember = mock(Member.class);
+            Club mockClub = mock(Club.class);
             Article mockArticle = mock(Article.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+            Member mockMember = mock(Member.class);
             Comment mockComment = mock(Comment.class);
             Comment mockUpdatedComment = mock(Comment.class);
 
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+            given(mockClubMember.getMember()).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(memberId);
+
             given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId)).willReturn(mockComment);
+
+            given(mockComment.getArticle()).willReturn(mockArticle);
+            given(mockArticle.getId()).willReturn(articleId);
+
             given(mockComment.updateContent(dto.content())).willReturn(mockUpdatedComment);
             given(mockUpdatedComment.getMember()).willReturn(mockMember);
             given(mockUpdatedComment.getArticle()).willReturn(mockArticle);
 
             // when
-            CommentResponseDto response = commentService.updateComment(commentId, memberId, dto);
+            CommentResponseDto response = commentService.updateComment(articleId, commentId, memberId, dto);
 
             // then
             assertThat(response).isNotNull();
             verify(commentValidator).findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
             verify(mockComment).updateContent(dto.content());
+        }
+
+        @Test
+        @DisplayName("댓글 수정 실패 - 다른 게시글의 댓글")
+        void fail_when_update_comment_article_mismatch() {
+            // given
+            Long clubId = 1L;
+            Long articleId = 2L;
+            Long otherArticleId = 3L;
+            Long commentId = 4L;
+            Long memberId = 5L;
+            CommentRequestDto dto = new CommentRequestDto("update content");
+
+            Club mockClub = mock(Club.class);
+            Article mockRequestedArticle = mock(Article.class);
+            Article mockOtherArticle = mock(Article.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+            Member mockMember = mock(Member.class);
+            Comment mockComment = mock(Comment.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockRequestedArticle);
+            given(mockRequestedArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+            given(mockClubMember.getMember()).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(memberId);
+
+            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId)).willReturn(mockComment);
+
+            given(mockComment.getArticle()).willReturn(mockOtherArticle);
+            given(mockOtherArticle.getId()).willReturn(otherArticleId);
+
+            // when & then
+            assertThatThrownBy(
+                    () -> commentService.updateComment(articleId, commentId, memberId, dto)
+            ).isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        @DisplayName("댓글 수정 실패 - 본인 댓글이 아님")
+        void fail_when_update_comment_not_owner() {
+            // given
+            Long clubId = 1L;
+            Long articleId = 2L;
+            Long commentId = 3L;
+            Long memberId = 4L;
+            CommentRequestDto dto = new CommentRequestDto("update content");
+
+            Club mockClub = mock(Club.class);
+            Article mockArticle = mock(Article.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+            Member mockMember = mock(Member.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
+            given(mockClubMember.getMember()).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(memberId);
+
+            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId))
+                    .willThrow(new IllegalArgumentException("No permission to update this comment"));
+
+            // when & then
+            assertThatThrownBy(
+                    () -> commentService.updateComment(articleId, commentId, memberId, dto)
+            ).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
@@ -165,21 +251,34 @@ class CommentServiceTest {
     class DeleteComment {
 
         @Test
-        @DisplayName("댓글 삭제 성공")
+        @DisplayName("댓글 삭제 성공 - 일반 멤버가 자신의 댓글 삭제")
         void success_when_delete_comment() {
             // given
             Long memberId = 1L;
             Long commentId = 2L;
+            Long clubId = 3L;
+            Long articleId = 4L;
 
             Comment mockComment = mock(Comment.class);
+            Club mockClub = mock(Club.class);
+            Article mockArticle = mock(Article.class);
+            ClubMember mockClubMember = mock(ClubMember.class);
+
+            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
+            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId)).willReturn(mockComment);
+            given(mockArticle.getClub()).willReturn(mockClub);
+            given(mockClub.getId()).willReturn(clubId);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
 
             given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId)).willReturn(mockComment);
 
+            given(mockComment.getArticle()).willReturn(mockArticle);
+            given(mockArticle.getId()).willReturn(articleId);
+
             // when
-            commentService.deleteComment(commentId, memberId);
+            commentService.deleteComment(articleId, commentId, memberId);
 
             // then
-            verify(commentValidator).findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
             verify(commentRepository).delete(mockComment);
         }
     }
