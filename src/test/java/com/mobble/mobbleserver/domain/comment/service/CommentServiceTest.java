@@ -13,6 +13,8 @@ import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -208,9 +210,9 @@ class CommentServiceTest {
             given(mockOtherArticle.getId()).willReturn(otherArticleId);
 
             // when & then
-            assertThatThrownBy(
-                    () -> commentService.updateComment(articleId, commentId, memberId, dto)
-            ).isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> commentService.updateComment(articleId, commentId, memberId, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(CommentErrorCode.ARTICLE_REQUIRED.message());
         }
 
         @Test
@@ -237,12 +239,12 @@ class CommentServiceTest {
             given(mockMember.getId()).willReturn(memberId);
 
             given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId))
-                    .willThrow(new IllegalArgumentException("No permission to update this comment"));
+                    .willThrow(new DomainException(CommentErrorCode.NO_PERMISSION));
 
             // when & then
-            assertThatThrownBy(
-                    () -> commentService.updateComment(articleId, commentId, memberId, dto)
-            ).isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> commentService.updateComment(articleId, commentId, memberId, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(CommentErrorCode.NO_PERMISSION.message());
         }
     }
 
