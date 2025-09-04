@@ -34,7 +34,6 @@ public class TokenProvider {
     public String createJwtToken(Long memberId, List<ClubMemberRole> roles) {
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 1000L * 60 * 60 * 24); // Valid Time: 1day
 
         Map<String, Object> claims = new HashMap<>();
         if (roles != null && !roles.isEmpty()) claims.put("roles", roles.stream().map(Enum::name).toList());
@@ -44,7 +43,6 @@ public class TokenProvider {
                 .addClaims(claims)
                 .setIssuedAt(now)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
                 .compact();
     }
 
