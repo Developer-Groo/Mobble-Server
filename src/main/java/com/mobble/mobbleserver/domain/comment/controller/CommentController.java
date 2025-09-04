@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/articles")
+@RequestMapping("/articles/{article-id}/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{article-id}/comments")
+    @PostMapping
     public ResponseEntity<CommentResponseDto> createRootComment(
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid CommentRequestDto dto,
@@ -30,7 +30,7 @@ public class CommentController {
                 .body(commentService.createRootComment(memberId, articleId, dto));
     }
 
-    @PostMapping("/{article-id}/comments/{parent-comment-id}/replies")
+    @PostMapping("/{parent-comment-id}/replies")
     public ResponseEntity<CommentResponseDto> createReplyComment(
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("parent-comment-id") @Positive Long parentCommentId,
@@ -41,22 +41,24 @@ public class CommentController {
                 .body(commentService.createReplyComment(memberId, articleId, parentCommentId, dto));
     }
 
-    @PatchMapping("/comments/{comment-id}")
+    @PatchMapping("/{comment-id}")
     public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(commentService.updateComment(commentId, memberId, dto));
+                .body(commentService.updateComment(articleId, commentId, memberId, dto));
     }
 
-    @DeleteMapping("/comments/{comment-id}")
+    @DeleteMapping("/{comment-id}")
     public ResponseEntity<Void> deleteComment(
+            @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        commentService.deleteComment(commentId, memberId);
+        commentService.deleteComment(articleId, commentId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
