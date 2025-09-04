@@ -4,10 +4,10 @@ import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.security.SecurityErrorCode;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public final class ClubPermissionPolicy {
+
+    private ClubPermissionPolicy() {}
 
     /**
      * 모임장(LEADER)만 가능한 권한 검증
