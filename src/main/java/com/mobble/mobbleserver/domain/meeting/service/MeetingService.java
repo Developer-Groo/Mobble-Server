@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting.service;
 
-import com.mobble.mobbleserver.domain.club.core.policy.ClubPermissionPolicy;
+import com.mobble.mobbleserver.domain.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;
@@ -30,7 +30,7 @@ public class MeetingService {
     @Transactional
     public MeetingResponseDto createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
         ClubMember hostMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManager(hostMember);
+        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(hostMember);
 
         Meeting meeting = dto.toEntity(hostMember);
 
@@ -58,7 +58,7 @@ public class MeetingService {
     @Transactional
     public MeetingResponseDto updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManager(clubMember);
+        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(clubMember);
         Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meeting.updateMeeting(
@@ -80,7 +80,7 @@ public class MeetingService {
     @Transactional
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManager(clubMember);
+        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(clubMember);
         Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meetingRepository.delete(meeting);
