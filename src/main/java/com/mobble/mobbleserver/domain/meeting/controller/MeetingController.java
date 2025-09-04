@@ -23,6 +23,7 @@ public class MeetingController {
 
     private final MeetingService meetingService;
 
+    @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
     @PostMapping
     public ResponseEntity<MeetingResponseDto> createMeeting(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
