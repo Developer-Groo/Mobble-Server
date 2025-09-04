@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum SocialProvider {
     KAKAO,
     NAVER,
-    GOOGLE;
+    GOOGLE,
+    APPLE;
 
     @JsonCreator
     public static SocialProvider fromString(String socialProvider) {
