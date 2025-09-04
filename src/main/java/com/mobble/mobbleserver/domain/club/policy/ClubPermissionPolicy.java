@@ -12,14 +12,14 @@ public final class ClubPermissionPolicy {
     /**
      * 모임장(LEADER)만 가능한 권한 검증
      */
-    public static void validateLeaderOnly(ClubMember clubMember) {
+    public static void validateLeaderOnlyOrThrow(ClubMember clubMember) {
         if (clubMember.getClubMemberRole() != ClubMemberRole.LEADER) throw new DomainException(SecurityErrorCode.ACCESS_DENIED);
     }
 
     /**
      * 관리자(LEADER, MANAGER)만 가능한 권한 검증
      */
-    public static void validateLeaderOrManager(ClubMember clubMember) {
+    public static void validateLeaderOrManagerOrThrow(ClubMember clubMember) {
         if (clubMember.getClubMemberRole() != ClubMemberRole.LEADER && clubMember.getClubMemberRole() != ClubMemberRole.MANAGER) throw new DomainException(SecurityErrorCode.ACCESS_DENIED);
     }
 
