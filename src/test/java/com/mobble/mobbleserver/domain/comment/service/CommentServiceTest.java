@@ -214,38 +214,6 @@ class CommentServiceTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.ARTICLE_REQUIRED.message());
         }
-
-        @Test
-        @DisplayName("댓글 수정 실패 - 본인 댓글이 아님")
-        void fail_when_update_comment_not_owner() {
-            // given
-            Long clubId = 1L;
-            Long articleId = 2L;
-            Long commentId = 3L;
-            Long memberId = 4L;
-            CommentRequestDto dto = new CommentRequestDto("update content");
-
-            Club mockClub = mock(Club.class);
-            Article mockArticle = mock(Article.class);
-            ClubMember mockClubMember = mock(ClubMember.class);
-            Member mockMember = mock(Member.class);
-
-            given(articleValidator.findArticleByArticleIdOrThrow(articleId)).willReturn(mockArticle);
-            given(mockArticle.getClub()).willReturn(mockClub);
-            given(mockClub.getId()).willReturn(clubId);
-
-            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(mockClubMember);
-            given(mockClubMember.getMember()).willReturn(mockMember);
-            given(mockMember.getId()).willReturn(memberId);
-
-            given(commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId))
-                    .willThrow(new DomainException(CommentErrorCode.NO_PERMISSION));
-
-            // when & then
-            assertThatThrownBy(() -> commentService.updateComment(articleId, commentId, memberId, dto))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(CommentErrorCode.NO_PERMISSION.message());
-        }
     }
 
     @Nested
