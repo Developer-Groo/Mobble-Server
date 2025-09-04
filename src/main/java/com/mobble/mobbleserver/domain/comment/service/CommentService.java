@@ -14,6 +14,8 @@ import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +78,7 @@ public class CommentService {
         Member member = clubMember.getMember();
         Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, member.getId());
 
-        if (!comment.getArticle().getId().equals(articleId)) throw new IllegalArgumentException("");
+        validateCommentByArticleIdOrThrow(comment, article.getId());
 
         Comment updatedComment = comment.updateContent(dto.content());
 
@@ -97,7 +99,7 @@ public class CommentService {
             comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
         }
 
-        if (!comment.getArticle().getId().equals(articleId)) throw new IllegalArgumentException("");
+        validateCommentByArticleIdOrThrow(comment, article.getId());
 
         commentRepository.delete(comment);
     }
@@ -122,5 +124,9 @@ public class CommentService {
                 .toList();
 
         return commentRepository.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
+    }
+
+    private void validateCommentByArticleIdOrThrow(Comment comment, Long articleId) {
+        if (!comment.getArticle().getId().equals(articleId)) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
     }
 }
