@@ -30,6 +30,7 @@ public class MeetingService {
     @Transactional
     public MeetingResponseDto createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
         ClubMember hostMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubPermissionPolicy.validateLeaderOrManager(hostMember);
 
         Meeting meeting = dto.toEntity(hostMember);
 
@@ -57,7 +58,7 @@ public class MeetingService {
     @Transactional
     public MeetingResponseDto updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        new ClubPermissionPolicy(clubMember).validateLeaderOrManager();
+        ClubPermissionPolicy.validateLeaderOrManager(clubMember);
         Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meeting.updateMeeting(
@@ -79,7 +80,7 @@ public class MeetingService {
     @Transactional
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        new ClubPermissionPolicy(clubMember).validateLeaderOrManager();
+        ClubPermissionPolicy.validateLeaderOrManager(clubMember);
         Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
 
         meetingRepository.delete(meeting);
