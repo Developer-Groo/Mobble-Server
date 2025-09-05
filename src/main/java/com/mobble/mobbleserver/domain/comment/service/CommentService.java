@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.domain.comment.service;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
-import com.mobble.mobbleserver.domain.club.core.policy.ClubPermissionPolicy;
+import com.mobble.mobbleserver.domain.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
