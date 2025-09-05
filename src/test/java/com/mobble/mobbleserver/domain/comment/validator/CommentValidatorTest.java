@@ -27,16 +27,19 @@ class CommentValidatorTest {
     @InjectMocks
     private CommentValidator commentValidator;
 
+    private static final Long COMMENT_ID = 1L;
+    private static final Long MEMBER_ID = 2L;
+
     @Test
     @DisplayName("댓글 ID 로 조회 성공")
     void success_when_find_comment_or_Throw() {
         // given
-        Long commentId = 1L;
         Comment mockComment = mock(Comment.class);
-        when(commentRepository.findById(commentId)).thenReturn(Optional.of(mockComment));
+
+        when(commentRepository.findById(COMMENT_ID)).thenReturn(Optional.of(mockComment));
 
         // when
-        Comment comment = commentValidator.findCommentByCommentIdOrThrow(commentId);
+        Comment comment = commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID);
 
         // then
         assertThat(comment).isEqualTo(mockComment);
@@ -46,11 +49,10 @@ class CommentValidatorTest {
     @DisplayName("댓글 ID 로 조회 실패 시 예외 발생")
     void fails_when_find_comment_or_throw() {
         // given
-        Long commentId = 1L;
-        when(commentRepository.findById(commentId)).thenReturn(Optional.empty());
+        when(commentRepository.findById(COMMENT_ID)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdOrThrow(commentId))
+        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(CommentErrorCode.NOT_FOUND.message());
     }
@@ -59,13 +61,12 @@ class CommentValidatorTest {
     @DisplayName("댓글 ID 와 멤버 ID 로 조회 성공")
     void success_when_find_comment_by_id_and_member_or_throw() {
         // given
-        Long commentId = 1L;
-        Long memberId = 2L;
         Comment mockComment = mock(Comment.class);
-        when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.of(mockComment));
+
+        when(commentRepository.findByIdAndMemberId(COMMENT_ID, MEMBER_ID)).thenReturn(Optional.of(mockComment));
 
         // when
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(COMMENT_ID, MEMBER_ID);
 
         // then
         assertThat(comment).isEqualTo(mockComment);
@@ -75,12 +76,10 @@ class CommentValidatorTest {
     @DisplayName("댓글 ID 와 멤버 ID 로 조회 실패 시 예외 발생")
     void fail_find_comment_by_id_and_member_or_throw() {
         // given
-        Long commentId = 1L;
-        Long memberId = 2L;
-        when(commentRepository.findByIdAndMemberId(commentId, memberId)).thenReturn(Optional.empty());
+        when(commentRepository.findByIdAndMemberId(COMMENT_ID, MEMBER_ID)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId))
+        assertThatThrownBy(() -> commentValidator.findCommentByCommentIdAndMemberIdOrThrow(COMMENT_ID, MEMBER_ID))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(CommentErrorCode.NO_PERMISSION.message());
     }
