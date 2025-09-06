@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.comment.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.dto.request.CommentRequestDto;
@@ -12,6 +14,8 @@ import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
 import com.mobble.mobbleserver.domain.comment.repository.dto.CommentLikeInfoDto;
 import com.mobble.mobbleserver.domain.comment.validator.CommentValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,16 +66,41 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, Long memberId, CommentRequestDto dto) {
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
+    public CommentResponseDto updateComment(
+            Long articleId,
+            Long commentId,
+            Long memberId,
+            CommentRequestDto dto
+    ) {
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Club club = article.getClub();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(club.getId(), memberId);
+        Member member = clubMember.getMember();
+        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, member.getId());
+
+        validateCommentByArticleIdOrThrow(comment, article.getId());
+
         Comment updatedComment = comment.updateContent(dto.content());
 
         return CommentResponseDto.toDto(updatedComment);
     }
 
     @Transactional
-    public void deleteComment(Long commentId, Long memberId) {
-        Comment comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
+    public void deleteComment(Long articleId, Long commentId, Long memberId) {
+        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Club club = article.getClub();
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(club.getId(), memberId);
+
+        Comment comment;
+
+        if (ClubPermissionPolicy.isLeaderOrManager(clubMember)) {
+            comment = commentValidator.findCommentByCommentIdOrThrow(commentId);
+        } else {
+            comment = commentValidator.findCommentByCommentIdAndMemberIdOrThrow(commentId, memberId);
+        }
+
+        validateCommentByArticleIdOrThrow(comment, article.getId());
+
         commentRepository.delete(comment);
     }
 
@@ -95,5 +124,9 @@ public class CommentService {
                 .toList();
 
         return commentRepository.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
+    }
+
+    private void validateCommentByArticleIdOrThrow(Comment comment, Long articleId) {
+        if (!comment.getArticle().getId().equals(articleId)) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
     }
 }
