@@ -19,7 +19,7 @@ class CommentTest {
     private final Comment mockComment = CommentTestFixture.createDefaultRootComment();
     private final Member mockMember = MemberTestFixture.createDefaultMember();
     private final Article mockArticle = ArticleTestFixture.createDefaultArticle();
-    private final String content = "content";
+    private static final String CONTENT = "content";
 
     @Nested
     @DisplayName("댓글 생성 테스트")
@@ -29,12 +29,12 @@ class CommentTest {
         @DisplayName("루트 댓글 생성 성공")
         void success_when_create_root_comment() {
             // given & when
-            Comment rootComment = Comment.createRootComment(mockMember, mockArticle, content);
+            Comment rootComment = Comment.createRootComment(mockMember, mockArticle, CONTENT);
 
             // then
             assertThat(rootComment.getMember()).isEqualTo(mockMember);
             assertThat(rootComment.getArticle()).isEqualTo(mockArticle);
-            assertThat(rootComment.getContent()).isEqualTo(content);
+            assertThat(rootComment.getContent()).isEqualTo(CONTENT);
             assertThat(rootComment.hasParent()).isFalse();
         }
 
@@ -42,13 +42,13 @@ class CommentTest {
         @DisplayName("대댓글 생성 성공")
         void success_when_create_reply_comment() {
             // given & when
-            Comment rootComment = Comment.createRootComment(mockMember, mockArticle, content);
-            Comment replyComment = Comment.createReplyComment(mockMember, mockArticle, rootComment, content);
+            Comment rootComment = Comment.createRootComment(mockMember, mockArticle, CONTENT);
+            Comment replyComment = Comment.createReplyComment(mockMember, mockArticle, rootComment, CONTENT);
 
             // then
             assertThat(replyComment.getMember()).isEqualTo(mockMember);
             assertThat(replyComment.getArticle()).isEqualTo(mockArticle);
-            assertThat(replyComment.getContent()).isEqualTo(content);
+            assertThat(replyComment.getContent()).isEqualTo(CONTENT);
             assertThat(replyComment.getParent()).isEqualTo(rootComment);
             assertThat(replyComment.hasParent()).isTrue();
         }
@@ -57,7 +57,7 @@ class CommentTest {
         @DisplayName("대댓글의 루트 댓글이 null 인 경우 예외 발생")
         void fails_when_create_reply_comment_parent_is_null() {
             // when & then
-            assertThatThrownBy(() -> Comment.createReplyComment(mockMember, mockArticle, null, content))
+            assertThatThrownBy(() -> Comment.createReplyComment(mockMember, mockArticle, null, CONTENT))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.PARENT_REQUIRED.message());
         }
@@ -104,7 +104,7 @@ class CommentTest {
         @DisplayName("member 가 null 인 경우 예외 발생")
         void fails_with_null_member() {
             // when & then
-            assertThatThrownBy(() -> Comment.createRootComment(null, mockArticle, content))
+            assertThatThrownBy(() -> Comment.createRootComment(null, mockArticle, CONTENT))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.MEMBER_REQUIRED.message());
         }
@@ -113,7 +113,7 @@ class CommentTest {
         @DisplayName("article 이 null 인 경우 예외 발생")
         void fails_with_null_article() {
             // when & then
-            assertThatThrownBy(() -> Comment.createRootComment(mockMember, null, content))
+            assertThatThrownBy(() -> Comment.createRootComment(mockMember, null, CONTENT))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(CommentErrorCode.ARTICLE_REQUIRED.message());
         }
