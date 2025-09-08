@@ -222,3 +222,58 @@ class ClubServiceTest {
             verifyNoInteractions(memberValidator);
         }
     }
+
+    @Nested
+    @DisplayName("클럽 수정")
+    class UpdateClub {
+
+        @Test
+        @DisplayName("수정 성공 - 리더가 수정, 연령대 재구성")
+        void success_update_by_leader() {
+            // given
+            Long clubId = 10L;
+            Long memberId = 20L;
+
+            Club club = mock(Club.class);
+            Member member = mock(Member.class);
+            ClubMember clubMember = mock(ClubMember.class);
+            ClubCategory category = mock(ClubCategory.class);
+
+            List<AgeGroupType> ages = List.of(AgeGroupType.THIRTIES, AgeGroupType.FORTIES);
+            ClubRequestDto dto = new ClubRequestDto("name", "SOCCER", "ground", "address", 3, ages, true);
+
+            given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(club);
+            given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(member);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(clubMember);
+            given(clubCategoryRepository.findByName(dto.category())).willReturn(Optional.of(category));
+            given(clubMember.isLeader()).willReturn(true);
+
+            given(club.getId()).willReturn(clubId);
+            given(member.getId()).willReturn(memberId);
+
+            given(club.getClubCategory()).willReturn(category);
+            given(category.getName()).willReturn("SOCCER");
+            given(club.getName()).willReturn("name");
+            given(club.getGround()).willReturn("ground");
+            given(club.getAddress()).willReturn("address");
+            given(club.getHeadCount()).willReturn(3);
+            given(club.isAutoJoin()).willReturn(true);
+
+            AgeGroup ag1 = mock(AgeGroup.class);
+            AgeGroup ag2 = mock(AgeGroup.class);
+
+            given(ageGroupRepository.findByClubId(clubId)).willReturn(List.of(ag1, ag2));
+            given(ag1.getAgeGroupType()).willReturn(AgeGroupType.THIRTIES);
+            given(ag2.getAgeGroupType()).willReturn(AgeGroupType.FORTIES);
+            given(clubRepository.findLikeInfoByClubIdAndMemberId(clubId, memberId))
+                    .willReturn(new ClubLikeInfoDto(1, false));
+
+            // when
+            ClubResponseDto res = clubService.updateClub(clubId, memberId, dto);
+
+            // then
+            assertThat(res).isNotNull();
+            verify(ageGroupRepository).saveAll(anyList());
+            verify(ageGroupRepository).deleteAllClubAgeGroupByClubId(clubId);
+        }
+    }
