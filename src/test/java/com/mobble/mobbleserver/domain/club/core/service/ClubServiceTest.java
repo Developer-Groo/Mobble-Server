@@ -94,7 +94,6 @@ class ClubServiceTest {
 
     private static final Long CLUB_ID = 1L;
     private static final Long MEMBER_ID = 2L;
-    private static final Long LEADER_MEMBER_ID = 2L;
 
     private Club mockClub;
     private Member mockMember;
@@ -179,9 +178,6 @@ class ClubServiceTest {
         @DisplayName("CLUB_ID로 조회")
         void success_find_by_id() {
             // given
-            Member leaderMember = mock(Member.class);
-            Member me = mock(Member.class);
-
             given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
             given(mockClub.getId()).willReturn(CLUB_ID);
 
@@ -191,8 +187,8 @@ class ClubServiceTest {
                     .willReturn(Optional.of(mockLeaderClubMember));
             given(mockLeaderClubMember.getMember()).willReturn(mockLeaderMember);
 
-            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(me);
-            given(me.getId()).willReturn(MEMBER_ID);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(MEMBER_ID);
 
             AgeGroup ag1 = mock(AgeGroup.class);
             AgeGroup ag2 = mock(AgeGroup.class);
