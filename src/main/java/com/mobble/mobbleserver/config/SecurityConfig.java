@@ -42,10 +42,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**",
-                                "/social-login.html",
-                                "/signup/details-info.html",
-                                "/login-success.html"
+                                "/api/auth/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
