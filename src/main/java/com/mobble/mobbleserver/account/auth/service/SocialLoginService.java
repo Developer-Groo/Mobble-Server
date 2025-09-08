@@ -30,7 +30,7 @@ public class SocialLoginService {
         SocialVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
         SocialUserInfo userInfo = verifier.verify(dto.accessToken());
 
-        Member member = memberValidator.validateMemberOrThrow(userInfo.socialProvider(), userInfo.socialId());
+        Member member = memberValidator.findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
             List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
