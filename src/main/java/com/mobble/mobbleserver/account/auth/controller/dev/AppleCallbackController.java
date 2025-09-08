@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.appleDev;
+package com.mobble.mobbleserver.account.auth.controller.dev;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
