@@ -5,9 +5,13 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
-  messages:
-    basename: validationMessages, globalMessages
-    encoding: UTF-8
+  #  검증 및 테스트 필요
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 4
+      thread-name-prefix: push-exec-
 
   datasource:
     url: ${MYSQL_URL}
@@ -25,6 +29,12 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET_KEY}
+
+fcm:
+  enabled: true
+  project-id: ${FCM_PROJECT_ID}
+  service-account: classpath:firebase-service-account.json
+  dry-run: false
 
 springdoc:
   api-docs:
