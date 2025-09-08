@@ -48,3 +48,45 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClubServiceTest {
+
+    @Mock
+    private ClubChatRoomService clubChatRoomService;
+
+    @Mock
+    private ClubRepository clubRepository;
+
+    @Mock
+    private ClubCategoryRepository clubCategoryRepository;
+
+    @Mock
+    private ClubMemberRepository clubMemberRepository;
+
+    @Mock
+    private AgeGroupRepository ageGroupRepository;
+
+    @Mock
+    private ArticleRepository articleRepository;
+
+    @Mock
+    private CommentRepository commentRepository;
+
+    @Mock
+    private CommentLikeRepository commentLikeRepository;
+
+    @Mock
+    private ArticleLikeRepository articleLikeRepository;
+
+    @Mock
+    private ClubLikeRepository clubLikeRepository;
+
+    @Mock
+    private ClubValidator clubValidator;
+
+    @Mock
+    private MemberValidator memberValidator;
+
+    @Mock
+    private ClubMemberValidator clubMemberValidator;
+
+    @InjectMocks
+    private ClubService clubService;
