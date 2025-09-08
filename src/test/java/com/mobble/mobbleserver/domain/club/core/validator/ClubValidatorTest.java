@@ -50,3 +50,18 @@ class ClubValidatorTest {
         assertThat(club).isEqualTo(mockClub);
         verify(clubRepository, times(1)).findById(CLUB_ID);
     }
+
+    @Test
+    @DisplayName("클럽 ID로 조회 실패 시 예외 발생")
+    void fails_when_find_club_or_throw() {
+        // given
+        given(clubRepository.findById(CLUB_ID)).willReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> clubValidator.findClubByClubIdOrThrow(CLUB_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ClubErrorCode.NOT_FOUND.message());
+
+        verify(clubRepository, times(1)).findById(CLUB_ID);
+    }
+}
