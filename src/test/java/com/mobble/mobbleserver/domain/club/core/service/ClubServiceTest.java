@@ -138,3 +138,19 @@ class ClubServiceTest {
             verify(clubChatRoomService).createClubChatRoom(nullable(Long.class), eq(memberId));
             verify(clubRepository).findLikeInfoByClubIdAndMemberId(any(), eq(memberId));
         }
+
+        @Test
+        @DisplayName("실패 - 잘못된 카테고리")
+        void fail_when_category_not_found() {
+            // given
+            Long memberId = 1L;
+            ClubRequestDto dto = mock(ClubRequestDto.class);
+            given(dto.category()).willReturn("UNKNOWN");
+            given(clubCategoryRepository.findByName("UNKNOWN")).willReturn(Optional.empty());
+
+            // when & then
+            assertThatThrownBy(() -> clubService.createClub(memberId, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.CATEGORY_NOT_FOUND.message());
+        }
+    }
