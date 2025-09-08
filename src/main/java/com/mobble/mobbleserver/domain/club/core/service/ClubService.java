@@ -112,8 +112,6 @@ public class ClubService {
 
         clubChatRoomService.deleteClubChatRoom(club.getId());
 
-        clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
-
         List<Long> articleIds = articleRepository.findArticleIdsByClubId(club.getId());
 
         commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
