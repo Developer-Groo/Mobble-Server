@@ -154,3 +154,52 @@ class ClubServiceTest {
                     .hasMessage(ClubErrorCode.CATEGORY_NOT_FOUND.message());
         }
     }
+
+    @Nested
+    @DisplayName("클럽 조회")
+    class GetClub {
+
+        @Test
+        @DisplayName("CLUB_ID로 조회")
+        void success_find_by_id() {
+            // given
+            Long clubId = 100L;
+            Long memberId = 200L;
+
+            Club club = mock(Club.class);
+            ClubCategory category = mock(ClubCategory.class);
+            ClubMember leader = mock(ClubMember.class);
+            Member leaderMember = mock(Member.class);
+            Member me = mock(Member.class);
+
+            given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(club);
+            given(club.getId()).willReturn(clubId);
+
+            given(club.getClubCategory()).willReturn(category);
+
+            given(clubMemberRepository.findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER))
+                    .willReturn(Optional.of(leader));
+            given(leader.getMember()).willReturn(leaderMember);
+
+            given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(me);
+            given(me.getId()).willReturn(memberId);
+
+            AgeGroup ag1 = mock(AgeGroup.class);
+            AgeGroup ag2 = mock(AgeGroup.class);
+            given(ageGroupRepository.findByClubId(clubId)).willReturn(List.of(ag1, ag2));
+            given(clubRepository.findLikeInfoByClubIdAndMemberId(clubId, memberId))
+                    .willReturn(new ClubLikeInfoDto(9, false));
+
+            // when
+            ClubResponseDto res = clubService.findClubById(clubId, memberId);
+
+            // then
+            assertThat(res).isNotNull();
+            assertThat(res.id()).isEqualTo(clubId);
+
+            verify(clubValidator).findClubByClubIdOrThrow(clubId);
+            verify(clubMemberRepository).findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER);
+            verify(memberValidator).findMemberByMemberIdOrThrow(memberId);
+            verify(ageGroupRepository).findByClubId(clubId);
+            verify(clubRepository).findLikeInfoByClubIdAndMemberId(clubId, memberId);
+        }
