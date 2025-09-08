@@ -203,3 +203,22 @@ class ClubServiceTest {
             verify(ageGroupRepository).findByClubId(clubId);
             verify(clubRepository).findLikeInfoByClubIdAndMemberId(clubId, memberId);
         }
+
+        @Test
+        @DisplayName("단건 조회 실패 - 클럽 없음")
+        void fail_when_not_found() {
+            // given
+            Long clubId = 1L;
+            Long memberId = 2L;
+
+            DomainException ex = new DomainException(ClubErrorCode.NOT_FOUND);
+            willThrow(ex).given(clubValidator).findClubByClubIdOrThrow(clubId);
+
+            // when & then
+            assertThatThrownBy(() -> clubService.findClubById(clubId, memberId))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubErrorCode.NOT_FOUND.message());
+
+            verifyNoInteractions(memberValidator);
+        }
+    }
