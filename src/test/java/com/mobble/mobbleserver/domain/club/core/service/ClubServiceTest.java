@@ -303,6 +303,8 @@ class ClubServiceTest {
         verify(clubRepository, never()).findLikeInfoByClubIdAndMemberId(anyLong(), anyLong());
         verify(ageGroupRepository, never()).deleteAllClubAgeGroupByClubId(anyLong());
     }
+
+    @Nested
     @DisplayName("클럽 삭제")
     class DeleteClub {
 
@@ -352,3 +354,24 @@ class ClubServiceTest {
             inOrder.verify(ageGroupRepository).deleteAllClubAgeGroupByClubId(clubId);
             inOrder.verify(clubRepository).deleteById(clubId);
         }
+
+        @Test
+        @DisplayName("삭제 실패 - 리더가 아님")
+        void fail_delete_when_not_leader() {
+            Long clubId = 10L;
+            Long memberId = 20L;
+            ClubMember cm = mock(ClubMember.class);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(cm);
+            given(cm.isLeader()).willReturn(false);
+
+            assertThatThrownBy(() -> clubService.deleteClub(clubId, memberId))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.NO_PERMISSION.message());
+
+            verifyNoInteractions(clubChatRoomService, articleRepository, commentLikeRepository,
+                    commentRepository, articleLikeRepository, clubMemberRepository, ageGroupRepository,
+                    clubRepository);
+        }
+    }
+}
