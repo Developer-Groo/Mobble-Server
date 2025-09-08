@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mobble.mobbleserver.account.auth.oauth.dto.response.AppleUserInfoResponse;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
-import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import java.util.Base64;
 public class AppleTokenVerifier implements SocialVerifier {
 
     private final RestClient appleRestClient;
-    private final MemberValidator memberValidator;
 
     @Override
     public SocialUserInfo verify(String idToken) {
