@@ -344,13 +344,13 @@ class ClubServiceTest {
             );
 
             inOrder.verify(clubChatRoomService).deleteClubChatRoom(clubId);
-            inOrder.verify(clubLikeRepository).deleteClubLikeAllByClub_Id(clubId);
             inOrder.verify(articleRepository).findArticleIdsByClubId(clubId);
             inOrder.verify(commentLikeRepository).deleteAllCommentLikeByComment_Article_IdIn(articleIds);
             inOrder.verify(commentRepository).deleteAllCommentByArticle_IdIn(articleIds);
             inOrder.verify(articleLikeRepository).deleteAllArticleLikeByArticle_IdIn(articleIds);
             inOrder.verify(articleRepository).deleteAllArticleByClub_Id(clubId);
             inOrder.verify(clubMemberRepository).deleteAllClubMemberByClubId(clubId);
+            inOrder.verify(clubLikeRepository).deleteClubLikeAllByClub_Id(clubId);
             inOrder.verify(ageGroupRepository).deleteAllClubAgeGroupByClubId(clubId);
             inOrder.verify(clubRepository).deleteById(clubId);
         }
