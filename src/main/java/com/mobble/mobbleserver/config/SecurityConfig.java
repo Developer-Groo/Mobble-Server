@@ -42,7 +42,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/apple/callback"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
