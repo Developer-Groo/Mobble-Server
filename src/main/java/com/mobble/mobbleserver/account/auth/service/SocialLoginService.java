@@ -10,6 +10,8 @@ import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,13 @@ public class SocialLoginService {
             return SocialLoginResponseDto.existMember(jwtToken);
         }
 
-        String signupToken = tokenProvider.createSignupToken(userInfo.name(), userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
+        if (userInfo.email() == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO); // for Apple Login
+
+        String signupToken = tokenProvider.createSignupToken(
+                userInfo.name(),
+                userInfo.email(),
+                userInfo.socialProvider(),
+                userInfo.socialId());
 
         return SocialLoginResponseDto.newMember(signupToken);
     }
