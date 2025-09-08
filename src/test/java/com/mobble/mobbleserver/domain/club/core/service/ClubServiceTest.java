@@ -303,3 +303,52 @@ class ClubServiceTest {
         verify(clubRepository, never()).findLikeInfoByClubIdAndMemberId(anyLong(), anyLong());
         verify(ageGroupRepository, never()).deleteAllClubAgeGroupByClubId(anyLong());
     }
+    @DisplayName("클럽 삭제")
+    class DeleteClub {
+
+        @Test
+        @DisplayName("삭제 성공 - 리더가 삭제, 연쇄 삭제 순서 검증")
+        void success_delete_by_leader() {
+            // given
+            Long clubId = 77L;
+            Long memberId = 88L;
+
+            ClubMember clubMember = mock(ClubMember.class);
+            Club club = mock(Club.class);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(clubMember);
+
+            given(clubMember.isLeader()).willReturn(true);
+            given(clubMember.getClub()).willReturn(club);
+            given(club.getId()).willReturn(clubId);
+
+            List<Long> articleIds = List.of(100L, 200L);
+            given(articleRepository.findArticleIdsByClubId(clubId)).willReturn(articleIds);
+
+            // when
+            clubService.deleteClub(clubId, memberId);
+
+            // then
+            InOrder inOrder = inOrder(
+                    clubChatRoomService,
+                    clubLikeRepository,
+                    articleRepository,
+                    commentLikeRepository,
+                    commentRepository,
+                    articleLikeRepository,
+                    clubMemberRepository,
+                    ageGroupRepository,
+                    clubRepository
+            );
+
+            inOrder.verify(clubChatRoomService).deleteClubChatRoom(clubId);
+            inOrder.verify(clubLikeRepository).deleteClubLikeAllByClub_Id(clubId);
+            inOrder.verify(articleRepository).findArticleIdsByClubId(clubId);
+            inOrder.verify(commentLikeRepository).deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+            inOrder.verify(commentRepository).deleteAllCommentByArticle_IdIn(articleIds);
+            inOrder.verify(articleLikeRepository).deleteAllArticleLikeByArticle_IdIn(articleIds);
+            inOrder.verify(articleRepository).deleteAllArticleByClub_Id(clubId);
+            inOrder.verify(clubMemberRepository).deleteAllClubMemberByClubId(clubId);
+            inOrder.verify(ageGroupRepository).deleteAllClubAgeGroupByClubId(clubId);
+            inOrder.verify(clubRepository).deleteById(clubId);
+        }
