@@ -277,3 +277,29 @@ class ClubServiceTest {
             verify(ageGroupRepository).deleteAllClubAgeGroupByClubId(clubId);
         }
     }
+
+    @Test
+    @DisplayName("수정 실패 - 리더가 아님")
+    void fail_when_not_leader() {
+        // given
+        Long clubId = 1L;
+        Long memberId = 2L;
+
+        Club club = mock(Club.class);
+        Member member = mock(Member.class);
+        ClubMember clubMember = mock(ClubMember.class);
+        ClubRequestDto dto = mock(ClubRequestDto.class);
+
+        given(clubValidator.findClubByClubIdOrThrow(clubId)).willReturn(club);
+        given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(member);
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId)).willReturn(clubMember);
+        given(clubMember.isLeader()).willReturn(false);
+
+        // when & then
+        assertThatThrownBy(() -> clubService.updateClub(clubId, memberId, dto))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ClubMemberErrorCode.NO_PERMISSION.message());
+
+        verify(clubRepository, never()).findLikeInfoByClubIdAndMemberId(anyLong(), anyLong());
+        verify(ageGroupRepository, never()).deleteAllClubAgeGroupByClubId(anyLong());
+    }
