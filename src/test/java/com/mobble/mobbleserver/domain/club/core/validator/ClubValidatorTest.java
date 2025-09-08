@@ -36,3 +36,17 @@ class ClubValidatorTest {
     void setUp() {
         mockClub = mock(Club.class);
     }
+
+    @Test
+    @DisplayName("클럽 ID로 조회 성공")
+    void success_when_find_club_or_throw() {
+        // given
+        given(clubRepository.findById(CLUB_ID)).willReturn(Optional.of(mockClub));
+
+        // when
+        Club club = clubValidator.findClubByClubIdOrThrow(CLUB_ID);
+
+        // then
+        assertThat(club).isEqualTo(mockClub);
+        verify(clubRepository, times(1)).findById(CLUB_ID);
+    }
