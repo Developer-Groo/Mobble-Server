@@ -90,3 +90,51 @@ class ClubServiceTest {
 
     @InjectMocks
     private ClubService clubService;
+
+    @Nested
+    @DisplayName("클럽 생성")
+    class CreateClub {
+
+        @Test
+        @DisplayName("성공 - 카테고리/멤버 유효, 채팅방 생성 포함")
+        void success_create_club() {
+            //given
+            Long memberId = 2L;
+
+            Member mockMember = mock(Member.class);
+            ClubCategory mockClubCategory = mock(ClubCategory.class);
+
+            List<AgeGroupType> ageGroupList = List.of(AgeGroupType.TEEN, AgeGroupType.TWENTIES);
+            ClubRequestDto dto = new ClubRequestDto("name", "SOCCER", "ground", "address", 3, ageGroupList, true);
+
+            given(clubCategoryRepository.findByName(dto.category())).willReturn(Optional.of(mockClubCategory));
+            given(memberValidator.findMemberByMemberIdOrThrow(memberId)).willReturn(mockMember);
+            given(mockMember.getId()).willReturn(memberId);
+
+            given(clubRepository.save(any(Club.class))).willAnswer(inv -> inv.getArgument(0));
+            given(clubMemberRepository.save(any(ClubMember.class))).willAnswer(inv -> inv.getArgument(0));
+
+            AgeGroup ag1 = mock(AgeGroup.class);
+            AgeGroup ag2 = mock(AgeGroup.class);
+            given(ageGroupRepository.saveAll(anyList())).willReturn(List.of(ag1, ag2));
+            given(ageGroupRepository.findByClubId(any())).willReturn(List.of(ag1, ag2));
+
+            given(clubChatRoomService.createClubChatRoom(nullable(Long.class), eq(memberId)))
+                    .willReturn(new ClubChatRoomPreviewResponseDto(123L, null, "clubName", "", null, 0, null));
+
+            ClubLikeInfoDto likeInfo = new ClubLikeInfoDto(0, false);
+            given(clubRepository.findLikeInfoByClubIdAndMemberId(any(), eq(memberId)))
+                    .willReturn(likeInfo);
+
+            // when
+            ClubResponseDto res = clubService.createClub(memberId, dto);
+
+            // then
+            assertThat(res).isNotNull();
+            verify(clubRepository).save(any(Club.class));
+            verify(clubMemberRepository).save(any(ClubMember.class));
+            verify(ageGroupRepository).saveAll(anyList());
+            verify(ageGroupRepository).findByClubId(any());
+            verify(clubChatRoomService).createClubChatRoom(nullable(Long.class), eq(memberId));
+            verify(clubRepository).findLikeInfoByClubIdAndMemberId(any(), eq(memberId));
+        }
