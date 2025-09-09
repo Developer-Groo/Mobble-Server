@@ -52,12 +52,11 @@ public class TokenProvider {
     }
 
     // 회원가입용 Signup Token 생성
-    public String createSignupToken(String name, String email, SocialProvider socialProvider, String socialId) {
+    public String createSignupToken(String email, SocialProvider socialProvider, String socialId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 10); // Valid Time: 10 minute
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", name);
         claims.put("email", email);
         claims.put("socialProvider", String.valueOf(socialProvider));
         claims.put("socialId", socialId);
@@ -100,12 +99,11 @@ public class TokenProvider {
     public SocialUserInfo getSignupTokenInfo(String signupToken) {
         Claims claims = parse(signupToken);
 
-        String name = (String) claims.get("name");
         String email = (String) claims.get("email");
         SocialProvider socialProvider = SocialProvider.valueOf((String) claims.get("socialProvider"));
         String socialId = (String) claims.get("socialId");
 
-        return new SocialUserInfo(name, email, socialProvider, socialId);
+        return new SocialUserInfo(email, socialProvider, socialId);
     }
 
     /* =======================
