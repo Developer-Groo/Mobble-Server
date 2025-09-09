@@ -43,10 +43,7 @@ public class SocialLoginService {
 
         if (userInfo.email() == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO); // for Apple Login
 
-        String signupToken = tokenProvider.createSignupToken(
-                userInfo.email(),
-                userInfo.socialProvider(),
-                userInfo.socialId());
+        String signupToken = tokenProvider.createSignupToken(userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
 
         return SocialLoginResponseDto.newMember(signupToken);
     }
