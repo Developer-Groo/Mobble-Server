@@ -34,7 +34,7 @@ public record SignUpRequestDto(
 
     public Member toEntity(SocialUserInfo userInfo) {
         return Member.createMember(
-                this.name(),
+                this.name,
                 this.age,
                 this.gender,
                 userInfo.email(),
