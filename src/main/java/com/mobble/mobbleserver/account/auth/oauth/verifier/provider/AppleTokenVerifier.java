@@ -50,7 +50,6 @@ public class AppleTokenVerifier implements SocialVerifier {
             AppleUserInfoResponse userInfo = new AppleUserInfoResponse(jwt);
 
             return new SocialUserInfo(
-                    userInfo.getName(),
                     userInfo.getEmail(),
                     userInfo.getProvider(),
                     userInfo.getProviderId()
