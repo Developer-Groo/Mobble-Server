@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum MemberValidationErrorCode implements ErrorCode {
-    NAME_NOT_BLANK("이름을 입력해주세요.", HttpStatus.BAD_REQUEST),
+    REQUIRED_NAME("이름을 입력해주세요.", HttpStatus.BAD_REQUEST),
     NAME_TOO_LONG("이름은 최대 10자까지 입력 가능합니다..", HttpStatus.BAD_REQUEST),
     AGE_TOO_LOW("나이는 1세 이상이어야 합니다.", HttpStatus.BAD_REQUEST),
     AGE_TOO_HIGH("나이는 100세 이하로 입력해주세요.", HttpStatus.BAD_REQUEST),

@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
     @Column(name = "gender")
     private Gender gender;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "phone")

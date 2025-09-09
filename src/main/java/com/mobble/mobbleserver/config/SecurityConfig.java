@@ -43,9 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/social-login.html",
-                                "/signup/details-info.html",
-                                "/login-success.html"
+                                "/apple/callback"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

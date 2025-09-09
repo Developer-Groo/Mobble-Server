@@ -25,7 +25,6 @@ public class GoogleTokenVerifier extends AbstractSocialTokenVerifier {
         GoogleUserInfoResponse userInfo = new GoogleUserInfoResponse(attributes);
 
         return new SocialUserInfo(
-                userInfo.getName(),
                 userInfo.getEmail(),
                 userInfo.getProvider(),
                 userInfo.getProviderId()
