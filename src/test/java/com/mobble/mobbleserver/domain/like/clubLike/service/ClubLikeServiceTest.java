@@ -7,7 +7,6 @@ import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepositor
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubValidationErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
