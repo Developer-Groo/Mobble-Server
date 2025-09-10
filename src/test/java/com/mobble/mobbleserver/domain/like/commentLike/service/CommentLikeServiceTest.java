@@ -83,4 +83,23 @@ class CommentLikeServiceTest {
         assertThat(result).isTrue();
         verify(commentLikeRepository).save(any(CommentLike.class));
     }
+
+    @DisplayName("댓글 좋아요가 있으면 삭제")
+    @Test
+    void success_when_has_liked() {
+        // given
+        given(mockComment.getId()).willReturn(COMMENT_ID);
+        given(mockMember.getId()).willReturn(MEMBER_ID);
+
+        given(commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID)).willReturn(mockComment);
+        given(commentLikeRepository.findLikedByCommentIdAndMemberId(COMMENT_ID, MEMBER_ID)).willReturn(Optional.of(mockCommentLike));
+
+        // when
+        boolean result = commentLikeService.toggleLike(COMMENT_ID, mockMember).isLiked();
+
+        // then
+        assertThat(result).isFalse();
+        verify(commentLikeRepository).delete(mockCommentLike);
+        verify(commentLikeRepository, never()).save(any());
+    }
 }
