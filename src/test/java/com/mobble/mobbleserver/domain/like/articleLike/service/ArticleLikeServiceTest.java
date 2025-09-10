@@ -97,8 +97,9 @@ class ArticleLikeServiceTest {
         boolean result = articleLikeService.toggleLike(ARTICLE_ID, mockMember).isLiked();
 
         // then
-        verify(articleLikeRepository).delete(mockArticleLike);
         assertThat(result).isFalse();
+        verify(articleLikeRepository).delete(mockArticleLike);
+        verify(articleLikeRepository, never()).save(any());
     }
 
     @DisplayName("좋아요할 게시글이 없으면 예외 발생")
