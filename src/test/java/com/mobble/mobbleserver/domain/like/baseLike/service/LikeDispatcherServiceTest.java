@@ -2,14 +2,21 @@ package com.mobble.mobbleserver.domain.like.baseLike.service;
 
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeQueryService;
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
+import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,5 +46,27 @@ class LikeDispatcherServiceTest {
         );
 
         mockMember = mock(Member.class);
+    }
+
+    @Nested
+    @DisplayName("toggleLike")
+    class ToggleLikeTest {
+
+        @Test
+        @DisplayName("성공 - ARTICLE 타입일 때")
+        void success_toggleLike_article() {
+            // given
+            given(mockMemberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(mockArticleLikeService.getType()).willReturn(LikeType.ARTICLE);
+            given(mockArticleLikeService.toggleLike(TARGET_ID, mockMember))
+                    .willReturn(new LikeToggleResponseDto(TARGET_ID, true));
+
+            // when
+            LikeToggleResponseDto result = likeDispatcherService.toggleLike(LikeType.ARTICLE, TARGET_ID, MEMBER_ID);
+
+            // then
+            assertThat(result.isLiked()).isTrue();
+            assertThat(result.targetId()).isEqualTo(TARGET_ID);
+        }
     }
 }
