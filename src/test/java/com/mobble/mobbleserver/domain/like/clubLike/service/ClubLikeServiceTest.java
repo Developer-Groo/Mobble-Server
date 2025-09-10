@@ -5,6 +5,9 @@ import com.mobble.mobbleserver.domain.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.domain.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubValidationErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -80,5 +84,17 @@ class ClubLikeServiceTest {
         assertThat(result).isFalse();
         verify(clubLikeRepository).delete(mockClubLike);
         verify(clubLikeRepository, never()).save(any());
+    }
+
+    @DisplayName("좋아요할 클럽이 없으면 예외 발생")
+    @Test
+    void fail_when_club_not_found() {
+        // given
+        given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willThrow(new DomainException(ClubErrorCode.NOT_FOUND));
+
+        // when & then
+        assertThatThrownBy(() -> clubLikeService.toggleLike(CLUB_ID, mockMember))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ClubErrorCode.NOT_FOUND.message());
     }
 }
