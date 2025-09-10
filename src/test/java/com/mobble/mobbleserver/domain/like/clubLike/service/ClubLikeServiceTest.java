@@ -49,7 +49,7 @@ class ClubLikeServiceTest {
         mockClubLike = mock(ClubLike.class);
     }
 
-    @DisplayName("좋아요가 없으면 생성")
+    @DisplayName("클럽 좋아요가 없으면 생성")
     @Test
     void success_when_not_liked() {
         // given
@@ -67,7 +67,7 @@ class ClubLikeServiceTest {
         verify(clubLikeRepository).save(any(ClubLike.class));
     }
 
-    @DisplayName("좋아요가 있으면 삭제")
+    @DisplayName("클럽 좋아요가 있으면 삭제")
     @Test
     void success_when_already_liked() {
         // given

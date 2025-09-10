@@ -60,7 +60,7 @@ class ArticleLikeServiceTest {
         mockArticleLike = mock(ArticleLike.class);
     }
 
-    @DisplayName("좋아요가 없으면 생성")
+    @DisplayName("게시글 좋아요가 없으면 생성")
     @Test
     void success_when_not_liked() {
         // given
@@ -83,7 +83,7 @@ class ArticleLikeServiceTest {
         verify(articleLikeRepository).save(any(ArticleLike.class));
     }
 
-    @DisplayName("좋아요가 있으면 삭제")
+    @DisplayName("게시글 좋아요가 있으면 삭제")
     @Test
     void success_when_has_liked() {
         // given
