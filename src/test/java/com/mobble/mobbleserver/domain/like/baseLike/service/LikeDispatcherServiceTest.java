@@ -41,6 +41,10 @@ class LikeDispatcherServiceTest {
         mockArticleLikeService = mock(ArticleLikeService.class);
         mockArticleLikeQueryService = mock(ArticleLikeQueryService.class);
 
+        given(mockArticleLikeService.getType()).willReturn(LikeType.ARTICLE);
+        given(mockArticleLikeQueryService.getType()).willReturn(LikeType.ARTICLE);
+
+
         likeDispatcherService = new LikeDispatcherService(
                 mockMemberValidator,
                 List.of(mockArticleLikeService),
@@ -55,11 +59,10 @@ class LikeDispatcherServiceTest {
     class ToggleLikeTest {
 
         @Test
-        @DisplayName("성공 - ARTICLE 만 지원")
+        @DisplayName("성공 - ARTICLE 타입만 지원")
         void success_toggleLike_article() {
             // given
             given(mockMemberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
-            given(mockArticleLikeService.getType()).willReturn(LikeType.ARTICLE);
             given(mockArticleLikeService.toggleLike(TARGET_ID, mockMember)).willReturn(new LikeToggleResponseDto(TARGET_ID, true));
 
             // when
