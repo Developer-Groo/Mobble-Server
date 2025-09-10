@@ -64,8 +64,8 @@ class ClubLikeServiceTest {
         verify(clubLikeRepository).save(any(ClubLike.class));
     }
 
-    @Test
     @DisplayName("좋아요가 있으면 삭제")
+    @Test
     void success_when_already_liked() {
         // given
         given(mockClub.getId()).willReturn(CLUB_ID);
