@@ -6,9 +6,11 @@ import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleRespo
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
-import org.assertj.core.api.Assertions;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,13 +55,12 @@ class LikeDispatcherServiceTest {
     class ToggleLikeTest {
 
         @Test
-        @DisplayName("성공 - ARTICLE 타입일 때")
+        @DisplayName("성공 - ARTICLE 만 지원")
         void success_toggleLike_article() {
             // given
             given(mockMemberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
             given(mockArticleLikeService.getType()).willReturn(LikeType.ARTICLE);
-            given(mockArticleLikeService.toggleLike(TARGET_ID, mockMember))
-                    .willReturn(new LikeToggleResponseDto(TARGET_ID, true));
+            given(mockArticleLikeService.toggleLike(TARGET_ID, mockMember)).willReturn(new LikeToggleResponseDto(TARGET_ID, true));
 
             // when
             LikeToggleResponseDto result = likeDispatcherService.toggleLike(LikeType.ARTICLE, TARGET_ID, MEMBER_ID);
