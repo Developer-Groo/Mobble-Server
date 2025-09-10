@@ -10,6 +10,7 @@ import com.mobble.mobbleserver.domain.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,5 +118,27 @@ class CommentLikeServiceTest {
         assertThatThrownBy(() -> commentLikeService.toggleLike(COMMENT_ID, mockMember))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(LikeErrorCode.COMMENT_REQUIRED.message());
+    }
+
+    @DisplayName("클럽 멤버가 아니면 예외 발생")
+    @Test
+    void fail_when_not_club_member() {
+        // given
+        Long clubId = 10L;
+
+        given(mockComment.getId()).willReturn(COMMENT_ID);
+        given(mockMember.getId()).willReturn(MEMBER_ID);
+        given(mockComment.getArticle()).willReturn(mockArticle);
+        given(mockArticle.getClub()).willReturn(mockClub);
+        given(mockClub.getId()).willReturn(clubId);
+
+        given(commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID)).willReturn(mockComment);
+        given(commentLikeRepository.findLikedByCommentIdAndMemberId(COMMENT_ID, MEMBER_ID)).willReturn(Optional.empty());
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID)).willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
+
+        // when & then
+        assertThatThrownBy(() -> commentLikeService.toggleLike(COMMENT_ID, mockMember))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND.message());
     }
 }
