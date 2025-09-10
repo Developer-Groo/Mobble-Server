@@ -62,7 +62,6 @@ class ArticleLikeQueryServiceTest {
         given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willReturn(mockArticle);
         given(articleLikeRepository.findAllByArticleId(ARTICLE_ID)).willReturn(List.of(mockLike1, mockLike2));
 
-
         // when
         LikeMemberListResponseDto response = articleLikeQueryService.getLikedMemberList(ARTICLE_ID);
 
