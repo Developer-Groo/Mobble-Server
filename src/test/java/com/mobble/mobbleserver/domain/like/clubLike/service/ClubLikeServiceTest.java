@@ -18,8 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClubLikeServiceTest {
@@ -63,5 +62,23 @@ class ClubLikeServiceTest {
         // then
         assertThat(result).isTrue();
         verify(clubLikeRepository).save(any(ClubLike.class));
+    }
+
+    @Test
+    @DisplayName("좋아요가 있으면 삭제")
+    void success_when_already_liked() {
+        // given
+        given(mockClub.getId()).willReturn(CLUB_ID);
+        given(mockMember.getId()).willReturn(MEMBER_ID);
+        given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+        given(clubLikeRepository.findLikedByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.of(mockClubLike));
+
+        // when
+        boolean result = clubLikeService.toggleLike(CLUB_ID, mockMember).isLiked();
+
+        // then
+        assertThat(result).isFalse();
+        verify(clubLikeRepository).delete(mockClubLike);
+        verify(clubLikeRepository, never()).save(any());
     }
 }
