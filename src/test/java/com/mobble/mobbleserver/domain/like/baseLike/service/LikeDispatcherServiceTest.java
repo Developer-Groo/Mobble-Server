@@ -69,5 +69,14 @@ class LikeDispatcherServiceTest {
             assertThat(result.isLiked()).isTrue();
             assertThat(result.targetId()).isEqualTo(TARGET_ID);
         }
+
+        @Test
+        @DisplayName("실패 - 지원하지 않는 LikeType")
+        void fail_toggleLike_invalidType() {
+            // when & then
+            assertThatThrownBy(() -> likeDispatcherService.toggleLike(LikeType.CLUB, TARGET_ID, MEMBER_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(LikeErrorCode.NOT_SUPPORTED_TYPE.message());
+        }
     }
 }
