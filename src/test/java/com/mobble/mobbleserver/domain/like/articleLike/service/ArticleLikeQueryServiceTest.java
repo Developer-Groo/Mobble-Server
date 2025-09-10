@@ -88,4 +88,25 @@ class ArticleLikeQueryServiceTest {
 
         verify(articleValidator).findArticleByArticleIdOrThrow(ARTICLE_ID);
     }
+
+    @DisplayName("좋아요한 멤버가 없으면 빈 리스트 반환")
+    @Test
+    void success_when_no_liked_members() {
+        // given
+        given(mockArticle.getId()).willReturn(ARTICLE_ID);
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
+                .willReturn(mockArticle);
+        given(articleLikeRepository.findAllByArticleId(ARTICLE_ID))
+                .willReturn(List.of());
+
+        // when
+        LikeMemberListResponseDto response = articleLikeQueryService.getLikedMemberList(ARTICLE_ID);
+
+        // then
+        assertThat(response.targetId()).isEqualTo(ARTICLE_ID);
+        assertThat(response.likedMembers()).isEmpty();
+
+        verify(articleValidator).findArticleByArticleIdOrThrow(ARTICLE_ID);
+        verify(articleLikeRepository).findAllByArticleId(ARTICLE_ID);
+    }
 }
