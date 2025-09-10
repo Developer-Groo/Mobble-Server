@@ -6,6 +6,8 @@ import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,5 +72,20 @@ class ArticleLikeQueryServiceTest {
         assertThat(response.likedMembers()).hasSize(2);
         verify(articleValidator).findArticleByArticleIdOrThrow(ARTICLE_ID);
         verify(articleLikeRepository).findAllByArticleId(ARTICLE_ID);
+    }
+
+    @DisplayName("조회할 게시글이 존재하지 않으면 예외 발생")
+    @Test
+    void fail_when_article_not_found() {
+        // given
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
+                .willThrow(new DomainException(ArticleErrorCode.NOT_FOUND));
+
+        // when & then
+        assertThatThrownBy(() -> articleLikeQueryService.getLikedMemberList(ARTICLE_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ArticleErrorCode.NOT_FOUND.message());
+
+        verify(articleValidator).findArticleByArticleIdOrThrow(ARTICLE_ID);
     }
 }
