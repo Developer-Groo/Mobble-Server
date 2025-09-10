@@ -9,6 +9,7 @@ import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -116,5 +117,29 @@ class ArticleLikeServiceTest {
         assertThatThrownBy(() -> articleLikeService.toggleLike(ARTICLE_ID, mockMember))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(LikeErrorCode.ARTICLE_REQUIRED.message());
+    }
+
+    @DisplayName("클럽 멤버가 아니면 예외 발생")
+    @Test
+    void fail_when_not_club_member() {
+        // given
+        Long clubId = 10L;
+
+        given(mockArticle.getId()).willReturn(ARTICLE_ID);
+        given(mockMember.getId()).willReturn(MEMBER_ID);
+        given(mockArticle.getClub()).willReturn(mockClub);
+        given(mockClub.getId()).willReturn(clubId);
+
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
+                .willReturn(mockArticle);
+        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID))
+                .willReturn(Optional.empty());
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID))
+                .willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
+
+        // when & then
+        assertThatThrownBy(() -> articleLikeService.toggleLike(ARTICLE_ID, mockMember))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND.message());
     }
 }
