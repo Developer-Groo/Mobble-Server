@@ -71,12 +71,9 @@ class ArticleLikeServiceTest {
         given(mockArticle.getClub()).willReturn(mockClub);
         given(mockClub.getId()).willReturn(clubId);
 
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID))
-                .willReturn(mockClubMember);
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willReturn(mockArticle);
-        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID))
-                .willReturn(Optional.empty());
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID)).willReturn(mockClubMember);
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willReturn(mockArticle);
+        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID)).willReturn(Optional.empty());
 
         // when
         boolean result = articleLikeService.toggleLike(ARTICLE_ID, mockMember).isLiked();
@@ -93,10 +90,8 @@ class ArticleLikeServiceTest {
         given(mockArticle.getId()).willReturn(ARTICLE_ID);
         given(mockMember.getId()).willReturn(MEMBER_ID);
 
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willReturn(mockArticle);
-        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID))
-                .willReturn(Optional.of(mockArticleLike));
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willReturn(mockArticle);
+        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID)).willReturn(Optional.of(mockArticleLike));
 
         // when
         boolean result = articleLikeService.toggleLike(ARTICLE_ID, mockMember).isLiked();
@@ -110,8 +105,7 @@ class ArticleLikeServiceTest {
     @Test
     void fail_when_article_not_found() {
         // given
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willThrow(new DomainException(LikeErrorCode.ARTICLE_REQUIRED));
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willThrow(new DomainException(LikeErrorCode.ARTICLE_REQUIRED));
 
         //when & then
         assertThatThrownBy(() -> articleLikeService.toggleLike(ARTICLE_ID, mockMember))
@@ -130,12 +124,9 @@ class ArticleLikeServiceTest {
         given(mockArticle.getClub()).willReturn(mockClub);
         given(mockClub.getId()).willReturn(clubId);
 
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willReturn(mockArticle);
-        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID))
-                .willReturn(Optional.empty());
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID))
-                .willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willReturn(mockArticle);
+        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID)).willReturn(Optional.empty());
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID)).willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
 
         // when & then
         assertThatThrownBy(() -> articleLikeService.toggleLike(ARTICLE_ID, mockMember))
