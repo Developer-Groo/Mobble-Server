@@ -8,6 +8,8 @@ import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -100,5 +103,18 @@ class ArticleLikeServiceTest {
         // then
         verify(articleLikeRepository).delete(mockArticleLike);
         assertThat(result).isFalse();
+    }
+
+    @DisplayName("좋아요할 게시글이 없으면 예외 발생")
+    @Test
+    void fail_when_article_not_found() {
+        // given
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
+                .willThrow(new DomainException(LikeErrorCode.ARTICLE_REQUIRED));
+
+        //when & then
+        assertThatThrownBy(() -> articleLikeService.toggleLike(ARTICLE_ID, mockMember))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(LikeErrorCode.ARTICLE_REQUIRED.message());
     }
 }
