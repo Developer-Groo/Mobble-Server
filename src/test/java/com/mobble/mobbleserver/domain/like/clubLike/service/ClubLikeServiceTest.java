@@ -58,7 +58,6 @@ class ClubLikeServiceTest {
 
         given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
         given(clubLikeRepository.findLikedByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.empty());
-        given(clubLikeRepository.save(any(ClubLike.class))).willReturn(mockClubLike);
 
         // when
         boolean result = clubLikeService.toggleLike(CLUB_ID, mockMember).isLiked();
@@ -74,7 +73,7 @@ class ClubLikeServiceTest {
         // given
         given(mockClub.getId()).willReturn(CLUB_ID);
         given(mockMember.getId()).willReturn(MEMBER_ID);
-        
+
         given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
         given(clubLikeRepository.findLikedByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.of(mockClubLike));
 
