@@ -18,10 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.mobble.mobbleserver.domain.member.entity.QMember.member;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.*;
 
 
@@ -83,3 +81,24 @@ class ArticleLikeServiceTest {
         assertThat(result).isTrue();
         verify(articleLikeRepository).save(any(ArticleLike.class));
     }
+
+    @DisplayName("좋아요가 있으면 삭제")
+    @Test
+    void success_when_has_liked() {
+        // given
+        given(mockArticle.getId()).willReturn(ARTICLE_ID);
+        given(mockMember.getId()).willReturn(MEMBER_ID);
+
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
+                .willReturn(mockArticle);
+        given(articleLikeRepository.findLikedByArticleIdAndMemberId(ARTICLE_ID, MEMBER_ID))
+                .willReturn(Optional.of(mockArticleLike));
+
+        // when
+        boolean result = articleLikeService.toggleLike(ARTICLE_ID, mockMember).isLiked();
+
+        // then
+        verify(articleLikeRepository).delete(mockArticleLike);
+        assertThat(result).isFalse();
+    }
+}
