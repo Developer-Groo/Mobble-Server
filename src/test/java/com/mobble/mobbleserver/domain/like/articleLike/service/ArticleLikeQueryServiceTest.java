@@ -37,15 +37,11 @@ class ArticleLikeQueryServiceTest {
 
     private static final Long ARTICLE_ID = 1L;
 
-    private Member mockMember;
     private Article mockArticle;
-    private ArticleLike mockArticleLike;
 
     @BeforeEach
     void setUp() {
-        mockMember = mock(Member.class);
         mockArticle = mock(Article.class);
-        mockArticleLike = mock(ArticleLike.class);
     }
 
     @DisplayName("게시글 좋아요 한 멤버 목록 조회 성공")
