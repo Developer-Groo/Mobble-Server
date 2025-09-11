@@ -13,42 +13,37 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class CommentLikeTest {
+class CommentLikeTest {
 
     private final Member mockMember = MemberTestFixture.createDefaultMember();
     private final Comment mockComment = CommentTestFixture.createDefaultRootComment();
 
-    @Nested
-    @DisplayName("CommentLike 생성 테스트")
-    class CreateCommentLike {
+    @Test
+    @DisplayName("CommentLike 생성 성공")
+    void success_when_create_comment_like() {
+        // when
+        CommentLike like = CommentLike.createCommentLike(mockComment, mockMember);
 
-        @Test
-        @DisplayName("CommentLike 생성 성공")
-        void success_when_create_comment_like() {
-            // when
-            CommentLike like = CommentLike.createCommentLike(mockComment, mockMember);
+        // then
+        assertThat(like.getComment()).isEqualTo(mockComment);
+        assertThat(like.getMember()).isEqualTo(mockMember);
+    }
 
-            // then
-            assertThat(like.getComment()).isEqualTo(mockComment);
-            assertThat(like.getMember()).isEqualTo(mockMember);
-        }
+    @Test
+    @DisplayName("comment 가 null 인 경우 예외 발생")
+    void fails_when_comment_is_null() {
+        // when & then
+        assertThatThrownBy(() -> CommentLike.createCommentLike(null, mockMember))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(LikeErrorCode.COMMENT_REQUIRED.message());
+    }
 
-        @Test
-        @DisplayName("comment 가 null 인 경우 예외 발생")
-        void fails_when_comment_is_null() {
-            // when & then
-            assertThatThrownBy(() -> CommentLike.createCommentLike(null, mockMember))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(LikeErrorCode.COMMENT_REQUIRED.message());
-        }
-
-        @Test
-        @DisplayName("member 가 null 인 경우 예외 발생")
-        void fails_when_member_is_null() {
-            // when & then
-            assertThatThrownBy(() -> CommentLike.createCommentLike(mockComment, null))
-                    .isInstanceOf(DomainException.class)
-                    .hasMessage(LikeErrorCode.MEMBER_REQUIRED.message());
-        }
+    @Test
+    @DisplayName("member 가 null 인 경우 예외 발생")
+    void fails_when_member_is_null() {
+        // when & then
+        assertThatThrownBy(() -> CommentLike.createCommentLike(mockComment, null))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(LikeErrorCode.MEMBER_REQUIRED.message());
     }
 }
