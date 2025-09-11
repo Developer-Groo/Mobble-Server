@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-public class ArticleLikeTest {
+class ArticleLikeTest {
 
     private final Member mockMember = MemberTestFixture.createDefaultMember();
     private final Article mockArticle = ArticleTestFixture.createDefaultArticle();
