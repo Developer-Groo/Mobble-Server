@@ -34,7 +34,7 @@ class BaseLikeTest {
     }
 
     @Test
-    @DisplayName("Member가 nulldls 인 경우 예외 발생")
+    @DisplayName("Member 가 null 인 경우 예외 발생")
     void fails_when_assignMember_member_is_null() {
         //when & then
         assertThatThrownBy(() -> TestLike.create(null))
