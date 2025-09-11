@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.like.baseLike.service;
 
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeQueryService;
 import com.mobble.mobbleserver.domain.like.articleLike.service.ArticleLikeService;
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeToggleResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -80,6 +81,25 @@ class LikeDispatcherServiceTest {
             assertThatThrownBy(() -> likeDispatcherService.toggleLike(LikeType.CLUB, TARGET_ID, MEMBER_ID))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(LikeErrorCode.NOT_SUPPORTED_TYPE.message());
+        }
+    }
+
+    @Nested
+    @DisplayName("getMemberList")
+    class GetMemberListTest {
+
+        @Test
+        @DisplayName("성공 - ARTICLE 타입만 지원")
+        void success_getMemberList_article() {
+            // given
+            LikeMemberListResponseDto response = new LikeMemberListResponseDto(TARGET_ID, List.of());
+            given(mockArticleLikeQueryService.getLikedMemberList(TARGET_ID)).willReturn(response);
+
+            // when
+            LikeMemberListResponseDto result = likeDispatcherService.getMemberList(LikeType.ARTICLE, TARGET_ID);
+
+            // then
+            assertThat(result).isEqualTo(response);
         }
     }
 }
