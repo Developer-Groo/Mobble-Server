@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
-import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeTestFixture.TestLike;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class BaseLikeTest {
 
     private final Member mockMember = MemberTestFixture.createDefaultMember();
-    private final TestLike mockTestLike = LikeTestFixture.create(mockMember);
+    private final LikeTestFixture mockTestLike = LikeTestFixture.create(mockMember);
 
 
     @Test
