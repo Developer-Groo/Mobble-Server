@@ -168,4 +168,39 @@ class ArticleLikeRepositoryTest {
         List<ArticleLike> result = articleLikeRepository.findAllByArticleId(article.getId());
         assertThat(result).isEmpty();
     }
+
+    @Test
+    @DisplayName("Article ID 리스트로 좋아요 전체 삭제 성공")
+    void success_when_delete_all_by_article_ids() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(category);
+
+        em.persist(category);
+        em.persist(member);
+        em.persist(club);
+
+        Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
+        Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
+        em.persist(article1);
+        em.persist(article2);
+
+        ArticleLike like1 = ArticleLike.createArticleLike(article1, member);
+        ArticleLike like2 = ArticleLike.createArticleLike(article2, member);
+        em.persist(like1);
+        em.persist(like2);
+        em.flush();
+
+        List<Long> articleIds = List.of(article1.getId(), article2.getId());
+
+        // when
+        articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
+        em.flush();
+        em.clear();
+
+        // then
+        List<ArticleLike> remainingLikes = articleLikeRepository.findAll();
+        assertThat(remainingLikes).isEmpty();
+    }
 }
