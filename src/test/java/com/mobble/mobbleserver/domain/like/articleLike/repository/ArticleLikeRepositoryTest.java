@@ -113,4 +113,29 @@ class ArticleLikeRepositoryTest {
                 .extracting(Member::getId)
                 .containsExactlyInAnyOrder(member1.getId(), member2.getId());
     }
+
+    @Test
+    @DisplayName("Article ID로 ArticleLike 리스트 조회 시 좋아요가 없는 경우, 빈 리스트 반환")
+    void success_when_findAllByArticleId_returns_empty_list() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory category = ClubCategory.createClubCategory("축구");
+        Club club = ClubTestFixture.createDefaultClub(category);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+
+        em.persist(category);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article);
+        em.flush();
+        em.clear();
+
+        // when
+        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+
+        // then
+        assertThat(articleLikes)
+                .isNotNull()
+                .isEmpty();
+    }
 }
