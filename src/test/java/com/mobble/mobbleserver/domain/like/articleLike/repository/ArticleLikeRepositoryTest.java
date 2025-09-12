@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,5 +79,38 @@ class ArticleLikeRepositoryTest {
 
         // then
         assertThat(result).isNotPresent();
+    }
+
+    @Test
+    @DisplayName("Article ID로 ArticleLike 리스트 조회 성공")
+    void success_when_findAllByArticleId() {
+        // given
+        Member member1 = MemberTestFixture.createDefaultMember();
+        Member member2 = MemberTestFixture.createDefaultMember();
+        ClubCategory category = ClubCategory.createClubCategory("축구");
+        Club club = ClubTestFixture.createDefaultClub(category);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member1, club);
+
+        em.persist(category);
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(club);
+        em.persist(article);
+
+        ArticleLike like1 = ArticleLike.createArticleLike(article, member1);
+        ArticleLike like2 = ArticleLike.createArticleLike(article, member2);
+        em.persist(like1);
+        em.persist(like2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+
+        // then
+        assertThat(articleLikes).hasSize(2);
+        assertThat(articleLikes).extracting(ArticleLike::getMember)
+                .extracting(Member::getId)
+                .containsExactlyInAnyOrder(member1.getId(), member2.getId());
     }
 }
