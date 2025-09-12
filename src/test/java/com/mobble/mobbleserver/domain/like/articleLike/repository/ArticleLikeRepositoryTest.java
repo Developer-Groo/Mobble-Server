@@ -56,4 +56,27 @@ class ArticleLikeRepositoryTest {
         assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
         assertThat(result.get().getArticle().getId()).isEqualTo(article.getId());
     }
+
+    @Test
+    @DisplayName("게시글에 사용자가 좋아요를 누르지 않은 경우, ArticleLike 조회 결과 없음")
+    void findLikedByArticleIdAndMemberId_success_when_not_liked() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(category);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+
+        em.persist(category);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article);
+        em.flush();
+        em.clear();
+
+        // when
+        Optional<ArticleLike> result = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
+
+        // then
+        assertThat(result).isNotPresent();
+    }
 }
