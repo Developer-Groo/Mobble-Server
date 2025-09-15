@@ -60,8 +60,8 @@ class ArticleLikeServiceTest {
         mockArticleLike = mock(ArticleLike.class);
     }
 
-    @DisplayName("게시글 좋아요가 없으면 생성")
     @Test
+    @DisplayName("게시글 좋아요가 없으면 생성")
     void success_when_not_liked() {
         // given
         Long clubId = 10L;
@@ -83,8 +83,8 @@ class ArticleLikeServiceTest {
         verify(articleLikeRepository).save(any(ArticleLike.class));
     }
 
-    @DisplayName("게시글 좋아요가 있으면 삭제")
     @Test
+    @DisplayName("게시글 좋아요가 있으면 삭제")
     void success_when_has_liked() {
         // given
         given(mockArticle.getId()).willReturn(ARTICLE_ID);
@@ -102,8 +102,8 @@ class ArticleLikeServiceTest {
         verify(articleLikeRepository, never()).save(any());
     }
 
-    @DisplayName("좋아요할 게시글이 없으면 예외 발생")
     @Test
+    @DisplayName("좋아요할 게시글이 없으면 예외 발생")
     void fail_when_article_not_found() {
         // given
         given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willThrow(new DomainException(LikeErrorCode.ARTICLE_REQUIRED));
@@ -114,8 +114,8 @@ class ArticleLikeServiceTest {
                 .hasMessage(LikeErrorCode.ARTICLE_REQUIRED.message());
     }
 
-    @DisplayName("클럽 멤버가 아니면 예외 발생")
     @Test
+    @DisplayName("클럽 멤버가 아니면 예외 발생")
     void fail_when_not_club_member() {
         // given
         Long clubId = 10L;

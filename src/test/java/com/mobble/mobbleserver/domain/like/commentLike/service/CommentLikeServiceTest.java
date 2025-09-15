@@ -64,8 +64,8 @@ class CommentLikeServiceTest {
         mockCommentLike = mock(CommentLike.class);
     }
 
-    @DisplayName("댓글 좋아요가 없으면 생성")
     @Test
+    @DisplayName("댓글 좋아요가 없으면 생성")
     void success_when_not_liked() {
         // given
         given(mockComment.getId()).willReturn(COMMENT_ID);
@@ -87,8 +87,8 @@ class CommentLikeServiceTest {
         verify(commentLikeRepository).save(any(CommentLike.class));
     }
 
-    @DisplayName("댓글 좋아요가 있으면 삭제")
     @Test
+    @DisplayName("댓글 좋아요가 있으면 삭제")
     void success_when_has_liked() {
         // given
         given(mockComment.getId()).willReturn(COMMENT_ID);
@@ -106,8 +106,8 @@ class CommentLikeServiceTest {
         verify(commentLikeRepository, never()).save(any());
     }
 
-    @DisplayName("좋아요 할 댓글이 존재하지 않으면 예외 발생")
     @Test
+    @DisplayName("좋아요 할 댓글이 존재하지 않으면 예외 발생")
     void fail_when_comment_not_found() {
         // given
         given(commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID)).willThrow(new DomainException(LikeErrorCode.COMMENT_REQUIRED));
@@ -118,8 +118,8 @@ class CommentLikeServiceTest {
                 .hasMessage(LikeErrorCode.COMMENT_REQUIRED.message());
     }
 
-    @DisplayName("클럽 멤버가 아니면 예외 발생")
     @Test
+    @DisplayName("클럽 멤버가 아니면 예외 발생")
     void fail_when_not_club_member() {
         // given
         given(mockComment.getId()).willReturn(COMMENT_ID);

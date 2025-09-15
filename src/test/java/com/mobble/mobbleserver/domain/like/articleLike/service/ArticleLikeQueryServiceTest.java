@@ -44,8 +44,8 @@ class ArticleLikeQueryServiceTest {
         mockArticle = mock(Article.class);
     }
 
-    @DisplayName("게시글 좋아요 한 멤버 목록 조회 성공")
     @Test
+    @DisplayName("게시글 좋아요 한 멤버 목록 조회 성공")
     void success_get_liked_member_list() {
         // given
         ArticleLike mockLike1 = mock(ArticleLike.class);
@@ -70,8 +70,8 @@ class ArticleLikeQueryServiceTest {
         verify(articleLikeRepository).findAllByArticleId(ARTICLE_ID);
     }
 
-    @DisplayName("조회할 게시글이 존재하지 않으면 예외 발생")
     @Test
+    @DisplayName("조회할 게시글이 존재하지 않으면 예외 발생")
     void fail_when_article_not_found() {
         // given
         given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
@@ -85,8 +85,8 @@ class ArticleLikeQueryServiceTest {
         verify(articleValidator).findArticleByArticleIdOrThrow(ARTICLE_ID);
     }
 
-    @DisplayName("좋아요한 멤버가 없으면 빈 리스트 반환")
     @Test
+    @DisplayName("좋아요한 멤버가 없으면 빈 리스트 반환")
     void success_when_no_liked_members() {
         // given
         given(mockArticle.getId()).willReturn(ARTICLE_ID);

@@ -49,8 +49,8 @@ class ClubLikeServiceTest {
         mockClubLike = mock(ClubLike.class);
     }
 
-    @DisplayName("클럽 좋아요가 없으면 생성")
     @Test
+    @DisplayName("클럽 좋아요가 없으면 생성")
     void success_when_not_liked() {
         // given
         given(mockClub.getId()).willReturn(CLUB_ID);
@@ -67,8 +67,8 @@ class ClubLikeServiceTest {
         verify(clubLikeRepository).save(any(ClubLike.class));
     }
 
-    @DisplayName("클럽 좋아요가 있으면 삭제")
     @Test
+    @DisplayName("클럽 좋아요가 있으면 삭제")
     void success_when_already_liked() {
         // given
         given(mockClub.getId()).willReturn(CLUB_ID);
@@ -86,8 +86,8 @@ class ClubLikeServiceTest {
         verify(clubLikeRepository, never()).save(any());
     }
 
-    @DisplayName("좋아요할 클럽이 없으면 예외 발생")
     @Test
+    @DisplayName("좋아요할 클럽이 없으면 예외 발생")
     void fail_when_club_not_found() {
         // given
         given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willThrow(new DomainException(ClubErrorCode.NOT_FOUND));
