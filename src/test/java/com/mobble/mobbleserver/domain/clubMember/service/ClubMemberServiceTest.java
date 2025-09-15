@@ -100,3 +100,26 @@ class ClubMemberServiceTest {
 
             verify(clubMemberRepository, times(1)).save(any(ClubMember.class));
         }
+
+        @Test
+        @DisplayName("수동승인 클럽이면 WAITING으로 가입")
+        void manualJoin_waiting() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(mockClub.getHeadCount()).willReturn(10);
+            given(mockClub.isAutoJoin()).willReturn(false);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.empty());
+            given(clubMemberRepository.countByClubIdAndJoinStatus(CLUB_ID, JoinStatus.APPROVED)).willReturn(0L);
+
+            given(clubMemberRepository.save(any(ClubMember.class))).willAnswer(inv -> inv.getArgument(0));
+
+            ClubMemberUpsertResponseDto res = clubMemberService.joinClub(MEMBER_ID, CLUB_ID);
+
+            assertThat(res).isNotNull();
+            assertThat(res.joinStatus()).isEqualTo(JoinStatus.WAITING);
+            assertThat(res.memberRole()).isEqualTo(ClubMemberRole.MEMBER.getDisplayName());
+
+            verify(clubMemberRepository, times(1)).save(any(ClubMember.class));
+        }
