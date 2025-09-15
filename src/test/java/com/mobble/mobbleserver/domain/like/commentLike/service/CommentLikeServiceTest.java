@@ -45,6 +45,7 @@ class CommentLikeServiceTest {
 
     private static final Long COMMENT_ID = 1L;
     private static final Long MEMBER_ID = 2L;
+    private static final Long CLUB_ID = 3L;
 
     private Club mockClub;
     private Article mockArticle;
@@ -67,18 +68,16 @@ class CommentLikeServiceTest {
     @Test
     void success_when_not_liked() {
         // given
-        Long clubId = 10L;
-
         given(mockComment.getId()).willReturn(COMMENT_ID);
         given(mockMember.getId()).willReturn(MEMBER_ID);
 
         given(mockComment.getArticle()).willReturn(mockArticle);
         given(mockArticle.getClub()).willReturn(mockClub);
-        given(mockClub.getId()).willReturn(clubId);
+        given(mockClub.getId()).willReturn(CLUB_ID);
 
         given(commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID)).willReturn(mockComment);
         given(commentLikeRepository.findLikedByCommentIdAndMemberId(COMMENT_ID, MEMBER_ID)).willReturn(Optional.empty());
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID)).willReturn(mockClubMember);
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(mockClubMember);
 
         // when
         boolean result = commentLikeService.toggleLike(COMMENT_ID, mockMember).isLiked();
@@ -123,17 +122,15 @@ class CommentLikeServiceTest {
     @Test
     void fail_when_not_club_member() {
         // given
-        Long clubId = 10L;
-
         given(mockComment.getId()).willReturn(COMMENT_ID);
         given(mockMember.getId()).willReturn(MEMBER_ID);
         given(mockComment.getArticle()).willReturn(mockArticle);
         given(mockArticle.getClub()).willReturn(mockClub);
-        given(mockClub.getId()).willReturn(clubId);
+        given(mockClub.getId()).willReturn(CLUB_ID);
 
         given(commentValidator.findCommentByCommentIdOrThrow(COMMENT_ID)).willReturn(mockComment);
         given(commentLikeRepository.findLikedByCommentIdAndMemberId(COMMENT_ID, MEMBER_ID)).willReturn(Optional.empty());
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, MEMBER_ID)).willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willThrow(new DomainException(ClubMemberValidationErrorCode.CLUB_MEMBER_NOT_FOUND));
 
         // when & then
         assertThatThrownBy(() -> commentLikeService.toggleLike(COMMENT_ID, mockMember))
