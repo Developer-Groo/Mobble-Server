@@ -92,3 +92,22 @@ class ClubMemberRepositoryImplTest {
                     .extracting(cm -> cm.getClub().getId())
                     .containsExactlyInAnyOrder(c1.getId(), c2.getId());
         }
+
+        @Test
+        @DisplayName("해당 멤버가 속한 클럽이 없으면 빈 리스트")
+        void return_empty_when_none() {
+            // given
+            Member m = MemberTestFixture.createDefaultMember();
+            em.persist(m);
+
+            em.flush();
+            em.clear();
+
+            // when
+            List<ClubMember> result = clubMemberRepository.findAllClubMemberByMemberId(m.getId());
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
+}
