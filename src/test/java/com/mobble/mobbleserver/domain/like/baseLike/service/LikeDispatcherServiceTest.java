@@ -49,8 +49,7 @@ class LikeDispatcherServiceTest {
         likeDispatcherService = new LikeDispatcherService(
                 mockMemberValidator,
                 List.of(mockArticleLikeService),
-                List.of(mockArticleLikeQueryService)
-        );
+                List.of(mockArticleLikeQueryService));
 
         mockMember = mock(Member.class);
     }
@@ -106,8 +105,7 @@ class LikeDispatcherServiceTest {
         @DisplayName("실패 - 지원하지 않는 LikeType")
         void fail_getMemberList_invalidType() {
             // when & then
-            assertThatThrownBy(() -> likeDispatcherService.getMemberList(LikeType.CLUB, TARGET_ID)
-            )
+            assertThatThrownBy(() -> likeDispatcherService.getMemberList(LikeType.CLUB, TARGET_ID))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(LikeErrorCode.NOT_SUPPORTED_TYPE.message());
         }
