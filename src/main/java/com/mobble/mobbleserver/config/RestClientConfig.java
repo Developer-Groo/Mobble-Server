@@ -32,4 +32,12 @@ public class RestClientConfig {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
+
+    @Bean
+    public RestClient appleRestClient() {
+        return RestClient.builder()
+                .baseUrl("https://appleid.apple.com")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
 }

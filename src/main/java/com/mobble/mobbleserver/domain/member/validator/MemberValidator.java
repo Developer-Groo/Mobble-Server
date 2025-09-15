@@ -21,7 +21,7 @@ public class MemberValidator {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public Member validateMemberOrThrow(SocialProvider socialProvider, String socialId) {
+    public Member findMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
         return memberRepository.findBySocialProviderAndSocialId(socialProvider, socialId)
                 .map(member -> {
                     if (member.isDeleted()) {
