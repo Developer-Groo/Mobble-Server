@@ -97,4 +97,19 @@ public class Meeting {
         this.memberLimit = memberLimit;
         this.type = type;
     }
+    private void validateContents(
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        if (title == null || title.isBlank()) throw new DomainException(MeetingErrorCode.TITLE_REQUIRED);
+        if (datetime == null) throw new DomainException(MeetingErrorCode.DATETIME_REQUIRED);
+        if (location == null || location.isBlank()) throw new DomainException(MeetingErrorCode.LOCATION_REQUIRED);
+        if (cost == null || cost.isBlank()) throw new DomainException(MeetingErrorCode.COST_REQUIRED);
+        if (memberLimit <= 0) throw new DomainException(MeetingErrorCode.MEMBER_LIMIT_REQUIRED);
+        if (type == null) throw new DomainException(MeetingErrorCode.TYPE_REQUIRED);
+    }
 }
