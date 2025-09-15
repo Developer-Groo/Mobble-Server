@@ -188,3 +188,35 @@ class ClubMemberServiceTest {
                     .hasMessage(ClubMemberErrorCode.NOT_JOINED_CLUB.message());
         }
     }
+    @Nested
+    @DisplayName("updateClubMemberRole")
+    class UpdateClubMemberRoleTest {
+
+        @Test
+        @DisplayName("리더가 권한 변경 → 토큰 재발급")
+        void leader_changes_role_and_reissues_token() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(leader.getId()).willReturn(LEADER_ID);
+            given(target.getId()).willReturn(TARGET_ID);
+
+            ClubMember leaderCM = ClubMember.createClubMember(leader, mockClub, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+            ClubMember targetCM = ClubMember.createClubMember(target, mockClub, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(TARGET_ID)).willReturn(target);
+            given(memberValidator.findMemberByMemberIdOrThrow(LEADER_ID)).willReturn(leader);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, LEADER_ID)).willReturn(leaderCM);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, TARGET_ID)).willReturn(targetCM);
+
+            List<ClubMemberRole> roles = List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER);
+            given(clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(eq(TARGET_ID), anyList())).willReturn(roles);
+            given(tokenProvider.createJwtToken(TARGET_ID, roles)).willReturn("jwt-token");
+
+            UpdateClubMemberRoleDto dto = new UpdateClubMemberRoleDto(TARGET_ID, ClubMemberRole.MANAGER);
+
+            ClubMemberRoleUpdateResultDto result = clubMemberService.updateClubMemberRole(CLUB_ID, LEADER_ID, dto);
+
+            assertThat(result).isNotNull();
+            assertThat(targetCM.getClubMemberRole()).isEqualTo(ClubMemberRole.MANAGER);
+            verify(tokenProvider).createJwtToken(TARGET_ID, roles);
+        }
