@@ -123,3 +123,18 @@ class ClubMemberServiceTest {
 
             verify(clubMemberRepository, times(1)).save(any(ClubMember.class));
         }
+
+        @Test
+        @DisplayName("이미 가입되어 있으면 ALREADY_JOINED")
+        void alreadyJoined_throws() {
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID))
+                    .willReturn(Optional.of(mock(ClubMember.class)));
+
+            assertThatThrownBy(() -> clubMemberService.joinClub(MEMBER_ID, CLUB_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.ALREADY_JOINED.message());
+
+            verify(clubMemberRepository, never()).save(any());
+        }
