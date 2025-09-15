@@ -94,3 +94,5 @@ class ClubMemberValidatorTest {
             verify(clubMemberRepository, times(1))
                     .findAllClubMemberByMemberId(MEMBER_ID);
         }
+    }
+}
