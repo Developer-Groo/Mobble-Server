@@ -31,6 +31,7 @@ class ClubMemberValidatorTest {
 
     private static final Long CLUB_ID = 1L;
     private static final Long MEMBER_ID = 2L;
+
     @Nested
     @DisplayName("findClubMemberByClubIdAndMemberIdOrThrow")
     class FindByClubAndMember {
@@ -70,3 +71,26 @@ class ClubMemberValidatorTest {
                     .findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID);
         }
     }
+
+    @Nested
+    @DisplayName("findAllClubMemberByMemberId")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("성공 - 멤버의 모든 클럽멤버 반환")
+        void success_return_list() {
+            // given
+            ClubMember clubMember1 = mock(ClubMember.class);
+            ClubMember clubMember2 = mock(ClubMember.class);
+            given(clubMemberRepository.findAllClubMemberByMemberId(MEMBER_ID))
+                    .willReturn(List.of(clubMember1, clubMember2));
+
+            // when
+            List<ClubMember> list = clubMemberValidator.findAllClubMemberByMemberId(MEMBER_ID);
+
+            // then
+            assertThat(list).hasSize(2)
+                    .containsExactly(clubMember1, clubMember2);
+            verify(clubMemberRepository, times(1))
+                    .findAllClubMemberByMemberId(MEMBER_ID);
+        }
