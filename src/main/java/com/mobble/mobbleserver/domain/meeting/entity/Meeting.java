@@ -97,6 +97,20 @@ public class Meeting {
         this.memberLimit = memberLimit;
         this.type = type;
     }
+
+    private void validateCommon(
+            ClubMember clubMember,
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        if (clubMember == null) throw new DomainException(MeetingErrorCode.CLUB_MEMBER_REQUIRED);
+        validateContents(title, datetime, location, cost, memberLimit, type);
+    }
+
     private void validateContents(
             String title,
             LocalDateTime datetime,
