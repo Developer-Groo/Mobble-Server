@@ -271,3 +271,34 @@ class ClubMemberServiceTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("updateClubMemberJoinStatus")
+    class UpdateJoinStatus {
+
+        @Test
+        @DisplayName("리더가 WAITING → APPROVED (정원 미초과)")
+        void approve_success() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(leader.getId()).willReturn(LEADER_ID);
+            given(target.getId()).willReturn(TARGET_ID);
+            given(mockClub.getHeadCount()).willReturn(2);
+
+            ClubMember leaderCM = ClubMember.createClubMember(leader, mockClub, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+            ClubMember targetCM = ClubMember.createClubMember(target, mockClub, ClubMemberRole.MEMBER, JoinStatus.WAITING);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(TARGET_ID)).willReturn(target);
+            given(memberValidator.findMemberByMemberIdOrThrow(LEADER_ID)).willReturn(leader);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, LEADER_ID)).willReturn(leaderCM);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, TARGET_ID)).willReturn(targetCM);
+
+            given(clubMemberRepository.countByClubIdAndJoinStatus(CLUB_ID, JoinStatus.APPROVED)).willReturn(1L);
+
+            UpdateClubMemberStatusDto dto = new UpdateClubMemberStatusDto(TARGET_ID, JoinStatus.APPROVED);
+
+            ClubMemberUpsertResponseDto res = clubMemberService.updateClubMemberJoinStatus(CLUB_ID, LEADER_ID, dto);
+
+            assertThat(res).isNotNull();
+            assertThat(targetCM.getJoinStatus()).isEqualTo(JoinStatus.APPROVED);
+        }
