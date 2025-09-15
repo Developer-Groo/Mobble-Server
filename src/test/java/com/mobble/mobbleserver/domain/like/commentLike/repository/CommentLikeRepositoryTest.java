@@ -60,4 +60,29 @@ class CommentLikeRepositoryTest {
         assertThat(result).isPresent();
         assertThat(result.get().getComment().getId()).isEqualTo(comment.getId());
     }
+
+    @Test
+    @DisplayName("댓글에 좋아요를 누르지 않은 경우, CommentLike 조회 결과 없음")
+    void success_when_not_liked() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+        Comment comment = Comment.createRootComment(member, article, "hello");
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article);
+        em.persist(comment);
+        em.flush();
+        em.clear();
+
+        // when
+        Optional<CommentLike> result = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
+
+        // then
+        assertThat(result).isNotPresent();
+    }
 }
