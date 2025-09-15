@@ -79,4 +79,37 @@ class MeetingTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingErrorCode.CLUB_MEMBER_REQUIRED.message());
     }
+
+    @Test
+    @DisplayName("모임 수정 성공")
+    void success_when_update_meeting() {
+        // given
+        Meeting meeting = Meeting.createMeeting(
+                mockClubMember,
+                TITLE,
+                DATETIME,
+                LOCATION,
+                COST,
+                LIMIT,
+                TYPE
+        );
+
+        // when
+        meeting.updateMeeting(
+                "수정된 title",
+                DATETIME.plusDays(2),
+                "다른 체육관",
+                "7000",
+                20,
+                MeetingType.IMPROMPTU_MEETING
+        );
+
+        // then
+        assertThat(meeting.getTitle()).isEqualTo("수정된 title");
+        assertThat(meeting.getDatetime()).isEqualTo(DATETIME.plusDays(2));
+        assertThat(meeting.getLocation()).isEqualTo("다른 체육관");
+        assertThat(meeting.getCost()).isEqualTo("7000");
+        assertThat(meeting.getMemberLimit()).isEqualTo(20);
+        assertThat(meeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
+    }
 }
