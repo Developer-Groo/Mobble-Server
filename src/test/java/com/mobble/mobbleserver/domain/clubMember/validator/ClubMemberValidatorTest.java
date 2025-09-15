@@ -31,3 +31,23 @@ class ClubMemberValidatorTest {
 
     private static final Long CLUB_ID = 1L;
     private static final Long MEMBER_ID = 2L;
+    @Nested
+    @DisplayName("findClubMemberByClubIdAndMemberIdOrThrow")
+    class FindByClubAndMember {
+
+        @Test
+        @DisplayName("성공 - 존재하면 반환")
+        void success_when_exists() {
+            // given
+            ClubMember clubMember = mock(ClubMember.class);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID))
+                    .willReturn(Optional.of(clubMember));
+
+            // when
+            ClubMember result = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
+
+            // then
+            assertThat(result).isSameAs(clubMember);
+            verify(clubMemberRepository, times(1))
+                    .findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID);
+        }
