@@ -38,7 +38,7 @@ class ArticleLikeRepositoryTest {
 
         @Test
         @DisplayName("게시글에 사용자가 좋아요를 누른 경우, ArticleLike 조회 성공")
-        void findLikedByArticleIdAndMemberId_success_when_liked() {
+        void success_when_liked() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
             ClubCategory category = ClubCategory.createClubCategory("SOCCER");
@@ -65,7 +65,7 @@ class ArticleLikeRepositoryTest {
 
         @Test
         @DisplayName("게시글에 사용자가 좋아요를 누르지 않은 경우, ArticleLike 조회 결과 없음")
-        void findLikedByArticleIdAndMemberId_success_when_not_liked() {
+        void success_when_not_liked() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
             ClubCategory category = ClubCategory.createClubCategory("SOCCER");
@@ -88,7 +88,7 @@ class ArticleLikeRepositoryTest {
 
         @Test
         @DisplayName("Article ID로 ArticleLike 리스트 조회 성공")
-        void success_when_findAllByArticleId() {
+        void success_when_liked_list_by_article_id() {
             // given
             Member member1 = MemberTestFixture.createDefaultMember();
             Member member2 = MemberTestFixture.createDefaultMember();
@@ -121,7 +121,7 @@ class ArticleLikeRepositoryTest {
 
         @Test
         @DisplayName("Article ID로 ArticleLike 리스트 조회 시 좋아요가 없는 경우, 빈 리스트 반환")
-        void success_when_findAllByArticleId_returns_empty_list() {
+        void success_when_returns_empty_list_by_article_id() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
             ClubCategory category = ClubCategory.createClubCategory("축구");
