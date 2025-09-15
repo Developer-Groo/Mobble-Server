@@ -61,7 +61,6 @@ class ClubMemberServiceTest {
     private static final Long LEADER_ID = 3L;
     private static final Long TARGET_ID = 4L;
 
-
     private Club mockClub;
     private Member mockMember;
     private Member leader;
