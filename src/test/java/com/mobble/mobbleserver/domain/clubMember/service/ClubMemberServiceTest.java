@@ -302,3 +302,29 @@ class ClubMemberServiceTest {
             assertThat(res).isNotNull();
             assertThat(targetCM.getJoinStatus()).isEqualTo(JoinStatus.APPROVED);
         }
+
+        @Test
+        @DisplayName("APPROVED로 변경하려는데 정원 초과 → CLUB_IS_FULL")
+        void approve_full_throws() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(leader.getId()).willReturn(LEADER_ID);
+            given(target.getId()).willReturn(TARGET_ID);
+            given(mockClub.getHeadCount()).willReturn(1);
+
+            ClubMember leaderCM = ClubMember.createClubMember(leader, mockClub, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+            ClubMember targetCM = ClubMember.createClubMember(target, mockClub, ClubMemberRole.MEMBER, JoinStatus.WAITING);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(TARGET_ID)).willReturn(target);
+            given(memberValidator.findMemberByMemberIdOrThrow(LEADER_ID)).willReturn(leader);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, LEADER_ID)).willReturn(leaderCM);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, TARGET_ID)).willReturn(targetCM);
+
+            given(clubMemberRepository.countByClubIdAndJoinStatus(CLUB_ID, JoinStatus.APPROVED)).willReturn(1L);
+
+            UpdateClubMemberStatusDto dto = new UpdateClubMemberStatusDto(TARGET_ID, JoinStatus.APPROVED);
+
+            assertThatThrownBy(() -> clubMemberService.updateClubMemberJoinStatus(CLUB_ID, LEADER_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.CLUB_IS_FULL.message());
+        }
