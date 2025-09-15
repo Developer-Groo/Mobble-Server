@@ -32,7 +32,7 @@ class ClubLikeRepositoryTest {
     @Test
     @DisplayName("클럽에 사용자가 좋아요를 누른 경우, ClubLike 조회 성공")
     void success_when_liked() {
-    // given
+        // given
         Member member = MemberTestFixture.createDefaultMember();
         ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
         Club club = ClubTestFixture.createDefaultClub(clubCategory);
@@ -52,6 +52,5 @@ class ClubLikeRepositoryTest {
         assertThat(result).isPresent();
         assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
         assertThat(result.get().getClub().getId()).isEqualTo(club.getId());
-
     }
 }
