@@ -74,4 +74,30 @@ class ClubLikeRepositoryTest {
         // then
         assertThat(result).isNotPresent();
     }
+
+    @Test
+    @DisplayName("Club ID로 좋아요 전체 삭제 성공")
+    void success_when_delete_all_by_club_id() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+
+        ClubLike like = ClubLike.createClubLike(club, member);
+        em.persist(like);
+        em.flush();
+
+        // when
+        clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+        em.flush();
+        em.clear();
+
+        // then
+        Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+        assertThat(result).isNotPresent();
+    }
 }
