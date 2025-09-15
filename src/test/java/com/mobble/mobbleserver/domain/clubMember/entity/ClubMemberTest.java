@@ -26,12 +26,8 @@ class ClubMemberTest {
         @Test
         @DisplayName("정상 생성")
         void create_success() {
-            // given
-            ClubMemberRole role = ClubMemberRole.MEMBER;
-            JoinStatus status = JoinStatus.WAITING;
-
-            // when
-            ClubMember clubMember = ClubMember.createClubMember(member, club, role, status);
+            // given & when
+            ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
 
             // then
             assertThat(clubMember.getId()).isNull();
