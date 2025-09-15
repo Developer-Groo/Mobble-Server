@@ -41,3 +41,20 @@ class ClubMemberTest {
             assertThat(clubMember.getJoinStatus()).isEqualTo(status);
         }
     }
+
+    @Nested
+    @DisplayName("상태/권한 업데이트")
+    class Update {
+
+        @Test
+        @DisplayName("updateStatus: WAITING -> APPROVED")
+        void update_status_success() {
+            // given
+            ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.WAITING);
+
+            // when
+            clubMember.updateStatus(JoinStatus.APPROVED);
+
+            // then
+            assertThat(clubMember.getJoinStatus()).isEqualTo(JoinStatus.APPROVED);
+        }
