@@ -72,3 +72,19 @@ class ClubMemberTest {
             assertThat(clubMember.getClubMemberRole()).isEqualTo(ClubMemberRole.LEADER);
         }
     }
+
+    @Nested
+    @DisplayName("권한별 기능")
+    class Permission {
+
+        @Test
+        @DisplayName("isLeader: LEADER면 true, MEMBER면 false")
+        void is_leader_checks_role() {
+            // given
+            ClubMember leader = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+            ClubMember normal = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+
+            // then
+            assertThat(leader.isLeader()).isTrue();
+            assertThat(normal.isLeader()).isFalse();
+        }
