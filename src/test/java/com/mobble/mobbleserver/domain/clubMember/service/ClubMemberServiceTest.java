@@ -175,3 +175,16 @@ class ClubMemberServiceTest {
 
             assertThat(clubMember.getJoinStatus()).isEqualTo(JoinStatus.WITHDRAWN);
         }
+
+        @Test
+        @DisplayName("가입되어 있지 않으면 NOT_JOINED_CLUB")
+        void withdraw_notJoined_throws() {
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.empty());
+
+            assertThatThrownBy(() -> clubMemberService.withdrawClub(MEMBER_ID, CLUB_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.NOT_JOINED_CLUB.message());
+        }
+    }
