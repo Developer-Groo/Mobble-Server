@@ -86,7 +86,7 @@ class CommentLikeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Comment ID로 댓글 좋아요 전체 삭제 성공")
+    @DisplayName("Article ID로 댓글 좋아요 전체 삭제 성공")
     void success_when_delete_all_by_comment_id() {
         Member member = MemberTestFixture.createDefaultMember();
         ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
