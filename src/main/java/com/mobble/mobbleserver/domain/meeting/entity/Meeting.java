@@ -90,7 +90,6 @@ public class Meeting {
             Integer memberLimit,
             MeetingType type
     ) {
-        //Todo null 검증 로직 추가
         this.title = title;
         this.datetime = dateTime;
         this.location = location;
