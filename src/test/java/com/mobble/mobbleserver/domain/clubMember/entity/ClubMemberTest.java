@@ -58,3 +58,17 @@ class ClubMemberTest {
             // then
             assertThat(clubMember.getJoinStatus()).isEqualTo(JoinStatus.APPROVED);
         }
+
+        @Test
+        @DisplayName("updateRole: MEMBER -> LEADER")
+        void update_role_success() {
+            // given
+            ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+
+            // when
+            clubMember.updateRole(ClubMemberRole.LEADER);
+
+            // then
+            assertThat(clubMember.getClubMemberRole()).isEqualTo(ClubMemberRole.LEADER);
+        }
+    }
