@@ -20,3 +20,40 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import(QueryDslConfig.class)
 public class ClubRepositoryImplTest {
+
+    @Autowired
+    private ClubRepository clubRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    @Test
+    @DisplayName("클럽 좋아요 수 및 사용자의 좋아요 여부 조회 - 좋아요 O")
+    void success_when_find_like_info_liked_true() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        Member other = MemberTestFixture.createDefaultMember();
+        em.persist(member);
+        em.persist(other);
+
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
+
+        Club club = ClubTestFixture.createDefaultClub(category);
+        em.persist(club);
+
+        ClubLike like1 = ClubLike.createClubLike(club, member);
+        ClubLike like2 = ClubLike.createClubLike(club, other);
+        em.persist(like1);
+        em.persist(like2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        ClubLikeInfoDto dto = clubRepository.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
+
+        // then
+        assertThat(dto.likeCount()).isEqualTo(2);
+        assertThat(dto.isLiked()).isTrue();
+    }
