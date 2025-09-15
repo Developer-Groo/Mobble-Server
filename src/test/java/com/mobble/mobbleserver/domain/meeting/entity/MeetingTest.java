@@ -6,6 +6,8 @@ import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MeetingTest {
 
@@ -58,5 +61,22 @@ class MeetingTest {
         assertThat(meeting.getMemberLimit()).isEqualTo(LIMIT);
         assertThat(meeting.getType()).isEqualTo(TYPE);
         assertThat(meeting.getMeetingMembers()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("ClubMember 가 null 이면 예외 발생")
+    void fails_when_club_member_is_null() {
+        // when & then
+        assertThatThrownBy(() -> Meeting.createMeeting(
+                null,
+                TITLE,
+                DATETIME,
+                LOCATION,
+                COST,
+                LIMIT,
+                TYPE
+        ))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.CLUB_MEMBER_REQUIRED.message());
     }
 }
