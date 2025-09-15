@@ -74,3 +74,29 @@ class ClubMemberServiceTest {
         leader = mock(Member.class);
         target = mock(Member.class);
     }
+    @Nested
+    @DisplayName("joinClub")
+    class JoinClub {
+
+        @Test
+        @DisplayName("자동가입 클럽이면 APPROVED로 가입")
+        void autoJoin_approved() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(mockClub.getHeadCount()).willReturn(5);
+            given(mockClub.isAutoJoin()).willReturn(true);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.empty());
+            given(clubMemberRepository.countByClubIdAndJoinStatus(CLUB_ID, JoinStatus.APPROVED)).willReturn(0L);
+
+            given(clubMemberRepository.save(any(ClubMember.class))).willAnswer(inv -> inv.getArgument(0));
+
+            ClubMemberUpsertResponseDto res = clubMemberService.joinClub(MEMBER_ID, CLUB_ID);
+
+            assertThat(res).isNotNull();
+            assertThat(res.joinStatus()).isEqualTo(JoinStatus.APPROVED);
+            assertThat(res.memberRole()).isEqualTo(ClubMemberRole.MEMBER.getDisplayName());
+
+            verify(clubMemberRepository, times(1)).save(any(ClubMember.class));
+        }
