@@ -53,4 +53,25 @@ class ClubLikeRepositoryTest {
         assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
         assertThat(result.get().getClub().getId()).isEqualTo(club.getId());
     }
+
+    @Test
+    @DisplayName("클럽에 사용자가 좋아요를 누르지 않은 경우, ClubLike 조회 결과 없음")
+    void success_when_not_liked() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.flush();
+        em.clear();
+
+        // when
+        Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+
+        // then
+        assertThat(result).isNotPresent();
+    }
 }
