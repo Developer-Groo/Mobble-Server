@@ -100,3 +100,15 @@ class ClubMemberTest {
             assertThat(leader.canPost(ArticleType.NOTICE)).isTrue();
             assertThat(normal.canPost(ArticleType.NOTICE)).isFalse();
         }
+
+        @Test
+        @DisplayName("canPost: 일반 게시글(FREE)은 MEMBER도 가능")
+        void can_post_non_notice_rule() {
+            // given
+            ClubMember normal = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+
+            // then
+            assertThat(normal.canPost(ArticleType.FREE)).isTrue();
+        }
+    }
+}
