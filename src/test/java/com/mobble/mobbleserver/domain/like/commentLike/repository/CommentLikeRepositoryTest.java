@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -110,6 +111,42 @@ class CommentLikeRepositoryTest {
 
         // when
         commentLikeRepository.deleteAllByArticleId(article.getId());
+        em.flush();
+        em.clear();
+
+        // then
+        assertThat(commentLikeRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Article ID 리스트로 댓글 좋아요 전체 삭제 성공")
+    void success_when_delete_all_by_article_ids() {
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
+        Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
+        Comment comment1 = Comment.createRootComment(member, article1, "content1");
+        Comment comment2 = Comment.createRootComment(member, article2, "content2");
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article1);
+        em.persist(article2);
+        em.persist(comment1);
+        em.persist(comment2);
+
+        CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
+        CommentLike commentLike2 = CommentLike.createCommentLike(comment1, member);
+        em.persist(commentLike1);
+        em.persist(commentLike2);
+        em.flush();
+
+        List<Long> articleIds = List.of(article1.getId(), article2.getId());
+
+        // when
+        commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
         em.flush();
         em.clear();
 
