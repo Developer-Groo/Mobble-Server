@@ -119,6 +119,29 @@ class CommentLikeRepositoryTest {
     }
 
     @Test
+    @DisplayName("Article ID로 삭제 시, 해당 Article 의 댓글 좋아요가 없는 경우에도 예외 없이 삭제 성공")
+    void success_when_delete_all_by_article_id_but_nothing_to_delete() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article);
+        em.flush();
+
+        // when
+        commentLikeRepository.deleteAllByArticleId(article.getId());
+        em.flush();
+
+        // then
+        assertThat(commentLikeRepository.findAll()).isEmpty();
+    }
+
+    @Test
     @DisplayName("Article ID 리스트로 댓글 좋아요 전체 삭제 성공")
     void success_when_delete_all_by_article_ids() {
         Member member = MemberTestFixture.createDefaultMember();
