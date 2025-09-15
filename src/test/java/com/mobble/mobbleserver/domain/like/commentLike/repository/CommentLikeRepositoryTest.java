@@ -12,6 +12,7 @@ import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,175 +33,186 @@ class CommentLikeRepositoryTest {
     @Autowired
     private EntityManager em;
 
-    @Test
-    @DisplayName("댓글에 사용자가 좋아요를 누른 경우, Comment Like 조회 성공")
-    void success_when_liked() {
-        // given
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Comment comment = Comment.createRootComment(member, article, "hello");
+    @Nested
+    @DisplayName("좋아요 조회 기능")
+    class Find {
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article);
-        em.persist(comment);
+        @Test
+        @DisplayName("댓글에 사용자가 좋아요를 누른 경우, Comment Like 조회 성공")
+        void success_when_liked() {
 
-        CommentLike like = CommentLike.createCommentLike(comment, member);
-        em.persist(like);
-        em.flush();
-        em.clear();
+            // given
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Comment comment = Comment.createRootComment(member, article, "hello");
 
-        // when
-        Optional<CommentLike> result = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article);
+            em.persist(comment);
 
-        // then
-        assertThat(result).isPresent();
-        assertThat(result.get().getComment().getId()).isEqualTo(comment.getId());
+            CommentLike like = CommentLike.createCommentLike(comment, member);
+            em.persist(like);
+            em.flush();
+            em.clear();
+
+            // when
+            Optional<CommentLike> result = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
+
+            // then
+            assertThat(result).isPresent();
+            assertThat(result.get().getComment().getId()).isEqualTo(comment.getId());
+        }
+
+        @Test
+        @DisplayName("댓글에 좋아요를 누르지 않은 경우, CommentLike 조회 결과 없음")
+        void success_when_not_liked() {
+            // given
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Comment comment = Comment.createRootComment(member, article, "hello");
+
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article);
+            em.persist(comment);
+            em.flush();
+            em.clear();
+
+            // when
+            Optional<CommentLike> result = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
+
+            // then
+            assertThat(result).isNotPresent();
+        }
     }
 
-    @Test
-    @DisplayName("댓글에 좋아요를 누르지 않은 경우, CommentLike 조회 결과 없음")
-    void success_when_not_liked() {
-        // given
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Comment comment = Comment.createRootComment(member, article, "hello");
+    @Nested
+    @DisplayName("좋아요 삭제 기능")
+    class Delete {
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article);
-        em.persist(comment);
-        em.flush();
-        em.clear();
+        @Test
+        @DisplayName("Article ID로 댓글 좋아요 전체 삭제 성공")
+        void success_when_delete_all_by_article_id() {
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Comment comment1 = Comment.createRootComment(member, article, "content1");
+            Comment comment2 = Comment.createRootComment(member, article, "content2");
 
-        // when
-        Optional<CommentLike> result = commentLikeRepository.findLikedByCommentIdAndMemberId(comment.getId(), member.getId());
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article);
+            em.persist(comment1);
+            em.persist(comment2);
 
-        // then
-        assertThat(result).isNotPresent();
-    }
+            CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
+            CommentLike commentLike2 = CommentLike.createCommentLike(comment2, member);
+            em.persist(commentLike1);
+            em.persist(commentLike2);
+            em.flush();
 
-    @Test
-    @DisplayName("Article ID로 댓글 좋아요 전체 삭제 성공")
-    void success_when_delete_all_by_article_id() {
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Comment comment1 = Comment.createRootComment(member, article, "content1");
-        Comment comment2 = Comment.createRootComment(member, article, "content2");
+            // when
+            commentLikeRepository.deleteAllByArticleId(article.getId());
+            em.flush();
+            em.clear();
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article);
-        em.persist(comment1);
-        em.persist(comment2);
+            // then
+            assertThat(commentLikeRepository.findAll()).isEmpty();
+        }
 
-        CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
-        CommentLike commentLike2 = CommentLike.createCommentLike(comment2, member);
-        em.persist(commentLike1);
-        em.persist(commentLike2);
-        em.flush();
+        @Test
+        @DisplayName("Article ID로 삭제 시, 해당 Article 의 댓글 좋아요가 없는 경우에도 예외 없이 삭제 성공")
+        void success_when_delete_all_by_article_id_but_nothing_to_delete() {
+            // given
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
 
-        // when
-        commentLikeRepository.deleteAllByArticleId(article.getId());
-        em.flush();
-        em.clear();
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article);
+            em.flush();
 
-        // then
-        assertThat(commentLikeRepository.findAll()).isEmpty();
-    }
+            // when
+            commentLikeRepository.deleteAllByArticleId(article.getId());
+            em.flush();
 
-    @Test
-    @DisplayName("Article ID로 삭제 시, 해당 Article 의 댓글 좋아요가 없는 경우에도 예외 없이 삭제 성공")
-    void success_when_delete_all_by_article_id_but_nothing_to_delete() {
-        // given
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+            // then
+            assertThat(commentLikeRepository.findAll()).isEmpty();
+        }
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article);
-        em.flush();
+        @Test
+        @DisplayName("Article ID 리스트로 댓글 좋아요 전체 삭제 성공")
+        void success_when_delete_all_by_article_ids() {
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Comment comment1 = Comment.createRootComment(member, article1, "content1");
+            Comment comment2 = Comment.createRootComment(member, article2, "content2");
 
-        // when
-        commentLikeRepository.deleteAllByArticleId(article.getId());
-        em.flush();
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article1);
+            em.persist(article2);
+            em.persist(comment1);
+            em.persist(comment2);
 
-        // then
-        assertThat(commentLikeRepository.findAll()).isEmpty();
-    }
+            CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
+            CommentLike commentLike2 = CommentLike.createCommentLike(comment1, member);
+            em.persist(commentLike1);
+            em.persist(commentLike2);
+            em.flush();
 
-    @Test
-    @DisplayName("Article ID 리스트로 댓글 좋아요 전체 삭제 성공")
-    void success_when_delete_all_by_article_ids() {
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Comment comment1 = Comment.createRootComment(member, article1, "content1");
-        Comment comment2 = Comment.createRootComment(member, article2, "content2");
+            List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article1);
-        em.persist(article2);
-        em.persist(comment1);
-        em.persist(comment2);
+            // when
+            commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+            em.flush();
+            em.clear();
 
-        CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
-        CommentLike commentLike2 = CommentLike.createCommentLike(comment1, member);
-        em.persist(commentLike1);
-        em.persist(commentLike2);
-        em.flush();
+            // then
+            assertThat(commentLikeRepository.findAll()).isEmpty();
+        }
 
-        List<Long> articleIds = List.of(article1.getId(), article2.getId());
+        @Test
+        @DisplayName("Article ID 리스트로 삭제 시, 해당 Article 의 댓글 좋아요가 없는 경우에도 예외 없이 삭제 성공")
+        void success_when_delete_all_by_article_ids_but_nothing_to_delete() {
+            // given
+            Member member = MemberTestFixture.createDefaultMember();
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
+            Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
+            Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
 
-        // when
-        commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
-        em.flush();
-        em.clear();
+            em.persist(clubCategory);
+            em.persist(member);
+            em.persist(club);
+            em.persist(article1);
+            em.persist(article2);
+            em.flush();
 
-        // then
-        assertThat(commentLikeRepository.findAll()).isEmpty();
-    }
+            List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
-    @Test
-    @DisplayName("Article ID 리스트로 삭제 시, 해당 Article 의 댓글 좋아요가 없는 경우에도 예외 없이 삭제 성공")
-    void success_when_delete_all_by_article_ids_but_nothing_to_delete() {
-        // given
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Article article1 = ArticleTestFixture.createWithMemberAndClub(member, club);
-        Article article2 = ArticleTestFixture.createWithMemberAndClub(member, club);
+            // when
+            commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+            em.flush();
 
-        em.persist(clubCategory);
-        em.persist(member);
-        em.persist(club);
-        em.persist(article1);
-        em.persist(article2);
-        em.flush();
-
-        List<Long> articleIds = List.of(article1.getId(), article2.getId());
-
-        // when
-        commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
-        em.flush();
-
-        // then
-        assertThat(commentLikeRepository.findAll()).isEmpty();
+            // then
+            assertThat(commentLikeRepository.findAll()).isEmpty();
+        }
     }
 }
