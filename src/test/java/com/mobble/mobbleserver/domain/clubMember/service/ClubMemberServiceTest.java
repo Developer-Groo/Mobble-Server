@@ -328,3 +328,31 @@ class ClubMemberServiceTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(ClubMemberErrorCode.CLUB_IS_FULL.message());
         }
+
+        @Test
+        @DisplayName("리더가 아니면 NO_PERMISSION")
+        void non_leader_no_permission() {
+            given(leader.getId()).willReturn(LEADER_ID);
+
+            ClubMember managerCM = ClubMember.createClubMember(
+                    leader, mockClub, ClubMemberRole.MANAGER, JoinStatus.APPROVED);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(TARGET_ID)).willReturn(target);
+            given(memberValidator.findMemberByMemberIdOrThrow(LEADER_ID)).willReturn(leader);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, LEADER_ID))
+                    .willReturn(managerCM);
+
+            UpdateClubMemberStatusDto dto = new UpdateClubMemberStatusDto(TARGET_ID, JoinStatus.APPROVED);
+
+            assertThatThrownBy(() -> clubMemberService.updateClubMemberJoinStatus(CLUB_ID, LEADER_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.NO_PERMISSION.message());
+
+            verify(clubMemberValidator, never())
+                    .findClubMemberByClubIdAndMemberIdOrThrow(eq(CLUB_ID), eq(TARGET_ID));
+            verify(clubMemberRepository, never())
+                    .countByClubIdAndJoinStatus(anyLong(), any());
+        }
+
+    }
