@@ -188,6 +188,7 @@ class ClubMemberServiceTest {
                     .hasMessage(ClubMemberErrorCode.NOT_JOINED_CLUB.message());
         }
     }
+
     @Nested
     @DisplayName("updateClubMemberRole")
     class UpdateClubMemberRoleTest {
@@ -219,4 +220,27 @@ class ClubMemberServiceTest {
             assertThat(result).isNotNull();
             assertThat(targetCM.getClubMemberRole()).isEqualTo(ClubMemberRole.MANAGER);
             verify(tokenProvider).createJwtToken(TARGET_ID, roles);
+        }
+
+        @Test
+        @DisplayName("자기 자신의 권한은 변경 불가")
+        void cannot_change_own_role() {
+            given(leader.getId()).willReturn(LEADER_ID);
+
+            ClubMember leaderCM = ClubMember.createClubMember(
+                    leader, mockClub, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(LEADER_ID)).willReturn(leader);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, LEADER_ID))
+                    .willReturn(leaderCM);
+
+            UpdateClubMemberRoleDto dto =
+                    new UpdateClubMemberRoleDto(LEADER_ID, ClubMemberRole.MANAGER);
+
+            assertThatThrownBy(() -> clubMemberService.updateClubMemberRole(CLUB_ID, LEADER_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE.message());
+
+            verifyNoInteractions(tokenProvider);
         }
