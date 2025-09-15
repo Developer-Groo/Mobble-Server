@@ -43,7 +43,7 @@ public class Meeting {
     @Enumerated(EnumType.STRING)
     private MeetingType type;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Meeting(
             ClubMember clubMember,
             String title,
