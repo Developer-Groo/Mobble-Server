@@ -48,7 +48,7 @@ class ClubMemberValidatorTest {
             ClubMember result = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
 
             // then
-            assertThat(result).isSameAs(clubMember);
+            assertThat(result).isEqualTo(clubMember);
             verify(clubMemberRepository, times(1))
                     .findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID);
         }
