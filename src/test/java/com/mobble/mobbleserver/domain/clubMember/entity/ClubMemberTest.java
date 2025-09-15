@@ -31,10 +31,10 @@ class ClubMemberTest {
 
             // then
             assertThat(clubMember.getId()).isNull();
-            assertThat(clubMember.getMember()).isSameAs(member);
-            assertThat(clubMember.getClub()).isSameAs(club);
-            assertThat(clubMember.getClubMemberRole()).isEqualTo(role);
-            assertThat(clubMember.getJoinStatus()).isEqualTo(status);
+            assertThat(clubMember.getMember()).isEqualTo(member);
+            assertThat(clubMember.getClub()).isEqualTo(club);
+            assertThat(clubMember.getClubMemberRole()).isEqualTo(ClubMemberRole.MEMBER);
+            assertThat(clubMember.getJoinStatus()).isEqualTo(JoinStatus.APPROVED);
         }
     }
 
