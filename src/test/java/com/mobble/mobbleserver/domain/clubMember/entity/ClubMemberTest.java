@@ -88,3 +88,15 @@ class ClubMemberTest {
             assertThat(leader.isLeader()).isTrue();
             assertThat(normal.isLeader()).isFalse();
         }
+
+        @Test
+        @DisplayName("canPost: NOTICE는 MEMBER 불가, LEADER 가능")
+        void can_post_notice_rule() {
+            // given
+            ClubMember leader = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
+            ClubMember normal = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+
+            // then
+            assertThat(leader.canPost(ArticleType.NOTICE)).isTrue();
+            assertThat(normal.canPost(ArticleType.NOTICE)).isFalse();
+        }
