@@ -1,0 +1,57 @@
+package com.mobble.mobbleserver.domain.like.clubLike.repository;
+
+import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.domain.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
+import com.mobble.mobbleserver.domain.like.clubLike.entity.ClubLike;
+import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
+import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
+import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+
+@DataJpaTest
+@Import(QueryDslConfig.class)
+class ClubLikeRepositoryTest {
+
+    @Autowired
+    private ClubLikeRepository clubLikeRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    @Test
+    @DisplayName("클럽에 사용자가 좋아요를 누른 경우, ClubLike 조회 성공")
+    void success_when_liked() {
+    // given
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        ClubLike like = ClubLike.createClubLike(club, member);
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.persist(like);
+        em.flush();
+        em.clear();
+
+        // when
+        Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+
+        // then
+        assertThat(result).isPresent();
+        assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
+        assertThat(result.get().getClub().getId()).isEqualTo(club.getId());
+
+    }
+}
