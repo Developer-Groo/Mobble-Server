@@ -11,7 +11,6 @@ import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +83,37 @@ class CommentLikeRepositoryTest {
 
         // then
         assertThat(result).isNotPresent();
+    }
+
+    @Test
+    @DisplayName("Comment ID로 댓글 좋아요 전체 삭제 성공")
+    void success_when_delete_all_by_comment_id() {
+        Member member = MemberTestFixture.createDefaultMember();
+        ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
+        Comment comment1 = Comment.createRootComment(member, article, "content1");
+        Comment comment2 = Comment.createRootComment(member, article, "content2");
+
+        em.persist(clubCategory);
+        em.persist(member);
+        em.persist(club);
+        em.persist(article);
+        em.persist(comment1);
+        em.persist(comment2);
+
+        CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
+        CommentLike commentLike2 = CommentLike.createCommentLike(comment2, member);
+        em.persist(commentLike1);
+        em.persist(commentLike2);
+        em.flush();
+
+        // when
+        commentLikeRepository.deleteAllByArticleId(article.getId());
+        em.flush();
+        em.clear();
+
+        // then
+        assertThat(commentLikeRepository.findAll()).isEmpty();
     }
 }
