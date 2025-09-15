@@ -41,16 +41,16 @@ class ArticleLikeRepositoryTest {
         void success_when_liked() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
-            ArticleLike like = ArticleLike.createArticleLike(article, member);
+            ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member);
             em.persist(club);
             em.persist(article);
-            em.persist(like);
+            em.persist(articleLike);
             em.flush();
             em.clear();
 
@@ -68,11 +68,11 @@ class ArticleLikeRepositoryTest {
         void success_when_not_liked() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member);
             em.persist(club);
             em.persist(article);
@@ -92,20 +92,20 @@ class ArticleLikeRepositoryTest {
             // given
             Member member1 = MemberTestFixture.createDefaultMember();
             Member member2 = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("축구");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member1, club);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member1);
             em.persist(member2);
             em.persist(club);
             em.persist(article);
 
-            ArticleLike like1 = ArticleLike.createArticleLike(article, member1);
-            ArticleLike like2 = ArticleLike.createArticleLike(article, member2);
-            em.persist(like1);
-            em.persist(like2);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(article, member1);
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(article, member2);
+            em.persist(articleLike1);
+            em.persist(articleLike2);
             em.flush();
             em.clear();
 
@@ -124,11 +124,11 @@ class ArticleLikeRepositoryTest {
         void success_when_returns_empty_list_by_article_id() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("축구");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("축구");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member);
             em.persist(club);
             em.persist(article);
@@ -154,19 +154,19 @@ class ArticleLikeRepositoryTest {
         void success_when_delete_all_by_article_id() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member);
             em.persist(club);
             em.persist(article);
 
-            ArticleLike like1 = ArticleLike.createArticleLike(article, member);
-            ArticleLike like2 = ArticleLike.createArticleLike(article, member);
-            em.persist(like1);
-            em.persist(like2);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(article, member);
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(article, member);
+            em.persist(articleLike1);
+            em.persist(articleLike2);
             em.flush();
 
             // when
@@ -184,10 +184,10 @@ class ArticleLikeRepositoryTest {
         void success_when_delete_all_by_article_ids() {
             // given
             Member member = MemberTestFixture.createDefaultMember();
-            ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-            Club club = ClubTestFixture.createDefaultClub(category);
+            ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
+            Club club = ClubTestFixture.createDefaultClub(clubCategory);
 
-            em.persist(category);
+            em.persist(clubCategory);
             em.persist(member);
             em.persist(club);
 
@@ -196,10 +196,10 @@ class ArticleLikeRepositoryTest {
             em.persist(article1);
             em.persist(article2);
 
-            ArticleLike like1 = ArticleLike.createArticleLike(article1, member);
-            ArticleLike like2 = ArticleLike.createArticleLike(article2, member);
-            em.persist(like1);
-            em.persist(like2);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(article1, member);
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(article2, member);
+            em.persist(articleLike1);
+            em.persist(articleLike2);
             em.flush();
 
             List<Long> articleIds = List.of(article1.getId(), article2.getId());
