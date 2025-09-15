@@ -74,6 +74,7 @@ class ClubMemberServiceTest {
         leader = mock(Member.class);
         target = mock(Member.class);
     }
+
     @Nested
     @DisplayName("joinClub")
     class JoinClub {
@@ -356,3 +357,30 @@ class ClubMemberServiceTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("findClubMembers")
+    class FindClubMembers {
+
+        @Test
+        @DisplayName("클럽 멤버 목록 조회/매핑 성공")
+        void list_success() {
+            Member m1 = mock(Member.class);
+            Member m2 = mock(Member.class);
+
+            ClubMember cm1 = ClubMember.createClubMember(m1, mockClub, ClubMemberRole.MEMBER, JoinStatus.APPROVED);
+            ClubMember cm2 = ClubMember.createClubMember(m2, mockClub, ClubMemberRole.MANAGER, JoinStatus.APPROVED);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(clubMemberRepository.findByClubId(CLUB_ID)).willReturn(List.of(cm1, cm2));
+
+            // when
+            List<ClubMemberResponseDto> res = clubMemberService.findClubMembers(CLUB_ID);
+
+            // then
+            assertThat(res).hasSize(2);
+            verify(clubMemberRepository).findByClubId(CLUB_ID);
+        }
+
+    }
+}
