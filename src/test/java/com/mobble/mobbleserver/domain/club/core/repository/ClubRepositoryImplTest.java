@@ -86,3 +86,28 @@ public class ClubRepositoryImplTest {
         assertThat(dto.likeCount()).isEqualTo(1);
         assertThat(dto.isLiked()).isFalse();
     }
+
+    @Test
+    @DisplayName("클럽 좋아요가 하나도 없을 때 - count=0, isLiked=false")
+    void success_when_find_like_info_empty() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        em.persist(member);
+
+        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
+        em.persist(category);
+
+        Club club = ClubTestFixture.createDefaultClub(category);
+        em.persist(club);
+
+        em.flush();
+        em.clear();
+
+        // when
+        ClubLikeInfoDto dto = clubRepository.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
+
+        // then
+        assertThat(dto.likeCount()).isEqualTo(0);
+        assertThat(dto.isLiked()).isFalse();
+    }
+}
