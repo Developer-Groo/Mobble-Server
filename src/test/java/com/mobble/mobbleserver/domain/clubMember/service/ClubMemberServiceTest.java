@@ -155,3 +155,23 @@ class ClubMemberServiceTest {
                     .hasMessage(ClubMemberErrorCode.CLUB_IS_FULL.message());
         }
     }
+
+    @Nested
+    @DisplayName("withdrawClub")
+    class WithdrawClub {
+
+        @Test
+        @DisplayName("가입되어 있으면 WITHDRAWN")
+        void withdraw_success() {
+            ClubMember clubMember = ClubMember.createClubMember(mockMember, mockClub, ClubMemberRole.MEMBER,
+                    JoinStatus.APPROVED);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.of(clubMember));
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(clubMember);
+
+            clubMemberService.withdrawClub(MEMBER_ID, CLUB_ID);
+
+            assertThat(clubMember.getJoinStatus()).isEqualTo(JoinStatus.WITHDRAWN);
+        }
