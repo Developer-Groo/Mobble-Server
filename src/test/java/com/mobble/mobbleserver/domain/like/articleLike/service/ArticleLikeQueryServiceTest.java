@@ -74,8 +74,7 @@ class ArticleLikeQueryServiceTest {
     @DisplayName("조회할 게시글이 존재하지 않으면 예외 발생")
     void fail_when_article_not_found() {
         // given
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willThrow(new DomainException(ArticleErrorCode.NOT_FOUND));
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willThrow(new DomainException(ArticleErrorCode.NOT_FOUND));
 
         // when & then
         assertThatThrownBy(() -> articleLikeQueryService.getLikedMemberList(ARTICLE_ID))
@@ -90,10 +89,8 @@ class ArticleLikeQueryServiceTest {
     void success_when_no_liked_members() {
         // given
         given(mockArticle.getId()).willReturn(ARTICLE_ID);
-        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID))
-                .willReturn(mockArticle);
-        given(articleLikeRepository.findAllByArticleId(ARTICLE_ID))
-                .willReturn(List.of());
+        given(articleValidator.findArticleByArticleIdOrThrow(ARTICLE_ID)).willReturn(mockArticle);
+        given(articleLikeRepository.findAllByArticleId(ARTICLE_ID)).willReturn(List.of());
 
         // when
         LikeMemberListResponseDto response = articleLikeQueryService.getLikedMemberList(ARTICLE_ID);
