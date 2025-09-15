@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.meeting.entity;
 
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,6 +55,7 @@ public class Meeting {
             int memberLimit,
             MeetingType type
     ) {
+        validateCommon(clubMember, title, datetime, location, cost, memberLimit, type);
         this.clubMember = clubMember;
         this.title = title;
         this.datetime = datetime;
@@ -90,6 +93,7 @@ public class Meeting {
             Integer memberLimit,
             MeetingType type
     ) {
+        validateContents(title, dateTime, location, cost, memberLimit, type);
         this.title = title;
         this.datetime = dateTime;
         this.location = location;
