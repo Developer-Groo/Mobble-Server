@@ -138,3 +138,20 @@ class ClubMemberServiceTest {
 
             verify(clubMemberRepository, never()).save(any());
         }
+
+        @Test
+        @DisplayName("정원 초과면 CLUB_IS_FULL")
+        void full_throws() {
+            given(mockClub.getId()).willReturn(CLUB_ID);
+            given(mockClub.getHeadCount()).willReturn(3);
+
+            given(clubValidator.findClubByClubIdOrThrow(CLUB_ID)).willReturn(mockClub);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(mockMember);
+            given(clubMemberRepository.findClubMemberByClubIdAndMemberId(CLUB_ID, MEMBER_ID)).willReturn(Optional.empty());
+            given(clubMemberRepository.countByClubIdAndJoinStatus(CLUB_ID, JoinStatus.APPROVED)).willReturn(3L);
+
+            assertThatThrownBy(() -> clubMemberService.joinClub(MEMBER_ID, CLUB_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(ClubMemberErrorCode.CLUB_IS_FULL.message());
+        }
+    }
