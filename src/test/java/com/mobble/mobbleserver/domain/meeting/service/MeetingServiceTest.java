@@ -10,6 +10,8 @@ import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.entity.MeetingType;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
 import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.security.SecurityErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -83,6 +86,32 @@ class MeetingServiceTest {
             // then
             assertThat(meeting).isNotNull();
             verify(meetingRepository).save(any());
+        }
+
+        @Test
+        @DisplayName("Meeting 생성 실패 - MEMBER")
+        void fail_when_create_meeting_by_member() {
+            // given
+            ClubMember member = mock(ClubMember.class);
+            given(member.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(member);
+
+            MeetingRequestDto dto = new MeetingRequestDto(
+                    "title",
+                    LocalDateTime.of(2025, 10, 10, 19, 0),
+                    "체육관",
+                    "5000",
+                    10,
+                    MeetingType.REGULAR_MEETING
+            );
+
+            // when & then
+            assertThatThrownBy(() -> meetingService.createMeeting(MEMBER_ID, CLUB_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
+
+            verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
+            verify(meetingRepository, never()).save(any());
         }
     }
 }
