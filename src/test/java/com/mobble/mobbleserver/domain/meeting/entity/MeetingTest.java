@@ -181,7 +181,7 @@ class MeetingTest {
         assertThatThrownBy(() ->
                 mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
                 .isInstanceOf(DomainException.class)
-                .hasMessage(MeetingErrorCode.MEMBER_LIMIT_REQUIRED.message());
+                .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
     }
 
     @Test
@@ -191,6 +191,6 @@ class MeetingTest {
         assertThatThrownBy(() ->
                 mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
                 .isInstanceOf(DomainException.class)
-                .hasMessage(MeetingErrorCode.MEMBER_LIMIT_REQUIRED.message());
+                .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
     }
 }
