@@ -133,4 +133,24 @@ class MeetingTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingErrorCode.DATETIME_REQUIRED.message());
     }
+
+    @Test
+    @DisplayName("장소를 null 로 변경 시 예외 발생")
+    void fails_when_location_is_null() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(TITLE, DATETIME, null, COST, LIMIT, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
+    }
+
+    @Test
+    @DisplayName("장소를 공백으로 변경 시 예외 발생")
+    void fails_when_location_is_blank() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(TITLE, DATETIME, " ", COST, LIMIT, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
+    }
 }
