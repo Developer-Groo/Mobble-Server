@@ -193,4 +193,14 @@ class MeetingTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
     }
+
+    @Test
+    @DisplayName("모임 타입을 null 로 변경 시 예외 발생")
+    void fails_when_type_is_null() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, LIMIT, null))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.TYPE_REQUIRED.message());
+    }
 }
