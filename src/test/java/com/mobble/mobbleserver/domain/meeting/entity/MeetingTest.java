@@ -103,4 +103,24 @@ class MeetingTest {
         assertThat(mockMeeting.getMemberLimit()).isEqualTo(20);
         assertThat(mockMeeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
     }
+
+    @Test
+    @DisplayName("제목을 null 로 변경 시 예외 발생")
+    void fails_when_title_is_null() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(null, DATETIME, LOCATION, COST, LIMIT, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
+    }
+
+    @Test
+    @DisplayName("제목을 공백으로 변경 시 예외 발생")
+    void fails_when_title_is_blank() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(" ", DATETIME, LOCATION, COST, LIMIT, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
+    }
 }
