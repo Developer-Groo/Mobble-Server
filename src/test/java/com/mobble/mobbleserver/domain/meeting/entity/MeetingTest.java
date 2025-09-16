@@ -173,4 +173,24 @@ class MeetingTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
     }
+
+    @Test
+    @DisplayName("참여 인원을 0 으로 변경 시 예외 발생")
+    void fails_when_member_limit_is_zero() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.MEMBER_LIMIT_REQUIRED.message());
+    }
+
+    @Test
+    @DisplayName("참여 인원을 음수로 변경 시 예외 발생")
+    void fails_when_member_limit_is_negative() {
+        // when & then
+        assertThatThrownBy(() ->
+                mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.MEMBER_LIMIT_REQUIRED.message());
+    }
 }
