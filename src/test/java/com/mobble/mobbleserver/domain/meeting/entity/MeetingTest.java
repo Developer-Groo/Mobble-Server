@@ -10,6 +10,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
+import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ class MeetingTest {
             ClubMemberRole.LEADER,
             JoinStatus.APPROVED
     );
+    private final Meeting mockMeeting = MeetingTestFixture.createDefaultMeeting();
 
     private static final String TITLE = "정기모임";
     private static final String LOCATION = "체육관";
@@ -83,19 +85,8 @@ class MeetingTest {
     @Test
     @DisplayName("모임 수정 성공")
     void success_when_update_meeting() {
-        // given
-        Meeting meeting = Meeting.createMeeting(
-                mockClubMember,
-                TITLE,
-                DATETIME,
-                LOCATION,
-                COST,
-                LIMIT,
-                TYPE
-        );
-
-        // when
-        meeting.updateMeeting(
+        // given & when
+        mockMeeting.updateMeeting(
                 "수정된 title",
                 DATETIME.plusDays(2),
                 "다른 체육관",
@@ -105,11 +96,11 @@ class MeetingTest {
         );
 
         // then
-        assertThat(meeting.getTitle()).isEqualTo("수정된 title");
-        assertThat(meeting.getDatetime()).isEqualTo(DATETIME.plusDays(2));
-        assertThat(meeting.getLocation()).isEqualTo("다른 체육관");
-        assertThat(meeting.getCost()).isEqualTo("7000");
-        assertThat(meeting.getMemberLimit()).isEqualTo(20);
-        assertThat(meeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
+        assertThat(mockMeeting.getTitle()).isEqualTo("수정된 title");
+        assertThat(mockMeeting.getDatetime()).isEqualTo(DATETIME.plusDays(2));
+        assertThat(mockMeeting.getLocation()).isEqualTo("다른 체육관");
+        assertThat(mockMeeting.getCost()).isEqualTo("7000");
+        assertThat(mockMeeting.getMemberLimit()).isEqualTo(20);
+        assertThat(mockMeeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
     }
 }
