@@ -12,6 +12,7 @@ import com.mobble.mobbleserver.domain.meeting.entity.MeetingType;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
 import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.security.SecurityErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -185,6 +186,33 @@ class MeetingServiceTest {
 
             verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
             verify(meetingValidator, never()).findMeetingByMeetingIdOrThrow(any());
+            verify(meetingRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Meeting 수정 실패 - 존재하지 않는 meetingId")
+        void fail_when_update_meeting_but_not_found_meeting_id() {
+            // given
+            ClubMember leader = mock(ClubMember.class);
+            given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
+
+            MeetingUpdateRequestDto dto = new MeetingUpdateRequestDto(
+                    "updated title",
+                    LocalDateTime.of(2025, 10, 10, 20, 0),
+                    "체육관 2",
+                    "60000",
+                    20,
+                    MeetingType.IMPROMPTU_MEETING
+            );
+
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willThrow(new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+
+            // when & then
+            assertThatThrownBy(() -> meetingService.updateMeeting(MEMBER_ID, CLUB_ID, MEETING_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+
             verify(meetingRepository, never()).save(any());
         }
     }
