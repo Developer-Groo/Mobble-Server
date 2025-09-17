@@ -289,39 +289,39 @@ class MeetingServiceTest {
             // then
             verify(meetingRepository).delete(meeting);
         }
-    }
 
-    @Test
-    @DisplayName("Meeting 삭제 실패 - MEMBER")
-    void fail_when_delete_meeting_by_member() {
-        // given
-        ClubMember member = mock(ClubMember.class);
-        given(member.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(member);
-        
-        // when & then
-        assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
-                .isInstanceOf(DomainException.class)
-                .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
+        @Test
+        @DisplayName("Meeting 삭제 실패 - MEMBER")
+        void fail_when_delete_meeting_by_member() {
+            // given
+            ClubMember member = mock(ClubMember.class);
+            given(member.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(member);
 
-        verify(meetingRepository, never()).delete(any());
-    }
+            // when & then
+            assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
 
-    @Test
-    @DisplayName("Meeting 삭제 실패 - 존재하지 않는 meetingId")
-    void fail_when_meeting_id_not_found_on_delete() {
-        // given
-        ClubMember leader = mock(ClubMember.class);
-        given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
-        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
+            verify(meetingRepository, never()).delete(any());
+        }
 
-        given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willThrow(new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+        @Test
+        @DisplayName("Meeting 삭제 실패 - 존재하지 않는 meetingId")
+        void fail_when_meeting_id_not_found_on_delete() {
+            // given
+            ClubMember leader = mock(ClubMember.class);
+            given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
 
-        // when & then
-        assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
-                .isInstanceOf(DomainException.class)
-                .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willThrow(new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
 
-        verify(meetingRepository, never()).delete(any());
+            // when & then
+            assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+
+            verify(meetingRepository, never()).delete(any());
+        }
     }
 }
