@@ -262,4 +262,20 @@ class MeetingServiceTest {
             verify(meetingRepository).delete(meeting);
         }
     }
+
+    @Test
+    @DisplayName("Meeting 삭제 실패 - MEMBER")
+    void fail_when_delete_meeting_by_member() {
+        // given
+        ClubMember member = mock(ClubMember.class);
+        given(member.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(member);
+        
+        // when & then
+        assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
+
+        verify(meetingRepository, never()).delete(any());
+    }
 }
