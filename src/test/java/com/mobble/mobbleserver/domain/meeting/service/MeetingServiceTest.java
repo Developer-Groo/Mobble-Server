@@ -223,5 +223,20 @@ class MeetingServiceTest {
             assertThat(result).hasSize(2);
             verify(meetingValidator).findMeetingsByClubId(CLUB_ID);
         }
+
+        @Test
+        @DisplayName("Meeting 목록 조회 실패 - Club 미가입")
+        void fail_when_not_club_member() {
+            // given
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willThrow(new DomainException(SecurityErrorCode.ACCESS_DENIED));
+
+            // when & then
+            assertThatThrownBy(() -> meetingService.findMeetingsByClubId(MEMBER_ID, CLUB_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
+
+            verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
+            verify(meetingValidator, never()).findMeetingsByClubId(any());
+        }
     }
 }
