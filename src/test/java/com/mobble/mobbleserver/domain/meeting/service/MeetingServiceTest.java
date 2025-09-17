@@ -238,28 +238,28 @@ class MeetingServiceTest {
             verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
             verify(meetingValidator, never()).findMeetingsByClubId(any());
         }
+    }
 
-        @Nested
-        @DisplayName("Meeting 삭제")
-        class DeleteMeeting {
+    @Nested
+    @DisplayName("Meeting 삭제")
+    class DeleteMeeting {
 
-            @Test
-            @DisplayName("Meeting 삭제 성공")
-            void success_when_delete_meeting() {
-                // given
-                ClubMember leader = mock(ClubMember.class);
-                given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
-                given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
+        @Test
+        @DisplayName("Meeting 삭제 성공")
+        void success_when_delete_meeting() {
+            // given
+            ClubMember leader = mock(ClubMember.class);
+            given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
 
-                Meeting meeting = mock(Meeting.class);
-                given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+            Meeting meeting = mock(Meeting.class);
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
 
-                // when
-                meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID);
+            // when
+            meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID);
 
-                // then
-                verify(meetingRepository).delete(meeting);
-            }
+            // then
+            verify(meetingRepository).delete(meeting);
         }
     }
 }
