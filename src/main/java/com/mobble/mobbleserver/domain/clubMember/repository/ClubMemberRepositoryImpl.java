@@ -22,7 +22,7 @@ public class ClubMemberRepositoryImpl implements ClubMemberQueryRepository {
                 .selectFrom(clubMember)
                 .join(clubMember.club, club)
                 .fetchJoin()
-                .join(club, clubChatRoom.club)
+                .join(club.clubChatRoom, clubChatRoom)
                 .fetchJoin()
                 .join(clubChatRoom.chatRoom, chatRoom)
                 .fetchJoin()

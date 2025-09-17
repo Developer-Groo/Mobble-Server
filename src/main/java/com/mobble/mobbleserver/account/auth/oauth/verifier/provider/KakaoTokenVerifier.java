@@ -25,7 +25,6 @@ public class KakaoTokenVerifier extends AbstractSocialTokenVerifier {
         KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(attributes);
 
         return new SocialUserInfo(
-                userInfo.getName(),
                 userInfo.getEmail(),
                 userInfo.getProvider(),
                 userInfo.getProviderId()

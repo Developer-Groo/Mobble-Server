@@ -6,6 +6,9 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.*;
 
 public record SignUpRequestDto(
+        @NotBlank(message = "MEMBER:NAME_NOT_BLANK")
+        String name,
+
         @Min(value = 1, message = "MEMBER:AGE_TOO_LOW")
         @Max(value = 100, message = "MEMBER:AGE_TOO_HIGH")
         int age,
@@ -31,7 +34,7 @@ public record SignUpRequestDto(
 
     public Member toEntity(SocialUserInfo userInfo) {
         return Member.createMember(
-                userInfo.name(),
+                this.name,
                 this.age,
                 this.gender,
                 userInfo.email(),

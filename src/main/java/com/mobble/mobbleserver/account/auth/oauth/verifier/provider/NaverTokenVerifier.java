@@ -25,7 +25,6 @@ public class NaverTokenVerifier extends AbstractSocialTokenVerifier {
         NaverUserInfoResponse userInfo = new NaverUserInfoResponse(attributes);
 
         return new SocialUserInfo(
-                userInfo.getName(),
                 userInfo.getEmail(),
                 userInfo.getProvider(),
                 userInfo.getProviderId()
