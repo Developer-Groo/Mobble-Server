@@ -306,4 +306,22 @@ class MeetingServiceTest {
 
         verify(meetingRepository, never()).delete(any());
     }
+
+    @Test
+    @DisplayName("Meeting 삭제 실패 - 존재하지 않는 meetingId")
+    void fail_when_meeting_id_not_found_on_delete() {
+        // given
+        ClubMember leader = mock(ClubMember.class);
+        given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+        given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
+
+        given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willThrow(new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+
+        // when & then
+        assertThatThrownBy(() -> meetingService.deleteMeeting(MEMBER_ID, CLUB_ID, MEETING_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+
+        verify(meetingRepository, never()).delete(any());
+    }
 }
