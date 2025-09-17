@@ -188,4 +188,40 @@ class MeetingServiceTest {
             verify(meetingRepository, never()).save(any());
         }
     }
+
+    @Nested
+    @DisplayName("Meeting 목록 조회")
+    class FindMeeting {
+
+        @Test
+        @DisplayName("Meeting 목록 조회 성공")
+        void success_when_find_meetings() {
+            // given
+            ClubMember clubMember = mock(ClubMember.class);
+            Club club = mock(Club.class);
+            given(club.getId()).willReturn(CLUB_ID);
+            given(clubMember.getClub()).willReturn(club);
+
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(clubMember);
+
+            Meeting meeting1 = mock(Meeting.class);
+            given(meeting1.getMeetingMembers()).willReturn(List.of());
+            given(meeting1.getDatetime()).willReturn(LocalDateTime.of(2025, 10, 10, 20, 0));
+            given(meeting1.getClubMember()).willReturn(clubMember);
+
+            Meeting meeting2 = mock(Meeting.class);
+            given(meeting2.getMeetingMembers()).willReturn(List.of());
+            given(meeting2.getDatetime()).willReturn(LocalDateTime.of(2025, 10, 20, 20, 0));
+            given(meeting2.getClubMember()).willReturn(clubMember);
+
+            given(meetingValidator.findMeetingsByClubId(CLUB_ID)).willReturn(List.of(meeting1, meeting2));
+
+            // when
+            List<MeetingResponseDto> result = meetingService.findMeetingsByClubId(MEMBER_ID, CLUB_ID);
+
+            // then
+            assertThat(result).hasSize(2);
+            verify(meetingValidator).findMeetingsByClubId(CLUB_ID);
+        }
+    }
 }
