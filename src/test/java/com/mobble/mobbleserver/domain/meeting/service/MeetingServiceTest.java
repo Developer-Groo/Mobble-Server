@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingRequestDto;
+import com.mobble.mobbleserver.domain.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.domain.meeting.dto.response.MeetingResponseDto;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.entity.MeetingType;
@@ -12,7 +13,6 @@ import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
 import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.security.SecurityErrorCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,9 +21,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -48,6 +47,7 @@ class MeetingServiceTest {
 
     private static final Long CLUB_ID = 1L;
     private static final Long MEMBER_ID = 2L;
+    private static final Long MEETING_ID = 3L;
 
     @Nested
     @DisplayName("Meeting 생성")
@@ -112,6 +112,53 @@ class MeetingServiceTest {
 
             verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
             verify(meetingRepository, never()).save(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Meeting 수정")
+    class UpdateMeeting {
+
+        @Test
+        @DisplayName("Meeting 수정 성공 - LEADER")
+        void success_when_update_meeting() {
+            // given
+            ClubMember leader = mock(ClubMember.class);
+            Club club = mock(Club.class);
+            given(leader.getClubMemberRole()).willReturn(ClubMemberRole.LEADER);
+            given(leader.getClub()).willReturn(club);
+            given(club.getId()).willReturn(CLUB_ID);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(leader);
+
+            Meeting meeting = mock(Meeting.class);
+            given(meeting.getMeetingMembers()).willReturn(List.of());
+            given(meeting.getDatetime()).willReturn(LocalDateTime.of(2025, 10, 10, 20, 0));
+            given(meeting.getClubMember()).willReturn(leader);
+            given(meetingRepository.save(any())).willReturn(meeting);
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+
+            MeetingUpdateRequestDto dto = new MeetingUpdateRequestDto(
+                    "updated title",
+                    LocalDateTime.of(2025, 10, 10, 20, 0),
+                    "체육관 2",
+                    "60000",
+                    20,
+                    MeetingType.IMPROMPTU_MEETING
+            );
+
+            // when
+            MeetingResponseDto updateMeeting = meetingService.updateMeeting(MEMBER_ID, CLUB_ID, MEETING_ID, dto);
+
+            assertThat(updateMeeting).isNotNull();
+            verify(meeting).updateMeeting(
+                    dto.title(),
+                    dto.dateTime(),
+                    dto.location(),
+                    dto.cost(),
+                    dto.memberLimit(),
+                    dto.type()
+            );
+            verify(meetingRepository).save(meeting);
         }
     }
 }
