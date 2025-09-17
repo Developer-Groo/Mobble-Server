@@ -160,5 +160,32 @@ class MeetingServiceTest {
             );
             verify(meetingRepository).save(meeting);
         }
+
+        @Test
+        @DisplayName("Meeting 수정 실패 - MEMBER")
+        void fail_when_update_meeting_by_member() {
+            // given
+            ClubMember member = mock(ClubMember.class);
+            given(member.getClubMemberRole()).willReturn(ClubMemberRole.MEMBER);
+            given(clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID)).willReturn(member);
+
+            MeetingUpdateRequestDto dto = new MeetingUpdateRequestDto(
+                    "updated title",
+                    LocalDateTime.of(2025, 10, 10, 20, 0),
+                    "체육관 2",
+                    "60000",
+                    20,
+                    MeetingType.IMPROMPTU_MEETING
+            );
+
+            // when & then
+            assertThatThrownBy(() -> meetingService.updateMeeting(MEMBER_ID, CLUB_ID, MEETING_ID, dto))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(SecurityErrorCode.ACCESS_DENIED.message());
+
+            verify(clubMemberValidator).findClubMemberByClubIdAndMemberIdOrThrow(CLUB_ID, MEMBER_ID);
+            verify(meetingValidator, never()).findMeetingByMeetingIdOrThrow(any());
+            verify(meetingRepository, never()).save(any());
+        }
     }
 }
