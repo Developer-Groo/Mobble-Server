@@ -8,6 +8,9 @@ import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepo
 import com.mobble.mobbleserver.domain.meetingMember.validator.MeetingMemberValidator;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -100,6 +104,25 @@ class MeetingMemberServiceTest {
             verify(meetingMemberRepository).delete(attending);
             assertThat(response.meetingId()).isEqualTo(MEETING_ID);
             assertThat(response.isAttending()).isFalse();
+        }
+
+        @Test
+        @DisplayName("정원 초과 시 예외 발생")
+        void throw_exception_when_capacity_is_full() {
+            // given
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(member);
+            given(meetingMemberValidator.findMeetingByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.empty());
+            given(meetingMemberRepository.countByMeetingId(MEETING_ID)).willReturn(5);
+
+            given(meeting.getId()).willReturn(MEETING_ID);
+            given(meeting.getMemberLimit()).willReturn(5);
+            given(member.getId()).willReturn(MEMBER_ID);
+
+            // when & then
+            assertThatThrownBy(() -> meetingMemberService.attendMeeting(MEETING_ID, MEMBER_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingMemberErrorCode.FULL_CAPACITY.message());
         }
     }
 }
