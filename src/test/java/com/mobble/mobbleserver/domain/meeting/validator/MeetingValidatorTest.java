@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +71,18 @@ class MeetingValidatorTest {
 
         // then
         assertThat(result).containsExactly(meeting1, meeting2);
+    }
+
+    @Test
+    @DisplayName("Club ID로 조회 시 Meeting 이 없는 경우 빈 리스트 반환")
+    void success_when_find_meetings_by_club_id_empty_list() {
+        // given
+        when(meetingRepository.findByClubMember_Club_Id(CLUB_ID)).thenReturn(Collections.emptyList());
+
+        // when
+        List<Meeting> result = meetingValidator.findMeetingsByClubId(CLUB_ID);
+
+        // then
+        assertThat(result).isEmpty();
     }
 }
