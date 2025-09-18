@@ -79,5 +79,27 @@ class MeetingMemberServiceTest {
             assertThat(response.meetingId()).isEqualTo(MEETING_ID);
             assertThat(response.isAttending()).isTrue();
         }
+
+        @Test
+        @DisplayName("이미 참석한 경우 참석 취소")
+        void success_cancel_attend_meeting() {
+            // given
+            MeetingMember attending = mock(MeetingMember.class);
+
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+            given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(member);
+            given(meetingMemberValidator.findMeetingByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.of(attending));
+
+            given(meeting.getId()).willReturn(MEETING_ID);
+            given(member.getId()).willReturn(MEMBER_ID);
+
+            // when
+            MeetingAttendanceResponseDto response = meetingMemberService.attendMeeting(MEETING_ID, MEMBER_ID);
+
+            // then
+            verify(meetingMemberRepository).delete(attending);
+            assertThat(response.meetingId()).isEqualTo(MEETING_ID);
+            assertThat(response.isAttending()).isFalse();
+        }
     }
 }
