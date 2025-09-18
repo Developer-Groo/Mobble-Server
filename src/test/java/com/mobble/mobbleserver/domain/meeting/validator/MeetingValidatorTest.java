@@ -47,7 +47,7 @@ class MeetingValidatorTest {
 
     @Test
     @DisplayName("Meeting ID로 조회 실패 시 예외 발생")
-    void fail_when_find_meeting_by_id_or_throw() {
+    void fail_when_find_meeting_or_throw() {
         // given
         when(meetingRepository.findById(MEETING_ID)).thenReturn(Optional.empty());
 
