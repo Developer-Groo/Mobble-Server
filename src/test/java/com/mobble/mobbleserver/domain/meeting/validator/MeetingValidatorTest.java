@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.meeting.validator;
 
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,5 +43,17 @@ class MeetingValidatorTest {
 
         // then
         assertThat(result).isEqualTo(mockMeeting);
+    }
+
+    @Test
+    @DisplayName("Meeting ID로 조회 실패 시 예외 발생")
+    void fail_when_find_meeting_by_id_or_throw() {
+        // given
+        when(meetingRepository.findById(MEETING_ID)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
     }
 }
