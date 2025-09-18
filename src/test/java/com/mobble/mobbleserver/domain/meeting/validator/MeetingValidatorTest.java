@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -55,5 +56,20 @@ class MeetingValidatorTest {
         assertThatThrownBy(() -> meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+    }
+
+    @Test
+    @DisplayName("Club ID로 Meeting 리스트 조회 성공")
+    void success_when_find_meetings_by_club_id() {
+        // given
+        Meeting meeting1 = mock(Meeting.class);
+        Meeting meeting2 = mock(Meeting.class);
+        when(meetingRepository.findByClubMember_Club_Id(CLUB_ID)).thenReturn(List.of(meeting1, meeting2));
+
+        // when
+        List<Meeting> result = meetingValidator.findMeetingsByClubId(CLUB_ID);
+
+        // then
+        assertThat(result).containsExactly(meeting1, meeting2);
     }
 }
