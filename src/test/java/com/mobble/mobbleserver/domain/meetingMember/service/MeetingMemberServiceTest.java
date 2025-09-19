@@ -169,5 +169,21 @@ class MeetingMemberServiceTest {
             assertThat(response.meetingId()).isEqualTo(MEETING_ID);
             assertThat(response.meetingMembers()).hasSize(2);
         }
+
+        @Test
+        @DisplayName("미팅 참석자가 없으면 빈 리스트 반환")
+        void success_return_empty_list_when_no_attendees() {
+            // given
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+            given(meeting.getId()).willReturn(MEETING_ID);
+            given(meetingMemberValidator.findByMeetingId(MEETING_ID)).willReturn(List.of());
+
+            // when
+            MeetingMemberListResponseDto response = meetingMemberService.getMeetingMembers(MEETING_ID);
+
+            // then
+            assertThat(response.meetingId()).isEqualTo(MEETING_ID);
+            assertThat(response.meetingMembers()).isEmpty();
+        }
     }
 }
