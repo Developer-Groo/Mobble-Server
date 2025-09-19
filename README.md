@@ -15,9 +15,8 @@
 ## 🏁 Team
 |**우현**|**태준**|**호진**|
 |-------|-------|-------|
-|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|--|<img width="110" height="110" src="https://github.com/user-attachments/assets/ac3a7f06-8c81-4f58-a1b1-aee9d5014d0a" />|
+|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/c10e91bf-cccd-4fd3-a8c3-9e2985cd63bc"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/ac3a7f06-8c81-4f58-a1b1-aee9d5014d0a"/>|
 |[GitHub](https://github.com/Developer-Groo)|[GitHub](https://github.com/taejunUM)|[GitHub](https://github.com/Hojin02)|
-
 
 ## 📑 Wiki
 
