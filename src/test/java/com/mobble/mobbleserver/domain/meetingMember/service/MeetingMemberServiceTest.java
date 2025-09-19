@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.meetingMember.service;
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingAttendanceResponseDto;
+import com.mobble.mobbleserver.domain.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.domain.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.domain.meetingMember.validator.MeetingMemberValidator;
@@ -20,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +62,7 @@ class MeetingMemberServiceTest {
 
     @Nested
     @DisplayName("attendMeeting")
-    class AttendMeeting{
+    class AttendMeeting {
 
         @Test
         @DisplayName("참석 성공")
@@ -135,6 +137,37 @@ class MeetingMemberServiceTest {
             assertThatThrownBy(() -> meetingMemberService.attendMeeting(MEETING_ID, MEMBER_ID))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
+        }
+    }
+
+    @Nested
+    @DisplayName("getMeetingMembers")
+    class GetMeetingMembers {
+
+        @Test
+        @DisplayName("미팅 참석자 목록 조회 성공")
+        void success_get_meeting_members() {
+            // given
+            Member member1 = mock(Member.class);
+            Member member2 = mock(Member.class);
+            given(member1.getId()).willReturn(100L);
+            given(member2.getId()).willReturn(101L);
+
+            MeetingMember meetingMember1 = MeetingMember.createMeetingMember(meeting, member1);
+            MeetingMember meetingMember2 = MeetingMember.createMeetingMember(meeting, member2);
+
+            List<MeetingMember> meetingMembers = List.of(meetingMember1, meetingMember2);
+
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willReturn(meeting);
+            given(meeting.getId()).willReturn(MEETING_ID);
+            given(meetingMemberValidator.findByMeetingId(MEETING_ID)).willReturn(meetingMembers);
+
+            // when
+            MeetingMemberListResponseDto response = meetingMemberService.getMeetingMembers(MEETING_ID);
+
+            // then
+            assertThat(response.meetingId()).isEqualTo(MEETING_ID);
+            assertThat(response.meetingMembers()).hasSize(2);
         }
     }
 }
