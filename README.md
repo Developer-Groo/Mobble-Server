@@ -25,9 +25,6 @@
 ### 👉 [Git Workflow Guid](https://github.com/Developer-Groo/Mobble-Server/wiki/%F0%9F%9A%80-Git-Workflow-Guide)
 ### 🚨 [Trouble Shooting](https://github.com/Developer-Groo/Mobble-Server/wiki)
 
-## 🛠 Technology
-
-
 ## 🔗 ERD
 
 ### **‼️ Liam ERD 로 변경 예정**
@@ -249,11 +246,31 @@ erDiagram
   DIRECT_CHAT_ROOM }o--|| MEMBER : member2_id
 ~~~
 
-## 🧬 Service Architecture
+## ✅ 작업 목록
+### 😃 우현
+#### ✅ 댓글 도메인 기능 개발 및 테스트 코드 작성
+#### ✅ 채팅 도메인 기능 개발 및 테스트 코드 작성
+#### ☑️ 알림 도메인 기능 개발 및 테스트 코드 작성
+#### ✅ API 문서화
+#### ☑️ API 문서화 디테일 작업
+#### ☑️ Liam ERD 로 시각화 변경 작업
+#### ☑️ 댓글 도메인 성능 테스트 및 최적화
+#### ☑️ 알림 도메인 부하 테스트 및 최적화
+#### ☑️ 기존 레이어 아키텍처에서 헥사고날 아키텍처로의 리팩터링 주도
+#### ☑️ CI/CD 파이프 라인 구축 및 인프라 설계, 배포
+#### ☑️ DDL 제약조건 명명 규칙 정리
+#### 📌 제약조건 명명 규칙 정의
+    • MySQL 기본 제약조건 이름이 난해하게 생성되는 문제를 개선하여 식별 가능한 규칙 기반 네이밍으로 변경
+#### ☑️ 채팅 도메인 부하 테스트 및 최적화: 채팅의 경우 대량 트래픽 발생이 예상 됨, Kafka 적용 예정/MySQL -> MongoDB 변경 구상
+#### 📌 채팅 도메인 부하 테스트 및 최적화
+    •	채팅 서비스는 실시간성이 핵심, 동시 접속자 수 증가에 따라 초당 수천~수만 건의 메시지 발생 예상
+    •	단일 DB 기반 처리 시 쓰기 작업에 트래픽이 몰려 병목 현상 발생 가능성 높음
+    •	따라서 부하 테스트를 통해 검증할 예정
+    •	TPS: 초당 메시지 전송/수신 처리량
+    •	Latency: 메시지 송수신 지연 시간
 
-
-## 🚨 Trouble Shooting
-
-
-## 🍰 Performance Comparison
-
+#### 📌 Kafka 적용 근거
+    •	고가용성 & 확장성: 파티션 기반 수평 확장을 통해 초당 수십만 건 이상 메시지 처리 가능
+    •	내결함성: 브로커 클러스터와 Replication으로 단일 장애점 제거
+    •	비동기 처리 모델: Producer와 Consumer 간 decoupling으로 DB/애플리케이션 부하 완화
+    •	내장 메시지 보존: 메시지를 일정 기간 유지하여 장애 시 재처리 및 메시지 유실 방지
