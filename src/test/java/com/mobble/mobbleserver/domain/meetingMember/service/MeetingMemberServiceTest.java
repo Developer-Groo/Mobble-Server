@@ -9,8 +9,8 @@ import com.mobble.mobbleserver.domain.meetingMember.validator.MeetingMemberValid
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -123,6 +123,18 @@ class MeetingMemberServiceTest {
             assertThatThrownBy(() -> meetingMemberService.attendMeeting(MEETING_ID, MEMBER_ID))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingMemberErrorCode.FULL_CAPACITY.message());
+        }
+
+        @Test
+        @DisplayName("Meeting 이 존재하지 않을 경우 예외 발생")
+        void fail_when_not_found_meeting() {
+            // given
+            given(meetingValidator.findMeetingByMeetingIdOrThrow(MEETING_ID)).willThrow(new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+
+            // when & then
+            assertThatThrownBy(() -> meetingMemberService.attendMeeting(MEETING_ID, MEMBER_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingErrorCode.NOT_FOUND_MEETING.message());
         }
     }
 }
