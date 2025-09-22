@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,5 +70,48 @@ class MeetingMemberRepositoryTest {
         assertThat(result).isPresent();
         assertThat(result.get().getMeeting().getId()).isEqualTo(meeting.getId());
         assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
+    }
+
+    @Test
+    @DisplayName("MeetingId로 MeetingMember 리스트 조회 성공")
+    void success_find_meeting_member_by_meeting_id() {
+        ClubCategory clubCategory = ClubCategoryTestFixture.createDefaultCategory();
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Member hostMember = MemberTestFixture.createDefaultMember();
+        ClubMember hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
+                hostMember,
+                club,
+                ClubMemberRole.LEADER,
+                JoinStatus.APPROVED
+        );
+        Meeting meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
+
+        em.persist(clubCategory);
+        em.persist(club);
+        em.persist(hostMember);
+        em.persist(hostClubMember);
+        em.persist(meeting);
+
+        Member member1 = MemberTestFixture.createDefaultMember();
+        Member member2 = MemberTestFixture.createDefaultMember();
+        Member member3 = MemberTestFixture.createDefaultMember();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+
+        MeetingMember meetingMember1 = MeetingMember.createMeetingMember(meeting, member1);
+        MeetingMember meetingMember2 = MeetingMember.createMeetingMember(meeting, member2);
+        MeetingMember meetingMember3 = MeetingMember.createMeetingMember(meeting, member3);
+        em.persist(meetingMember1);
+        em.persist(meetingMember2);
+        em.persist(meetingMember3);
+        em.flush();
+        em.clear();
+
+        // when
+        List<MeetingMember> result = meetingMemberRepository.findByMeetingId(meeting.getId());
+
+        // then
+        assertThat(result).hasSize(3);
     }
 }
