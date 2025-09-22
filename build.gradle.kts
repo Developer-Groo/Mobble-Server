@@ -31,7 +31,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.8.5")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")
