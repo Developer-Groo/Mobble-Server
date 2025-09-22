@@ -15,6 +15,7 @@ import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
 import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,62 +37,55 @@ class MeetingMemberRepositoryTest {
     @Autowired
     private EntityManager em;
 
+    private ClubCategory clubCategory;
+    private Club club;
+    private Member hostMember;
+    private ClubMember hostClubMember;
+    private Meeting meeting;
+
+    @BeforeEach
+    void setUp() {
+        clubCategory = ClubCategoryTestFixture.createDefaultCategory();
+        em.persist(clubCategory);
+
+        club = ClubTestFixture.createDefaultClub(clubCategory);
+        em.persist(club);
+
+        hostMember = MemberTestFixture.createDefaultMember();
+        em.persist(hostMember);
+
+        hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
+                hostMember, club, ClubMemberRole.LEADER, JoinStatus.APPROVED
+        );
+        em.persist(hostClubMember);
+
+        meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
+        em.persist(meeting);
+    }
+
     @Test
     @DisplayName("Meeting ID와 Member ID로 MeetingMember 조회 성공")
     void success_find_meeting_member_by_meeting_id_member_id() {
         // given
-        Member member = MemberTestFixture.createDefaultMember();
-        ClubCategory clubCategory = ClubCategoryTestFixture.createDefaultCategory();
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        ClubMember clubMember = ClubMemberTestFixture.createDefaultClubMember(
-                member,
-                club,
-                ClubMemberRole.LEADER,
-                JoinStatus.APPROVED
-        );
-        em.persist(member);
-        em.persist(clubCategory);
-        em.persist(club);
-        em.persist(clubMember);
-
-        Meeting meeting = MeetingTestFixture.createDefaultMeeting(clubMember);
-        em.persist(meeting);
-
-        MeetingMember meetingMember = MeetingMember.createMeetingMember(meeting, member);
+        MeetingMember meetingMember = MeetingMember.createMeetingMember(meeting, hostMember);
         em.persist(meetingMember);
         em.flush();
         em.clear();
 
         // when
         Optional<MeetingMember> result = meetingMemberRepository
-                .findMeetingMemberByMeetingIdAndMemberId(meeting.getId(), member.getId());
+                .findMeetingMemberByMeetingIdAndMemberId(meeting.getId(), hostMember.getId());
 
         // then
         assertThat(result).isPresent();
         assertThat(result.get().getMeeting().getId()).isEqualTo(meeting.getId());
-        assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
+        assertThat(result.get().getMember().getId()).isEqualTo(hostMember.getId());
     }
 
     @Test
     @DisplayName("MeetingId로 MeetingMember 리스트 조회 성공")
     void success_find_meeting_member_by_meeting_id() {
-        ClubCategory clubCategory = ClubCategoryTestFixture.createDefaultCategory();
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Member hostMember = MemberTestFixture.createDefaultMember();
-        ClubMember hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
-                hostMember,
-                club,
-                ClubMemberRole.LEADER,
-                JoinStatus.APPROVED
-        );
-        Meeting meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
-
-        em.persist(clubCategory);
-        em.persist(club);
-        em.persist(hostMember);
-        em.persist(hostClubMember);
-        em.persist(meeting);
-
+        // given
         Member member1 = MemberTestFixture.createDefaultMember();
         Member member2 = MemberTestFixture.createDefaultMember();
         Member member3 = MemberTestFixture.createDefaultMember();
@@ -119,23 +113,6 @@ class MeetingMemberRepositoryTest {
     @DisplayName("meetingId로 MeetingMember 수 조회 성공")
     void success_count_meeting_member_by_meeting_id() {
         // given
-        ClubCategory clubCategory = ClubCategoryTestFixture.createDefaultCategory();
-        Club club = ClubTestFixture.createDefaultClub(clubCategory);
-        Member hostMember = MemberTestFixture.createDefaultMember();
-        ClubMember hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
-                hostMember,
-                club,
-                ClubMemberRole.LEADER,
-                JoinStatus.APPROVED
-        );
-        Meeting meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
-
-        em.persist(clubCategory);
-        em.persist(club);
-        em.persist(hostMember);
-        em.persist(hostClubMember);
-        em.persist(meeting);
-
         Member member1 = MemberTestFixture.createDefaultMember();
         Member member2 = MemberTestFixture.createDefaultMember();
         Member member3 = MemberTestFixture.createDefaultMember();
