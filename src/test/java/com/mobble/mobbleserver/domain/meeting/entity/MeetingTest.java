@@ -32,7 +32,7 @@ class MeetingTest {
             ClubMemberRole.LEADER,
             JoinStatus.APPROVED
     );
-    private final Meeting mockMeeting = MeetingTestFixture.createDefaultMeeting();
+    private final Meeting mockMeeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
 
     private static final String TITLE = "정기모임";
     private static final String LOCATION = "체육관";
