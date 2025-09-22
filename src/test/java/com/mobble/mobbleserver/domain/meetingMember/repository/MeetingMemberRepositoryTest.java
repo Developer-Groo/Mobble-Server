@@ -114,4 +114,48 @@ class MeetingMemberRepositoryTest {
         // then
         assertThat(result).hasSize(3);
     }
+
+    @Test
+    @DisplayName("meetingId로 MeetingMember 수 조회 성공")
+    void success_count_meeting_member_by_meeting_id() {
+        // given
+        ClubCategory clubCategory = ClubCategoryTestFixture.createDefaultCategory();
+        Club club = ClubTestFixture.createDefaultClub(clubCategory);
+        Member hostMember = MemberTestFixture.createDefaultMember();
+        ClubMember hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
+                hostMember,
+                club,
+                ClubMemberRole.LEADER,
+                JoinStatus.APPROVED
+        );
+        Meeting meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
+
+        em.persist(clubCategory);
+        em.persist(club);
+        em.persist(hostMember);
+        em.persist(hostClubMember);
+        em.persist(meeting);
+
+        Member member1 = MemberTestFixture.createDefaultMember();
+        Member member2 = MemberTestFixture.createDefaultMember();
+        Member member3 = MemberTestFixture.createDefaultMember();
+        em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+
+        MeetingMember meetingMember1 = MeetingMember.createMeetingMember(meeting, member1);
+        MeetingMember meetingMember2 = MeetingMember.createMeetingMember(meeting, member2);
+        MeetingMember meetingMember3 = MeetingMember.createMeetingMember(meeting, member3);
+        em.persist(meetingMember1);
+        em.persist(meetingMember2);
+        em.persist(meetingMember3);
+        em.flush();
+        em.clear();
+
+        // when
+        int count = meetingMemberRepository.countByMeetingId(meeting.getId());
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
 }
