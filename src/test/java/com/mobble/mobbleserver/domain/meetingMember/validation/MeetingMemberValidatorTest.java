@@ -51,4 +51,18 @@ class MeetingMemberValidatorTest {
         assertThat(result.get()).isEqualTo(meetingMember);
         verify(meetingMemberRepository).findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID);
     }
+
+    @Test
+    @DisplayName("meetingId, memberId 로 MeetingMember 조회 실패 시 Optional.empty 반환")
+    void fail_when_meeting_member_not_found() {
+        // given
+        given(meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.empty());
+
+        // when
+        Optional<MeetingMember> result = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID);
+
+        // then
+        assertThat(result).isNotPresent();
+        verify(meetingMemberRepository).findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID);
+    }
 }
