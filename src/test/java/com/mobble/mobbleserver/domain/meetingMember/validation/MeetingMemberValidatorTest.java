@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,5 +65,20 @@ class MeetingMemberValidatorTest {
         // then
         assertThat(result).isNotPresent();
         verify(meetingMemberRepository).findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID);
+    }
+
+    @Test
+    @DisplayName("meetingId 로 MeetingMember 리스트 조회 성공")
+    void success_when_find_meeting_member_list() {
+        // given
+        List<MeetingMember> meetingMembers = List.of(meetingMember);
+        given(meetingMemberRepository.findByMeetingId(MEETING_ID)).willReturn(meetingMembers);
+
+        // when
+        List<MeetingMember> result = meetingMemberValidator.findByMeetingId(MEETING_ID);
+
+        // then
+        assertThat(result).hasSize(1).containsExactly(meetingMember);
+        verify(meetingMemberRepository).findByMeetingId(MEETING_ID);
     }
 }
