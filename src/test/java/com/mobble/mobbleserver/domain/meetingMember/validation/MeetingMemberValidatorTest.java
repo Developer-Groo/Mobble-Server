@@ -39,7 +39,7 @@ class MeetingMemberValidatorTest {
 
     @Test
     @DisplayName("meetingId, memberId 로 MeetingMember 조회 성공")
-    void success_when_find_meeting_member_by_meeting_id_member_id_with_optional() {
+    void success_when_find_meeting_member_by_meeting_id_member_id() {
         // given
         given(meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.of(meetingMember));
 
