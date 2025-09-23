@@ -40,4 +40,16 @@ class MeetingMemberTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MeetingMemberErrorCode.MEETING_REQUIRED.message());
     }
+    
+    @Test
+    @DisplayName("Member 가 null 인 경우 예외 발생")
+    void fail_when_member_is_null() {
+        // given
+        Meeting meeting = MeetingTestFixture.createDefaultMeeting();
+
+        // when & then
+        assertThatThrownBy(() -> MeetingMember.createMeetingMember(meeting, null))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MeetingMemberErrorCode.MEMBER_REQUIRED.message());
+    }
 }
