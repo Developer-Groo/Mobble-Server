@@ -39,7 +39,7 @@ class MeetingMemberValidatorTest {
     }
 
     @Test
-    @DisplayName("meetingId, memberId 로 MeetingMember 조회 성공")
+    @DisplayName("meetingId, memberId로 MeetingMember 조회 성공")
     void success_when_find_meeting_member_by_meeting_id_member_id() {
         // given
         given(meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.of(meetingMember));
@@ -54,7 +54,7 @@ class MeetingMemberValidatorTest {
     }
 
     @Test
-    @DisplayName("meetingId, memberId 로 MeetingMember 조회 실패 시 Optional.empty 반환")
+    @DisplayName("meetingId, memberId로 MeetingMember 조회 실패 시 Optional.empty 반환")
     void fail_when_meeting_member_not_found() {
         // given
         given(meetingMemberRepository.findMeetingMemberByMeetingIdAndMemberId(MEETING_ID, MEMBER_ID)).willReturn(Optional.empty());
@@ -68,7 +68,7 @@ class MeetingMemberValidatorTest {
     }
 
     @Test
-    @DisplayName("meetingId 로 MeetingMember 리스트 조회 성공")
+    @DisplayName("meetingId로 MeetingMember 리스트 조회 성공")
     void success_when_find_meeting_member_list() {
         // given
         List<MeetingMember> meetingMembers = List.of(meetingMember);
@@ -79,6 +79,20 @@ class MeetingMemberValidatorTest {
 
         // then
         assertThat(result).hasSize(1).containsExactly(meetingMember);
+        verify(meetingMemberRepository).findByMeetingId(MEETING_ID);
+    }
+
+    @Test
+    @DisplayName("meetingId로 조회된 MeetingMember 가 없으면 빈 리스트 반환")
+    void success_return_empty_list_when_no_attendees() {
+        // given
+        given(meetingMemberRepository.findByMeetingId(MEETING_ID)).willReturn(List.of());
+
+        // when
+        List<MeetingMember> result = meetingMemberValidator.findByMeetingId(MEETING_ID);
+
+        // then
+        assertThat(result).isEmpty();
         verify(meetingMemberRepository).findByMeetingId(MEETING_ID);
     }
 }
