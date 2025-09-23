@@ -26,7 +26,7 @@ public class MeetingMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private MeetingMember(Meeting meeting, Member member) {
         this.meeting = meeting;
         this.member = member;
