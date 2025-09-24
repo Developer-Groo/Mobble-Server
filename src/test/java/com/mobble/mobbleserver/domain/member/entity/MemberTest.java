@@ -114,4 +114,26 @@ class MemberTest {
                     .hasMessage(MemberErrorCode.PRIVACY_AGREED_REQUIRED.message());
         }
     }
+
+    @Nested
+    @DisplayName("멤버 수정")
+    class UpdateMember {
+
+        @Test
+        @DisplayName("ground, profileImage 수정 성공")
+        void success_when_update_ground_and_profile_image() {
+            // given
+            Member member = Member.createMember(
+                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            );
+
+            // when
+            member.updateMember("new Ground", "new profileImage");
+
+            // then
+            assertThat(member.getGround()).isEqualTo("new Ground");
+            assertThat(member.getProfileImage()).isEqualTo("new profileImage");
+        }
+    }
 }
