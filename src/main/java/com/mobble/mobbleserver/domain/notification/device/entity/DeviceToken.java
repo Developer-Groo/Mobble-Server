@@ -49,10 +49,6 @@ public class DeviceToken extends BaseEntity {
                 .build();
     }
 
-    public void enable() {
-        this.enabled = true;
-    }
-
     public void disable() {
         this.enabled = false;
     }
