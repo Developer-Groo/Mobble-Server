@@ -52,5 +52,17 @@ class MemberTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MemberErrorCode.NAME_REQUIRED.message());
         }
+
+        @Test
+        @DisplayName("gender 가 null 이면 예외 발생")
+        void fail_when_gender_null() {
+            // when & then
+            assertThatThrownBy(() -> Member.createMember(
+                    NAME, AGE, null, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            ))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.GENDER_REQUIRED.message());
+        }
     }
 }
