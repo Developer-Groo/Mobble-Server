@@ -135,5 +135,20 @@ class MemberTest {
             assertThat(member.getGround()).isEqualTo("new Ground");
             assertThat(member.getProfileImage()).isEqualTo("new profileImage");
         }
+
+        @Test
+        @DisplayName("ground 가 null 이면 예외 발생")
+        void fail_when_ground_null() {
+            // given
+            Member member = Member.createMember(
+                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            );
+
+            // when & then
+            assertThatThrownBy(() -> member.updateMember(null, "new profileImage"))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.GROUND_REQUIRED.message());
+        }
     }
 }
