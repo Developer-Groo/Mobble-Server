@@ -1,11 +1,14 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MemberTest {
 
@@ -36,6 +39,18 @@ class MemberTest {
             assertThat(member).isNotNull();
             assertThat(member.getName()).isEqualTo(NAME);
             assertThat(member.isDeleted()).isFalse();
+        }
+
+        @Test
+        @DisplayName("name 이 null 이면 예외 발생")
+        void fail_when_name_null() {
+            // when & then
+            assertThatThrownBy(() -> Member.createMember(
+                    null, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            ))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.NAME_REQUIRED.message());
         }
     }
 }
