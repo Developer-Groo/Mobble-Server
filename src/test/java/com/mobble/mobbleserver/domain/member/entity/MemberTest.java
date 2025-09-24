@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -149,6 +151,29 @@ class MemberTest {
             assertThatThrownBy(() -> member.updateMember(null, "new profileImage"))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MemberErrorCode.GROUND_REQUIRED.message());
+        }
+    }
+
+    @Nested
+    @DisplayName("softDelete")
+    class SoftDelete {
+
+        @Test
+        @DisplayName("Soft Delete 성공")
+        void success_soft_delete() {
+            Member member = Member.createMember(
+                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            );
+
+            // when
+            member.softDelete();
+
+            // then
+            assertThat(member.isDeleted()).isTrue();
+            assertThat(member.getDeletedAt())
+                    .isNotNull()
+                    .isBeforeOrEqualTo(LocalDateTime.now());
         }
     }
 }
