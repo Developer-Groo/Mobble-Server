@@ -88,5 +88,17 @@ class MemberTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MemberErrorCode.GROUND_REQUIRED.message());
         }
+
+        @Test
+        @DisplayName("termsAgreed 가 false 면 예외 발생")
+        void fail_when_terms_not_agreed() {
+            // when & then
+            assertThatThrownBy(() -> Member.createMember(
+                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    false, true, SOCIAL_PROVIDER, SOCIAL_ID
+            ))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.TERMS_AGREED_REQUIRED.message());
+        }
     }
 }
