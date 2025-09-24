@@ -27,7 +27,10 @@ class MemberTest {
         @DisplayName("Member 생성 성공")
         void success_create_member() {
             // given & when
-            Member member = Member.createMember(NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE, true, true, SOCIAL_PROVIDER, SOCIAL_ID);
+            Member member = Member.createMember(
+                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
+            );
 
             // then
             assertThat(member).isNotNull();
