@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.domain.comment.validator;
 
 import com.mobble.mobbleserver.domain.comment.entity.Comment;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
