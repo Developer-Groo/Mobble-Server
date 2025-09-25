@@ -25,7 +25,7 @@ jwt:
 fcm:
   enabled: false
   project-id: ${FCM_PROJECT_ID}
-  service-account: ${FIREBASE_CREDENTIALS_PATH}
+  service-account: classpath:firebase-service-account.json
   dry-run: false
 
 springdoc:
