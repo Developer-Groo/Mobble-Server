@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.article.dto.response;
 
-import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.repository.dto.ArticleLikeInfoDto;
 
 import java.time.LocalDateTime;
 
