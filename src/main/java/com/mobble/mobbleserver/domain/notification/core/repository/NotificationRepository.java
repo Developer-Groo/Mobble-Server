@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.notification.core.repository;
 
 import com.mobble.mobbleserver.domain.notification.core.entity.Notification;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
          AND (:cursorId IS NULL OR n.id < :cursorId)
        ORDER BY n.id DESC
     """)
-    List<Notification> findSlice(@Param("memberId") Long memberId, @Param("cursorId") Long cursorId);
+    List<Notification> findSlice(@Param("memberId") Long memberId, @Param("cursorId") Long cursorId, Pageable pageable);
 
     @Modifying
     @Query("""
