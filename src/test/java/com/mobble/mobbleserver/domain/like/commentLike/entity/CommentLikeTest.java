@@ -7,7 +7,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.support.fixture.comment.CommentTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
