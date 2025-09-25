@@ -36,7 +36,7 @@ public class NotificationSettingItem extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public static NotificationSettingItem create(NotificationSetting setting, NotificationType type) {
+    protected static NotificationSettingItem create(NotificationSetting setting, NotificationType type) {
         return NotificationSettingItem.builder()
                 .setting(setting)
                 .type(type)
