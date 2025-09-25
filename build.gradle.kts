@@ -24,6 +24,8 @@ repositories {
     mavenCentral()
 }
 
+var mockitoAgent: Configuration = configurations.create("mockitoAgent")
+
 dependencies {
     // Spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -60,9 +62,9 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.mockito:mockito-core:5.18.0")
+    mockitoAgent("org.mockito:mockito-core:5.18.0") { isTransitive = false }
 }
-
-var mockitoAgent: Configuration = configurations.create("mockitoAgent")
 
 tasks.withType<Test> {
     useJUnitPlatform()
