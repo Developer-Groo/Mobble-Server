@@ -12,7 +12,6 @@ jobs:
     env:
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       FCM_PROJECT_ID: ${{ secrets.FCM_PROJECT_ID }}
-      FIREBASE_CREDENTIALS_PATH: ${{ secrets.FIREBASE_CREDENTIALS_PATH }}
 
     steps:
       - name: Checkout repository
@@ -27,6 +26,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
+
+      - name: Create firebase-service-account.json
+        run: echo $FIREBASE_CREDENTIALS | base64 --decode > src/main/resources/firebase-service-account.json
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
 
       - name: Assemble project
         run: ./gradlew assemble --no-daemon
