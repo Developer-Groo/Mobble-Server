@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.meetingMember.entity;
 
 import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
 import com.mobble.mobbleserver.domain.member.entity.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,8 +28,9 @@ public class MeetingMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private MeetingMember(Meeting meeting, Member member) {
+        validateMeetingMember(meeting, member);
         this.meeting = meeting;
         this.member = member;
     }
@@ -37,5 +40,10 @@ public class MeetingMember {
                 .meeting(meeting)
                 .member(member)
                 .build();
+    }
+
+    private void validateMeetingMember(Meeting meeting, Member member) {
+        if (meeting == null) throw new DomainException(MeetingMemberErrorCode.MEETING_REQUIRED);
+        if (member == null) throw new DomainException(MeetingMemberErrorCode.MEMBER_REQUIRED);
     }
 }
