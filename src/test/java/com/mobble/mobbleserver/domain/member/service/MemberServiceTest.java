@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.service;
 
+import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.validator.MemberValidator;
@@ -56,4 +57,23 @@ class MemberServiceTest {
                 .isInstanceOf(DomainException.class)
                 .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
     }
+
+    @Test
+    @DisplayName("회원 정보 수정 성공")
+    void success_when_update_member() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(member);
+
+        MemberUpdateRequestDto dto = new MemberUpdateRequestDto("new Ground", "new profileImage");
+
+        // when
+        MemberResponseDto result = memberService.updateMember(MEMBER_ID, dto);
+
+        // then
+        verify(memberValidator).findMemberByMemberIdOrThrow(MEMBER_ID);
+        assertThat(result.ground()).isEqualTo("new Ground");
+        assertThat(result.profileImage()).isEqualTo("new profileImage");
+    }
+
 }
