@@ -2,9 +2,9 @@ package com.mobble.mobbleserver.domain.like.articleLike.service;
 
 import com.mobble.mobbleserver.domain.article.entity.Article;
 import com.mobble.mobbleserver.domain.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.domain.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.domain.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.domain.like.baseLike.service.LikeQueryService;
 import lombok.RequiredArgsConstructor;

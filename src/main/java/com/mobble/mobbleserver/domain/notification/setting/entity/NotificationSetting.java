@@ -3,7 +3,6 @@ package com.mobble.mobbleserver.domain.notification.setting.entity;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.notification.core.entity.NotificationType;
-import com.mobble.mobbleserver.domain.notification.settingItem.entity.NotificationSettingItem;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
