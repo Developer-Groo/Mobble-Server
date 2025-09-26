@@ -47,5 +47,20 @@ public class MemberRepositoryTest {
             assertThat(result).isPresent();
             assertThat(result.get().isDeleted()).isFalse();
         }
+
+        @Test
+        @DisplayName("삭제 회원 조회 실패")
+        void fail_when_member_is_deleted() {
+            // given
+            Member deletedMember = MemberTestFixture.createDefaultMember();
+            deletedMember.softDelete();
+            memberRepository.save(deletedMember);
+
+            // when
+            Optional<Member> result = memberRepository.findByIdAndIsDeletedFalse(deletedMember.getId());
+
+            // then
+            assertThat(result).isNotPresent();
+        }
     }
 }
