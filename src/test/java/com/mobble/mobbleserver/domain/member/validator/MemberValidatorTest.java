@@ -5,7 +5,6 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -47,7 +47,7 @@ class MemberValidatorTest {
             Member result = memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID);
 
             // then
-            Assertions.assertThat(result).isEqualTo(member);
+            assertThat(result).isEqualTo(member);
         }
 
         @Test
@@ -57,10 +57,29 @@ class MemberValidatorTest {
             given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.empty());
 
             // when & then
-            Assertions.assertThatThrownBy(() -> memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID))
+            assertThatThrownBy(() -> memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
         }
     }
 
+    @Nested
+    @DisplayName("findMemberOrThrowIfDeleted")
+    class FindMemberOrThrowIfDeleted {
+
+        @Test
+        @DisplayName("삭제되지 않은 회원 조회 성공")
+        void success_when_get_member_not_deleted() {
+            // given
+            Member member = mock(Member.class);
+            given(member.isDeleted()).willReturn(false);
+            given(memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID)).willReturn(Optional.of(member));
+
+            // when
+            Member result = memberValidator.findMemberOrThrowIfDeleted(SOCIAL_PROVIDER, SOCIAL_ID);
+
+            // then
+            assertThat(result).isEqualTo(member);
+        }
+    }
 }
