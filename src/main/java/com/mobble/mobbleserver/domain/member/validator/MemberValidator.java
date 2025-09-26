@@ -8,8 +8,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
