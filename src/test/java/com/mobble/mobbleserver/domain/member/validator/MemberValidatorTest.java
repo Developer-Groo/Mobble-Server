@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.domain.member.validator;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,4 +45,15 @@ class MemberValidatorTest {
         Assertions.assertThat(result).isEqualTo(member);
     }
 
+    @Test
+    @DisplayName("회원이 존재하지 않으면 예외 발생")
+    void fail_when_member_not_found() {
+        // given
+        given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.empty());
+
+        // when & then
+        Assertions.assertThatThrownBy(() -> memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
+    }
 }
