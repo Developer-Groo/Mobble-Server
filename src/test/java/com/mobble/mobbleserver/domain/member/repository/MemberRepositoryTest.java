@@ -39,6 +39,8 @@ public class MemberRepositoryTest {
             // given
             Member member = MemberTestFixture.createDefaultMember();
             memberRepository.save(member);
+            em.flush();
+            em.clear();
 
             // when
             Optional<Member> result = memberRepository.findByIdAndIsDeletedFalse(member.getId());
@@ -55,6 +57,8 @@ public class MemberRepositoryTest {
             Member deletedMember = MemberTestFixture.createDefaultMember();
             deletedMember.softDelete();
             memberRepository.save(deletedMember);
+            em.flush();
+            em.clear();
 
             // when
             Optional<Member> result = memberRepository.findByIdAndIsDeletedFalse(deletedMember.getId());
