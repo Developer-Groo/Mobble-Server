@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,29 +32,35 @@ class MemberValidatorTest {
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.NAVER;
     private static final String SOCIAL_ID = "123456";
 
-    @Test
-    @DisplayName("회원 조회 성공")
-    void success_when_get_member() {
-        // given
-        Member member = mock(Member.class);
-        given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.of(member));
+    @Nested
+    @DisplayName("findMemberByMemberIdOrThrow")
+    class FindMemberByMemberIdOrThrow {
 
-        // when
-        Member result = memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID);
+        @Test
+        @DisplayName("회원 조회 성공")
+        void success_when_get_member() {
+            // given
+            Member member = mock(Member.class);
+            given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.of(member));
 
-        // then
-        Assertions.assertThat(result).isEqualTo(member);
+            // when
+            Member result = memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID);
+
+            // then
+            Assertions.assertThat(result).isEqualTo(member);
+        }
+
+        @Test
+        @DisplayName("회원이 존재하지 않으면 예외 발생")
+        void fail_when_member_not_found() {
+            // given
+            given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.empty());
+
+            // when & then
+            Assertions.assertThatThrownBy(() -> memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
+        }
     }
 
-    @Test
-    @DisplayName("회원이 존재하지 않으면 예외 발생")
-    void fail_when_member_not_found() {
-        // given
-        given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.empty());
-
-        // when & then
-        Assertions.assertThatThrownBy(() -> memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID))
-                .isInstanceOf(DomainException.class)
-                .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
-    }
 }
