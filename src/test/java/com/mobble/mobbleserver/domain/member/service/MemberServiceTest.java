@@ -76,4 +76,18 @@ class MemberServiceTest {
         assertThat(result.profileImage()).isEqualTo("new profileImage");
     }
 
+    @Test
+    @DisplayName("회원 삭제 성공")
+    void success_when_delete_member() {
+        // given
+        Member member = MemberTestFixture.createDefaultMember();
+        given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(member);
+
+        // when
+        memberService.deleteMember(MEMBER_ID);
+
+        // then
+        verify(memberValidator).findMemberByMemberIdOrThrow(MEMBER_ID);
+        assertThat(member.isDeleted()).isTrue();
+    }
 }
