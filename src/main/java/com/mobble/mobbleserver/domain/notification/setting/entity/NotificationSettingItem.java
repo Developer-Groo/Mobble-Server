@@ -1,8 +1,7 @@
-package com.mobble.mobbleserver.domain.notification.settingItem.entity;
+package com.mobble.mobbleserver.domain.notification.setting.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.notification.core.entity.NotificationType;
-import com.mobble.mobbleserver.domain.notification.setting.entity.NotificationSetting;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,7 +36,7 @@ public class NotificationSettingItem extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public static NotificationSettingItem create(NotificationSetting setting, NotificationType type) {
+    protected static NotificationSettingItem create(NotificationSetting setting, NotificationType type) {
         return NotificationSettingItem.builder()
                 .setting(setting)
                 .type(type)
