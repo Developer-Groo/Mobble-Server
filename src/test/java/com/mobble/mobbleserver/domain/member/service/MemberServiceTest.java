@@ -90,4 +90,18 @@ class MemberServiceTest {
         verify(memberValidator).findMemberByMemberIdOrThrow(MEMBER_ID);
         assertThat(member.isDeleted()).isTrue();
     }
+
+    @Test
+    @DisplayName("이미 삭제된 회원의 경우 예외 발생")
+    void fail_when_member_already_deleted() {
+        // given
+        Member deletedMember = MemberTestFixture.createDefaultMember();
+        deletedMember.softDelete();
+        given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willThrow(new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        // when & then
+        assertThatThrownBy(() -> memberService.deleteMember(MEMBER_ID))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(MemberErrorCode.NOT_FOUND_MEMBER.message());
+    }
 }
