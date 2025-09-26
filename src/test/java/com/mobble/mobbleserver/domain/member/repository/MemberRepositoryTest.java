@@ -136,5 +136,21 @@ public class MemberRepositoryTest {
             assertThat(result.get().getSocialProvider()).isEqualTo(SOCIAL_PROVIDER);
             assertThat(result.get().getSocialId()).isEqualTo(SOCIAL_ID);
         }
+
+        @Test
+        @DisplayName("socialProvider 가 불일치하면 조회 실패")
+        void fail_when_provider_mismatch() {
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "socialProvider", SocialProvider.KAKAO);
+            memberRepository.save(member);
+            em.flush();
+            em.clear();
+
+            // when
+            Optional<Member> result = memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID);
+
+            // then
+            assertThat(result).isNotPresent();
+        }
     }
 }
