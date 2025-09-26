@@ -8,8 +8,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class MemberValidator {
@@ -30,14 +28,5 @@ public class MemberValidator {
                     return member;
                 })
                 .orElse(null); //신규 회원 이라면 null
-    }
-
-    public Optional<Member> findIsDeletedFalseMemberByProviderAndSocialId(SocialProvider socialProvider, String socialId) {
-        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId);
-    }
-
-    public Member findIsDeletedFalseMemberByProviderAndSocialIdOrThrow(SocialProvider socialProvider, String socialId) {
-        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }
