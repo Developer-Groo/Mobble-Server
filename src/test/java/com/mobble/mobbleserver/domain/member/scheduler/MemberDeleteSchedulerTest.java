@@ -48,4 +48,19 @@ class MemberDeleteSchedulerTest {
                 .findAllByIsDeletedTrueAndDeletedAtBefore(any(LocalDateTime.class));
         verify(memberRepository, never()).deleteAll(any());
     }
+
+    @Test
+    @DisplayName("삭제할 회원이 있으면 deleteAll 호출함")
+    void success_when_withdrew_members_exist() {
+        // given
+        given(memberRepository.findAllByIsDeletedTrueAndDeletedAtBefore(any(LocalDateTime.class))).willReturn(List.of(withdrewMember));
+
+        // when
+        memberDeleteScheduler.deleteWithdrewMembers();
+
+        // then
+        verify(memberRepository, times(1))
+                .findAllByIsDeletedTrueAndDeletedAtBefore(any(LocalDateTime.class));
+        verify(memberRepository, times(1)).deleteAll(List.of(withdrewMember));
+    }
 }
