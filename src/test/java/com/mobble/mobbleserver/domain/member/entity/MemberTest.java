@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.member.entity;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,16 @@ class MemberTest {
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.KAKAO;
     private static final String SOCIAL_ID = "1232123";
 
+    private Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = Member.createMember(
+                NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
+                true, true, SOCIAL_PROVIDER, SOCIAL_ID
+        );
+    }
+
     @Nested
     @DisplayName("멤버 생성")
     class CreateMember {
@@ -31,12 +42,6 @@ class MemberTest {
         @Test
         @DisplayName("Member 생성 성공")
         void success_create_member() {
-            // given & when
-            Member member = Member.createMember(
-                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
-                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
-            );
-
             // then
             assertThat(member).isNotNull();
             assertThat(member.getName()).isEqualTo(NAME);
@@ -103,7 +108,6 @@ class MemberTest {
                     .hasMessage(MemberErrorCode.TERMS_AGREED_REQUIRED.message());
         }
 
-
         @Test
         @DisplayName("privacyAgreed 가 false 면 예외 발생")
         void fail_when_privacy_not_agreed() {
@@ -124,12 +128,6 @@ class MemberTest {
         @Test
         @DisplayName("ground, profileImage 수정 성공")
         void success_when_update_ground_and_profile_image() {
-            // given
-            Member member = Member.createMember(
-                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
-                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
-            );
-
             // when
             member.updateMember("new Ground", "new profileImage");
 
@@ -141,12 +139,6 @@ class MemberTest {
         @Test
         @DisplayName("ground 가 null 이면 예외 발생")
         void fail_when_ground_null() {
-            // given
-            Member member = Member.createMember(
-                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
-                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
-            );
-
             // when & then
             assertThatThrownBy(() -> member.updateMember(null, "new profileImage"))
                     .isInstanceOf(DomainException.class)
@@ -161,11 +153,6 @@ class MemberTest {
         @Test
         @DisplayName("Soft Delete 성공")
         void success_soft_delete() {
-            Member member = Member.createMember(
-                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
-                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
-            );
-
             // when
             member.softDelete();
 
