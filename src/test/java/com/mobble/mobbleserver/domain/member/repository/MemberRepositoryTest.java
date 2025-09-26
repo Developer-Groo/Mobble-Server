@@ -11,7 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -65,6 +68,31 @@ public class MemberRepositoryTest {
 
             // then
             assertThat(result).isNotPresent();
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllByIsDeletedTrueAndDeletedAtBefore")
+    class FindAllByIsDeletedTrueAndDeletedAtBefore {
+
+        @Test
+        @DisplayName("deletedAt이 기준일 이전이면 조회 성공")
+        void success_when_deleted_before_standard_day() {
+            // given
+            LocalDateTime standardDay = LocalDateTime.now();
+            Member deletedMember = MemberTestFixture.createDefaultMember();
+            deletedMember.softDelete();
+            ReflectionTestUtils.setField(deletedMember, "deletedAt", standardDay.minusHours(1));
+            memberRepository.save(deletedMember);
+            em.flush();
+            em.clear();
+
+            // when
+            List<Member> result = memberRepository.findAllByIsDeletedTrueAndDeletedAtBefore(standardDay);
+
+            // then
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).getDeletedAt()).isBefore(standardDay);
         }
     }
 }
