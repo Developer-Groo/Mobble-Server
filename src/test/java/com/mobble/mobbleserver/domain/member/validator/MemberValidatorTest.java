@@ -81,5 +81,19 @@ class MemberValidatorTest {
             // then
             assertThat(result).isEqualTo(member);
         }
+
+        @Test
+        @DisplayName("삭제된 회원 조회시 예외 발생")
+        void fail_when_get_member_deleted() {
+            // given
+            Member member = mock(Member.class);
+            given(member.isDeleted()).willReturn(true);
+            given(memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID)).willReturn(Optional.of(member));
+
+            // when & then
+            assertThatThrownBy(() -> memberValidator.findMemberOrThrowIfDeleted(SOCIAL_PROVIDER, SOCIAL_ID))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MemberErrorCode.FAILED_JOIN.message());
+        }
     }
 }
