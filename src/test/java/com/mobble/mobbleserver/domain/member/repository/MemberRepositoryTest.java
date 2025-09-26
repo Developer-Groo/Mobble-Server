@@ -30,7 +30,7 @@ public class MemberRepositoryTest {
     private EntityManager em;
 
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.NAVER;
-    private static final String SOCIAL_ID = "123456";
+    private static final String SOCIAL_ID = "1212";
 
     @Nested
     @DisplayName("findByIdAndIsDeletedFalse")
