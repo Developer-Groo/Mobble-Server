@@ -152,5 +152,21 @@ public class MemberRepositoryTest {
             // then
             assertThat(result).isNotPresent();
         }
+
+        @Test
+        @DisplayName("socialId가 불일치하면 조회 실패")
+        void fail_when_social_id_mismatch() {
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "socialId", "123123");
+            memberRepository.save(member);
+            em.flush();
+            em.clear();
+
+            // when
+            Optional<Member> result = memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID);
+
+            // then
+            assertThat(result).isNotPresent();
+        }
     }
 }
