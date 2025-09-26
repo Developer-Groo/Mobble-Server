@@ -30,6 +30,7 @@ public class MemberDeleteScheduler {
 
         if (withdrewMembers.isEmpty()) {
             log.info("Not found withdrew members to delete");
+            return;
         }
         log.info("Deleting {} withdrew members.", withdrewMembers.size());
 
