@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,13 @@ class MemberValidatorTest {
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.NAVER;
     private static final String SOCIAL_ID = "123456";
 
+    private Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = mock(Member.class);
+    }
+
     @Nested
     @DisplayName("findMemberByMemberIdOrThrow")
     class FindMemberByMemberIdOrThrow {
@@ -40,7 +48,6 @@ class MemberValidatorTest {
         @DisplayName("회원 조회 성공")
         void success_when_get_member() {
             // given
-            Member member = mock(Member.class);
             given(memberRepository.findByIdAndIsDeletedFalse(MEMBER_ID)).willReturn(Optional.of(member));
 
             // when
@@ -71,7 +78,6 @@ class MemberValidatorTest {
         @DisplayName("삭제되지 않은 회원 조회 성공")
         void success_when_get_member_not_deleted() {
             // given
-            Member member = mock(Member.class);
             given(member.isDeleted()).willReturn(false);
             given(memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID)).willReturn(Optional.of(member));
 
@@ -86,7 +92,6 @@ class MemberValidatorTest {
         @DisplayName("삭제된 회원 조회시 예외 발생")
         void fail_when_get_member_deleted() {
             // given
-            Member member = mock(Member.class);
             given(member.isDeleted()).willReturn(true);
             given(memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID)).willReturn(Optional.of(member));
 
