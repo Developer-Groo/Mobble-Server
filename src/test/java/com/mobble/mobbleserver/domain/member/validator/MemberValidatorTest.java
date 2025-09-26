@@ -95,5 +95,18 @@ class MemberValidatorTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MemberErrorCode.FAILED_JOIN.message());
         }
+
+        @Test
+        @DisplayName("존재하지 않는 회원이면 null 반환")
+        void success_when_member_not_found() {
+            // given
+            given(memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID)).willReturn(Optional.empty());
+
+            // when
+            Member result = memberValidator.findMemberOrThrowIfDeleted(SOCIAL_PROVIDER, SOCIAL_ID);
+
+            // then
+            assertThat(result).isNull();
+        }
     }
 }
