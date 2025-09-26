@@ -114,4 +114,27 @@ public class MemberRepositoryTest {
             assertThat(result).isEmpty();
         }
     }
+
+    @Nested
+    @DisplayName("findBySocialProviderAndSocialId")
+    class FindBySocialProviderAndSocialId {
+
+        @Test
+        @DisplayName("socialProvider 와 socialId가 일치하면 조회 성공")
+        void success_when_provider_and_socialId_match() {
+            // given
+            Member member = MemberTestFixture.createDefaultMember();
+            memberRepository.save(member);
+            em.flush();
+            em.clear();
+
+            // when
+            Optional<Member> result = memberRepository.findBySocialProviderAndSocialId(SOCIAL_PROVIDER, SOCIAL_ID);
+
+            // then
+            assertThat(result).isPresent();
+            assertThat(result.get().getSocialProvider()).isEqualTo(SOCIAL_PROVIDER);
+            assertThat(result.get().getSocialId()).isEqualTo(SOCIAL_ID);
+        }
+    }
 }
