@@ -25,8 +25,6 @@ class MemberDeleteSchedulerTest {
     @InjectMocks
     private MemberDeleteScheduler memberDeleteScheduler;
 
-    private static final LocalDateTime NOW = LocalDateTime.of(2025, 9, 26, 18, 0);
-
     private Member withdrewMember;
 
     @BeforeEach
