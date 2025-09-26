@@ -31,13 +31,4 @@ public class MemberValidator {
                 })
                 .orElse(null); //신규 회원 이라면 null
     }
-
-    public Optional<Member> findIsDeletedFalseMemberByProviderAndSocialId(SocialProvider socialProvider, String socialId) {
-        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId);
-    }
-
-    public Member findIsDeletedFalseMemberByProviderAndSocialIdOrThrow(SocialProvider socialProvider, String socialId) {
-        return memberRepository.findBySocialProviderAndSocialIdAndIsDeletedFalse(socialProvider, socialId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
-    }
 }
