@@ -1,11 +1,16 @@
 package com.mobble.mobbleserver.domain.club.core.service;
 
+import com.mobble.mobbleserver.domain.adress.dto.request.AddressRequestDto;
+import com.mobble.mobbleserver.domain.adress.entity.Address;
+import com.mobble.mobbleserver.domain.adress.repository.AddressRepository;
 import com.mobble.mobbleserver.domain.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.service.ClubChatRoomService;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.ageGroup.repository.AgeGroupRepository;
+import com.mobble.mobbleserver.domain.club.clubGround.entity.ClubGround;
+import com.mobble.mobbleserver.domain.club.clubGround.repository.ClubGroundRepository;
 import com.mobble.mobbleserver.domain.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.domain.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
@@ -20,6 +25,9 @@ import com.mobble.mobbleserver.domain.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.domain.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.comment.repository.CommentRepository;
+import com.mobble.mobbleserver.domain.ground.dto.response.GroundResponseDto;
+import com.mobble.mobbleserver.domain.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.domain.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.domain.like.commentLike.repository.CommentLikeRepository;
@@ -33,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,11 +115,20 @@ public class ClubService {
         assertLeader(clubMember);
 
         ClubCategory category = findCategoryOrThrow(dto.category());
-        club.updateClub(category, dto.name(), dto.ground(), dto.address(), dto.headcount(), dto.isAutoJoin());
+
+        Address address = club.getAddress();
+        AddressRequestDto addrDto = dto.addressDto();
+
+        address.updateAddress(addrDto);
+        club.updateClub(category, dto.name(), address, dto.headcount(), dto.isAutoJoin());
 
         ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
+        clubGroundRepository.deleteAllByClubId(club.getId());
+
         List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
+        List<ClubGround> newClubGrounds = createClubGroundList(dto.groundCodes(), club);
         ageGroupRepository.saveAll(newAgeGroups);
+        clubGroundRepository.saveAll(newClubGrounds);
 
         return buildClubResponse(club, member, member.getName());
     }
