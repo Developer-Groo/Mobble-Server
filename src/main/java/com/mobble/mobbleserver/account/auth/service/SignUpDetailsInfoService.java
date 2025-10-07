@@ -2,8 +2,10 @@ package com.mobble.mobbleserver.account.auth.service;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SignUpDetailsInfoResponseDto;
-import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.domain.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import com.mobble.mobbleserver.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class SignUpDetailsInfoService {
 
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final GroundRepository groundRepository;
 
     public SignUpDetailsInfoResponseDto getSocialUserInfo(String signupToken) {
         SocialUserInfo userInfo = tokenProvider.getSignupTokenInfo(signupToken);
@@ -27,7 +30,8 @@ public class SignUpDetailsInfoService {
     @Transactional
     public String signup(String signupToken, SignUpRequestDto dto) {
         SocialUserInfo userInfo = tokenProvider.getSignupTokenInfo(signupToken);
-        Member member = dto.toEntity(userInfo);
+        Ground ground = groundRepository.findGroundByCode(dto.groundCode()).get();
+        Member member = dto.toEntity(userInfo,ground);
         memberRepository.save(member);
 
         return tokenProvider.createJwtToken(member.getId());
