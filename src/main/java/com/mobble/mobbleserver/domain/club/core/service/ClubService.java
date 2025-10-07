@@ -50,6 +50,9 @@ public class ClubService {
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
     private final ClubLikeRepository clubLikeRepository;
+    private final AddressRepository addressRepository;
+    private final GroundRepository groundRepository;
+    private final ClubGroundRepository clubGroundRepository;
 
     private final ClubValidator clubValidator;
     private final MemberValidator memberValidator;
@@ -63,6 +66,14 @@ public class ClubService {
         Club club = dto.toEntity(category);
         clubRepository.save(club);
 
+        Address address = dto.addressDto().toEntity(club);
+        addressRepository.save(address);
+        club.setAddress(address);
+
+        List<Long> codeList = dto.groundCodes();
+        List<ClubGround> clubGrounds = createClubGroundList(codeList, club);
+        clubGroundRepository.saveAll(clubGrounds);
+
         ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
         clubMemberRepository.save(clubMember);
 
@@ -70,7 +81,8 @@ public class ClubService {
         ageGroupRepository.saveAll(ageGroups);
 
         // Todo: 반환값이 Club 채팅방의 preview 에 필요한 데이터이기 때문에 반환 DTO에 포함 되어야 함
-        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomService.createClubChatRoom(club.getId(), member.getId());
+        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomService.createClubChatRoom(club.getId(),
+                member.getId());
 
         return buildClubResponse(club, member, member.getName());
     }
