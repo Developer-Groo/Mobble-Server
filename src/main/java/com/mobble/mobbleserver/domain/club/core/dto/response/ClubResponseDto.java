@@ -1,8 +1,11 @@
 package com.mobble.mobbleserver.domain.club.core.dto.response;
 
+import com.mobble.mobbleserver.domain.adress.dto.response.AddressResponseDto;
+import com.mobble.mobbleserver.domain.adress.entity.Address;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.club.core.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.ground.dto.response.GroundResponseDto;
 
 import java.util.List;
 
@@ -11,8 +14,8 @@ public record ClubResponseDto(
         String leader,
         String name,
         String category,
-        String ground,
-        String address,
+        List<GroundResponseDto> groundList,
+        AddressResponseDto address,
         int headcount,
         List<AgeGroupType> ageGroup,
 //        String profileImage,
@@ -25,7 +28,9 @@ public record ClubResponseDto(
     public static ClubResponseDto toDto(
             Club club,
             String leaderName,
+            Address address,
             List<AgeGroupType> ageGroup,
+            List<GroundResponseDto> groundList,
             ClubLikeInfoDto likeInfo
     ){
         return new ClubResponseDto(
@@ -33,8 +38,8 @@ public record ClubResponseDto(
                 leaderName,
                 club.getName(),
                 club.getClubCategory().getName(),
-                club.getGround(),
-                club.getAddress(),
+                groundList,
+                AddressResponseDto.toDto(address),
                 club.getHeadCount(),
                 ageGroup,
                 likeInfo.likeCount(),
