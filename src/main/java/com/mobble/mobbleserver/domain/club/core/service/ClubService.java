@@ -162,6 +162,13 @@ public class ClubService {
                 .toList();
     }
 
+    private List<ClubGround> createClubGroundList(List<Long> codeList, Club club) {
+        List<Ground> grounds = groundRepository.findAllById(codeList);
+        return grounds.stream()
+                .map(g -> ClubGround.createClubGround(club, g))
+                .toList();
+    }
+
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
