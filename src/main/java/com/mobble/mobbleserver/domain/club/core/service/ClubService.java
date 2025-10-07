@@ -131,14 +131,29 @@ public class ClubService {
                 .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
     }
 
-    private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
+    private ClubResponseDto buildClubResponse(
+            Club club,
+            Member member,
+            String leaderName
+    ) {
         List<AgeGroupType> ageGroupList = ageGroupRepository.findByClubId(club.getId()).stream()
                 .map(AgeGroup::getAgeGroupType)
                 .toList();
 
+        List<Long> groundCodes = clubGroundRepository.findByClubId(club.getId())
+                .stream()
+                .map(cg -> cg.getGround().getCode())
+                .collect(Collectors.toList());
+
+        List<GroundResponseDto> groundList = groundRepository.findAllByCodeIn(groundCodes)
+                .stream()
+                .map(GroundResponseDto::toDto)
+                .toList();
+
+        Address address = club.getAddress();
         ClubLikeInfoDto likeInfo = clubRepository.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
 
-        return ClubResponseDto.toDto(club, leaderName, ageGroupList, likeInfo);
+        return ClubResponseDto.toDto(club, leaderName, address, ageGroupList, groundList, likeInfo);
     }
 
     private List<AgeGroup> createClubAgeGroups(Club club, List<AgeGroupType> ageGroupTypes) {
