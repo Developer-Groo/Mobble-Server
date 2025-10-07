@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.club.core.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.adress.entity.Address;
 import com.mobble.mobbleserver.domain.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -31,12 +32,8 @@ public class Club extends BaseEntity {
 //    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private final List<ClubImage> clubImages = new ArrayList<>();
 
-    // Todo: 지역관리를 위해 추후 Enum 또는 테이블로 관리해야함.
-    @Column(name = "ground")
-    private String ground;
-
-    @Column(name = "address")
-    private String address;
+    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY)
+    private Address address;
 
     @Column(name = "head_count")
     private int headCount;
@@ -51,16 +48,12 @@ public class Club extends BaseEntity {
     private Club(
             ClubCategory category,
             String name,
-            String ground,
-            String address,
             int headCount,
             boolean isAutoJoin
     ) {
-        validateCommon(category, name, ground, address, headCount);
+        validateCommon(category, name, headCount);
         this.clubCategory = category;
         this.name = name;
-        this.ground = ground;
-        this.address = address;
         this.headCount = headCount;
         this.isAutoJoin = isAutoJoin;
     }
@@ -68,16 +61,12 @@ public class Club extends BaseEntity {
     public static Club createClub(
             ClubCategory category,
             String name,
-            String ground,
-            String address,
             int headCount,
             boolean isAutoJoin
     ) {
         return Club.builder()
                 .category(category)
                 .name(name)
-                .ground(ground)
-                .address(address)
                 .headCount(headCount)
                 .isAutoJoin(isAutoJoin)
                 .build();
@@ -90,15 +79,13 @@ public class Club extends BaseEntity {
     public void updateClub(
             ClubCategory category,
             String name,
-            String ground,
-            String address,
+            Address address,
             int headCount,
             boolean isAutoJoin
     ) {
-        validateCommon(category, name, ground, address, headCount);
+        validateCommon(category, name, headCount);
         this.clubCategory = category;
         this.name = name;
-        this.ground = ground;
         this.address = address;
         this.headCount = headCount;
         this.isAutoJoin = isAutoJoin;
@@ -107,14 +94,15 @@ public class Club extends BaseEntity {
     private void validateCommon(
             ClubCategory category,
             String name,
-            String ground,
-            String address,
             int headCount
     ) {
         if (category == null) throw new DomainException(ClubErrorCode.CATEGORY_REQUIRED);
         if (name == null || name.isBlank()) throw new DomainException(ClubErrorCode.NAME_REQUIRED);
-        if (ground == null || ground.isBlank()) throw new DomainException(ClubErrorCode.GROUND_REQUIRED);
-        if (address == null || address.isBlank()) throw new DomainException(ClubErrorCode.ADDRESS_REQUIRED);
         if (headCount <= 0) throw new DomainException(ClubErrorCode.HEADCOUNT_REQUIRED);
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+        address.setClub(this);
     }
 }
