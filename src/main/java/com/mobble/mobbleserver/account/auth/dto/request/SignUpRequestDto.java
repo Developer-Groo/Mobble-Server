@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.account.auth.dto.request;
 
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.domain.ground.entity.Ground;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 import jakarta.validation.constraints.*;
@@ -20,8 +21,7 @@ public record SignUpRequestDto(
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "MEMBER:WRONG_PHONE_PATTERN")
         String phone,
 
-        @NotBlank(message = "MEMBER:REQUIRED_GROUND")
-        String ground,
+        Long groundCode,
 
         String profileImage,
 
@@ -32,14 +32,14 @@ public record SignUpRequestDto(
         boolean privacyAgreed
 ) {
 
-    public Member toEntity(SocialUserInfo userInfo) {
+    public Member toEntity(SocialUserInfo userInfo, Ground ground) {
         return Member.createMember(
                 this.name,
                 this.age,
                 this.gender,
                 userInfo.email(),
                 this.phone,
-                this.ground,
+                ground,
                 this.profileImage,
                 this.termsAgreed,
                 this.privacyAgreed,

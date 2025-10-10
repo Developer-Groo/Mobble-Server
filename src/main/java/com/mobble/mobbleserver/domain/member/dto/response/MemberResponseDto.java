@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.member.dto.response;
 
+import com.mobble.mobbleserver.domain.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Gender;
 import com.mobble.mobbleserver.domain.member.entity.Member;
 
@@ -9,7 +10,7 @@ public record MemberResponseDto(
         Gender gender,
         String email,
         String phone,
-        String ground,
+        GroundResponseDto ground,
         String profileImage
 ) {
 
@@ -20,7 +21,8 @@ public record MemberResponseDto(
                 member.getGender(),
                 member.getEmail(),
                 member.getPhone(),
-                member.getGround(),
+//                GroundResponseDto.toDto(member.getGround()),
+                null,
                 member.getProfileImage()
         );
     }

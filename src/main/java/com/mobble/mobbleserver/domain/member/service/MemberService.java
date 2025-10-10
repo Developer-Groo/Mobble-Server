@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.domain.member.service;
 
+import com.mobble.mobbleserver.domain.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.domain.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.domain.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.entity.Member;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberValidator memberValidator;
+    private final GroundRepository groundRepository;
 
     public MemberResponseDto getMember(Long memberId) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
@@ -24,7 +27,9 @@ public class MemberService {
     @Transactional
     public MemberResponseDto updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-        Member updateMember = member.updateMember(dto.ground(), dto.profileImage());
+        Ground ground = groundRepository.findGroundByCode(dto.groundCode())
+                .orElseThrow();
+        Member updateMember = member.updateMember(ground, dto.profileImage());
 
         return MemberResponseDto.toDto(updateMember);
     }
