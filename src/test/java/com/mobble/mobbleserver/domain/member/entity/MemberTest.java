@@ -130,7 +130,7 @@ class MemberTest {
         @DisplayName("ground, profileImage 수정 성공")
         void success_when_update_ground_and_profile_image() {
             // when
-            member.updateMember("new Ground", "new profileImage");
+            member.updateMember(null, "new profileImage");
 
             // then
             assertThat(member.getGround()).isEqualTo("new Ground");
