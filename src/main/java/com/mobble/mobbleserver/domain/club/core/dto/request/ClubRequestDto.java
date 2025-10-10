@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.club.core.dto.request;
 
+import com.mobble.mobbleserver.domain.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.domain.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.core.entity.Club;
 import com.mobble.mobbleserver.domain.clubCategory.entity.ClubCategory;
@@ -18,11 +19,9 @@ public record ClubRequestDto(
 //        String profileImage,
 //        List<String> infoImage,
 
-        @NotBlank(message = "CLUB:GROUND_NOT_BLANK")
-        String ground,
+        AddressRequestDto addressDto,
 
-        @NotBlank(message = "CLUB:ADDRESS_NOT_BLANK")
-        String address,
+        List<Long> groundCodes,
 
         @Min(value = 2, message = "CLUB:HEADCOUNT_MIN")
         @Max(value = 1000, message = "CLUB:HEADCOUNT_MAX")
@@ -39,8 +38,6 @@ public record ClubRequestDto(
         return Club.createClub(
                 clubCategory,
                 this.name,
-                this.ground,
-                this.address,
                 this.headcount,
                 this.isAutoJoin
         );

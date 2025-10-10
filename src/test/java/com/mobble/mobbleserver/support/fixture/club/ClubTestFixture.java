@@ -9,8 +9,6 @@ public class ClubTestFixture {
         return Club.createClub(
                 clubCategory,
                 "name",
-                "ground",
-                "address",
                 1,
                 true
         );
