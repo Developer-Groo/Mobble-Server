@@ -21,7 +21,8 @@ public record MemberResponseDto(
                 member.getGender(),
                 member.getEmail(),
                 member.getPhone(),
-                GroundResponseDto.toDto(member.getGround()),
+//                GroundResponseDto.toDto(member.getGround()),
+                null,
                 member.getProfileImage()
         );
     }

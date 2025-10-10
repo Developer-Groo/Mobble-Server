@@ -40,7 +40,7 @@ public class Member extends BaseEntity {
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ground_code", nullable = false)
+    @JoinColumn(name = "ground_code")
     private Ground ground;
 
     @Column(name = "profile_image")

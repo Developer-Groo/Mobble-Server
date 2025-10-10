@@ -27,7 +27,8 @@ public class MemberService {
     @Transactional
     public MemberResponseDto updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-        Ground ground = groundRepository.findGroundByCode(dto.groundCode()).get();
+        Ground ground = groundRepository.findGroundByCode(dto.groundCode())
+                .orElseThrow();
         Member updateMember = member.updateMember(ground, dto.profileImage());
 
         return MemberResponseDto.toDto(updateMember);
