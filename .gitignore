@@ -47,5 +47,7 @@ build/
 
 # === Local Environment ===
 .env
-
 HELP.md
+
+# Firebase service account key
+src/main/resources/firebase-service-account.json

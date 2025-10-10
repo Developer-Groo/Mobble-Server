@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.domain.meeting.entity;
 
 import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.domain.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,7 +45,7 @@ public class Meeting {
     @Enumerated(EnumType.STRING)
     private MeetingType type;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Meeting(
             ClubMember clubMember,
             String title,
@@ -53,6 +55,7 @@ public class Meeting {
             int memberLimit,
             MeetingType type
     ) {
+        validateCommon(clubMember, title, datetime, location, cost, memberLimit, type);
         this.clubMember = clubMember;
         this.title = title;
         this.datetime = datetime;
@@ -90,12 +93,41 @@ public class Meeting {
             Integer memberLimit,
             MeetingType type
     ) {
-        //Todo null 검증 로직 추가
+        validateContents(title, dateTime, location, cost, memberLimit, type);
         this.title = title;
         this.datetime = dateTime;
         this.location = location;
         this.cost = cost;
         this.memberLimit = memberLimit;
         this.type = type;
+    }
+
+    private void validateCommon(
+            ClubMember clubMember,
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        if (clubMember == null) throw new DomainException(MeetingErrorCode.CLUB_MEMBER_REQUIRED);
+        validateContents(title, datetime, location, cost, memberLimit, type);
+    }
+
+    private void validateContents(
+            String title,
+            LocalDateTime datetime,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        if (title == null || title.isBlank()) throw new DomainException(MeetingErrorCode.TITLE_REQUIRED);
+        if (datetime == null) throw new DomainException(MeetingErrorCode.DATETIME_REQUIRED);
+        if (location == null || location.isBlank()) throw new DomainException(MeetingErrorCode.LOCATION_REQUIRED);
+        if (cost == null || cost.isBlank()) throw new DomainException(MeetingErrorCode.COST_REQUIRED);
+        if (memberLimit <= 0) throw new DomainException(MeetingErrorCode.INVALID_MEMBER_LIMIT);
+        if (type == null) throw new DomainException(MeetingErrorCode.TYPE_REQUIRED);
     }
 }
