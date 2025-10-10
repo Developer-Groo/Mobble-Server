@@ -15,7 +15,7 @@ public class MemberTestFixture {
                 Gender.FEMALE,
                 UUID.randomUUID().toString(),
                 "phone",
-                "ground",
+                null,
                 "profileImage",
                 true,
                 true,

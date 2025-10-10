@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.member.entity;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.domain.ground.entity.Ground;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ class MemberTest {
     private static final Gender GENDER = Gender.MALE;
     private static final String EMAIL = "test@example.com";
     private static final String PHONE = "010-1234-5678";
-    private static final String GROUND = "ground";
+    private static final Ground GROUND = null;
     private static final String PROFILE_IMAGE = "profile";
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.KAKAO;
     private static final String SOCIAL_ID = "1232123";

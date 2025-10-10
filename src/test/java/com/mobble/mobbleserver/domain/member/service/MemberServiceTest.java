@@ -65,7 +65,7 @@ class MemberServiceTest {
         Member member = MemberTestFixture.createDefaultMember();
         given(memberValidator.findMemberByMemberIdOrThrow(MEMBER_ID)).willReturn(member);
 
-        MemberUpdateRequestDto dto = new MemberUpdateRequestDto("new Ground", "new profileImage");
+        MemberUpdateRequestDto dto = new MemberUpdateRequestDto(17L, "new profileImage");
 
         // when
         MemberResponseDto result = memberService.updateMember(MEMBER_ID, dto);
