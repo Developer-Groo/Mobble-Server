@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.member.entity;
+package com.mobble.mobbleserver.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

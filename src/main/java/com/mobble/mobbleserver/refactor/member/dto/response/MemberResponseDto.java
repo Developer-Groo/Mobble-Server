@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.refactor.member.dto.response;
 
 import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
-import com.mobble.mobbleserver.refactor.member.entity.Gender;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Gender;
+import com.mobble.mobbleserver.domain.member.Member;
 
 public record MemberResponseDto(
         Long memberId,

@@ -7,7 +7,7 @@ import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

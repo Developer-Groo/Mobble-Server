@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.member.dto.response;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 
 public record MemberCreateResponseDto(Long id, String name, String email) {
 

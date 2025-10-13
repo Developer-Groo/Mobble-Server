@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.member.entity;
+package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
