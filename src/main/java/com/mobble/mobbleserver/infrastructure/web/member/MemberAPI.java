@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.member.controller;
+package com.mobble.mobbleserver.infrastructure.web.member;
 
 import com.mobble.mobbleserver.refactor.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.refactor.member.dto.response.MemberResponseDto;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
-public class MemberController {
+public class MemberAPI {
 
     private final MemberService memberService;
 
