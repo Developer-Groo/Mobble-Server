@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.refactor.member.dto.request.MemberUpdateRequestDto;
 import com.mobble.mobbleserver.refactor.member.dto.response.MemberResponseDto;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

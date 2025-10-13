@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.notification.setting.service;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
 import com.mobble.mobbleserver.refactor.notification.setting.entity.NotificationSetting;

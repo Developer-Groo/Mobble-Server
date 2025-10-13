@@ -22,7 +22,7 @@
 //import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 //import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
 //import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
-//import com.mobble.mobbleserver.refactor.member.entity.Member;
+//import com.mobble.mobbleserver.domain.member.Member;
 //import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 //import com.mobble.mobbleserver.global.exception.common.DomainException;
 //import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;

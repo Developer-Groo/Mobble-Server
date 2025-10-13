@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.account.auth.dto.request;
 
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
-import com.mobble.mobbleserver.refactor.member.entity.Gender;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Gender;
+import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
 
 public record SignUpRequestDto(

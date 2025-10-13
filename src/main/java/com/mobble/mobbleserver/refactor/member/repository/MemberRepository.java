@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.member.repository;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

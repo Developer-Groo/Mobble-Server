@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

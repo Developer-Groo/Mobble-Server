@@ -9,7 +9,7 @@ import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMember
 import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

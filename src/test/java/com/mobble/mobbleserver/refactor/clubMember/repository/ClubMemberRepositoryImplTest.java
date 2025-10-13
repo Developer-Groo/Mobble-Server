@@ -8,7 +8,7 @@ import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.chat.chatRoom.ChatRoomTestFixture;
 import com.mobble.mobbleserver.support.fixture.chat.clubChatRoom.ClubChatRoomTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;

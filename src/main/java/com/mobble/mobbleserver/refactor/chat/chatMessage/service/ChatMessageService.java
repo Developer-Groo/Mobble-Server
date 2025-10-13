@@ -9,7 +9,7 @@ import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.validator.ChatRoomValidator;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

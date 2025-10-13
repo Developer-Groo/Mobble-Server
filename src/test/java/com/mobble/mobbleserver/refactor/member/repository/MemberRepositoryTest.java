@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.member.repository;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;

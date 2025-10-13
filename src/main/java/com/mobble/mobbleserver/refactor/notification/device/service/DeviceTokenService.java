@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.notification.device.service;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
 import com.mobble.mobbleserver.refactor.notification.device.entity.Platform;

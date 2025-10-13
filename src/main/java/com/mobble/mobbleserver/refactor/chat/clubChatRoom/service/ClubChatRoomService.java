@@ -19,7 +19,7 @@ import com.mobble.mobbleserver.refactor.chat.clubChatRoom.validator.ClubChatRoom
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;

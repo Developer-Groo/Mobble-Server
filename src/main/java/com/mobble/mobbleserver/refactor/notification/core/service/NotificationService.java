@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.notification.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
 import com.mobble.mobbleserver.refactor.notification.core.entity.Notification;
 import com.mobble.mobbleserver.refactor.notification.core.repository.NotificationRepository;

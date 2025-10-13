@@ -18,7 +18,7 @@ import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectC
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.DirectChatRoom;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.repository.DirectChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
