@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 class MemberValidatorTest {
 
     @Mock
-    private MemberRepository memberRepository;
+    private JpaMemberRepository memberRepository;
 
     @InjectMocks
     private MemberValidator memberValidator;

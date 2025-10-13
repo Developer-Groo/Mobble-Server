@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.refactor.member.repository;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MemberRepositoryTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private JpaMemberRepository memberRepository;
 
     @Autowired
     private EntityManager em;

@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.member.scheduler;
 
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class MemberDeleteSchedulerTest {
 
     @Mock
-    private MemberRepository memberRepository;
+    private JpaMemberRepository memberRepository;
 
     @InjectMocks
     private MemberDeleteScheduler memberDeleteScheduler;

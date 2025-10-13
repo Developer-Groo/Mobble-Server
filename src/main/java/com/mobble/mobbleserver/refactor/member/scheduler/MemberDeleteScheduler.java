@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.member.scheduler;
 
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberDeleteScheduler {
 
-    private final MemberRepository memberRepository;
+    private final JpaMemberRepository memberRepository;
 
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")

@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MemberValidator {
 
-    private final MemberRepository memberRepository;
+    private final JpaMemberRepository memberRepository;
 
     public Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberRepository.findByIdAndIsDeletedFalse(memberId)

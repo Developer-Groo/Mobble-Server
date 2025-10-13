@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.member.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.member;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface JpaMemberRepository extends JpaRepository<Member, Long> {
 
     // 활성 회원(isDeleted = false)만 조회하는 메소드
     Optional<Member> findByIdAndIsDeletedFalse(Long memberId);
