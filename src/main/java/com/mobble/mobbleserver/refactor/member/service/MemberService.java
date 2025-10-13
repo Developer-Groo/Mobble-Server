@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.refactor.member.service;
 
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
-import com.mobble.mobbleserver.refactor.member.dto.request.MemberUpdateRequestDto;
-import com.mobble.mobbleserver.refactor.member.dto.response.MemberResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;

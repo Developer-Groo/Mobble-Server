@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.member.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.member.dto.response;
 
 import com.mobble.mobbleserver.domain.member.Member;
 

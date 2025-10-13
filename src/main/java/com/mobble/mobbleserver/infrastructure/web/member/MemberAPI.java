@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.member;
 
-import com.mobble.mobbleserver.refactor.member.dto.request.MemberUpdateRequestDto;
-import com.mobble.mobbleserver.refactor.member.dto.response.MemberResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.refactor.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

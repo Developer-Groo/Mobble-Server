@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.refactor.member.service;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
-import com.mobble.mobbleserver.refactor.member.dto.response.MemberResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.response.MemberResponseDto;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
