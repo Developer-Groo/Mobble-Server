@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.refactor.meeting.validator;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
-import com.mobble.mobbleserver.refactor.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.meeting.JpaMeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingValidator {
 
-    private final MeetingRepository meetingRepository;
+    private final JpaMeetingRepository meetingRepository;
 
     public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingRepository.findById(meetingId)

@@ -7,7 +7,7 @@ import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingReq
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
-import com.mobble.mobbleserver.refactor.meeting.repository.MeetingRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.meeting.JpaMeetingRepository;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MeetingService {
 
-    private final MeetingRepository meetingRepository;
+    private final JpaMeetingRepository meetingRepository;
     private final MeetingValidator meetingValidator;
     private final ClubMemberValidator clubMemberValidator;
 
