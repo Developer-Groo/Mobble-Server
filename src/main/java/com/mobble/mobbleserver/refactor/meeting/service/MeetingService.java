@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.infrastructure.persistence.meeting.JpaMeetingRepository;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import lombok.RequiredArgsConstructor;

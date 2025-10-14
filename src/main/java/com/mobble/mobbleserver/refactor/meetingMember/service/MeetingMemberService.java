@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.meetingMember.service;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
