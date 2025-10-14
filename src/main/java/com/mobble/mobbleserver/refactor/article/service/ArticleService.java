@@ -1,9 +1,11 @@
 package com.mobble.mobbleserver.refactor.article.service;
 
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.refactor.article.dto.request.ArticleRequestDto;
@@ -22,7 +24,6 @@ import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,15 +46,16 @@ public class ArticleService {
     private final ArticleValidator articleValidator;
     private final ClubValidator clubValidator;
     private final ClubMemberValidator clubMemberValidator;
-    private final MemberValidator memberValidator;
+
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        assertCanPost(clubMember ,dto.articleType());
+        assertCanPost(clubMember, dto.articleType());
         Article article = dto.toEntity(club, member);
 
         return ArticleResponseDto.toDto(articleRepository.save(article));
@@ -67,7 +69,7 @@ public class ArticleService {
 
         return articles.stream()
                 .map(article -> {
-                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(),ArticleLikeInfoDto.toDto(0,false));
+                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), ArticleLikeInfoDto.toDto(0, false));
                     int commentCount = commentCountMap.getOrDefault(article.getId(), 0);
                     return ArticleSummaryResponseDto.toDto(article, likeInfo, commentCount);
                 })
@@ -86,7 +88,7 @@ public class ArticleService {
         Long clubId = article.getClub().getId();
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        assertCanPost(clubMember ,dto.articleType());
+        assertCanPost(clubMember, dto.articleType());
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
         return convertToArticleResponseDto(article, memberId);
@@ -145,5 +147,10 @@ public class ArticleService {
         if (!clubMember.canPost(articleType)) {
             throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
         }
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

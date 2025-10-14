@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.service;
 
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
@@ -19,7 +22,6 @@ import com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.DirectChatRoo
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.repository.DirectChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,6 @@ public class DirectChatRoomService {
 
     private final ChatMessageService chatMessageService;
 
-    private final MemberValidator memberValidator;
     private final ChatRoomParticipantValidator chatRoomParticipantValidator;
     private final DirectChatRoomValidator directChatRoomValidator;
 
@@ -49,9 +50,11 @@ public class DirectChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
 
+    private final MemberReadPort memberReadPort;
+
     @Transactional
     public void sendDirectMessage(DirectChatMessageRequestDto dto, Long memberId) {
-        Member targetMember = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
+        Member targetMember = findMemberByMemberIdOrThrow(dto.receiverId());
         ChatMessage savedMessage = chatMessageService.saveChatMessageAndUpdateLastRead(dto.chatRoomId(), memberId, dto.content(), dto.type());
 
         DirectChatMessageResponseDto response = DirectChatMessageResponseDto.toDto(
@@ -70,8 +73,8 @@ public class DirectChatRoomService {
     public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
         directChatRoomValidator.existsDirectChatRoomByBetweenMembersOrThrow(memberId, dto.receiverId());
 
-        Member sender = memberValidator.findMemberByMemberIdOrThrow(memberId);
-        Member receiver = memberValidator.findMemberByMemberIdOrThrow(dto.receiverId());
+        Member sender = findMemberByMemberIdOrThrow(memberId);
+        Member receiver = findMemberByMemberIdOrThrow(dto.receiverId());
 
         ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.DIRECT);
         ChatRoomParticipant senderParticipant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, sender);
@@ -87,7 +90,7 @@ public class DirectChatRoomService {
     }
 
     public List<DirectChatRoomPreviewResponseDto> getDirectChatRooms(Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         List<DirectChatRoom> directChatRooms = directChatRoomValidator.findDirectChatRoomsAllByMemberId(memberId);
         List<Long> chatRoomIds = extractChatRoomIds(directChatRooms);
@@ -111,7 +114,7 @@ public class DirectChatRoomService {
     }
 
     public List<ChatMessageResponseDto> getDirectChatRoomMessages(Long memberId, ChatMessageRequestDto dto) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         return chatMessageService.getMessagesForParticipant(member.getId(), dto);
     }
@@ -147,5 +150,10 @@ public class DirectChatRoomService {
                                 .map(ChatMessage::getId)
                                 .orElse(0L)
                 ));
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

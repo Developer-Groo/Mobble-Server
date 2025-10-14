@@ -2,16 +2,18 @@ package com.mobble.mobbleserver.account.auth.service;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
+import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,15 +26,16 @@ import java.util.List;
 public class SocialLoginService {
 
     private final SocialVerifierFactory verifierFactory;
-    private final MemberValidator memberValidator;
     private final TokenProvider tokenProvider;
     private final ClubMemberRepository clubMemberRepository;
+
+    private final MemberReadPort memberReadPort;
 
     public SocialLoginResponseDto socialLogin(SocialLoginRequestDto dto) {
         SocialVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
         SocialUserInfo userInfo = verifier.verify(dto.accessToken());
 
-        Member member = memberValidator.findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
+        Member member = findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
             List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
@@ -46,5 +49,16 @@ public class SocialLoginService {
         String signupToken = tokenProvider.createSignupToken(userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
 
         return SocialLoginResponseDto.newMember(signupToken);
+    }
+
+    private Member findMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
+        return memberReadPort.findBySocialProviderAndSocialId(socialProvider, socialId)
+                .map(member -> {
+                    if (member.isDeleted()) {
+                        throw new DomainException(MemberErrorCode.FAILED_JOIN);
+                    }
+                    return member;
+                })
+                .orElse(null); //신규 회원 이라면 null
     }
 }

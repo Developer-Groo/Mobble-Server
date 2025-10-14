@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.service;
 
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
@@ -20,7 +23,6 @@ import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -46,9 +48,10 @@ public class ClubChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ClubChatRoomRepository clubChatRoomRepository;
 
-    private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
     private final ClubChatRoomValidator clubChatRoomValidator;
+
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
@@ -102,7 +105,7 @@ public class ClubChatRoomService {
     }
 
     public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
         List<Long> chatRoomIds = extractChatRoomIds(clubMembers);
@@ -170,5 +173,10 @@ public class ClubChatRoomService {
                                 .map(ChatMessage::getId)
                                 .orElse(0L)
                 ));
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }
