@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
-import com.mobble.mobbleserver.infrastructure.web.meeting.MeetingType;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.MeetingType;
 
 import java.time.LocalDateTime;
 
