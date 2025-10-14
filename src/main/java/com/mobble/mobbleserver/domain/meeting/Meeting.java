@@ -85,7 +85,7 @@ public class Meeting {
                 .build();
     }
 
-    public void updateMeeting(
+    public Meeting updateMeeting(
             String title,
             LocalDateTime dateTime,
             String location,
@@ -100,6 +100,7 @@ public class Meeting {
         this.cost = cost;
         this.memberLimit = memberLimit;
         this.type = type;
+        return this;
     }
 
     private void validateCommon(
