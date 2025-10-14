@@ -24,7 +24,7 @@ public class MemberPersistenceAdapter implements MemberWritePort, MemberReadPort
     }
 
     @Override
-    public void deleteAll(Member member) {
+    public void deleteAll(List<Member> members) {
         repository.deleteAll();
     }
 
