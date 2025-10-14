@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.club.core.repository.dto.ClubLikeInfoDto;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;

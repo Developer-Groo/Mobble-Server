@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.refactor.chat.chatMessage.service;
 
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
@@ -9,8 +12,7 @@ import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.validator.ChatRoomValidator;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +25,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatMessageService {
 
-    private final MemberValidator memberValidator;
     private final ChatRoomParticipantValidator chatRoomParticipantValidator;
     private final ChatRoomValidator chatRoomValidator;
 
     private final ChatMessageRepository chatMessageRepository;
+
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public ChatMessage saveChatMessageAndUpdateLastRead(
@@ -36,7 +39,7 @@ public class ChatMessageService {
             String content,
             MessageType messageType
     ) {
-        Member sender = memberValidator.findMemberByMemberIdOrThrow(senderId);
+        Member sender = findMemberByMemberIdOrThrow(senderId);
         ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(chatRoomId);
 
         ChatMessage chatMessage = ChatMessage.createChatMessage(chatRoom, sender, content, messageType);
@@ -68,5 +71,10 @@ public class ChatMessageService {
         return messages.stream()
                 .map(ChatMessageResponseDto::toDto)
                 .toList();
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

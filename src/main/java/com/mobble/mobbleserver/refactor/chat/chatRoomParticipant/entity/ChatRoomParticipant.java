@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity;
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

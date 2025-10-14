@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.refactor.notification.setting.service;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
 import com.mobble.mobbleserver.refactor.notification.setting.entity.NotificationSetting;
 import com.mobble.mobbleserver.refactor.notification.setting.repository.NotificationSettingRepository;
@@ -17,13 +19,13 @@ public class NotificationSettingService {
 
     private final NotificationSettingRepository settingRepository;
 
-    private final MemberValidator memberValidator;
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public NotificationSetting getSettings(Long memberId) {
         NotificationSetting setting = settingRepository.findSettingByMember_Id(memberId)
                 .orElseGet(() -> {
-                    Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+                    Member member = findMemberByMemberIdOrThrow(memberId);
                     return settingRepository.save(NotificationSetting.defaultOn(member));
                 });
         setting.syncTypesWithEnum();
@@ -53,5 +55,10 @@ public class NotificationSettingService {
         } else {
             setting.disable(type);
         }
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

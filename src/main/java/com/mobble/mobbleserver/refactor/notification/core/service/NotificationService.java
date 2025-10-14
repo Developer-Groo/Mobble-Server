@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.refactor.notification.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import com.mobble.mobbleserver.refactor.notification.core.entity.Notification;
 import com.mobble.mobbleserver.refactor.notification.core.repository.NotificationRepository;
 import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
@@ -29,7 +29,7 @@ import static com.mobble.mobbleserver.refactor.notification.core.dto.Notificatio
 @Transactional(readOnly = true)
 public class NotificationService {
 
-    private final MemberRepository memberRepository;
+    private final JpaMemberRepository memberRepository;
     private final NotificationRepository notificationRepository;
     private final NotificationSettingRepository settingRepository;
     private final DeviceTokenRepository deviceTokenRepository;

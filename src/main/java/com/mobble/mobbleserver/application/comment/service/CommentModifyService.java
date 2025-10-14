@@ -15,7 +15,7 @@ import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

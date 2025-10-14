@@ -6,8 +6,8 @@ import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.repository.MemberRepository;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SignUpDetailsInfoService {
 
     private final TokenProvider tokenProvider;
-    private final MemberRepository memberRepository;
+    private final JpaMemberRepository memberRepository;
     private final GroundRepository groundRepository;
 
     public SignUpDetailsInfoResponseDto getSocialUserInfo(String signupToken) {

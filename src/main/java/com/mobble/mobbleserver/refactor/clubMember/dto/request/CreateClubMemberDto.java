@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 
 public record CreateClubMemberDto(
         Member member,
