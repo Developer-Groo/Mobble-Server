@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.meeting.validator;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
+import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
 import com.mobble.mobbleserver.refactor.meeting.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

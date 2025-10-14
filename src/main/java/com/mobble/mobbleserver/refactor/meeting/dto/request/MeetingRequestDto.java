@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.refactor.meeting.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
-import com.mobble.mobbleserver.refactor.meeting.entity.MeetingType;
+import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
+import com.mobble.mobbleserver.infrastructure.web.meeting.MeetingType;
 
 import java.time.LocalDateTime;
 
