@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meeting.MeetingType;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record MeetingResponseDto(
@@ -20,8 +22,14 @@ public record MeetingResponseDto(
         MeetingType type,
         int dDay
 ) {
-    
-    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount, int dDay) {
+
+    public static MeetingResponseDto toDto(Meeting meeting) {
+
+        int attendeeCount = (meeting.getMeetingMembers() == null) ?
+                0 : meeting.getMeetingMembers().size();
+
+        int dDay = calculateDDay(meeting.getDatetime());
+
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
@@ -34,5 +42,12 @@ public record MeetingResponseDto(
                 meeting.getType(),
                 dDay
         );
+    }
+
+    private static int calculateDDay(LocalDateTime meetingDateTime) {
+        LocalDate today = LocalDate.now();
+        LocalDate meetingDate = meetingDateTime.toLocalDate();
+
+        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
