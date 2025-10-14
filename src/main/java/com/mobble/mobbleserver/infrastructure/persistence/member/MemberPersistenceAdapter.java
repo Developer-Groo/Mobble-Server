@@ -35,8 +35,8 @@ public class MemberPersistenceAdapter implements MemberWritePort, MemberReadPort
     }
 
     @Override
-    public List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate) {
-        return repository.findAllByIsDeletedTrueAndDeletedAtBefore(withdrewDate);
+    public List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime softDeletedDate) {
+        return repository.findAllByIsDeletedTrueAndDeletedAtBefore(softDeletedDate);
     }
 
     @Override

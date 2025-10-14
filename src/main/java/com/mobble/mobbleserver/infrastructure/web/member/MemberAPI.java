@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.member;
 
-import com.mobble.mobbleserver.application.member.port.provided.MemberDeletePort;
+import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberQueryPort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -22,7 +22,7 @@ public class MemberAPI {
 
     private final MemberQueryPort memberQueryPort;
     private final MemberUpdatePort memberUpdatePort;
-    private final MemberDeletePort memberDeletePort;
+    private final MemberSoftDeletePort memberDeletePort;
 
 
     @GetMapping
@@ -50,7 +50,7 @@ public class MemberAPI {
     public ResponseEntity<Void> deleteMember(
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        memberDeletePort.deleteMember(memberId);
+        memberDeletePort.softDeleteMember(memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

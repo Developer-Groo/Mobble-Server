@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.scheduler.member;
 
-import com.mobble.mobbleserver.application.member.port.provided.DeleteWithdrawnMembersPort;
+import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MemberDeleteScheduler {
 
-    private final DeleteWithdrawnMembersPort deleteWithdrawMembersPort;
+    private final MembersDeletePort membersDeletePort;
 
     @Scheduled(cron = "0 0 0 * * *")
-    public void deleteWithdrawnMembers() {
-        LocalDateTime withdrewDate = LocalDateTime.now().minusDays(7);
-        log.info("Start deleting withdrew members.");
+    public void deleteMembers() {
+        LocalDateTime softDeletedDate = LocalDateTime.now().minusDays(7);
+        log.info("Start deleting soft deleted members.");
 
-        deleteWithdrawMembersPort.deleteWithdrawnMembers(withdrewDate);
-        log.info("Finished deleting withdrew members.");
+        membersDeletePort.deleteMembers(softDeletedDate);
+        log.info("Finished deleting soft deleted members.");
     }
 }

@@ -13,7 +13,7 @@ public interface MemberReadPort {
     Optional<Member> findByIdAndIsDeletedFalse(Long memberId);
 
     // soft-delete(isDeleted = true) 회원을 포함한 모든 회원 조회
-    List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime withdrewDate);
+    List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime softDeletedDate);
 
     Optional<Member> findBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId);
 }
