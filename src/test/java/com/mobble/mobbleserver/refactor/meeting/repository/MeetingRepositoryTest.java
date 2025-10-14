@@ -1,12 +1,13 @@
 package com.mobble.mobbleserver.refactor.meeting.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.infrastructure.persistence.meeting.JpaMeetingRepository;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MeetingRepositoryTest {
 
     @Autowired
-    private MeetingRepository meetingRepository;
+    private JpaMeetingRepository meetingRepository;
 
     @Autowired
     private EntityManager em;

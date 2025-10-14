@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
