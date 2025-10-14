@@ -1,8 +1,6 @@
-package com.mobble.mobbleserver.refactor.member.entity;
+package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
-import com.mobble.mobbleserver.domain.member.Gender;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
