@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.meeting.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.meeting.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;

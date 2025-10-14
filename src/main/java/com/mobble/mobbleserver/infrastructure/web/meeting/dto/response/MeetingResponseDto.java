@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.meeting.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.meeting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.infrastructure.web.meeting.Meeting;
