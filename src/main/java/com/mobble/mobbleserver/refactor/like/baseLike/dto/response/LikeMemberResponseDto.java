@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.baseLike.dto.response;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 
 public record LikeMemberResponseDto(Long memberId, String name, String profileImage) {
 

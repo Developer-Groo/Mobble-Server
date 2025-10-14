@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.support.fixture.member;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
-import com.mobble.mobbleserver.refactor.member.entity.Gender;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Gender;
+import com.mobble.mobbleserver.domain.member.Member;
 
 import java.util.UUID;
 

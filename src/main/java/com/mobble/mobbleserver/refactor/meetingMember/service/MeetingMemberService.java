@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.refactor.meetingMember.service;
 
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
@@ -9,8 +11,7 @@ import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMember
 import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,12 +26,13 @@ public class MeetingMemberService {
     private final MeetingMemberRepository meetingMemberRepository;
     private final MeetingValidator meetingValidator;
     private final MeetingMemberValidator meetingMemberValidator;
-    private final MemberValidator memberValidator;
+
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public MeetingAttendanceResponseDto attendMeeting(Long meetingId, Long memberId) {
         Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         Boolean isAttended = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId())
                 .map(attending -> {
@@ -56,5 +58,10 @@ public class MeetingMemberService {
         List<MeetingMember> meetingMembers = meetingMemberValidator.findByMeetingId(meeting.getId());
 
         return MeetingMemberListResponseDto.toDto(meeting.getId(), meetingMembers);
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

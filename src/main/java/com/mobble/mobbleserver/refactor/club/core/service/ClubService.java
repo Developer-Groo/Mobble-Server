@@ -1,8 +1,10 @@
 package com.mobble.mobbleserver.refactor.club.core.service;
 
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
@@ -34,8 +36,7 @@ import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,13 +65,14 @@ public class ClubService {
     private final ClubGroundRepository clubGroundRepository;
 
     private final ClubValidator clubValidator;
-    private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
+
+    private final MemberReadPort memberReadPort;
 
     @Transactional
     public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
         ClubCategory category = findCategoryOrThrow(dto.category());
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         Club club = dto.toEntity(category);
         clubRepository.save(club);
@@ -102,7 +104,7 @@ public class ClubService {
                 .findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER).get();
         String leaderName = leader.getMember().getName();
 
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         return buildClubResponse(club, member, leaderName);
     }
@@ -110,7 +112,7 @@ public class ClubService {
     @Transactional
     public ClubResponseDto updateClub(Long clubId, Long memberId, ClubRequestDto dto) {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         assertLeader(clubMember);
 
@@ -201,5 +203,10 @@ public class ClubService {
 
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

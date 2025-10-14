@@ -7,7 +7,7 @@ import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

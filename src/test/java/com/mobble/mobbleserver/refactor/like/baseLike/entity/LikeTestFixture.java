@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.baseLike.entity;
 
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 
 public class LikeTestFixture extends BaseLike{
 

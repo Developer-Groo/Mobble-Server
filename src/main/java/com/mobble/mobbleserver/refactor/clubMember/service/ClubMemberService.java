@@ -1,8 +1,10 @@
 package com.mobble.mobbleserver.refactor.clubMember.service;
 
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.refactor.clubMember.dto.request.UpdateClubMemberRoleDto;
@@ -15,8 +17,7 @@ import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.refactor.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,15 +33,16 @@ public class ClubMemberService {
     private final ClubMemberRepository clubMemberRepository;
 
     private final ClubValidator clubValidator;
-    private final MemberValidator memberValidator;
     private final ClubMemberValidator clubMemberValidator;
 
     private final TokenProvider tokenProvider;
 
+    private final MemberReadPort memberReadPort;
+
     @Transactional
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         boolean existsClubMember = existsClubMember(clubId, memberId);
         if (existsClubMember) throw new DomainException(ClubMemberErrorCode.ALREADY_JOINED);
@@ -58,7 +60,7 @@ public class ClubMemberService {
     @Transactional
     public void withdrawClub(Long memberId, Long clubId) {
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         boolean existsClubMember = existsClubMember(clubId, memberId);
         if (!existsClubMember) throw new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB);
@@ -78,8 +80,8 @@ public class ClubMemberService {
         ClubMemberRole newRole = dto.newRole();
 
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(targetMemberId);
-        Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
+        Member member = findMemberByMemberIdOrThrow(targetMemberId);
+        Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
         assertLeader(clubLeader);
 
@@ -104,8 +106,8 @@ public class ClubMemberService {
         JoinStatus targetStatus = dto.status();
 
         Club club = clubValidator.findClubByClubIdOrThrow(clubId);
-        Member member = memberValidator.findMemberByMemberIdOrThrow(memberId);
-        Member loginedMember = memberValidator.findMemberByMemberIdOrThrow(loginedMemberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
         assertLeader(clubLeader);
 
@@ -147,5 +149,10 @@ public class ClubMemberService {
 
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.comment.dto.request;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.member.entity.Member;
+import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
