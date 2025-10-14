@@ -45,6 +45,9 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
         member.softDelete();
     }
 
+    /**
+     * Scheduler 에서 호출하는 탈퇴 회원 삭제 메서드
+     */
     @Override
     public void deleteMembers(LocalDateTime softDeletedDate) {
         log.info("soft deleted members delete time: {}", softDeletedDate);
