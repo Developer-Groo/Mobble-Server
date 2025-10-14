@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.meeting.controller;
+package com.mobble.mobbleserver.infrastructure.web.meeting;
 
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/clubs/{club-id}/meetings")
-public class MeetingController {
+public class MeetingAPI {
 
     private final MeetingService meetingService;
 
