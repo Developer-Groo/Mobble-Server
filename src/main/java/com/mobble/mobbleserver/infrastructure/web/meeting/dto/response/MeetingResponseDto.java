@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.domain.meeting.MeetingType;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record MeetingResponseDto(
         Long meetingId,
@@ -42,6 +43,12 @@ public record MeetingResponseDto(
                 meeting.getType(),
                 dDay
         );
+    }
+
+    public static List<MeetingResponseDto> listToDto(List<Meeting> meetings) {
+        return meetings.stream()
+                .map(MeetingResponseDto::toDto)
+                .toList();
     }
 
     private static int calculateDDay(LocalDateTime meetingDateTime) {
