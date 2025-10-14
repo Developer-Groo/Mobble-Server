@@ -18,7 +18,6 @@ import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
 import com.mobble.mobbleserver.refactor.clubMember.repository.ClubMemberRepository;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

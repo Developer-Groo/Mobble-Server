@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.refactor.member.validator.MemberValidator;
 import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
 import com.mobble.mobbleserver.refactor.notification.device.entity.Platform;
 import com.mobble.mobbleserver.refactor.notification.device.repository.DeviceTokenRepository;
