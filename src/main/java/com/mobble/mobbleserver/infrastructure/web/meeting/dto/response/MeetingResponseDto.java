@@ -25,12 +25,6 @@ public record MeetingResponseDto(
 ) {
 
     public static MeetingResponseDto toDto(Meeting meeting) {
-
-        int attendeeCount = (meeting.getMeetingMembers() == null) ?
-                0 : meeting.getMeetingMembers().size();
-
-        int dDay = calculateDDay(meeting.getDatetime());
-
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
@@ -39,9 +33,9 @@ public record MeetingResponseDto(
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),
-                attendeeCount,
+                meeting.getAttendeeCount(),
                 meeting.getType(),
-                dDay
+                meeting.calculateDDay()
         );
     }
 
@@ -49,12 +43,5 @@ public record MeetingResponseDto(
         return meetings.stream()
                 .map(MeetingResponseDto::toDto)
                 .toList();
-    }
-
-    private static int calculateDDay(LocalDateTime meetingDateTime) {
-        LocalDate today = LocalDate.now();
-        LocalDate meetingDate = meetingDateTime.toLocalDate();
-
-        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
