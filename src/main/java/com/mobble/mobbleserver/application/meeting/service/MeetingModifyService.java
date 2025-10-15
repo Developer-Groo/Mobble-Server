@@ -35,11 +35,6 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         Meeting meeting = dto.toEntity(hostMember);
 
         return meetingWritePort.save(meeting);
-
-//        int attendeeCount = 0;
-//        int dDay = calculateDDay(saveMeeting.getDatetime());
-//
-//        return MeetingResponseDto.toDto(saveMeeting, attendeeCount, dDay)
     }
 
     @Override
@@ -56,12 +51,6 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
                 dto.memberLimit(),
                 dto.type()
         );
-
-//        Meeting updateMeeting = meetingWritePort.save(meeting);
-//        int attendeeCount = meeting.getMeetingMembers().size();
-//        int dDay = calculateDDay(updateMeeting.getDatetime());
-//
-//        return MeetingResponseDto.toDto(updateMeeting, attendeeCount, dDay);
     }
 
     @Override
