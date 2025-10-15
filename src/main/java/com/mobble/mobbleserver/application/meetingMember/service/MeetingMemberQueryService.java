@@ -11,7 +11,6 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +37,10 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
     }
 
     @Override
-    public MeetingMemberListResponseDto getMeetingMembers(Long meetingId) {
+    public List<MeetingMember> getMeetingMembers(Long meetingId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
-        List<MeetingMember> meetingMembers = meetingMemberReadPort.findByMeetingId(meeting.getId());
-
-        return MeetingMemberListResponseDto.toDto(meeting.getId(), meetingMembers);
+        return meetingMemberReadPort.findByMeetingId(meeting.getId());
     }
 
     private Member findMemberByMemberIdOrThrow(Long memberId) {
