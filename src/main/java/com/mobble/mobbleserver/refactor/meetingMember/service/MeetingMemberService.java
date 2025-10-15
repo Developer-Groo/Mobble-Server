@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,28 +31,21 @@ public class MeetingMemberService {
     private final MemberReadPort memberReadPort;
     private final MeetingReadPort meetingReadPort;
 
-    // 반환값 없이 참석 생성, 삭제만
     @Transactional
-    public MeetingAttendanceResponseDto attendMeeting(Long meetingId, Long memberId) {
+    public void attendMeeting(Long meetingId, Long memberId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        Boolean isAttended = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId())
-                .map(attending -> {
-                    meetingMemberRepository.delete(attending);
-                    return false;
-                })
-                .orElseGet(() -> {
-                    int currentCount = meetingMemberRepository.countByMeetingId(meeting.getId());
+        Optional<MeetingMember> result = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId());
 
-                    if (currentCount >= meeting.getMemberLimit()) throw new DomainException(MeetingMemberErrorCode.FULL_CAPACITY);
+        if (result.isPresent()) {
+            meetingMemberRepository.delete(result.get());
+        } else {
+            int currentCount = meetingMemberRepository.countByMeetingId(meeting.getId());
+            if (currentCount >= meeting.getMemberLimit()) throw new DomainException(MeetingMemberErrorCode.FULL_CAPACITY);
 
-                    MeetingMember attendedMember = MeetingMember.createMeetingMember(meeting, member);
-                    meetingMemberRepository.save(attendedMember);
-                    return true;
-                });
-
-        return MeetingAttendanceResponseDto.toDto(meeting.getId(), isAttended);
+            meetingMemberRepository.save(MeetingMember.createMeetingMember(meeting, member));
+        }
     }
 
     public MeetingAttendanceResponseDto getMeetingMember(Long meetingId, Long memberId) {
