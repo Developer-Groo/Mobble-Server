@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.meetingMember.validator;
 
-import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

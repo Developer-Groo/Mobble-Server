@@ -8,7 +8,7 @@ import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
-import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;
 import com.mobble.mobbleserver.domain.member.Member;

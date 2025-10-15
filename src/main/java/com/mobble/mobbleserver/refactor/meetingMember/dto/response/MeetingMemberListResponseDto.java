@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.meetingMember.dto.response;
 
-import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 
 import java.util.List;
 

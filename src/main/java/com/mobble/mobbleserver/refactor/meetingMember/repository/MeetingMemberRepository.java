@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.meetingMember.repository;
 
-import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
