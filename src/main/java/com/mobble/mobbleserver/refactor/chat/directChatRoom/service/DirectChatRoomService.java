@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

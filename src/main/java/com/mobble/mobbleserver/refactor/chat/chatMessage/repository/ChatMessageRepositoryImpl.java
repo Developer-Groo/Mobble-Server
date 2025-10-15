@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatMessage.repository;
 
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.QChatMessage;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;

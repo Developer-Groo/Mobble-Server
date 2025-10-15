@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response;
 
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.MessageType;
+import com.mobble.mobbleserver.domain.chat.message.MessageType;
 
 import java.time.LocalDateTime;
 

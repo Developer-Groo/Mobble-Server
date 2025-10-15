@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response;
 
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.DirectChatRoom;
 
 import java.time.LocalDateTime;

@@ -3,17 +3,10 @@ package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.service;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberValidationErrorCode;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.validator.ChatMessageValidator;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.validator.ChatRoomValidator;
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

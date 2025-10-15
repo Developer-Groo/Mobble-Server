@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatMessage.repository;
 
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 
 import java.time.LocalDateTime;
 import java.util.List;
