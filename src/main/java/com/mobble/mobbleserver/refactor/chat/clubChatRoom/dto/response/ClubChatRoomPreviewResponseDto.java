@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response;
 
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 
 import java.time.LocalDateTime;

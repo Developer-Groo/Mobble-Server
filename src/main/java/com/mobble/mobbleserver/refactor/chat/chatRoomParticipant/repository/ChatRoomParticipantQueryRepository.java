@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository;
 
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 
 import java.util.List;
 

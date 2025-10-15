@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.clubMember.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;

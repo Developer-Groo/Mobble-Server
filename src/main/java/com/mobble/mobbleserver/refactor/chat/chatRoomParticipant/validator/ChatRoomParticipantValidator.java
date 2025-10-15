@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator;
 
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

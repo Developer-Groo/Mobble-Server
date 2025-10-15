@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.QChatRoomParticipant.chatRoomParticipant;
+import static com.mobble.mobbleserver.domain.chat.room.QChatRoomParticipant.chatRoomParticipant;
 import static com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.QDirectChatRoom.directChatRoom;
 
 @RequiredArgsConstructor
