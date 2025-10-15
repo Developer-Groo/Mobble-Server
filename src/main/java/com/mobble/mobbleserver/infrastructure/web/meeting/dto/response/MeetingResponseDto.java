@@ -45,7 +45,7 @@ public record MeetingResponseDto(
         );
     }
 
-    public static List<MeetingResponseDto> listToDto(List<Meeting> meetings) {
+    public static List<MeetingResponseDto> toDto(List<Meeting> meetings) {
         return meetings.stream()
                 .map(MeetingResponseDto::toDto)
                 .toList();

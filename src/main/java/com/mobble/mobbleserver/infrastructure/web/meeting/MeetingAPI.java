@@ -51,7 +51,7 @@ public class MeetingAPI {
         List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(MeetingResponseDto.listToDto(meetings));
+                .body(MeetingResponseDto.toDto(meetings));
     }
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
