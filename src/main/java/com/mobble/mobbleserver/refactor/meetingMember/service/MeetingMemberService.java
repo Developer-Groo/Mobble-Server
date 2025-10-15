@@ -1,17 +1,18 @@
 package com.mobble.mobbleserver.refactor.meetingMember.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
-import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
 import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;
-import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +25,14 @@ import java.util.List;
 public class MeetingMemberService {
 
     private final MeetingMemberRepository meetingMemberRepository;
-    private final MeetingValidator meetingValidator;
     private final MeetingMemberValidator meetingMemberValidator;
 
     private final MemberReadPort memberReadPort;
+    private final MeetingReadPort meetingReadPort;
 
     @Transactional
     public MeetingAttendanceResponseDto attendMeeting(Long meetingId, Long memberId) {
-        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
+        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 
         Boolean isAttended = meetingMemberValidator.findMeetingByMeetingIdAndMemberId(meeting.getId(), member.getId())
@@ -53,7 +54,7 @@ public class MeetingMemberService {
     }
 
     public MeetingMemberListResponseDto getMeetingMembers(Long meetingId) {
-        Meeting meeting = meetingValidator.findMeetingByMeetingIdOrThrow(meetingId);
+        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
         List<MeetingMember> meetingMembers = meetingMemberValidator.findByMeetingId(meeting.getId());
 
@@ -63,5 +64,10 @@ public class MeetingMemberService {
     private Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
+        return meetingReadPort.findById(meetingId)
+                .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
     }
 }

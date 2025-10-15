@@ -1,10 +1,13 @@
-package com.mobble.mobbleserver.refactor.meeting.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.meeting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
-import com.mobble.mobbleserver.refactor.meeting.entity.MeetingType;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.MeetingType;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record MeetingResponseDto(
         Long meetingId,
@@ -20,8 +23,8 @@ public record MeetingResponseDto(
         MeetingType type,
         int dDay
 ) {
-    
-    public static MeetingResponseDto toDto(Meeting meeting, int attendeeCount, int dDay) {
+
+    public static MeetingResponseDto toDto(Meeting meeting) {
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
@@ -30,9 +33,15 @@ public record MeetingResponseDto(
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),
-                attendeeCount,
+                meeting.getAttendeeCount(),
                 meeting.getType(),
-                dDay
+                meeting.calculateDDay()
         );
+    }
+
+    public static List<MeetingResponseDto> toDto(List<Meeting> meetings) {
+        return meetings.stream()
+                .map(MeetingResponseDto::toDto)
+                .toList();
     }
 }

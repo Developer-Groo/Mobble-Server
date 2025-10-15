@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.meeting.entity;
+package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +87,7 @@ public class Meeting {
                 .build();
     }
 
-    public void updateMeeting(
+    public Meeting updateMeeting(
             String title,
             LocalDateTime dateTime,
             String location,
@@ -100,6 +102,7 @@ public class Meeting {
         this.cost = cost;
         this.memberLimit = memberLimit;
         this.type = type;
+        return this;
     }
 
     private void validateCommon(
@@ -129,5 +132,16 @@ public class Meeting {
         if (cost == null || cost.isBlank()) throw new DomainException(MeetingErrorCode.COST_REQUIRED);
         if (memberLimit <= 0) throw new DomainException(MeetingErrorCode.INVALID_MEMBER_LIMIT);
         if (type == null) throw new DomainException(MeetingErrorCode.TYPE_REQUIRED);
+    }
+
+    public int getAttendeeCount() {
+        return meetingMembers.size();
+    }
+
+    public int calculateDDay() {
+        LocalDate today = LocalDate.now();
+        LocalDate meetingDate = this.datetime.toLocalDate();
+
+        return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 }
