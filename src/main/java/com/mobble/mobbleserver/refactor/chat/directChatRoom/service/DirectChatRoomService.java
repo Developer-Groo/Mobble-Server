@@ -8,10 +8,10 @@ import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessag
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoomType;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.repository.ChatRoomRepository;
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatMessageRequestDto;
@@ -77,13 +77,12 @@ public class DirectChatRoomService {
         Member receiver = findMemberByMemberIdOrThrow(dto.receiverId());
 
         ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.DIRECT);
-        ChatRoomParticipant senderParticipant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, sender);
-        ChatRoomParticipant receiverParticipant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, receiver);
+        chatRoom.addParticipant(sender);
+        chatRoom.addParticipant(receiver);
+
         DirectChatRoom directChatRoom = DirectChatRoom.createDirectChatRoom(chatRoom, sender, receiver);
 
         chatRoomRepository.save(chatRoom);
-        chatRoomParticipantRepository.save(senderParticipant);
-        chatRoomParticipantRepository.save(receiverParticipant);
         directChatRoomRepository.save(directChatRoom);
 
         return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, null, 0, null);
@@ -146,9 +145,7 @@ public class DirectChatRoomService {
                 .stream()
                 .collect(Collectors.toMap(
                         participant -> participant.getChatRoom().getId(),
-                        participant -> Optional.ofNullable(participant.getLastReadMessage())
-                                .map(ChatMessage::getId)
-                                .orElse(0L)
+                        ChatRoomParticipant::getLastReadMessageId
                 ));
     }
 
