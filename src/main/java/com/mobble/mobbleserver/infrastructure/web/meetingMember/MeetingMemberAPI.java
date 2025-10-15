@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.meetingMember.controller;
+package com.mobble.mobbleserver.infrastructure.web.meetingMember;
 
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/meetings/{meeting-id}/members")
-public class MeetingMemberController {
+public class MeetingMemberAPI {
 
     private final MeetingMemberService meetingMemberService;
 
