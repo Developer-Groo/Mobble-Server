@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.mobble.mobbleserver.domain.chat.message.QChatMessage.chatMessage;
 import static com.mobble.mobbleserver.domain.chat.room.QChatRoomParticipant.chatRoomParticipant;
-import static com.mobble.mobbleserver.refactor.chat.chatMessage.entity.QChatMessage.chatMessage;
 
 @RequiredArgsConstructor
 public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQueryRepository{

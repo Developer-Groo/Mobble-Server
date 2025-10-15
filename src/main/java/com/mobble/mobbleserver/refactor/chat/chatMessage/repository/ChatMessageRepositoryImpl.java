@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.chatMessage.repository;
 
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.QChatMessage;
+import com.mobble.mobbleserver.domain.chat.message.QChatMessage;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.DateTimePath;
@@ -18,7 +18,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.mobble.mobbleserver.refactor.chat.chatMessage.entity.QChatMessage.chatMessage;
+import static com.mobble.mobbleserver.domain.chat.message.QChatMessage.chatMessage;
+
 
 @RequiredArgsConstructor
 public class ChatMessageRepositoryImpl implements ChatMessageQueryRepository {
