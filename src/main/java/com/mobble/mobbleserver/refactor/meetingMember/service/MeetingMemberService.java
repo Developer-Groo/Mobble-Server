@@ -48,7 +48,7 @@ public class MeetingMemberService {
         }
     }
 
-    public MeetingAttendanceResponseDto getMeetingMember(Long meetingId, Long memberId) {
+    public MeetingAttendanceResponseDto getIsAttended(Long meetingId, Long memberId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 
