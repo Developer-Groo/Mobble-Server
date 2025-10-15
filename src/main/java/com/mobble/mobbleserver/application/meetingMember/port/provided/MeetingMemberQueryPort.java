@@ -7,5 +7,5 @@ public interface MeetingMemberQueryPort {
 
     MeetingAttendanceResponseDto getIsAttended(Long meetingId, Long memberId);
 
-    MeetingMemberListResponseDto getMeetingMembers(Long meetingId, Long memberId);
+    MeetingMemberListResponseDto getMeetingMembers(Long meetingId);
 }

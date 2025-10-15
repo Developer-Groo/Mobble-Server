@@ -38,7 +38,7 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
     }
 
     @Override
-    public MeetingMemberListResponseDto getMeetingMembers(Long meetingId, Long memberId) {
+    public MeetingMemberListResponseDto getMeetingMembers(Long meetingId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
         List<MeetingMember> meetingMembers = meetingMemberReadPort.findByMeetingId(meeting.getId());
