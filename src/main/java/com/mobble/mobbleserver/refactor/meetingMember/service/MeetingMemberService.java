@@ -6,8 +6,8 @@ import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberE
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.meeting.entity.Meeting;
 import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
-import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
-import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.infrastructure.persistence.meetingMember.JpaMeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;

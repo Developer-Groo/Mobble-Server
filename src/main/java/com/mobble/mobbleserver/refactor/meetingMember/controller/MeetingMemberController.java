@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.meetingMember.controller;
 
-import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
-import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.service.MeetingMemberService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
