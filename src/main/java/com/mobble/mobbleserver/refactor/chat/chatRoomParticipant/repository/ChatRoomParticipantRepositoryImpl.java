@@ -1,12 +1,13 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository;
 
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.QChatRoomParticipant.chatRoomParticipant;
+import static com.mobble.mobbleserver.domain.chat.room.QChatRoomParticipant.chatRoomParticipant;
+import static com.mobble.mobbleserver.refactor.chat.chatMessage.entity.QChatMessage.chatMessage;
 
 @RequiredArgsConstructor
 public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQueryRepository{
@@ -19,7 +20,8 @@ public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQue
                 .selectFrom(chatRoomParticipant)
                 .join(chatRoomParticipant.chatRoom)
                 .fetchJoin()
-                .leftJoin(chatRoomParticipant.lastReadMessage)
+                .leftJoin(chatMessage)
+                .on(chatMessage.id.eq(chatRoomParticipant.lastReadMessageId))
                 .fetchJoin()
                 .where(
                         chatRoomParticipant.chatRoom.id.in(chatRoomId),
