@@ -14,5 +14,4 @@ public interface MeetingMemberReadPort {
     List<MeetingMember> findByMeetingId(Long meetingId);
 
     int countByMeetingId(Long meetingId);
-
 }
