@@ -5,9 +5,10 @@ import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpd
 
 public interface MeetingUpdatePort {
 
-    Meeting updateMeeting(Long memberId,
-                          Long clubId,
-                          Long meetingId,
-                          MeetingUpdateRequestDto dto
+    Meeting updateMeeting(
+            Long memberId,
+            Long clubId,
+            Long meetingId,
+            MeetingUpdateRequestDto dto
     );
 }
