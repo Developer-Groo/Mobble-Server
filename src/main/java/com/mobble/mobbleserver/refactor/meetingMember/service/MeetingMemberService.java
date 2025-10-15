@@ -9,7 +9,7 @@ import com.mobble.mobbleserver.refactor.meeting.validator.MeetingValidator;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.refactor.meetingMember.dto.response.MeetingMemberListResponseDto;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
-import com.mobble.mobbleserver.refactor.meetingMember.repository.MeetingMemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.meetingMember.JpaMeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.meetingMember.validator.MeetingMemberValidator;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MeetingMemberService {
 
-    private final MeetingMemberRepository meetingMemberRepository;
+    private final JpaMeetingMemberRepository meetingMemberRepository;
     private final MeetingValidator meetingValidator;
     private final MeetingMemberValidator meetingMemberValidator;
 
