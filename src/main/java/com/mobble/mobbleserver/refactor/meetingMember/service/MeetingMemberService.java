@@ -30,6 +30,7 @@ public class MeetingMemberService {
     private final MemberReadPort memberReadPort;
     private final MeetingReadPort meetingReadPort;
 
+    // 반환값 없이 참석 생성, 삭제만
     @Transactional
     public MeetingAttendanceResponseDto attendMeeting(Long meetingId, Long memberId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
@@ -49,6 +50,15 @@ public class MeetingMemberService {
                     meetingMemberRepository.save(attendedMember);
                     return true;
                 });
+
+        return MeetingAttendanceResponseDto.toDto(meeting.getId(), isAttended);
+    }
+
+    public MeetingAttendanceResponseDto getMeetingMember(Long meetingId, Long memberId) {
+        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
+
+        boolean isAttended = meetingMemberRepository.existsByMeeting_IdAndMember_Id(meeting.getId(), member.getId());
 
         return MeetingAttendanceResponseDto.toDto(meeting.getId(), isAttended);
     }
