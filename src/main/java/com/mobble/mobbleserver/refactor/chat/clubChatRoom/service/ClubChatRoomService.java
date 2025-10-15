@@ -8,10 +8,10 @@ import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessag
 import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoomType;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
 import com.mobble.mobbleserver.refactor.chat.chatRoom.repository.ChatRoomRepository;
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.entity.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
 import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
@@ -78,10 +78,8 @@ public class ClubChatRoomService {
         clubChatRoomValidator.existsClubChatRoomByClubIdOrThrow(club.getId());
 
         ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.GROUP);
+        chatRoom.addParticipant(member);
         chatRoomRepository.save(chatRoom);
-
-        ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
-        chatRoomParticipantRepository.save(participant);
 
         ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
         clubChatRoomRepository.save(clubChatRoom);
@@ -99,8 +97,7 @@ public class ClubChatRoomService {
         ChatRoom chatRoom = clubChatRoom.getChatRoom();
 
         if (!chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoom.getId(), member.getId())) {
-            ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(chatRoom, member);
-            chatRoomParticipantRepository.save(participant);
+            chatRoom.addParticipant(member);
         }
     }
 
@@ -169,9 +166,7 @@ public class ClubChatRoomService {
                 .stream()
                 .collect(Collectors.toMap(
                         participant -> participant.getChatRoom().getId(),
-                        participant -> Optional.ofNullable(participant.getLastReadMessage())
-                                .map(ChatMessage::getId)
-                                .orElse(0L)
+                        ChatRoomParticipant::getLastReadMessageId
                 ));
     }
 
