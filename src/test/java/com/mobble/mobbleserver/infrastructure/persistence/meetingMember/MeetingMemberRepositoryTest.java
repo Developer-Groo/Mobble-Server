@@ -1,7 +1,6 @@
-package com.mobble.mobbleserver.refactor.meetingMember.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.infrastructure.persistence.meetingMember.JpaMeetingMemberRepository;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
