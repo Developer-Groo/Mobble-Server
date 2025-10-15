@@ -1,8 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.web.meetingMember;
 
+import com.mobble.mobbleserver.application.meetingMember.port.provided.AttendMeetingPort;
+import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
-import com.mobble.mobbleserver.refactor.meetingMember.service.MeetingMemberService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,25 +15,37 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/meetings/{meeting-id}/members")
+@RequestMapping("/api/meetings/{meeting-id}")
 public class MeetingMemberAPI {
 
-    private final MeetingMemberService meetingMemberService;
+    private final AttendMeetingPort attendMeetingPort;
+    private final MeetingMemberQueryPort meetingMemberQueryPort;
 
     @PostMapping
-    public ResponseEntity<MeetingAttendanceResponseDto> toggleAttendanceMeeting(
+    public ResponseEntity<Void> toggleAttendanceMeeting(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
+            @PathVariable("meeting-id") @Positive Long meetingId
+    ) {
+        attendMeetingPort.attendMeeting(meetingId, memberId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<MeetingAttendanceResponseDto> getIsAttended(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingMemberService.attendMeeting(meetingId, memberId));
+                .body(meetingMemberQueryPort.getIsAttended(memberId, meetingId));
     }
 
-    @GetMapping
+    @GetMapping("/members")
     public ResponseEntity<MeetingMemberListResponseDto> getMeetingMembers(
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingMemberService.getMeetingMembers(meetingId));
+                .body(meetingMemberQueryPort.getMeetingMembers(meetingId));
     }
 }
