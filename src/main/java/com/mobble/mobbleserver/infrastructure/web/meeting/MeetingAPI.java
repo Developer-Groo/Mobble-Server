@@ -1,9 +1,13 @@
-package com.mobble.mobbleserver.refactor.meeting.controller;
+package com.mobble.mobbleserver.infrastructure.web.meeting;
 
-import com.mobble.mobbleserver.refactor.meeting.dto.request.MeetingRequestDto;
-import com.mobble.mobbleserver.refactor.meeting.dto.request.MeetingUpdateRequestDto;
-import com.mobble.mobbleserver.refactor.meeting.dto.response.MeetingResponseDto;
-import com.mobble.mobbleserver.refactor.meeting.service.MeetingService;
+import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
+import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
+import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
+import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +23,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/clubs/{club-id}/meetings")
-public class MeetingController {
+public class MeetingAPI {
 
-    private final MeetingService meetingService;
+    private final MeetingCreatePort meetingCreatePort;
+    private final MeetingQueryPort meetingQueryPort;
+    private final MeetingUpdatePort meetingUpdatePort;
+    private final MeetingDeletePort meetingDeletePort;
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
     @PostMapping
@@ -30,8 +37,10 @@ public class MeetingController {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
+        Meeting meeting = meetingCreatePort.createMeeting(memberId, clubId, dto);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(meetingService.createMeeting(memberId, clubId, dto));
+                .body(MeetingResponseDto.toDto(meeting));
     }
 
     @GetMapping
@@ -39,8 +48,10 @@ public class MeetingController {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
+        List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingService.findMeetingsByClubId(memberId, clubId));
+                .body(MeetingResponseDto.toDto(meetings));
     }
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
@@ -51,8 +62,10 @@ public class MeetingController {
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingUpdateRequestDto dto
     ) {
+        Meeting meeting = meetingUpdatePort.updateMeeting(memberId, clubId, meetingId, dto);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingService.updateMeeting(memberId, clubId, meetingId, dto));
+                .body(MeetingResponseDto.toDto(meeting));
     }
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
@@ -62,7 +75,8 @@ public class MeetingController {
             @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        meetingService.deleteMeeting(memberId, clubId, meetingId);
+        meetingDeletePort.deleteMeeting(memberId, clubId, meetingId);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
