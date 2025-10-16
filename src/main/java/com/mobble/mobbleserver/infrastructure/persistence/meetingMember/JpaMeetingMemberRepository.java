@@ -1,14 +1,16 @@
-package com.mobble.mobbleserver.refactor.meetingMember.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
-import com.mobble.mobbleserver.refactor.meetingMember.entity.MeetingMember;
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MeetingMemberRepository extends JpaRepository<MeetingMember, Long> {
+public interface JpaMeetingMemberRepository extends JpaRepository<MeetingMember, Long> {
 
     Optional<MeetingMember> findMeetingMemberByMeetingIdAndMemberId(Long meetingId, Long memberId);
+
+    boolean existsByMeeting_IdAndMember_Id(Long meetingId, Long memberId);
 
     List<MeetingMember> findByMeetingId(Long meetingId);
 
