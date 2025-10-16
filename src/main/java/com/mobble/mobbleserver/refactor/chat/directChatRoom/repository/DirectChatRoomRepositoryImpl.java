@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.mobble.mobbleserver.domain.chat.room.QChatRoomParticipant.chatRoomParticipant;
-import static com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.QDirectChatRoom.directChatRoom;
+import static com.mobble.mobbleserver.domain.chat.room.QDirectRoomInfo.directRoomInfo;
 
 @RequiredArgsConstructor
 public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryRepository {
@@ -25,18 +25,18 @@ public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryReposito
                 .fetch();
 
         return queryFactory
-                .selectFrom(directChatRoom)
-                .where(directChatRoom.chatRoom.id.in(chatRoomIds))
+                .selectFrom(directRoomInfo)
+                .where(directRoomInfo.chatRoom.id.in(chatRoomIds))
                 .fetchFirst() != null;
     }
 
     @Override
     public List<DirectRoomInfo> findDirectChatRoomsAllByMemberId(Long memberId) {
         return queryFactory
-                .selectFrom(directChatRoom)
+                .selectFrom(directRoomInfo)
                 .where(
-                        directChatRoom.memberA.id.eq(memberId)
-                                .or(directChatRoom.memberB.id.eq(memberId))
+                        directRoomInfo.memberA.id.eq(memberId)
+                                .or(directRoomInfo.memberB.id.eq(memberId))
                 )
                 .fetch();
     }
