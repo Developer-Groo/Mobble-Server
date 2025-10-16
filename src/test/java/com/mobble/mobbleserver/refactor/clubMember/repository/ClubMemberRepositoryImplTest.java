@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.clubMember.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
@@ -61,8 +61,8 @@ class ClubMemberRepositoryImplTest {
             em.persist(r1);
             em.persist(r2);
 
-            ClubChatRoom cc1 = ClubChatRoomTestFixture.createDefaultClubChatRoom(c1);
-            ClubChatRoom cc2 = ClubChatRoomTestFixture.createDefaultClubChatRoom(c2);
+            ClubRoomInfo cc1 = ClubChatRoomTestFixture.createDefaultClubChatRoom(c1);
+            ClubRoomInfo cc2 = ClubChatRoomTestFixture.createDefaultClubChatRoom(c2);
             em.persist(cc1.getChatRoom());
             em.persist(cc2.getChatRoom());
             em.persist(cc1);
@@ -86,7 +86,7 @@ class ClubMemberRepositoryImplTest {
 
             ClubMember rcm1 = result.get(0);
             assertThat(rcm1.getClub().getId()).isNotNull();
-            assertThat(rcm1.getClub().getClubChatRoom().getChatRoom().getId()).isNotNull();
+            assertThat(rcm1.getClub().getClubRoomInfo().getChatRoom().getId()).isNotNull();
 
             assertThat(result)
                     .extracting(cm -> cm.getClub().getId())

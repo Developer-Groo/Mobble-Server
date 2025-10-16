@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.repository;
 
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.DirectChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,7 @@ public class DirectChatRoomRepositoryImpl implements DirectChatRoomQueryReposito
     }
 
     @Override
-    public List<DirectChatRoom> findDirectChatRoomsAllByMemberId(Long memberId) {
+    public List<DirectRoomInfo> findDirectChatRoomsAllByMemberId(Long memberId) {
         return queryFactory
                 .selectFrom(directChatRoom)
                 .where(

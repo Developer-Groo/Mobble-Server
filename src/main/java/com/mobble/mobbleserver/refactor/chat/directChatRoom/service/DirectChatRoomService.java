@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
@@ -18,7 +19,6 @@ import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectCh
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.entity.DirectChatRoom;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.repository.DirectChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -79,25 +79,25 @@ public class DirectChatRoomService {
         chatRoom.addParticipant(sender);
         chatRoom.addParticipant(receiver);
 
-        DirectChatRoom directChatRoom = DirectChatRoom.createDirectChatRoom(chatRoom, sender, receiver);
+        DirectRoomInfo directRoomInfo = DirectRoomInfo.createDirectChatRoom(chatRoom, sender, receiver);
 
         chatRoomRepository.save(chatRoom);
-        directChatRoomRepository.save(directChatRoom);
+        directChatRoomRepository.save(directRoomInfo);
 
-        return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, null, 0, null);
+        return DirectChatRoomPreviewResponseDto.toDto(directRoomInfo, null, 0, null);
     }
 
     public List<DirectChatRoomPreviewResponseDto> getDirectChatRooms(Long memberId) {
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        List<DirectChatRoom> directChatRooms = directChatRoomValidator.findDirectChatRoomsAllByMemberId(memberId);
-        List<Long> chatRoomIds = extractChatRoomIds(directChatRooms);
+        List<DirectRoomInfo> directRoomInfos = directChatRoomValidator.findDirectChatRoomsAllByMemberId(memberId);
+        List<Long> chatRoomIds = extractChatRoomIds(directRoomInfos);
 
         Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
         Map<Long, ChatMessage> latestMessageMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
         Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
 
-        return directChatRooms.stream()
+        return directRoomInfos.stream()
                 .map(directChatRoom -> {
                     ChatRoom chatRoom = directChatRoom.getChatRoom();
                     Long chatRoomId = chatRoom.getId();
@@ -133,8 +133,8 @@ public class DirectChatRoomService {
         chatRoomRepository.deleteById(chatRoomId);
     }
 
-    private List<Long> extractChatRoomIds(List<DirectChatRoom> directChatRooms) {
-        return directChatRooms.stream()
+    private List<Long> extractChatRoomIds(List<DirectRoomInfo> directRoomInfos) {
+        return directRoomInfos.stream()
                 .map(chatRoom -> chatRoom.getChatRoom().getId())
                 .toList();
     }

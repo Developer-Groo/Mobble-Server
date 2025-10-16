@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
@@ -16,7 +17,6 @@ import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository.Chat
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.repository.ClubChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.validator.ClubChatRoomValidator;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
@@ -80,10 +80,10 @@ public class ClubChatRoomService {
         chatRoom.addParticipant(member);
         chatRoomRepository.save(chatRoom);
 
-        ClubChatRoom clubChatRoom = ClubChatRoom.createClubChatRoom(club, chatRoom);
-        clubChatRoomRepository.save(clubChatRoom);
+        ClubRoomInfo clubRoomInfo = ClubRoomInfo.createClubChatRoom(club, chatRoom);
+        clubChatRoomRepository.save(clubRoomInfo);
 
-        clubChatRoom.attachTo(club);
+        clubRoomInfo.attachTo(club);
 
         return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, null, 0, null);
     }
@@ -92,8 +92,8 @@ public class ClubChatRoomService {
     public void joinClubChatRoom(ClubMember clubMember) {
         Member member = clubMember.getMember();
         Club club = clubMember.getClub();
-        ClubChatRoom clubChatRoom = club.getClubChatRoom();
-        ChatRoom chatRoom = clubChatRoom.getChatRoom();
+        ClubRoomInfo clubRoomInfo = club.getClubRoomInfo();
+        ChatRoom chatRoom = clubRoomInfo.getChatRoom();
 
         if (!chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoom.getId(), member.getId())) {
             chatRoom.addParticipant(member);
@@ -113,7 +113,7 @@ public class ClubChatRoomService {
         return clubMembers.stream()
                 .map(clubMember -> {
                     Club club = clubMember.getClub();
-                    ChatRoom chatRoom = club.getClubChatRoom().getChatRoom();
+                    ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
                     Long chatRoomId = chatRoom.getId();
 
                     ChatMessage lastMessage = latestMessagesMap.get(chatRoomId);
@@ -136,27 +136,27 @@ public class ClubChatRoomService {
     public void leaveClubChatRoom(ClubMember clubMember) {
         Member member = clubMember.getMember();
         Club club = clubMember.getClub();
-        ChatRoom chatRoom = club.getClubChatRoom().getChatRoom();
+        ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
 
         chatRoomParticipantRepository.deleteByChatRoomIdAndMemberId(chatRoom.getId(), member.getId());
     }
 
     @Transactional
     public void deleteClubChatRoom(Long clubId) {
-        ClubChatRoom clubChatRoom = clubChatRoomValidator.findClubChatRoomByClubIdOrThrow(clubId);
-        ChatRoom chatRoom = clubChatRoom.getChatRoom();
+        ClubRoomInfo clubRoomInfo = clubChatRoomValidator.findClubChatRoomByClubIdOrThrow(clubId);
+        ChatRoom chatRoom = clubRoomInfo.getChatRoom();
 
-        clubChatRoom.detach();
+        clubRoomInfo.detach();
 
         chatRoomParticipantRepository.deleteByChatRoomId(chatRoom.getId());
         chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
-        clubChatRoomRepository.deleteById(clubChatRoom.getId());
+        clubChatRoomRepository.deleteById(clubRoomInfo.getId());
         chatRoomRepository.deleteById(chatRoom.getId());
     }
 
     private List<Long> extractChatRoomIds(List<ClubMember> clubMembers) {
         return clubMembers.stream()
-                .map(cm -> cm.getClub().getClubChatRoom().getChatRoom().getId())
+                .map(cm -> cm.getClub().getClubRoomInfo().getChatRoom().getId())
                 .toList();
     }
 

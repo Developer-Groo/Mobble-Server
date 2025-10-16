@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.validator;
 
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
+import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.repository.ClubChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class ClubChatRoomValidator {
         if (clubChatRoomRepository.existsClubChatRoomByClubId(clubId)) throw new IllegalArgumentException("");
     }
 
-    public ClubChatRoom findClubChatRoomByClubIdOrThrow(Long clubId) {
+    public ClubRoomInfo findClubChatRoomByClubIdOrThrow(Long clubId) {
         return clubChatRoomRepository.findByClubId(clubId)
                 .orElseThrow(() -> new IllegalArgumentException(""));
     }
