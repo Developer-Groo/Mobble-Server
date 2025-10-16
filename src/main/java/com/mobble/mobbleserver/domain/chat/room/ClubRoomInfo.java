@@ -1,6 +1,5 @@
-package com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity;
+package com.mobble.mobbleserver.domain.chat.room;
 
-import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubChatRoom {
+public class ClubRoomInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +26,13 @@ public class ClubChatRoom {
     private ChatRoom chatRoom;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ClubChatRoom(Club club, ChatRoom chatRoom) {
+    private ClubRoomInfo(Club club, ChatRoom chatRoom) {
         this.club = club;
         this.chatRoom = chatRoom;
     }
 
-    public static ClubChatRoom createClubChatRoom(Club club, ChatRoom chatRoom) {
-        return ClubChatRoom.builder()
+    public static ClubRoomInfo createClubChatRoom(Club club, ChatRoom chatRoom) {
+        return ClubRoomInfo.builder()
                 .club(club)
                 .chatRoom(chatRoom)
                 .build();

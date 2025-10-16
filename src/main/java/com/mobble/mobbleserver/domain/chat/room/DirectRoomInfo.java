@@ -1,7 +1,6 @@
-package com.mobble.mobbleserver.refactor.chat.directChatRoom.entity;
+package com.mobble.mobbleserver.domain.chat.room;
 
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class DirectChatRoom extends CreatedAtEntity {
+public class DirectRoomInfo extends CreatedAtEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,17 +31,17 @@ public class DirectChatRoom extends CreatedAtEntity {
     private Member memberB;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private DirectChatRoom(ChatRoom chatRoom, Member memberA, Member memberB) {
+    private DirectRoomInfo(ChatRoom chatRoom, Member memberA, Member memberB) {
         this.chatRoom = chatRoom;
         this.memberA = memberA;
         this.memberB = memberB;
     }
 
-    public static DirectChatRoom createDirectChatRoom(ChatRoom chatRoom, Member memberA, Member memberB) {
+    public static DirectRoomInfo createDirectChatRoom(ChatRoom chatRoom, Member memberA, Member memberB) {
         Member a = memberA.getId() < memberB.getId() ? memberA : memberB;
         Member b = memberA.getId() < memberB.getId() ? memberB : memberA;
 
-        return DirectChatRoom.builder()
+        return DirectRoomInfo.builder()
                 .chatRoom(chatRoom)
                 .memberA(a)
                 .memberB(b)
