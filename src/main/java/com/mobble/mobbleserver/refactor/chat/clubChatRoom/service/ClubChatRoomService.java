@@ -39,18 +39,8 @@ import java.util.stream.Collectors;
 public class ClubChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
-
     private final ChatMessageService chatMessageService;
-
-    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatMessageRepository chatMessageRepository;
-    private final ClubChatRoomRepository clubChatRoomRepository;
-
     private final ClubMemberValidator clubMemberValidator;
-    private final ClubChatRoomValidator clubChatRoomValidator;
-
-    private final MemberReadPort memberReadPort;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
@@ -68,109 +58,10 @@ public class ClubChatRoomService {
         messagingTemplate.convertAndSend("/topic/group/chatroom/" + dto.chatRoomId(), response);
     }
 
-    @Transactional
-    public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        Club club = clubMember.getClub();
-        Member member = clubMember.getMember();
-
-        clubChatRoomValidator.existsClubChatRoomByClubIdOrThrow(club.getId());
-
-        ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.GROUP);
-        chatRoom.addParticipant(member);
-        chatRoomRepository.save(chatRoom);
-
-        ClubRoomInfo clubRoomInfo = ClubRoomInfo.createClubChatRoom(club, chatRoom);
-        clubChatRoomRepository.save(clubRoomInfo);
-
-        clubRoomInfo.attachTo(club);
-
-        return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, null, 0, null);
-    }
-
-    @Transactional
-    public void joinClubChatRoom(ClubMember clubMember) {
-        Member member = clubMember.getMember();
-        Club club = clubMember.getClub();
-        ClubRoomInfo clubRoomInfo = club.getClubRoomInfo();
-        ChatRoom chatRoom = clubRoomInfo.getChatRoom();
-
-        if (!chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoom.getId(), member.getId())) {
-            chatRoom.addParticipant(member);
-        }
-    }
-
-    public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
-        Member member = findMemberByMemberIdOrThrow(memberId);
-
-        List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
-        List<Long> chatRoomIds = extractChatRoomIds(clubMembers);
-
-        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
-        Map<Long, ChatMessage> latestMessagesMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
-        Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
-
-        return clubMembers.stream()
-                .map(clubMember -> {
-                    Club club = clubMember.getClub();
-                    ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
-                    Long chatRoomId = chatRoom.getId();
-
-                    ChatMessage lastMessage = latestMessagesMap.get(chatRoomId);
-                    int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
-                    Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
-
-                    return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, lastMessage, unreadCount, lastReadMessageId);
-                })
-                .toList();
-    }
-
     public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long memberId, ChatMessageRequestDto dto) {
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Member member = clubMember.getMember();
 
         return chatMessageService.getMessagesForParticipant(member.getId(), dto);
-    }
-
-    @Transactional
-    public void leaveClubChatRoom(ClubMember clubMember) {
-        Member member = clubMember.getMember();
-        Club club = clubMember.getClub();
-        ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
-
-        chatRoomParticipantRepository.deleteByChatRoomIdAndMemberId(chatRoom.getId(), member.getId());
-    }
-
-    @Transactional
-    public void deleteClubChatRoom(Long clubId) {
-        ClubRoomInfo clubRoomInfo = clubChatRoomValidator.findClubChatRoomByClubIdOrThrow(clubId);
-        ChatRoom chatRoom = clubRoomInfo.getChatRoom();
-
-        clubRoomInfo.detach();
-
-        chatRoomParticipantRepository.deleteByChatRoomId(chatRoom.getId());
-        chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
-        clubChatRoomRepository.deleteById(clubRoomInfo.getId());
-        chatRoomRepository.deleteById(chatRoom.getId());
-    }
-
-    private List<Long> extractChatRoomIds(List<ClubMember> clubMembers) {
-        return clubMembers.stream()
-                .map(cm -> cm.getClub().getClubRoomInfo().getChatRoom().getId())
-                .toList();
-    }
-
-    private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
-        return chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
-                .stream()
-                .collect(Collectors.toMap(
-                        participant -> participant.getChatRoom().getId(),
-                        ChatRoomParticipant::getLastReadMessageId
-                ));
-    }
-
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
-        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }

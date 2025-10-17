@@ -38,17 +38,7 @@ import java.util.stream.Collectors;
 public class DirectChatRoomService {
 
     private final SimpMessagingTemplate messagingTemplate;
-
     private final ChatMessageService chatMessageService;
-
-    private final ChatRoomParticipantValidator chatRoomParticipantValidator;
-    private final DirectChatRoomValidator directChatRoomValidator;
-
-    private final DirectChatRoomRepository directChatRoomRepository;
-    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
-    private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
-
     private final MemberReadPort memberReadPort;
 
     @Transactional
@@ -68,84 +58,10 @@ public class DirectChatRoomService {
         messagingTemplate.convertAndSendToUser(targetMember.getEmail(), "/queue/direct/chatroom/" + dto.chatRoomId(), response);
     }
 
-    @Transactional
-    public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
-        directChatRoomValidator.existsDirectChatRoomByBetweenMembersOrThrow(memberId, dto.receiverId());
-
-        Member sender = findMemberByMemberIdOrThrow(memberId);
-        Member receiver = findMemberByMemberIdOrThrow(dto.receiverId());
-
-        ChatRoom chatRoom = ChatRoom.createChatRoom(ChatRoomType.DIRECT);
-        chatRoom.addParticipant(sender);
-        chatRoom.addParticipant(receiver);
-
-        DirectRoomInfo directRoomInfo = DirectRoomInfo.createDirectChatRoom(chatRoom, sender, receiver);
-
-        chatRoomRepository.save(chatRoom);
-        directChatRoomRepository.save(directRoomInfo);
-
-        return DirectChatRoomPreviewResponseDto.toDto(directRoomInfo, null, 0, null);
-    }
-
-    public List<DirectChatRoomPreviewResponseDto> getDirectChatRooms(Long memberId) {
-        Member member = findMemberByMemberIdOrThrow(memberId);
-
-        List<DirectRoomInfo> directRoomInfos = directChatRoomValidator.findDirectChatRoomsAllByMemberId(memberId);
-        List<Long> chatRoomIds = extractChatRoomIds(directRoomInfos);
-
-        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
-        Map<Long, ChatMessage> latestMessageMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
-        Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
-
-        return directRoomInfos.stream()
-                .map(directChatRoom -> {
-                    ChatRoom chatRoom = directChatRoom.getChatRoom();
-                    Long chatRoomId = chatRoom.getId();
-
-                    ChatMessage lastMessage = latestMessageMap.get(chatRoomId);
-                    int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
-                    Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
-
-                    return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, lastMessage, unreadCount, lastReadMessageId);
-                })
-                .toList();
-    }
-
     public List<ChatMessageResponseDto> getDirectChatRoomMessages(Long memberId, ChatMessageRequestDto dto) {
         Member member = findMemberByMemberIdOrThrow(memberId);
 
         return chatMessageService.getMessagesForParticipant(member.getId(), dto);
-    }
-
-    @Transactional
-    public void leaveDirectChatRoom(Long memberId, Long chatRoomId) {
-        ChatRoomParticipant participant = chatRoomParticipantValidator.findParticipantByChatRoomIdAndMemberIdOrThrow(chatRoomId, memberId);
-
-        chatRoomParticipantRepository.delete(participant);
-        boolean hasRemainingParticipant = chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoomId, memberId);
-
-        if (!hasRemainingParticipant) deleteDirectChatRoom(chatRoomId);
-    }
-
-    private void deleteDirectChatRoom(Long chatRoomId) {
-        chatMessageRepository.deleteByChatRoomId(chatRoomId);
-        chatRoomParticipantRepository.deleteByChatRoomId(chatRoomId);
-        chatRoomRepository.deleteById(chatRoomId);
-    }
-
-    private List<Long> extractChatRoomIds(List<DirectRoomInfo> directRoomInfos) {
-        return directRoomInfos.stream()
-                .map(chatRoom -> chatRoom.getChatRoom().getId())
-                .toList();
-    }
-
-    private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
-        return chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
-                .stream()
-                .collect(Collectors.toMap(
-                        participant -> participant.getChatRoom().getId(),
-                        ChatRoomParticipant::getLastReadMessageId
-                ));
     }
 
     private Member findMemberByMemberIdOrThrow(Long memberId) {
