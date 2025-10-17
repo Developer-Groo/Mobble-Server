@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.controller;
 
+import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomQueryPort;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.request.ClubChatMessageRequestDto;
@@ -24,6 +25,8 @@ public class ClubChatRoomController {
 
     private final ClubChatRoomService clubChatRoomService;
 
+    private final ClubChatRoomQueryPort clubChatRoomQueryPort;
+
     @MessageMapping("/group/chat/send")
     public void handleMessage(
             ClubChatMessageRequestDto dto
@@ -38,7 +41,7 @@ public class ClubChatRoomController {
         Long memberId = 1L;
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubChatRoomService.getClubChatRooms(memberId));
+                .body(clubChatRoomQueryPort.getClubChatRoomsPreview(memberId));
     }
 
     @GetMapping("/clubs/{club-id}/chat-rooms/messages")

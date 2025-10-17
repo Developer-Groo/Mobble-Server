@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.controller;
 
+import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomQueryPort;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatMessageRequestDto;
@@ -25,6 +28,11 @@ public class DirectChatRoomController {
 
     private final DirectChatRoomService directChatRoomService;
 
+    private final DirectChatRoomCreatePort directChatRoomCreatePort;
+    private final ChatRoomExitPort chatRoomExitPort;
+
+    private final DirectChatRoomQueryPort directChatRoomQueryPort;
+
     @MessageMapping("/direct/chat/send")
     public void handleMessage(
             @RequestBody DirectChatMessageRequestDto dto
@@ -41,7 +49,7 @@ public class DirectChatRoomController {
         Long memberId = 1L;
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(directChatRoomService.createDirectChatRoom(dto, memberId));
+                .body(directChatRoomCreatePort.createDirectChatRoom(dto, memberId));
     }
 
     @GetMapping("/chat-rooms/direct")
@@ -49,7 +57,7 @@ public class DirectChatRoomController {
         Long memberId = 1L;
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(directChatRoomService.getDirectChatRooms(memberId));
+                .body(directChatRoomQueryPort.getDirectChatRoomsPreview(memberId));
     }
 
     @GetMapping("/chat-rooms/messages")
@@ -67,7 +75,7 @@ public class DirectChatRoomController {
             @PathVariable("chat-room-id") @Positive Long chatRoomId
     ) {
         Long memberId = 1L;
-        directChatRoomService.leaveDirectChatRoom(chatRoomId, memberId);
+        chatRoomExitPort.leave(chatRoomId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

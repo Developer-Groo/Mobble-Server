@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.controller;
 
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.service.ChatRoomParticipantService;
+import com.mobble.mobbleserver.application.chat.room.port.provided.common.ParticipantUpdatePort;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/chat-rooms/{chat-room-id}")
 public class ChatRoomParticipantController {
 
-    private final ChatRoomParticipantService chatRoomParticipantService;
+    private final ParticipantUpdatePort participantUpdatePort;
 
     @PatchMapping("/read")
     public ResponseEntity<Void> updateLastReadMessage(
@@ -22,7 +22,7 @@ public class ChatRoomParticipantController {
             @RequestParam("message-id") @Positive Long messageId
     ) {
         Long memberId = 1L;
-        chatRoomParticipantService.updateLastReadMessage(memberId, chatRoomId, messageId);
+        participantUpdatePort.updateLastReadMessage(memberId, chatRoomId, messageId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
@@ -34,7 +34,7 @@ public class ChatRoomParticipantController {
             @RequestParam("enabled") @Positive boolean enabled
     ) {
         Long memberId = 1L;
-        chatRoomParticipantService.updateNotificationStatus(chatRoomId, memberId, enabled);
+        participantUpdatePort.updateNotification(chatRoomId, memberId, enabled);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
