@@ -63,4 +63,8 @@ public class ChatRoomParticipant extends CreatedAtEntity {
     void disableNotified() {
         this.notified = false;
     }
+
+    void detach() {
+        this.chatRoom = null;
+    }
 }
