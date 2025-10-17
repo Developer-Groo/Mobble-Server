@@ -34,7 +34,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
 
         clubChatRoomValidator.existsClubChatRoomByClubIdOrThrow(club.getId());
 
-        ChatRoom clubChatRoom = ChatRoom.createClubChatRoom(club);
+        ChatRoom clubChatRoom = ChatRoom.createClub(club);
 
         clubChatRoom.addParticipant(member);
         chatRoomRepository.save(clubChatRoom);

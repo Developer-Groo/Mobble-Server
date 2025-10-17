@@ -31,7 +31,7 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
         Member sender = findMemberByMemberIdOrThrow(memberId);
         Member receiver = findMemberByMemberIdOrThrow(dto.receiverId());
 
-        ChatRoom directChatRoom = ChatRoom.createDirectChatRoom(sender, receiver);
+        ChatRoom directChatRoom = ChatRoom.createDirect(sender, receiver);
         directChatRoom.addParticipant(sender);
         directChatRoom.addParticipant(receiver);
 

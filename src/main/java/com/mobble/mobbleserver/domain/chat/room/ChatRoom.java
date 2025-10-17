@@ -31,14 +31,14 @@ public class ChatRoom extends CreatedAtEntity {
     private RoomInfo roomInfo;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatRoomParticipant> participants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private ChatRoom(ChatRoomType type) {
         this.type = type;
     }
 
-    public static ChatRoom createDirectChatRoom(Member memberA, Member memberB) {
+    public static ChatRoom createDirect(Member memberA, Member memberB) {
         ChatRoom room = ChatRoom.builder()
                 .type(ChatRoomType.DIRECT)
                 .build();
@@ -47,7 +47,7 @@ public class ChatRoom extends CreatedAtEntity {
         return room;
     }
 
-    public static ChatRoom createClubChatRoom(Club club) {
+    public static ChatRoom createClub(Club club) {
         ChatRoom room = ChatRoom.builder()
                 .type(ChatRoomType.GROUP)
                 .build();
@@ -63,7 +63,7 @@ public class ChatRoom extends CreatedAtEntity {
 
         if (alreadyJoined) throw new IllegalStateException("");
 
-        ChatRoomParticipant participant = ChatRoomParticipant.createChatRoomParticipant(this, member);
+        Participant participant = Participant.create(this, member);
         participants.add(participant);
     }
 
@@ -91,7 +91,7 @@ public class ChatRoom extends CreatedAtEntity {
         return findParticipant(member).getJoinedAt();
     }
 
-    private ChatRoomParticipant findParticipant(Member member) {
+    private Participant findParticipant(Member member) {
         return participants.stream()
                 .filter(participant -> participant.getMember().getId().equals(member.getId()))
                 .findFirst()
