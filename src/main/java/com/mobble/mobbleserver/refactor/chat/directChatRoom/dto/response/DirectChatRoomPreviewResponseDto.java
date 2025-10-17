@@ -1,7 +1,8 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response;
 
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
-import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.member.Member;
 
 import java.time.LocalDateTime;
 
@@ -16,15 +17,16 @@ public record DirectChatRoomPreviewResponseDto(
 ) {
 
     public static DirectChatRoomPreviewResponseDto toDto(
-            DirectRoomInfo directRoomInfo,
+            ChatRoom chatRoom,
+            Member receiver,
             ChatMessage lastMessage,
             int unreadCount,
             Long lastReadMessageId
     ) {
         return new DirectChatRoomPreviewResponseDto(
-                directRoomInfo.getChatRoom().getId(),
-                directRoomInfo.getMemberB().getName(),
-                directRoomInfo.getMemberB().getProfileImage(),
+                chatRoom.getId(),
+                receiver.getName(),
+                receiver.getProfileImage(),
                 lastMessage != null ? lastMessage.getContent() : "",
                 lastMessage != null ? lastMessage.getCreatedAt() : null,
                 unreadCount,
