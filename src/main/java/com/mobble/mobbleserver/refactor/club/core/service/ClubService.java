@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.refactor.club.core.service;
 
+import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
@@ -49,7 +51,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ClubService {
 
-    private final ClubChatRoomService clubChatRoomService;
+    private final ClubChatRoomCreatePort clubChatRoomCreatePort;
+    private final ChatRoomExitPort chatRoomExitPort;
 
     private final ClubRepository clubRepository;
     private final ClubCategoryRepository clubCategoryRepository;
@@ -92,8 +95,7 @@ public class ClubService {
         ageGroupRepository.saveAll(ageGroups);
 
         // Todo: 반환값이 Club 채팅방의 preview 에 필요한 데이터이기 때문에 반환 DTO에 포함 되어야 함
-        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomService.createClubChatRoom(club.getId(),
-                member.getId());
+        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomCreatePort.createClubChatRoom(club.getId(), member.getId());
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -142,7 +144,7 @@ public class ClubService {
 
         assertLeader(clubMember);
 
-        clubChatRoomService.deleteClubChatRoom(club.getId());
+        chatRoomExitPort.delete(club.getId());
 
         List<Long> articleIds = articleRepository.findArticleIdsByClubId(club.getId());
 
