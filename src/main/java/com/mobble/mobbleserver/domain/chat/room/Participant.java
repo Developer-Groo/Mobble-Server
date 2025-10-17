@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoomParticipant extends CreatedAtEntity {
+public class Participant extends CreatedAtEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,13 +35,13 @@ public class ChatRoomParticipant extends CreatedAtEntity {
     private boolean notified = true;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ChatRoomParticipant(ChatRoom chatRoom, Member member) {
+    public Participant(ChatRoom chatRoom, Member member) {
         this.chatRoom = chatRoom;
         this.member = member;
     }
 
-    static ChatRoomParticipant createChatRoomParticipant(ChatRoom chatRoom, Member member) {
-        return ChatRoomParticipant.builder()
+    static Participant create(ChatRoom chatRoom, Member member) {
+        return Participant.builder()
                 .chatRoom(chatRoom)
                 .member(member)
                 .build();

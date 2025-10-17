@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository;
 
-import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
+import com.mobble.mobbleserver.domain.chat.room.Participant;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 import static com.mobble.mobbleserver.domain.chat.message.QChatMessage.chatMessage;
-import static com.mobble.mobbleserver.domain.chat.room.QChatRoomParticipant.chatRoomParticipant;
+import static com.mobble.mobbleserver.domain.chat.room.QParticipant.participant;
 
 @RequiredArgsConstructor
 public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQueryRepository{
@@ -15,17 +15,17 @@ public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQue
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ChatRoomParticipant> findAllByChatRoomIdsAndMemberId(List<Long> chatRoomId, Long memberId) {
+    public List<Participant> findAllByChatRoomIdsAndMemberId(List<Long> chatRoomId, Long memberId) {
         return queryFactory
-                .selectFrom(chatRoomParticipant)
-                .join(chatRoomParticipant.chatRoom)
+                .selectFrom(participant)
+                .join(participant.chatRoom)
                 .fetchJoin()
                 .leftJoin(chatMessage)
-                .on(chatMessage.id.eq(chatRoomParticipant.lastReadMessageId))
+                .on(chatMessage.id.eq(participant.lastReadMessageId))
                 .fetchJoin()
                 .where(
-                        chatRoomParticipant.chatRoom.id.in(chatRoomId),
-                        chatRoomParticipant.member.id.eq(memberId)
+                        participant.chatRoom.id.in(chatRoomId),
+                        participant.member.id.eq(memberId)
                 )
                 .fetch();
     }
