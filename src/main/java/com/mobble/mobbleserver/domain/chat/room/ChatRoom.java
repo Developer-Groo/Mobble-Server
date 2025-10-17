@@ -28,7 +28,7 @@ public class ChatRoom extends CreatedAtEntity {
     private ChatRoomType type;
 
     @OneToOne(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RoomInfo chatRoomInfo;
+    private RoomInfo roomInfo;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoomParticipant> participants = new ArrayList<>();
@@ -101,12 +101,12 @@ public class ChatRoom extends CreatedAtEntity {
     /* Info 관리 */
     private void attachDirectInfo(Member a, Member b) {
         assertType(ChatRoomType.DIRECT);
-        this.chatRoomInfo = DirectRoomInfo.create(this, a, b);
+        this.roomInfo = DirectRoomInfo.create(this, a, b);
     }
 
     private void attachClubInfo(Club club) {
         assertType(ChatRoomType.GROUP);
-        this.chatRoomInfo = ClubRoomInfo.create(this, club);
+        this.roomInfo = ClubRoomInfo.create(this, club);
     }
 
     private void assertType(ChatRoomType expected) {
@@ -119,7 +119,7 @@ public class ChatRoom extends CreatedAtEntity {
     public Member getReceiverFor(Long senderId) {
         if (this.type != ChatRoomType.DIRECT) throw new IllegalStateException("");
 
-        DirectRoomInfo directRoomInfo = (DirectRoomInfo) this.chatRoomInfo;
+        DirectRoomInfo directRoomInfo = (DirectRoomInfo) this.roomInfo;
 
         return directRoomInfo.getReceiverFor(senderId);
     }
