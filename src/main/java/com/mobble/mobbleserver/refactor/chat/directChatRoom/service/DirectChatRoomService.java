@@ -1,27 +1,15 @@
 package com.mobble.mobbleserver.refactor.chat.directChatRoom.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
-import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
-import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.repository.ChatRoomRepository;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoomParticipant;
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository.ChatRoomParticipantRepository;
-import com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.validator.ChatRoomParticipantValidator;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatMessageRequestDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.repository.DirectChatRoomRepository;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;
-import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -29,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

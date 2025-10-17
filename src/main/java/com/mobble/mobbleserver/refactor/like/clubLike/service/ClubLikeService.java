@@ -1,12 +1,12 @@
 package com.mobble.mobbleserver.refactor.like.clubLike.service;
 
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
-import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

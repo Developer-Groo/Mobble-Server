@@ -2,7 +2,10 @@ package com.mobble.mobbleserver.domain.chat.room;
 
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
