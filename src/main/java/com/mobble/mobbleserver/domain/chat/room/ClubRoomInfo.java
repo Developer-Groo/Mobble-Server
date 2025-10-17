@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @PrimaryKeyJoinColumn(name = "room_info_id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubRoomInfo extends RoomInfo{
+public class ClubRoomInfo extends RoomInfo {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id", nullable = false, unique = true)
