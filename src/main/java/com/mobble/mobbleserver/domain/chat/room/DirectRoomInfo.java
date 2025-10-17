@@ -1,26 +1,14 @@
 package com.mobble.mobbleserver.domain.chat.room;
 
-import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class DirectRoomInfo extends CreatedAtEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "direct_chat_room_id")
-    private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id", nullable = false, unique = true)
-    private ChatRoom chatRoom;
+@PrimaryKeyJoinColumn(name = "room_info_id")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class DirectRoomInfo extends RoomInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_a_id", nullable = false)
@@ -32,12 +20,12 @@ public class DirectRoomInfo extends CreatedAtEntity {
 
     @Builder(access = AccessLevel.PRIVATE)
     private DirectRoomInfo(ChatRoom chatRoom, Member memberA, Member memberB) {
-        this.chatRoom = chatRoom;
+        super.setChatRoom(chatRoom);
         this.memberA = memberA;
         this.memberB = memberB;
     }
 
-    public static DirectRoomInfo createDirectChatRoom(ChatRoom chatRoom, Member memberA, Member memberB) {
+    static DirectRoomInfo create(ChatRoom chatRoom, Member memberA, Member memberB) {
         Member a = memberA.getId() < memberB.getId() ? memberA : memberB;
         Member b = memberA.getId() < memberB.getId() ? memberB : memberA;
 
@@ -46,5 +34,9 @@ public class DirectRoomInfo extends CreatedAtEntity {
                 .memberA(a)
                 .memberB(b)
                 .build();
+    }
+
+    Member getReceiverFor(Long senderId) {
+        return this.memberA.getId().equals(senderId) ? memberB : memberA;
     }
 }
