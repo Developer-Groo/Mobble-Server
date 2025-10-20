@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.like.commentLike.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.like.commentLike;
 
 public interface CommentLikeQueryRepository {
 

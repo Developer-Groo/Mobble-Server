@@ -21,8 +21,8 @@ import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,8 +40,8 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final JpaCommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository articleLikeRepository;
 
     private final ArticleValidator articleValidator;
     private final ClubValidator clubValidator;

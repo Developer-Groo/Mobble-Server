@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.refactor.like.commentLike.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentLikeRepositoryTest {
 
     @Autowired
-    private CommentLikeRepository commentLikeRepository;
+    private JpaCommentLikeRepository commentLikeRepository;
 
     @Autowired
     private EntityManager em;

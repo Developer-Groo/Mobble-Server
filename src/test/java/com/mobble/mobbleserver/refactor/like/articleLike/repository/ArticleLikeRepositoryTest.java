@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ArticleLikeRepositoryTest {
 
     @Autowired
-    private ArticleLikeRepository articleLikeRepository;
+    private JpaArticleLikeRepository articleLikeRepository;
 
     @Autowired
     private EntityManager em;

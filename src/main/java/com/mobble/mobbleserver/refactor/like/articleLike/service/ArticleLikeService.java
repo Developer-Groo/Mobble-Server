@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
 import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike> {
 
-    private final ArticleLikeRepository articleLikeRepository;
+    private final JpaArticleLikeRepository articleLikeRepository;
     private final ArticleValidator articleValidator;
     private final ClubMemberValidator clubMemberValidator;
 

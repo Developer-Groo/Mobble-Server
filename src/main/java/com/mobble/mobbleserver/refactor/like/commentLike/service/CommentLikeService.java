@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator
 import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class CommentLikeService extends AbstractLikeService<Comment, CommentLike> {
 
-    private final CommentLikeRepository commentLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
     private final CommentReadPort commentReadPort;
     private final ClubMemberValidator clubMemberValidator;
 

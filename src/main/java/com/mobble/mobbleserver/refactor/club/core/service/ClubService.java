@@ -33,9 +33,9 @@ import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator
 import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.clubLike.JpaClubLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,9 +57,9 @@ public class ClubService {
     private final AgeGroupRepository ageGroupRepository;
     private final ArticleRepository articleRepository;
     private final JpaCommentRepository commentRepository;
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
-    private final ClubLikeRepository clubLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository articleLikeRepository;
+    private final JpaClubLikeRepository clubLikeRepository;
     private final AddressRepository addressRepository;
     private final GroundRepository groundRepository;
     private final ClubGroundRepository clubGroundRepository;
