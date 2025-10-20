@@ -2,10 +2,10 @@ package com.mobble.mobbleserver.refactor.like.articleLike.service;
 
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.LikeQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

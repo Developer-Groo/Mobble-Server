@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeToggleResponseDto;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

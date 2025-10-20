@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.clubLike.repository;
 
-import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
+import com.mobble.mobbleserver.domain.like.clubLike.ClubLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 

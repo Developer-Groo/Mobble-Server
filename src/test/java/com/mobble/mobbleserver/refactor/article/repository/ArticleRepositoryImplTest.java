@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
-import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;

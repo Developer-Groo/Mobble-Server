@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.Com
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
-import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
+import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;

@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.refactor.like.commentLike.entity;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.domain.member.Member;

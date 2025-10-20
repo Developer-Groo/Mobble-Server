@@ -1,9 +1,9 @@
-package com.mobble.mobbleserver.refactor.like.commentLike.entity;
+package com.mobble.mobbleserver.domain.like.commentLike;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.like.baseLike.BaseLike;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.BaseLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
