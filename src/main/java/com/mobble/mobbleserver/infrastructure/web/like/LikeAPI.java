@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.like.baseLike.controller;
+package com.mobble.mobbleserver.infrastructure.web.like;
 
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeToggleResponseDto;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/likes")
-public class LikeController {
+public class LikeAPI {
 
     private final LikeDispatcherService likeDispatcherService;
 
