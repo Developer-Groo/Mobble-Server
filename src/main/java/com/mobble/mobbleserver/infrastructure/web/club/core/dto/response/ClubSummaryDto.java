@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.club.search.dto.response;
 
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
-import com.mobble.mobbleserver.refactor.club.core.repository.dto.ClubLikeInfoDto;
+import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 
 import java.util.List;
