@@ -1,7 +1,5 @@
-package com.mobble.mobbleserver.refactor.meeting.entity;
+package com.mobble.mobbleserver.domain.meeting;
 
-import com.mobble.mobbleserver.domain.meeting.Meeting;
-import com.mobble.mobbleserver.domain.meeting.MeetingType;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.domain.club.core.Club;
