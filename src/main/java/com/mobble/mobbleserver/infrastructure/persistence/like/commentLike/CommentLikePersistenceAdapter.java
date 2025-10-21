@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.infrastructure.persistence.like.commentLike;
 
 import com.mobble.mobbleserver.application.like.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.required.LikeWritePort;
-import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -32,7 +31,7 @@ public class CommentLikePersistenceAdapter implements LikeWritePort<CommentLike>
      * LikeReadPort
      */
     @Override
-    public Optional<CommentLike> findLike(LikeType likeType, Long targetId, Long memberId) {
+    public Optional<CommentLike> findLike(Long targetId, Long memberId) {
         return jpaCommentLikeRepository.findLikedByCommentIdAndMemberId(targetId, memberId);
     }
 }

@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.infrastructure.persistence.like.clubLike;
 
 import com.mobble.mobbleserver.application.like.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.required.LikeWritePort;
-import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.domain.like.clubLike.ClubLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -32,7 +31,7 @@ public class ClubLikePersistenceAdapter implements LikeWritePort<ClubLike>, Like
      * LikeReadPort
      */
     @Override
-    public Optional<ClubLike> findLike(LikeType likeType, Long targetId, Long memberId) {
+    public Optional<ClubLike> findLike(Long targetId, Long memberId) {
         return jpaClubLikeRepository.findLikedByClubIdAndMemberId(targetId, memberId);
     }
 

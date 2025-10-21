@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.application.like.required.LikeMemberListReadPort;
 import com.mobble.mobbleserver.application.like.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.required.LikeWritePort;
 import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
-import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -35,7 +34,7 @@ public class ArticleLikePersistenceAdapter implements LikeWritePort<ArticleLike>
      * LikeReadPort
      */
     @Override
-    public Optional<ArticleLike> findLike(LikeType likeType, Long targetId, Long memberId) {
+    public Optional<ArticleLike> findLike(Long targetId, Long memberId) {
         return jpaArticleLikeRepository.findLikedByArticleIdAndMemberId(targetId, memberId);
     }
 
