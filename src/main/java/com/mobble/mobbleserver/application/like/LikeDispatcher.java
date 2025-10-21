@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.application.like;
 
 import com.mobble.mobbleserver.application.like.provided.LikeMemberListPort;
-import com.mobble.mobbleserver.application.like.provided.ToggleLikePort;
+import com.mobble.mobbleserver.application.like.provided.LikeTogglePort;
 import com.mobble.mobbleserver.application.like.service.ArticleLikeModifyService;
 import com.mobble.mobbleserver.application.like.service.ArticleLikeQueryService;
 import com.mobble.mobbleserver.application.like.service.ClubLikeModifyService;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikeDispatcher implements ToggleLikePort, LikeMemberListPort {
+public class LikeDispatcher implements LikeTogglePort, LikeMemberListPort {
 
     private final ArticleLikeModifyService articleLikeModifyService;
     private final ArticleLikeQueryService articleLikeQueryService;
