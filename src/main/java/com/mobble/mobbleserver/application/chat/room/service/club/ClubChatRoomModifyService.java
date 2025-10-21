@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.application.chat.room.service.club;
 
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomJoinPort;
-import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubChatRoomJoinPort {
 
-    private final ChatRoomWritePort chatRoomWritePort;
+    private final ChatRoomReadPort chatRoomReadPort;
 
     private final ClubMemberValidator clubMemberValidator;
     private final ChatRoomRepository chatRoomRepository;
@@ -33,7 +33,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
 
-        if (chatRoomWritePort.existsClubRoomInfoByClubId(clubId)) throw new IllegalStateException();
+        if (chatRoomReadPort.existsClubRoomInfo(clubId)) throw new IllegalStateException();
 
         ChatRoom clubChatRoom = ChatRoom.createClub(club);
 

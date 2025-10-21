@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.refactor.chat.chatMessage.service;
 
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.message.MessageType;
@@ -10,7 +11,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.validator.ChatRoomValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatMessageService {
 
-    private final ChatRoomValidator chatRoomValidator;
+    private final ChatRoomReadPort chatRoomReadPort;
 
     private final ChatMessageRepository chatMessageRepository;
 
@@ -37,7 +37,7 @@ public class ChatMessageService {
             MessageType messageType
     ) {
         Member sender = findMemberByMemberIdOrThrow(senderId);
-        ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(chatRoomId);
+        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
 
         ChatMessage chatMessage = ChatMessage.createChatMessage(chatRoom, sender, content, messageType);
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
@@ -54,7 +54,7 @@ public class ChatMessageService {
         Member member = memberReadPort.findByIdAndIsDeletedFalse(memberId).orElseThrow();
         Long chatRoomId = dto.chatRoomId();
 
-        ChatRoom chatRoom = chatRoomValidator.findChatRoomByChatRoomIdOrThrow(chatRoomId);
+        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
         LocalDateTime joinedAt = chatRoom.joinedAtOf(member);
 
         Long lastMessageId = dto.lastMessageId();
