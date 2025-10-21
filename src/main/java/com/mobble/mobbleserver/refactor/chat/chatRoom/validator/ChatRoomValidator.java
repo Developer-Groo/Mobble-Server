@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.chatRoom.validator;
 
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.repository.ChatRoomRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

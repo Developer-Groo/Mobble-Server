@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.repository.ChatRoomRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;

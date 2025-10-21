@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.directChatRoom.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.direct;
 
 import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.querydsl.jpa.impl.JPAQueryFactory;

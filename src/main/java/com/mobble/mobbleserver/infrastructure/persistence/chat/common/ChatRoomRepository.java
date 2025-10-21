@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.chatRoom.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.common;
 
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;

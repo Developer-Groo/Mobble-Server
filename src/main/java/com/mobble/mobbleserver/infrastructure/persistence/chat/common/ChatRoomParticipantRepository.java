@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.chatRoomParticipant.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.common;
 
 import com.mobble.mobbleserver.domain.chat.room.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,10 +10,6 @@ public interface ChatRoomParticipantRepository extends JpaRepository<Participant
     Optional<Participant> findByChatRoomIdAndMemberId(Long chatRoomId, Long memberId);
 
     boolean existsByChatRoomIdAndMemberId(Long chatRoomId, Long memberId);
-
-    void deleteByChatRoomIdAndMemberId(Long chatRoomId, Long memberId);
-
-    void deleteByChatRoomId(Long chatRoomId);
 
     long countByChatRoomId(Long id);
 }
