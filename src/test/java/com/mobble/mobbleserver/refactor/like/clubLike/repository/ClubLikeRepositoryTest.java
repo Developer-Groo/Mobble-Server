@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.like.clubLike.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.domain.member.Member;

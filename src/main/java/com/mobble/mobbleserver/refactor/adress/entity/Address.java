@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.adress.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

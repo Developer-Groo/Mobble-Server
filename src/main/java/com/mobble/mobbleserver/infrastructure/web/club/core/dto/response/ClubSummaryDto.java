@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.search.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.club.core.dto.response;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;

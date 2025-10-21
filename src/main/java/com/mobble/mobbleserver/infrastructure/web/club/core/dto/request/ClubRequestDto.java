@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.refactor.club.core.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.club.core.dto.request;
 
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import jakarta.validation.constraints.*;
 

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.core.repository.dto;
+package com.mobble.mobbleserver.infrastructure.persistence.club.core.projection;
 
 public record ClubLikeInfoDto(int likeCount, boolean isLiked) {
 

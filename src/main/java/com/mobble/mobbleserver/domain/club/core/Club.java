@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.core.entity;
+package com.mobble.mobbleserver.domain.club.core;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

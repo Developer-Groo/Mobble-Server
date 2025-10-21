@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.like.clubLike.entity;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.BaseLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;

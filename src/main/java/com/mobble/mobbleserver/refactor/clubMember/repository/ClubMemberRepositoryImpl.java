@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.mobble.mobbleserver.domain.club.core.QClub.club;
 import static com.mobble.mobbleserver.refactor.chat.chatRoom.entity.QChatRoom.chatRoom;
 import static com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.QClubChatRoom.clubChatRoom;
-import static com.mobble.mobbleserver.refactor.club.core.entity.QClub.club;
 import static com.mobble.mobbleserver.refactor.clubMember.entity.QClubMember.clubMember;
 
 @RequiredArgsConstructor
