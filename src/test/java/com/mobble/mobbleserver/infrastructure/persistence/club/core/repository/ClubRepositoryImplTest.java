@@ -1,7 +1,8 @@
-package com.mobble.mobbleserver.refactor.club.core.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.club.core.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.infrastructure.persistence.club.core.JpaClubDslRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClubRepositoryImplTest {
 
     @Autowired
-    private ClubDslRepository clubRepository;
+    private JpaClubDslRepository clubRepository;
 
     @Autowired
     private EntityManager em;
