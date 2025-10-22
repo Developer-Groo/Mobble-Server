@@ -4,7 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.mobble.mobbleserver.refactor.like.commentLike.entity.QCommentLike.commentLike;
+import static com.mobble.mobbleserver.domain.like.commentLike.QCommentLike.commentLike;
 
 @Repository
 @RequiredArgsConstructor

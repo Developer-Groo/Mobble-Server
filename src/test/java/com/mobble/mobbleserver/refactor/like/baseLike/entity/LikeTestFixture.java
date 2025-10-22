@@ -10,4 +10,9 @@ public class LikeTestFixture extends BaseLike {
         like.assignMember(member);
         return like;
     }
+
+    @Override
+    public Long getTargetId() {
+        return 1L;
+    }
 }

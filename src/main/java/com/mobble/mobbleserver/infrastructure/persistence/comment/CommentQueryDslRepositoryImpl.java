@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.mobble.mobbleserver.domain.comment.QComment.comment;
-import static com.mobble.mobbleserver.refactor.like.commentLike.entity.QCommentLike.commentLike;
+import static com.mobble.mobbleserver.domain.like.commentLike.QCommentLike.commentLike;
 
 @RequiredArgsConstructor
 public class CommentQueryDslRepositoryImpl implements CommentQueryDslRepository {

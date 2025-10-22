@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.mobble.mobbleserver.domain.like.articleLike.QArticleLike.articleLike;
 import static com.mobble.mobbleserver.refactor.article.entity.QArticle.article;
-import static com.mobble.mobbleserver.refactor.like.articleLike.entity.QArticleLike.articleLike;
 
 @Repository
 @RequiredArgsConstructor

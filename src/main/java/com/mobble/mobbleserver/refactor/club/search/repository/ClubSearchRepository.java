@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.mobble.mobbleserver.domain.like.clubLike.QClubLike.clubLike;
 import static com.mobble.mobbleserver.refactor.adress.entity.QAddress.address;
 import static com.mobble.mobbleserver.refactor.club.clubGround.entity.QClubGround.clubGround;
 import static com.mobble.mobbleserver.refactor.club.core.entity.QClub.club;
 import static com.mobble.mobbleserver.refactor.clubCategory.entity.QClubCategory.clubCategory;
 import static com.mobble.mobbleserver.refactor.ground.entity.QGround.ground;
-import static com.mobble.mobbleserver.refactor.like.clubLike.entity.QClubLike.clubLike;
 
 @Repository
 @RequiredArgsConstructor

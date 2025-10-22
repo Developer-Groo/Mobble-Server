@@ -5,7 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.mobble.mobbleserver.refactor.like.clubLike.entity.QClubLike.clubLike;
+import static com.mobble.mobbleserver.domain.like.clubLike.QClubLike.clubLike;
+
 
 @Repository
 @RequiredArgsConstructor
