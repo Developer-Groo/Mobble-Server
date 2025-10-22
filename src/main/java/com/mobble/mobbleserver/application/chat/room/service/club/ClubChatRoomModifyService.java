@@ -43,16 +43,16 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
         return ClubChatRoomPreviewResponseDto.toDto(clubChatRoom, club, null, 0, null);
     }
 
-    // Todo: 파라미터로 id 받도록 수정 필요
     @Override
-    public void joinClubChatRoom(ClubMember clubMember) {
+    public void joinClubChatRoom(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Member member = clubMember.getMember();
         Club club = clubMember.getClub();
-        ClubRoomInfo clubRoomInfo = club.getClubRoomInfo();
+
+        ClubRoomInfo clubRoomInfo = chatRoomReadPort.findClubRoomInfoByClubId(club.getId()).orElseThrow();
+
         ChatRoom chatRoom = clubRoomInfo.getChatRoom();
 
-        if (!chatRoomParticipantRepository.existsByChatRoomIdAndMemberId(chatRoom.getId(), member.getId())) {
-            chatRoom.addParticipant(member);
-        }
+        chatRoom.addParticipant(member);
     }
 }

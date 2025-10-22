@@ -4,5 +4,5 @@ import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 
 public interface ClubChatRoomJoinPort {
 
-    void joinClubChatRoom(ClubMember clubMember);
+    void joinClubChatRoom(Long clubId, Long memberId);
 }
