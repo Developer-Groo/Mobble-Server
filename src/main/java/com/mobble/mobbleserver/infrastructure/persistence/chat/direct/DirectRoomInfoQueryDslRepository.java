@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 
 import java.util.List;
 
-public interface DirectChatRoomQueryRepository {
+public interface DirectRoomInfoQueryDslRepository {
 
     boolean existsDirectChatRoomByBetweenMembers(Long senderId, Long receiverId);
 

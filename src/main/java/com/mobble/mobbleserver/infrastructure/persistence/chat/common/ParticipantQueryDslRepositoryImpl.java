@@ -10,7 +10,7 @@ import static com.mobble.mobbleserver.domain.chat.message.QChatMessage.chatMessa
 import static com.mobble.mobbleserver.domain.chat.room.QParticipant.participant;
 
 @RequiredArgsConstructor
-public class ChatRoomParticipantRepositoryImpl implements ChatRoomParticipantQueryRepository{
+public class ParticipantQueryDslRepositoryImpl implements ParticipantQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 

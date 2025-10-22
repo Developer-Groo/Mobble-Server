@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DirectChatRoomRepository extends JpaRepository<DirectRoomInfo, Long>, DirectChatRoomQueryRepository {
+public interface DirectRoomInfoRepository extends JpaRepository<DirectRoomInfo, Long>, DirectRoomInfoQueryDslRepository {
 }
