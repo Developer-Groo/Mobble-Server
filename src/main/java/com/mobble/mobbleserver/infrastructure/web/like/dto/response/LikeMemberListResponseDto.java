@@ -1,15 +1,21 @@
 package com.mobble.mobbleserver.infrastructure.web.like.dto.response;
 
-import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.domain.like.baseLike.BaseLike;
 
 import java.util.List;
-import java.util.function.Function;
 
 public record LikeMemberListResponseDto(Long targetId, List<LikeMemberResponseDto> likedMembers) {
 
-    public static <T> LikeMemberListResponseDto toDto(Long targetId, List<T> likeEntities, Function<T, Member> memberExtractor) {
-        List<LikeMemberResponseDto> likedMembers = likeEntities.stream()
-                .map(memberExtractor.andThen(LikeMemberResponseDto::toDto))
+    public static <T> LikeMemberListResponseDto toDto(List<? extends BaseLike> likes) {
+        if (likes.isEmpty()) {
+            return new LikeMemberListResponseDto(null, List.of());
+        }
+
+        Long targetId = likes.get(0).getTargetId();
+
+        List<LikeMemberResponseDto> likedMembers = likes.stream()
+                .map(BaseLike::getMember)
+                .map(LikeMemberResponseDto::toDto)
                 .toList();
 
         return new LikeMemberListResponseDto(targetId, likedMembers);
