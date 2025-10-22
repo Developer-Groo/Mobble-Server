@@ -34,5 +34,4 @@ public class ClubLikePersistenceAdapter implements LikeWritePort<ClubLike>, Like
     public Optional<ClubLike> findLike(Long targetId, Long memberId) {
         return jpaClubLikeRepository.findLikedByClubIdAndMemberId(targetId, memberId);
     }
-
 }
