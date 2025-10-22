@@ -26,4 +26,6 @@ public abstract class BaseLike {
 
         this.member = member;
     }
+
+    public abstract Long getTargetId();
 }
