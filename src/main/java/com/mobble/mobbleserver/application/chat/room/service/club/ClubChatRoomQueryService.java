@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.chat.room.service.club;
 
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomQueryPort;
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
@@ -9,7 +10,6 @@ import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
@@ -28,10 +28,11 @@ import java.util.stream.Collectors;
 public class ClubChatRoomQueryService implements ClubChatRoomQueryPort {
 
     private final MemberReadPort memberReadPort;
+    private final ChatRoomReadPort chatRoomReadPort;
 
+    // Todo: port 변경 필요
     private final ClubMemberValidator clubMemberValidator;
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
 
     @Override
     public List<ClubChatRoomPreviewResponseDto> getClubChatRoomsPreview(Long memberId) {
@@ -66,7 +67,7 @@ public class ClubChatRoomQueryService implements ClubChatRoomQueryPort {
     }
 
     private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
-        return chatRoomParticipantRepository.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
+        return chatRoomReadPort.findAllByChatRoomIdsAndMemberId(chatRoomIds, memberId)
                 .stream()
                 .collect(Collectors.toMap(
                         participant -> participant.getChatRoom().getId(),
