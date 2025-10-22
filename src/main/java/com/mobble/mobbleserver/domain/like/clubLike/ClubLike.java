@@ -34,4 +34,9 @@ public class ClubLike extends BaseLike {
                 .member(member)
                 .build();
     }
+
+    @Override
+    public Long getTargetId() {
+        return club.getId();
+    }
 }

@@ -34,4 +34,9 @@ public class CommentLike extends BaseLike {
                 .member(member)
                 .build();
     }
+
+    @Override
+    public Long getTargetId() {
+        return comment.getId();
+    }
 }
