@@ -19,11 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExitPort {
 
+    private final ChatRoomWritePort chatRoomWritePort;
+
     private final ChatRoomReadPort chatRoomReadPort;
     private final MemberReadPort memberReadPort;
 
-    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
-    private final ChatRoomRepository chatRoomRepository;
+    // Todo: port 변경 필요
     private final ChatMessageRepository chatMessageRepository;
 
     @Override
@@ -64,10 +65,10 @@ public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExi
 
     @Override
     public void delete(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElse(null);
+        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElse(null);
         if (chatRoom == null) return;
 
         chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
-        chatRoomRepository.delete(chatRoom);
+        chatRoomWritePort.delete(chatRoom);
     }
 }

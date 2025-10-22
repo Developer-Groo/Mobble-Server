@@ -3,11 +3,10 @@ package com.mobble.mobbleserver.application.chat.room.service.club;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomJoinPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomParticipantRepository;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
@@ -21,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubChatRoomJoinPort {
 
+    private final ChatRoomWritePort chatRoomWritePort;
+
     private final ChatRoomReadPort chatRoomReadPort;
 
+    // Todo: port 변경 필요
     private final ClubMemberValidator clubMemberValidator;
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatRoomParticipantRepository chatRoomParticipantRepository;
 
     @Override
     public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
@@ -38,7 +38,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
         ChatRoom clubChatRoom = ChatRoom.createClub(club);
 
         clubChatRoom.addParticipant(member);
-        chatRoomRepository.save(clubChatRoom);
+        chatRoomWritePort.save(clubChatRoom);
 
         return ClubChatRoomPreviewResponseDto.toDto(clubChatRoom, club, null, 0, null);
     }
