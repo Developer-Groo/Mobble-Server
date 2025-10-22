@@ -8,7 +8,7 @@ import static com.mobble.mobbleserver.domain.like.commentLike.QCommentLike.comme
 
 @Repository
 @RequiredArgsConstructor
-public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository {
+public class CommentLikeQueryDslRepositoryImpl implements CommentLikeQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 

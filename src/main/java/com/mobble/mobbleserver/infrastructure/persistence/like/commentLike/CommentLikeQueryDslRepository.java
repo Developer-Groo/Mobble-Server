@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like.commentLike;
 
-public interface CommentLikeQueryRepository {
+public interface CommentLikeQueryDslRepository {
 
     void deleteAllByArticleId(Long articleId);
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import java.util.List;
 import java.util.Optional;
 
-public interface JpaCommentLikeRepository extends CommentLikeQueryRepository, JpaRepository<CommentLike, Long> {
+public interface JpaCommentLikeRepository extends JpaRepository<CommentLike, Long>, CommentLikeQueryDslRepository {
 
     Optional<CommentLike> findLikedByCommentIdAndMemberId(Long commentId, Long memberId);
 
