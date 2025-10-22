@@ -18,7 +18,15 @@ public class ChatRoomPersistenceAdapter implements ChatRoomWritePort, ChatRoomRe
     private final ClubRoomInfoRepository clubRoomInfoRepository;
 
     /* ChatRoomWritePort */
+    @Override
+    public ChatRoom save(ChatRoom chatRoom) {
+        return chatRoomRepository.save(chatRoom);
+    }
 
+    @Override
+    public void delete(ChatRoom chatRoom) {
+        chatRoomRepository.delete(chatRoom);
+    }
 
     /* ChatRoomReadPort */
     @Override
