@@ -1,8 +1,10 @@
 package com.mobble.mobbleserver.application.like.required;
 
-import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
+import com.mobble.mobbleserver.domain.like.baseLike.BaseLike;
 
-public interface LikeMemberListReadPort {
+import java.util.List;
 
-    LikeMemberListResponseDto getLikedMembers(Long articleId);
+public interface LikeMemberListReadPort<T extends BaseLike> {
+
+    List<T> getLikeEntities(Long targetId);
 }

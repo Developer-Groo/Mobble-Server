@@ -6,13 +6,15 @@ import com.mobble.mobbleserver.application.like.service.ArticleLikeModifyService
 import com.mobble.mobbleserver.application.like.service.ArticleLikeQueryService;
 import com.mobble.mobbleserver.application.like.service.ClubLikeModifyService;
 import com.mobble.mobbleserver.application.like.service.CommentLikeModifyService;
+import com.mobble.mobbleserver.domain.like.baseLike.BaseLike;
 import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +37,9 @@ public class LikeDispatcher implements LikeTogglePort, LikeMemberListPort {
 
     @Override
     @Transactional
-    public LikeMemberListResponseDto getMemberList(LikeType likeType, Long targetId) {
+    public List<? extends BaseLike> getLikeEntities(LikeType likeType, Long targetId) {
         if (likeType == LikeType.ARTICLE) {
-            return articleLikeQueryService.getMemberList(targetId);
+            return articleLikeQueryService.getLikeEntities(targetId);
         }
         throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
     }
