@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.club.core.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.club.core;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.club.core.Club;
