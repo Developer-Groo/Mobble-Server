@@ -6,5 +6,4 @@ import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubRes
 public interface ClubCreatePort {
 
     ClubResponseDto createClub(Long memberId, ClubRequestDto dto);
-
 }

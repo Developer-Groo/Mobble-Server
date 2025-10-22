@@ -49,7 +49,6 @@ public class ClubQueryService implements ClubQueryPort {
         ClubMember leader = clubMemberRepository
                 .findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER).get();
         String leaderName = leader.getMember().getName();
-
         Member member = findMemberByMemberIdOrThrow(memberId);
 
         return buildClubResponse(club, member, leaderName);

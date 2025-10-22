@@ -160,7 +160,6 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
@@ -203,5 +202,4 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         return ClubResponseDto.toDto(club, leaderName, address, ageGroupList, groundList, likeInfo);
     }
-
 }

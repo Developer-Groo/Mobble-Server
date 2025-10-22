@@ -7,5 +7,4 @@ public interface ClubWritePort {
     Club save(Club club);
 
     void delete(Club club);
-
 }

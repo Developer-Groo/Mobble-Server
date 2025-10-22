@@ -10,6 +10,5 @@ public interface ClubQueryDslRepository {
 
     ClubLikeInfoDto findLikeInfoByClubIdAndMemberId(Long clubId, Long memberId);
 
-
     List<Club> searchClubs(ClubSearchRequestDto dto);
 }
