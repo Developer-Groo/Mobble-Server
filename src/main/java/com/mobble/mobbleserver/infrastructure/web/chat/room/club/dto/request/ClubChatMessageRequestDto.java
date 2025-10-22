@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.request;
 
 import com.mobble.mobbleserver.domain.chat.message.MessageType;
 

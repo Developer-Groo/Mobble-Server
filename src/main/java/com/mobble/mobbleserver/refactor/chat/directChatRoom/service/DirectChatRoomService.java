@@ -8,8 +8,8 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatMessageRequestDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatMessageResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.request.DirectChatMessageRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatMessageResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;

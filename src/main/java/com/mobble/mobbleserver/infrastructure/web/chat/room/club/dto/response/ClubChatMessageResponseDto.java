@@ -1,10 +1,10 @@
-package com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response;
 
 import com.mobble.mobbleserver.domain.chat.message.MessageType;
 
 import java.time.LocalDateTime;
 
-public record DirectChatMessageResponseDto(
+public record ClubChatMessageResponseDto(
         Long chatRoomId,
         String content,
         MessageType type,
@@ -13,7 +13,7 @@ public record DirectChatMessageResponseDto(
         LocalDateTime sentAt
 ) {
 
-    public static DirectChatMessageResponseDto toDto(
+    public static ClubChatMessageResponseDto toDto(
             Long chatRoomId,
             String content,
             MessageType type,
@@ -21,7 +21,7 @@ public record DirectChatMessageResponseDto(
             String senderName,
             LocalDateTime sentAt
     ) {
-        return new DirectChatMessageResponseDto(
+        return new ClubChatMessageResponseDto(
                 chatRoomId,
                 content,
                 type,
@@ -31,4 +31,3 @@ public record DirectChatMessageResponseDto(
         );
     }
 }
-
