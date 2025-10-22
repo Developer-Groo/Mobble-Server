@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.port.provided.club;
 
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 
 public interface ClubChatRoomCreatePort {
 
