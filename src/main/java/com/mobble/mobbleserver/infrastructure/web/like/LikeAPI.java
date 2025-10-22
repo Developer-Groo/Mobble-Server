@@ -1,30 +1,36 @@
 package com.mobble.mobbleserver.infrastructure.web.like;
 
-import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeToggleResponseDto;
+import com.mobble.mobbleserver.application.like.provided.LikeMemberListPort;
+import com.mobble.mobbleserver.application.like.provided.LikeTogglePort;
+import com.mobble.mobbleserver.domain.like.baseLike.BaseLike;
 import com.mobble.mobbleserver.domain.like.baseLike.LikeType;
-import com.mobble.mobbleserver.refactor.like.baseLike.service.LikeDispatcherService;
+import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/likes")
 public class LikeAPI {
 
-    private final LikeDispatcherService likeDispatcherService;
+    private final LikeTogglePort likeTogglePort;
+    private final LikeMemberListPort likeMemberListPort;
 
     @PostMapping
-    public ResponseEntity<LikeToggleResponseDto> toggleLike(
+    public ResponseEntity<Void> toggleLike(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(likeDispatcherService.toggleLike(likeType, targetId, memberId));
+        likeTogglePort.toggleLike(likeType, targetId, memberId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 
     @GetMapping("/members")
@@ -32,7 +38,9 @@ public class LikeAPI {
             @RequestParam LikeType likeType,
             @RequestParam Long targetId
     ) {
+        List<? extends BaseLike> likes = likeMemberListPort.getLikeEntities(likeType, targetId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(likeDispatcherService.getMemberList(likeType, targetId));
+                .body(LikeMemberListResponseDto.toDto(likes));
     }
 }
