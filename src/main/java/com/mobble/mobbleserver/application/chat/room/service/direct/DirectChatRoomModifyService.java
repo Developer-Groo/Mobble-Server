@@ -1,15 +1,15 @@
 package com.mobble.mobbleserver.application.chat.room.service.direct;
 
 import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
+import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.refactor.chat.directChatRoom.dto.response.DirectChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.validator.DirectChatRoomValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
 
-    private final MemberReadPort memberReadPort;
+    private final ChatRoomWritePort chatRoomWritePort;
 
-    private final DirectChatRoomValidator directChatRoomValidator;
-    private final ChatRoomRepository chatRoomRepository;
+    private final MemberReadPort memberReadPort;
+    private final ChatRoomReadPort chatRoomReadPort;
 
     @Override
     public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
-        directChatRoomValidator.existsDirectChatRoomByBetweenMembersOrThrow(memberId, dto.receiverId());
+        // Todo: DB Unique 제약 필요 (memberA + memberB)
+        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, dto.receiverId())) throw new IllegalStateException();
 
         Member sender = findMemberByMemberIdOrThrow(memberId);
         Member receiver = findMemberByMemberIdOrThrow(dto.receiverId());
@@ -35,7 +36,7 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
         directChatRoom.addParticipant(sender);
         directChatRoom.addParticipant(receiver);
 
-        chatRoomRepository.save(directChatRoom);
+        chatRoomWritePort.save(directChatRoom);
 
         return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, receiver, null, 0, null);
     }
