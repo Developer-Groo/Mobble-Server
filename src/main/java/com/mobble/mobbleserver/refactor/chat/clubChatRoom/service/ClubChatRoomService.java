@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.refactor.chat.clubChatRoom.service;
 
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.chat.message.dto.request.ChatMessageRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.chat.message.dto.response.ChatMessageResponseDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.service.ChatMessageService;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.request.ClubChatMessageRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatMessageResponseDto;

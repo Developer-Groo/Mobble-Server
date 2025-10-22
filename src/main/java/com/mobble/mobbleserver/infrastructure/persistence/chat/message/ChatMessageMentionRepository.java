@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.chatMessageMention.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.message;
 
 import com.mobble.mobbleserver.domain.chat.message.ChatMessageMention;
 import org.springframework.data.jpa.repository.JpaRepository;

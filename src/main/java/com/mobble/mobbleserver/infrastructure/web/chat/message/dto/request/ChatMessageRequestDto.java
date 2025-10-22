@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.chat.message.dto.request;
 
 import jakarta.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;

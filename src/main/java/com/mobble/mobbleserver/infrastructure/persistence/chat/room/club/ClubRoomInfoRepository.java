@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.chat.club;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.room.club;
 
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

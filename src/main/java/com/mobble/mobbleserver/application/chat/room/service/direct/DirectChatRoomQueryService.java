@@ -10,7 +10,7 @@ import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.message.ChatMessageRepository;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatRoomPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

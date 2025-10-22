@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.chat.common;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.room.common;
 
 import com.mobble.mobbleserver.domain.chat.room.Participant;
 

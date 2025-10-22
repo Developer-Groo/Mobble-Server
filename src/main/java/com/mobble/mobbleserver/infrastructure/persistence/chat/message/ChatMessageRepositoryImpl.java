@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.chat.chatMessage.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.message;
 
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.message.QChatMessage;

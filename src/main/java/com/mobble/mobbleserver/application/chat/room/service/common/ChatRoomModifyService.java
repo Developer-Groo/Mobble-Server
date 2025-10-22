@@ -8,7 +8,7 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.chat.chatMessage.repository.ChatMessageRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.message.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

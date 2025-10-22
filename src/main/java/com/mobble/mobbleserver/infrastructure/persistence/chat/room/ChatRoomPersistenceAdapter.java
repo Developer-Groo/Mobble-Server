@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.chat;
+package com.mobble.mobbleserver.infrastructure.persistence.chat.room;
 
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
@@ -6,10 +6,10 @@ import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.mobble.mobbleserver.domain.chat.room.Participant;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.club.ClubRoomInfoRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ChatRoomRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.common.ParticipantRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.direct.DirectRoomInfoRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.club.ClubRoomInfoRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.ChatRoomRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.ParticipantRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.direct.DirectRoomInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
