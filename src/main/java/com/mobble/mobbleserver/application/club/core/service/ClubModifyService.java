@@ -5,6 +5,8 @@ import com.mobble.mobbleserver.application.club.core.port.provided.ClubDeletePor
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubUpdatePort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubWritePort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -29,11 +31,9 @@ import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubCategory.repository.ClubCategoryRepository;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.refactor.clubMember.repository.ClubMemberRepository;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
@@ -53,14 +53,15 @@ import java.util.stream.Collectors;
 public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDeletePort {
 
     private final ClubWritePort clubWritePort;
-    private final ClubReadPort clubReadPort;
+    private final ClubMemberWritePort clubMemberWritePort;
 
+    private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
 
     private final ClubChatRoomService clubChatRoomService;
 
     private final ClubCategoryRepository clubCategoryRepository;
-    private final ClubMemberRepository clubMemberRepository;
     private final AgeGroupRepository ageGroupRepository;
     private final AddressRepository addressRepository;
     private final GroundRepository groundRepository;
@@ -70,8 +71,6 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
     private final ClubLikeRepository clubLikeRepository;
-
-    private final ClubMemberValidator clubMemberValidator;
 
     @Override
     public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
@@ -90,7 +89,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         clubGroundRepository.saveAll(clubGrounds);
 
         ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
-        clubMemberRepository.save(clubMember);
+        clubMemberWritePort.save(clubMember);
 
         List<AgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
         ageGroupRepository.saveAll(ageGroups);
@@ -106,7 +105,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     public ClubResponseDto updateClub(Long clubId, Long memberId, ClubRequestDto dto) {
         Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         assertLeader(clubMember);
 
         ClubCategory category = findCategoryOrThrow(dto.category());
@@ -130,7 +129,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
     @Override
     public void deleteClub(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Club club = clubMember.getClub();
 
         assertLeader(clubMember);
@@ -143,7 +142,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         commentRepository.deleteAllCommentByArticle_IdIn(articleIds);
         articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
         articleRepository.deleteAllArticleByClub_Id(club.getId());
-        clubMemberRepository.deleteAllClubMemberByClubId(club.getId());
+        clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
         ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
@@ -158,6 +157,11 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 
     private void assertLeader(ClubMember clubMember) {
