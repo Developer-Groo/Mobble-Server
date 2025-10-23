@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public interface ChatMessageQueryRepository {
+public interface ChatMessageQueryDslRepository {
 
     List<ChatMessage> findMessagesFrom(Long chatroomId, LocalDateTime startDate, Long lastMessageId, LocalDateTime lastCreatedAt);
 

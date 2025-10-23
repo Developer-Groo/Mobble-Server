@@ -6,10 +6,10 @@ import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.mobble.mobbleserver.domain.chat.room.Participant;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.room.club.ClubRoomInfoRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.ChatRoomRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.ParticipantRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.room.direct.DirectRoomInfoRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.club.JpaClubRoomInfoRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.JpaChatRoomRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.common.JpaParticipantRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.room.direct.JpaDirectRoomInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +20,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatRoomPersistenceAdapter implements ChatRoomWritePort, ChatRoomReadPort {
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final ParticipantRepository participantRepository;
-    private final ClubRoomInfoRepository clubRoomInfoRepository;
-    private final DirectRoomInfoRepository directRoomInfoRepository;
+    private final JpaChatRoomRepository chatRoomRepository;
+    private final JpaParticipantRepository participantRepository;
+    private final JpaClubRoomInfoRepository clubRoomInfoRepository;
+    private final JpaDirectRoomInfoRepository directRoomInfoRepository;
 
     /* ChatRoomWritePort */
     @Override

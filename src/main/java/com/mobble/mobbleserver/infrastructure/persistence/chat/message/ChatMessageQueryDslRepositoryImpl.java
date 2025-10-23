@@ -22,7 +22,7 @@ import static com.mobble.mobbleserver.domain.chat.message.QChatMessage.chatMessa
 
 
 @RequiredArgsConstructor
-public class ChatMessageRepositoryImpl implements ChatMessageQueryRepository {
+public class ChatMessageQueryDslRepositoryImpl implements ChatMessageQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 

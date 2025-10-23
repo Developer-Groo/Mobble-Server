@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ClubRoomInfoRepository extends JpaRepository<ClubRoomInfo, Long> {
+public interface JpaClubRoomInfoRepository extends JpaRepository<ClubRoomInfo, Long> {
 
     Optional<ClubRoomInfo> findByClub_Id(Long clubId);
 
