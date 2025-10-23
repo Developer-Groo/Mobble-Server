@@ -1,10 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.chat.message;
 
-import com.mobble.mobbleserver.infrastructure.web.chat.message.dto.request.ChatMessageRequestDto;
+import com.mobble.mobbleserver.application.chat.message.port.provided.MessageQueryPort;
 import com.mobble.mobbleserver.infrastructure.web.chat.message.dto.response.ChatMessageResponseDto;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.service.ClubChatRoomService;
-import com.mobble.mobbleserver.refactor.chat.directChatRoom.service.DirectChatRoomService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Validated
@@ -20,27 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ChatMessageAPI {
-    // Todo: api 병합 설계 필요
 
-    private final ClubChatRoomService clubChatRoomService;
-    private final DirectChatRoomService directChatRoomService;
+    private final MessageQueryPort messageQueryPort;
 
-    @GetMapping("/clubs/{club-id}/chat-rooms/messages")
-    public ResponseEntity<List<ChatMessageResponseDto>> getClubChatRoomMessages(
-            @PathVariable(name = "club-id") @Positive Long clubId,
-            @RequestBody @Valid ChatMessageRequestDto dto,
+    @GetMapping("/chat-rooms/{chat-room-id}/messages")
+    public ResponseEntity<List<ChatMessageResponseDto>> list(
+            @PathVariable(name = "chat-room-id") @Positive Long chatRoomId,
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(required = false) LocalDateTime lastCreatedAt,
+            @RequestParam(defaultValue = "prev") String direction,
+            @RequestParam(defaultValue = "50") int limit,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubChatRoomService.getClubChatRoomMessages(clubId, memberId, dto));
-    }
-
-    @GetMapping("/chat-rooms/messages")
-    public ResponseEntity<List<ChatMessageResponseDto>> getDirectChatRoomMessages(
-            @RequestBody @Valid ChatMessageRequestDto dto,
-            @AuthenticationPrincipal(expression = "memberId") Long memberId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(directChatRoomService.getDirectChatRoomMessages(memberId, dto));
+                .body(messageQueryPort.list(chatRoomId, memberId, cursor, lastCreatedAt, direction, limit));
     }
 }
