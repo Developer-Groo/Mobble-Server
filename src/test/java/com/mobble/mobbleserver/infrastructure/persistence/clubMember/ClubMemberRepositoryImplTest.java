@@ -1,17 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.persistence.clubMember;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
-import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
-import com.mobble.mobbleserver.support.fixture.chat.chatRoom.ChatRoomTestFixture;
-import com.mobble.mobbleserver.support.fixture.chat.clubChatRoom.ClubChatRoomTestFixture;
-import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
