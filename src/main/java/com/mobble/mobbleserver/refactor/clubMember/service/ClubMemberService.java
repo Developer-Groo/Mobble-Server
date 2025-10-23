@@ -1,13 +1,15 @@
 package com.mobble.mobbleserver.refactor.clubMember.service;
 
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
-import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
 import com.mobble.mobbleserver.refactor.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.refactor.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.refactor.clubMember.dto.response.ClubMemberResponseDto;
@@ -32,16 +34,16 @@ public class ClubMemberService {
 
     private final ClubMemberRepository clubMemberRepository;
 
-    private final ClubValidator clubValidator;
     private final ClubMemberValidator clubMemberValidator;
 
     private final TokenProvider tokenProvider;
 
     private final MemberReadPort memberReadPort;
+    private final ClubReadPort clubReadPort;
 
     @Transactional
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 
         boolean existsClubMember = existsClubMember(clubId, memberId);
@@ -59,7 +61,7 @@ public class ClubMemberService {
 
     @Transactional
     public void withdrawClub(Long memberId, Long clubId) {
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 
         boolean existsClubMember = existsClubMember(clubId, memberId);
@@ -79,7 +81,7 @@ public class ClubMemberService {
         Long targetMemberId = dto.memberId();
         ClubMemberRole newRole = dto.newRole();
 
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(targetMemberId);
         Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
@@ -105,7 +107,7 @@ public class ClubMemberService {
         Long memberId = dto.memberId();
         JoinStatus targetStatus = dto.status();
 
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
         Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
         ClubMember clubLeader = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
@@ -123,13 +125,18 @@ public class ClubMemberService {
     }
 
     public List<ClubMemberResponseDto> findClubMembers(Long clubId) {
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
 
         List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
 
         return clubMembers.stream()
                 .map(ClubMemberResponseDto::toEntity)
                 .collect(Collectors.toList());
+    }
+
+    private Club findClubByClubIdOrThrow(Long clubId) {
+        return clubReadPort.findById(clubId)
+                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
     }
 
     private JoinStatus determineJoinStatus(Club club) {

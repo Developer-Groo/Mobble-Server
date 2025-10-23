@@ -1,11 +1,13 @@
 package com.mobble.mobbleserver.refactor.article.service;
 
+import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
@@ -17,8 +19,7 @@ import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import com.mobble.mobbleserver.refactor.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
-import com.mobble.mobbleserver.refactor.club.core.validator.ClubValidator;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
@@ -44,15 +45,15 @@ public class ArticleService {
     private final ArticleLikeRepository articleLikeRepository;
 
     private final ArticleValidator articleValidator;
-    private final ClubValidator clubValidator;
     private final ClubMemberValidator clubMemberValidator;
 
+    private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
+        Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
         ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         assertCanPost(clubMember, dto.articleType());
@@ -62,7 +63,7 @@ public class ArticleService {
     }
 
     public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
-        Club club = clubValidator.findClubByClubIdOrThrow(clubId);
+        Club club = findClubByClubIdOrThrow(clubId);
         List<Article> articles = articleRepository.findArticlesByClubId(clubId, articleType);
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
         Map<Long, Integer> commentCountMap = getArticleCommentCount(articles);
@@ -123,6 +124,11 @@ public class ArticleService {
         boolean isMine = articleRepository.existsArticleByIdAndMemberId(article.getId(), memberId);
 
         return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
+    }
+
+    private Club findClubByClubIdOrThrow(Long clubId) {
+        return clubReadPort.findById(clubId)
+                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
     }
 
     private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {

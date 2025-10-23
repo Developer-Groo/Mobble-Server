@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.mobble.mobbleserver.domain.chat.room.QChatRoom.chatRoom;
-import static com.mobble.mobbleserver.domain.chat.room.QClubRoomInfo.clubRoomInfo;
-import static com.mobble.mobbleserver.refactor.club.core.entity.QClub.club;
+import static com.mobble.mobbleserver.domain.club.core.QClub.club;
+import static com.mobble.mobbleserver.refactor.chat.chatRoom.entity.QChatRoom.chatRoom;
+import static com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.QClubChatRoom.clubChatRoom;
 import static com.mobble.mobbleserver.refactor.clubMember.entity.QClubMember.clubMember;
 
 @RequiredArgsConstructor
@@ -22,9 +22,9 @@ public class ClubMemberRepositoryImpl implements ClubMemberQueryRepository {
                 .selectFrom(clubMember)
                 .join(clubMember.club, club)
                 .fetchJoin()
-                .join(club.clubRoomInfo, clubRoomInfo)
+                .join(club.clubChatRoom, clubChatRoom)
                 .fetchJoin()
-                .join(clubRoomInfo.chatRoom, chatRoom)
+                .join(clubChatRoom.chatRoom, chatRoom)
                 .fetchJoin()
                 .where(clubMember.member.id.eq(memberId))
                 .fetch();
