@@ -1,14 +1,18 @@
 package com.mobble.mobbleserver.refactor.article.service;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
@@ -20,9 +24,6 @@ import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import com.mobble.mobbleserver.refactor.article.repository.ArticleRepository;
 import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,16 +46,16 @@ public class ArticleService {
     private final ArticleLikeRepository articleLikeRepository;
 
     private final ArticleValidator articleValidator;
-    private final ClubMemberValidator clubMemberValidator;
 
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Transactional
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
         Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         assertCanPost(clubMember, dto.articleType());
         Article article = dto.toEntity(club, member);
@@ -87,7 +88,7 @@ public class ArticleService {
     public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = articleValidator.findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
         Long clubId = article.getClub().getId();
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         assertCanPost(clubMember, dto.articleType());
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
@@ -99,7 +100,7 @@ public class ArticleService {
     public void deleteArticle(Long articleId, Long memberId) {
         Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
         boolean isOwner = articleRepository.existsArticleByIdAndMemberId(articleId, memberId);
 
@@ -158,5 +159,10 @@ public class ArticleService {
     private Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 }

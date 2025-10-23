@@ -1,10 +1,10 @@
 package com.mobble.mobbleserver.support.fixture.clubMember;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
 
 public class ClubMemberTestFixture {
 

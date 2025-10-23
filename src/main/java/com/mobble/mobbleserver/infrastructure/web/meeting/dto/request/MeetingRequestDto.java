@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meeting.MeetingType;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 
 import java.time.LocalDateTime;
 

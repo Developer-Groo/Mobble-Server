@@ -8,12 +8,12 @@ import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
-import com.mobble.mobbleserver.refactor.clubMember.repository.ClubMemberRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.clubMember.JpaClubMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class SocialLoginService {
 
     private final SocialVerifierFactory verifierFactory;
     private final TokenProvider tokenProvider;
-    private final ClubMemberRepository clubMemberRepository;
+    private final JpaClubMemberRepository clubMemberRepository;
 
     private final MemberReadPort memberReadPort;
 

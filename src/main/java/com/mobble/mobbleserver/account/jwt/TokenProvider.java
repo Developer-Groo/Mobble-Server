@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.account.jwt;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
