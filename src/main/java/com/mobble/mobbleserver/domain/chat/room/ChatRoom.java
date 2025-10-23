@@ -75,6 +75,11 @@ public class ChatRoom extends CreatedAtEntity {
         });
     }
 
+    public boolean hasParticipant(Member member) {
+        return participants.stream()
+                .anyMatch(participant -> participant.getMember().getId().equals(member.getId()));
+    }
+
     public void enableNotified(Member member) {
         findParticipant(member).enableNotified();
     }
