@@ -5,4 +5,6 @@ import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 public interface MessageWritePort {
 
     ChatMessage save(ChatMessage chatMessage);
+
+    void delete(Long chatRoomId);
 }
