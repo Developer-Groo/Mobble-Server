@@ -59,7 +59,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
     }
 
     @Override
-    public void withdrawClub(Long memberId, Long clubId) {
+    public void leaveClub(Long memberId, Long clubId) {
         Club club = findClubByClubIdOrThrow(clubId);
         Member member = findMemberByMemberIdOrThrow(memberId);
 

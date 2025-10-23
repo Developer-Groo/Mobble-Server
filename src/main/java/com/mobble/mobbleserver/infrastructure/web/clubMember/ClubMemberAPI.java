@@ -42,11 +42,11 @@ public class ClubMemberAPI {
     }
 
     @DeleteMapping("/{club-id}/members/withdraw")
-    public ResponseEntity<ClubMemberUpsertResponseDto> withdrawClub(
+    public ResponseEntity<ClubMemberUpsertResponseDto> leaveClub(
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        clubMemberDeletePort.withdrawClub(memberId, clubId);
+        clubMemberDeletePort.leaveClub(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
