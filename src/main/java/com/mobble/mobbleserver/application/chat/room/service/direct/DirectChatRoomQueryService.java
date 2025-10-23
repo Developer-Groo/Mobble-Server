@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.service.direct;
 
+import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomQueryPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
@@ -10,7 +11,7 @@ import com.mobble.mobbleserver.domain.chat.room.Participant;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.message.ChatMessageRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.chat.message.JpaChatMessageRepository;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatRoomPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,7 @@ public class DirectChatRoomQueryService implements DirectChatRoomQueryPort {
 
     private final MemberReadPort memberReadPort;
     private final ChatRoomReadPort chatRoomReadPort;
-
-    // Todo: port 변경 필요
-    private final ChatMessageRepository chatMessageRepository;
+    private final MessageReadPort messageReadPort;
 
     @Override
     public List<DirectChatRoomPreviewResponseDto> getDirectChatRoomsPreview(Long memberId) {
@@ -39,8 +38,8 @@ public class DirectChatRoomQueryService implements DirectChatRoomQueryPort {
         List<Long> chatRoomIds = extractChatRoomIds(directRoomInfos);
 
         Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
-        Map<Long, ChatMessage> latestMessageMap = chatMessageRepository.findLatestMessagesByChatRoomIds(chatRoomIds);
-        Map<Long, Integer> unreadCountMap = chatMessageRepository.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
+        Map<Long, ChatMessage> latestMessageMap = messageReadPort.findLatestMessagesByChatRoomIds(chatRoomIds);
+        Map<Long, Integer> unreadCountMap = messageReadPort.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
 
         return directRoomInfos.stream()
                 .map(directRoomInfo -> {

@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.service.common;
 
+import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ParticipantUpdatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
@@ -8,7 +9,6 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.persistence.chat.message.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExitPort {
 
     private final ChatRoomWritePort chatRoomWritePort;
+    private final MessageWritePort messageWritePort;
 
     private final ChatRoomReadPort chatRoomReadPort;
     private final MemberReadPort memberReadPort;
-
-    // Todo: port 변경 필요
-    private final ChatMessageRepository chatMessageRepository;
 
     @Override
     public void updateLastReadMessage(Long chatRoomId, Long memberId, Long lastMessageId) {
@@ -63,7 +61,7 @@ public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExi
         ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElse(null);
         if (chatRoom == null) return;
 
-        chatMessageRepository.deleteByChatRoomId(chatRoom.getId());
+        messageWritePort.delete(chatRoom.getId());
         chatRoomWritePort.delete(chatRoom);
     }
 }
