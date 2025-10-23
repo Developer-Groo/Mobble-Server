@@ -31,7 +31,7 @@ public class ChatMessageModifyService implements SendMessagePort {
         Member sender = memberReadPort.findByIdAndIsDeletedFalse(senderId).orElseThrow();
         ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
 
-        if (chatRoom.hasParticipant(sender)) throw new IllegalStateException();
+        if (!chatRoom.hasParticipant(sender)) throw new IllegalStateException();
 
         ChatMessage chatMessage = ChatMessage.create(chatRoom, sender, dto.content(), dto.type());
         ChatMessage savedMessage = messageWritePort.save(chatMessage);
