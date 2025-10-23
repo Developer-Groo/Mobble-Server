@@ -6,9 +6,9 @@ import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadP
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import lombok.RequiredArgsConstructor;

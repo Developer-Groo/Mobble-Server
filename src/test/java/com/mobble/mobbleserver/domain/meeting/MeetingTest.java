@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.domain.meeting;
 
+import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMemberRole;
 import com.mobble.mobbleserver.refactor.clubMember.entity.JoinStatus;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
 import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;

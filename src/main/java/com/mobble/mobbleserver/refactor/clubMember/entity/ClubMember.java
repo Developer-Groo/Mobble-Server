@@ -1,10 +1,9 @@
 package com.mobble.mobbleserver.refactor.clubMember.entity;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
-import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

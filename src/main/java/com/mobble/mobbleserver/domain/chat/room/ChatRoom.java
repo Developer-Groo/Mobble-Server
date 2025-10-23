@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.chat.room;
 
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

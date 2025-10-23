@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.domain.meeting;
 
+import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

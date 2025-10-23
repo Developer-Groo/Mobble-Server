@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePo
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -12,7 +13,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCo
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.request.CommentRequestDto;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.club.policy.ClubPermissionPolicy;
 import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
 import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;

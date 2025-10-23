@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response;
 
-import com.mobble.mobbleserver.refactor.chat.chatMessage.entity.ChatMessage;
-import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.club.core.Club;
 
 import java.time.LocalDateTime;
 
