@@ -53,7 +53,7 @@ public class ChatMessage extends CreatedAtEntity {
         this.type = type;
     }
 
-    public static ChatMessage createChatMessage(
+    public static ChatMessage create(
             ChatRoom chatRoom,
             Member sender,
             String content,
