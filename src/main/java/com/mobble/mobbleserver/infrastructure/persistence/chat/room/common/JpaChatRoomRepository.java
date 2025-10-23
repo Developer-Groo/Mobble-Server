@@ -1,0 +1,7 @@
+package com.mobble.mobbleserver.infrastructure.persistence.chat.room.common;
+
+import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface JpaChatRoomRepository extends JpaRepository<ChatRoom, Long> {
+}

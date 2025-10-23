@@ -1,10 +1,10 @@
 package com.mobble.mobbleserver.infrastructure.web.club.core.dto.response;
 
+import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.refactor.adress.dto.response.AddressResponseDto;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
-import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
 
 import java.util.List;

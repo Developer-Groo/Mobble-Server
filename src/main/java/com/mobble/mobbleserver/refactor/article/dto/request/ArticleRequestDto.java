@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.refactor.article.dto.request;
 
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.refactor.article.entity.Article;
+import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

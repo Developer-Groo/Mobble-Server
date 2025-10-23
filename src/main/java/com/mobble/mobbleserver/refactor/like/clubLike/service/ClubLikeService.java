@@ -2,13 +2,13 @@ package com.mobble.mobbleserver.refactor.like.clubLike.service;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
-import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

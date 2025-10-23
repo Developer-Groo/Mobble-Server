@@ -3,11 +3,11 @@ package com.mobble.mobbleserver.refactor.like.commentLike.service;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
-import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

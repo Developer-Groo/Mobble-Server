@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.infrastructure.persistence.comment;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.CommentLikeInfoDto;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;

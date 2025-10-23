@@ -1,10 +1,10 @@
 package com.mobble.mobbleserver.domain.club.core;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -42,7 +42,7 @@ public class Club extends BaseEntity {
     private boolean isAutoJoin;
 
     @OneToOne(mappedBy = "club", fetch = FetchType.LAZY)
-    private ClubChatRoom clubChatRoom;
+    private ClubRoomInfo clubRoomInfo;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
@@ -72,8 +72,8 @@ public class Club extends BaseEntity {
                 .build();
     }
 
-    public void setClubChatRoomInternal(ClubChatRoom chatRoom) {
-        this.clubChatRoom = chatRoom;
+    public void setClubChatRoomInternal(ClubRoomInfo chatRoom) {
+        this.clubRoomInfo = chatRoom;
     }
 
     public void updateClub(

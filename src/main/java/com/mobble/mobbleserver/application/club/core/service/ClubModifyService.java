@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.application.club.core.service;
 
+import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubUpdatePort;
@@ -9,6 +11,9 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
@@ -16,14 +21,13 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCo
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
+import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
 import com.mobble.mobbleserver.refactor.adress.repository.AddressRepository;
 import com.mobble.mobbleserver.refactor.article.repository.ArticleRepository;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.chat.clubChatRoom.service.ClubChatRoomService;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
@@ -31,9 +35,6 @@ import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubCategory.repository.ClubCategoryRepository;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.ground.entity.Ground;
 import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
@@ -59,7 +60,8 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
 
-    private final ClubChatRoomService clubChatRoomService;
+    private final ClubChatRoomCreatePort clubChatRoomCreatePort;
+    private final ChatRoomExitPort chatRoomExitPort;
 
     private final ClubCategoryRepository clubCategoryRepository;
     private final AgeGroupRepository ageGroupRepository;
@@ -95,8 +97,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         ageGroupRepository.saveAll(ageGroups);
 
         // Todo: 반환값이 Club 채팅방의 preview 에 필요한 데이터이기 때문에 반환 DTO에 포함 되어야 함
-        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomService.createClubChatRoom(club.getId(),
-                member.getId());
+        ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomCreatePort.createClubChatRoom(club.getId(), member.getId());
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -134,7 +135,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         assertLeader(clubMember);
 
-        clubChatRoomService.deleteClubChatRoom(club.getId());
+        chatRoomExitPort.delete(club.getId());
 
         List<Long> articleIds = articleRepository.findArticleIdsByClubId(club.getId());
 
