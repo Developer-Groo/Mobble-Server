@@ -27,7 +27,7 @@ public class DirectChatRoomAPI {
 
     @PostMapping("/chat-rooms/direct")
     public ResponseEntity<DirectChatRoomPreviewResponseDto> createDirectChatRoom(
-            @RequestBody DirectChatRoomCreateRequestDto dto,
+            @RequestBody DirectChatRoomCreateRequestDto dto, // Todo: Dto 유지 고민 (receiverId 값 1개 존재)
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
