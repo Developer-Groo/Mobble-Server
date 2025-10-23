@@ -10,5 +10,4 @@ public interface ClubMemberUpdatePort {
     ClubMemberUpsertResponseDto updateClubMemberJoinStatus(Long clubId, Long memberId, UpdateClubMemberStatusDto dto);
 
     ClubMemberRoleUpdateResultDto updateClubMemberRole(Long clubId, Long memberId, UpdateClubMemberRoleDto dto);
-
 }
