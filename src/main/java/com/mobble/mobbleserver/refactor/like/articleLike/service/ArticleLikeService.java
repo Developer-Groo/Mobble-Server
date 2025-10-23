@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.service;
 
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
 import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
@@ -19,7 +19,8 @@ public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike
 
     private final ArticleLikeRepository articleLikeRepository;
     private final ArticleValidator articleValidator;
-    private final ClubMemberValidator clubMemberValidator;
+
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
     public LikeType getType() {
@@ -39,7 +40,7 @@ public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike
     @Override
     protected ArticleLike createLike(Article article, Member member) {
         Long clubId = article.getClub().getId();
-        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
+        clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, member.getId());
 
         return ArticleLike.createArticleLike(article, member);
     }

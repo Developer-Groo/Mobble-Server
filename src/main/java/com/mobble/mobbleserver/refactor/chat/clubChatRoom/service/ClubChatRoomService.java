@@ -1,7 +1,12 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.service;
 
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.request.ChatMessageRequestDto;
 import com.mobble.mobbleserver.refactor.chat.chatMessage.dto.response.ChatMessageResponseDto;
@@ -19,10 +24,6 @@ import com.mobble.mobbleserver.refactor.chat.clubChatRoom.dto.response.ClubChatR
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity.ClubChatRoom;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.repository.ClubChatRoomRepository;
 import com.mobble.mobbleserver.refactor.chat.clubChatRoom.validator.ClubChatRoomValidator;
-import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -48,10 +49,10 @@ public class ClubChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final ClubChatRoomRepository clubChatRoomRepository;
 
-    private final ClubMemberValidator clubMemberValidator;
     private final ClubChatRoomValidator clubChatRoomValidator;
 
     private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Transactional
     public void sendGroupMessage(ClubChatMessageRequestDto dto, Long memberId) {
@@ -71,7 +72,7 @@ public class ClubChatRoomService {
 
     @Transactional
     public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
 
@@ -107,7 +108,7 @@ public class ClubChatRoomService {
     public List<ClubChatRoomPreviewResponseDto> getClubChatRooms(Long memberId) {
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
+        List<ClubMember> clubMembers = clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
         List<Long> chatRoomIds = extractChatRoomIds(clubMembers);
 
         Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
@@ -130,7 +131,7 @@ public class ClubChatRoomService {
     }
 
     public List<ChatMessageResponseDto> getClubChatRoomMessages(Long clubId, Long memberId, ChatMessageRequestDto dto) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Member member = clubMember.getMember();
 
         return chatMessageService.getMessagesForParticipant(member.getId(), dto);
@@ -178,5 +179,10 @@ public class ClubChatRoomService {
     private Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 }

@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.refactor.like.commentLike.service;
 
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
@@ -19,7 +19,8 @@ public class CommentLikeService extends AbstractLikeService<Comment, CommentLike
 
     private final CommentLikeRepository commentLikeRepository;
     private final CommentReadPort commentReadPort;
-    private final ClubMemberValidator clubMemberValidator;
+
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
     public LikeType getType() {
@@ -39,7 +40,7 @@ public class CommentLikeService extends AbstractLikeService<Comment, CommentLike
     @Override
     protected CommentLike createLike(Comment comment, Member member) {
         Long clubId = comment.getArticle().getClub().getId();
-        clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
+        clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, member.getId());
 
         return CommentLike.createCommentLike(comment, member);
     }
