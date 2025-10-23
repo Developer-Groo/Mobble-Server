@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.chat.clubChatRoom.entity;
 
 import com.mobble.mobbleserver.refactor.chat.chatRoom.entity.ChatRoom;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

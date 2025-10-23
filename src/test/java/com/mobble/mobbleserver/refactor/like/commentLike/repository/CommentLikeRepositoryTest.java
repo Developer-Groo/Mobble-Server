@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.refactor.like.commentLike.repository;
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.domain.member.Member;

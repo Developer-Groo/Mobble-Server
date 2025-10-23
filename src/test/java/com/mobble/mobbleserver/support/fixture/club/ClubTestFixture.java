@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.support.fixture.club;
 
-import com.mobble.mobbleserver.refactor.club.core.entity.Club;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 
 public class ClubTestFixture {
