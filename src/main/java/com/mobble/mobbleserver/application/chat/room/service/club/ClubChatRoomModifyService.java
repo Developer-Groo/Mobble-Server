@@ -4,13 +4,13 @@ import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChat
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomJoinPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +23,11 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     private final ChatRoomWritePort chatRoomWritePort;
 
     private final ChatRoomReadPort chatRoomReadPort;
-
-    // Todo: port 변경 필요
-    private final ClubMemberValidator clubMemberValidator;
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
     public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
 
@@ -45,7 +43,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
 
     @Override
     public void joinClubChatRoom(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberValidator.findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
         Member member = clubMember.getMember();
         Club club = clubMember.getClub();
 

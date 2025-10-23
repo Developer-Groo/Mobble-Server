@@ -3,17 +3,17 @@ package com.mobble.mobbleserver.application.chat.room.service.club;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomQueryPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.Participant;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
-import com.mobble.mobbleserver.refactor.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.refactor.clubMember.validator.ClubMemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,15 +30,13 @@ public class ClubChatRoomQueryService implements ClubChatRoomQueryPort {
     private final MemberReadPort memberReadPort;
     private final ChatRoomReadPort chatRoomReadPort;
     private final MessageReadPort messageReadPort;
-
-    // Todo: port 변경 필요
-    private final ClubMemberValidator clubMemberValidator;
+    private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
     public List<ClubChatRoomPreviewResponseDto> getClubChatRoomsPreview(Long memberId) {
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        List<ClubMember> clubMembers = clubMemberValidator.findAllClubMemberByMemberId(member.getId());
+        List<ClubMember> clubMembers = clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
         List<Long> chatRoomIds = extractChatRoomIds(clubMembers);
 
         Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
