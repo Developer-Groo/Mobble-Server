@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.refactor.notification.setting.entity;
+package com.mobble.mobbleserver.domain.notification.setting;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
+import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
