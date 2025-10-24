@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.article.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.article.dto.request;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;

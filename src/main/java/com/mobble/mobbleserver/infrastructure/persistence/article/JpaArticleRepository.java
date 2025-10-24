@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.article.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.article;
 
 import com.mobble.mobbleserver.domain.article.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.Optional;
 
-public interface ArticleRepository extends JpaRepository<Article, Long>,  ArticleQueryRepository {
+public interface JpaArticleRepository extends JpaRepository<Article, Long>, ArticleQueryDslRepository {
 
     Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
 

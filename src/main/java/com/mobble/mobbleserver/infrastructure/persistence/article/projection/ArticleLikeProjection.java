@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.article.repository.dto;
+package com.mobble.mobbleserver.infrastructure.persistence.article.projection;
 
 public record ArticleLikeProjection(Long articleId, Long memberId) {
 }

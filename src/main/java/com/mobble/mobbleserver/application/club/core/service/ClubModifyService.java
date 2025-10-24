@@ -27,7 +27,7 @@ import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubRes
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
 import com.mobble.mobbleserver.refactor.adress.repository.AddressRepository;
-import com.mobble.mobbleserver.refactor.article.repository.ArticleRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.article.JpaArticleRepository;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
@@ -68,7 +68,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final AddressRepository addressRepository;
     private final GroundRepository groundRepository;
     private final ClubGroundRepository clubGroundRepository;
-    private final ArticleRepository articleRepository;
+    private final JpaArticleRepository articleRepository;
     private final JpaCommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;

@@ -7,7 +7,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.article.projection.Art
 import java.util.List;
 import java.util.Map;
 
-public interface ArticleQueryRepository {
+public interface ArticleQueryDslRepository {
 
     List<Article> findArticlesByClubId(Long clubId, ArticleType articleType);
 

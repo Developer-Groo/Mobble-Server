@@ -1,11 +1,12 @@
-package com.mobble.mobbleserver.refactor.article.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.article;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
-import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
+import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.article.ArticleType;
+import com.mobble.mobbleserver.infrastructure.persistence.article.JpaArticleRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ArticleRepositoryImplTest {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private JpaArticleRepository articleRepository;
 
     @Autowired
     private EntityManager em;

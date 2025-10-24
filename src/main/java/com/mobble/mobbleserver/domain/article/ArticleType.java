@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.article.entity;
+package com.mobble.mobbleserver.domain.article;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

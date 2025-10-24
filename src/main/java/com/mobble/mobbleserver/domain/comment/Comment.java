@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
+import com.mobble.mobbleserver.domain.article.Article;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

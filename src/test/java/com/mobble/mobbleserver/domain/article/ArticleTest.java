@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.article.entity;
+package com.mobble.mobbleserver.domain.article;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
