@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.application.notification.setting.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.application.notification.setting.port.provided.NotificationSettingCommandPort;
+import com.mobble.mobbleserver.application.notification.setting.port.provided.NotificationSettingLoadPort;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
@@ -14,15 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.mobble.mobbleserver.infrastructure.web.notification.dto.NotificationDto.Toggle;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class NotificationSettingService {
-
-    private final JpaNotificationSettingRepository settingRepository;
+public class NotificationSettingModifyService implements NotificationSettingLoadPort, NotificationSettingCommandPort {
 
     private final MemberReadPort memberReadPort;
 
-    @Transactional
-    public NotificationSetting getSettings(Long memberId) {
+    private final JpaNotificationSettingRepository settingRepository;
+
+    @Override
+    public NotificationSetting getOrCreate(Long memberId) {
         NotificationSetting setting = settingRepository.findSettingByMember_Id(memberId)
                 .orElseGet(() -> {
                     Member member = findMemberByMemberIdOrThrow(memberId);
@@ -33,8 +36,8 @@ public class NotificationSettingService {
         return setting;
     }
 
-    @Transactional
-    public void toggleGlobal(Long memberId, Toggle request) {
+    @Override
+    public void setGlobalEnabled(Long memberId, Toggle request) {
         NotificationSetting setting = settingRepository.findSettingByMember_Id(memberId)
                 .orElseThrow();
 
@@ -45,8 +48,8 @@ public class NotificationSettingService {
         }
     }
 
-    @Transactional
-    public void setType(Long memberId, Toggle request, NotificationType type) {
+    @Override
+    public void setTypeEnabled(Long memberId, Toggle request, NotificationType type) {
         NotificationSetting setting = settingRepository.findSettingByMember_Id(memberId)
                 .orElseThrow();
 
