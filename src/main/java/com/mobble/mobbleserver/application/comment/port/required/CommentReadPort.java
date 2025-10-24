@@ -16,4 +16,8 @@ public interface CommentReadPort {
     List<Comment> findCommentsWithRepliesByArticleId(Long articleId);
 
     Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> ids, Long memberId);
+
+    Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
+
+    void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
 }

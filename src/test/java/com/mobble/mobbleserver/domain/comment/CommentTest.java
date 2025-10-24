@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.domain.comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.comment.CommentTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;

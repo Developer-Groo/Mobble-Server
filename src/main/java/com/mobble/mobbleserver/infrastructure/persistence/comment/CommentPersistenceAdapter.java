@@ -28,6 +28,11 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
          repository.delete(comment);
     }
 
+    @Override
+    public void deleteAll(List<Comment> comments) {
+        repository.deleteAll(comments);
+    }
+
     /* CommentReadPort */
     @Override
     public Optional<Comment> findById(Long id) {
@@ -51,5 +56,10 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
 
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
         return repository.countCommentsByArticleIds(articleIds);
+    }
+
+    @Override
+    public void deleteAllCommentByArticle_IdIn(List<Long> articleIds) {
+        repository.deleteAllCommentByArticle_IdIn(articleIds);
     }
 }

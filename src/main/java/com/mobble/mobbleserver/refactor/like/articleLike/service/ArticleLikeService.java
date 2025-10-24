@@ -1,9 +1,11 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.service;
 
+import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
@@ -18,9 +20,9 @@ import java.util.Optional;
 public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike> {
 
     private final ArticleLikeRepository articleLikeRepository;
-    private final ArticleValidator articleValidator;
 
     private final ClubMemberReadPort clubMemberReadPort;
+    private final ArticleReadPort articleReadPort;
 
     @Override
     public LikeType getType() {
@@ -29,7 +31,7 @@ public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike
 
     @Override
     protected Article getTarget(Long targetId) {
-        return articleValidator.findArticleByArticleIdOrThrow(targetId);
+        return findArticleByArticleIdOrThrow(targetId);
     }
 
     @Override
@@ -53,5 +55,10 @@ public class ArticleLikeService extends AbstractLikeService<Article, ArticleLike
     @Override
     protected void deleteLike(ArticleLike entity) {
         articleLikeRepository.delete(entity);
+    }
+
+    private Article findArticleByArticleIdOrThrow(Long articleId) {
+        return articleReadPort.findById(articleId)
+                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
     }
 }

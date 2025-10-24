@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Ground {
 
     @Id
-    @Column(name = "ground_code", length = 20)
+    @Column(name = "ground_code")
     private Long code;
 
     private String sido;

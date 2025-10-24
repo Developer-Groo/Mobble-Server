@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.service;
 
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
+import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
@@ -18,8 +20,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ArticleLikeQueryService implements LikeQueryService {
 
-    private final ArticleValidator articleValidator;
     private final ArticleLikeRepository articleLikeRepository;
+
+    private final ArticleReadPort articleReadPort;
 
     @Override
     public LikeType getType() {
@@ -28,7 +31,8 @@ public class ArticleLikeQueryService implements LikeQueryService {
 
     @Override
     public LikeMemberListResponseDto getLikedMemberList(Long articleId) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = articleReadPort.findById(articleId)
+                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
         List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
 
         return LikeMemberListResponseDto.toDto(article.getId(), articleLikes, ArticleLike::getMember);
