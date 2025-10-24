@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.config.push;
+package com.mobble.mobbleserver.application.notification.outbox.push;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

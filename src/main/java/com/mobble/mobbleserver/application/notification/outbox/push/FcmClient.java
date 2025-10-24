@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.config.push;
+package com.mobble.mobbleserver.application.notification.outbox.push;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.AccessToken;

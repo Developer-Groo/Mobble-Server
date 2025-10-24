@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.config.push;
+package com.mobble.mobbleserver.application.notification.outbox.push;
 
 import java.util.Map;
 
