@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.outbox.entity;
+package com.mobble.mobbleserver.domain.notification.outbox;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
