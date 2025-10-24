@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.comment.service;
 
+import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
@@ -11,11 +12,11 @@ import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.validator.ArticleValidator;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.refactor.club.policy.ClubPermissionPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentModifyService implements CommentCreatePort, CommentUpdatePort, CommentDeletePort {
 
-    private final ArticleValidator articleValidator;
-
     private final CommentWritePort commentWritePort;
     private final CommentReadPort commentReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
+    private final ArticleReadPort articleReadPort;
 
     @Override
     public Comment createRootComment(Long memberId, Long articleId, CommentRequestDto dto) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
@@ -51,7 +51,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
             Long parentCommentId,
             CommentRequestDto dto
     ) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = findArticleByArticleIdOrThrow(articleId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
         Comment parentComment = commentReadPort.findById(parentCommentId).orElseThrow();
@@ -69,7 +69,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
             Long memberId,
             CommentRequestDto dto
     ) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = findArticleByArticleIdOrThrow(articleId);
         Club club = article.getClub();
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(club.getId(), memberId);
         Member member = clubMember.getMember();
@@ -82,7 +82,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public void deleteComment(Long articleId, Long commentId, Long memberId) {
-        Article article = articleValidator.findArticleByArticleIdOrThrow(articleId);
+        Article article = findArticleByArticleIdOrThrow(articleId);
         Club club = article.getClub();
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(club.getId(), memberId);
 
@@ -100,11 +100,17 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     }
 
     private void validateCommentByArticleIdOrThrow(Comment comment, Long articleId) {
-        if (!comment.getArticle().getId().equals(articleId)) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
+        if (!comment.getArticle().getId().equals(articleId))
+            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+    }
+
+    private Article findArticleByArticleIdOrThrow(Long articleId) {
+        return articleReadPort.findById(articleId)
+                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
     }
 }

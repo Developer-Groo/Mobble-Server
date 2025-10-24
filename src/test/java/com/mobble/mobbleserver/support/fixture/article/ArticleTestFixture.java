@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.support.fixture.article;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
