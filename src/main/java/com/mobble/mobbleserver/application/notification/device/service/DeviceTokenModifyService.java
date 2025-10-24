@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.application.notification.device.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.application.notification.device.port.provided.DeviceTokenDisablePort;
+import com.mobble.mobbleserver.application.notification.device.port.provided.DeviceTokenRegisterPort;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
@@ -16,14 +18,15 @@ import java.util.Objects;
 import static com.mobble.mobbleserver.infrastructure.web.notification.dto.NotificationDto.RegisterTokenReq;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class DeviceTokenService {
+public class DeviceTokenModifyService implements DeviceTokenRegisterPort, DeviceTokenDisablePort {
 
     private final JpaDeviceTokenRepository jpaDeviceTokenRepository;
 
     private final MemberReadPort memberReadPort;
 
-    @Transactional
+    @Override
     public DeviceToken register(Long memberId, RegisterTokenReq request) {
         Member member = findMemberByMemberIdOrThrow(memberId);
         Platform platform = Platform.valueOf(request.platform().toUpperCase());
@@ -38,7 +41,7 @@ public class DeviceTokenService {
                 );
     }
 
-    @Transactional
+    @Override
     public void disable(Long memberId, Long deviceTokenId) {
         DeviceToken deviceToken = jpaDeviceTokenRepository.findById(deviceTokenId).orElseThrow();
 
