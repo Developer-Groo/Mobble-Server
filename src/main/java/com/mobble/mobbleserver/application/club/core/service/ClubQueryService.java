@@ -15,7 +15,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.C
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubSummaryDto;
-import com.mobble.mobbleserver.refactor.adress.entity.Address;
+import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
