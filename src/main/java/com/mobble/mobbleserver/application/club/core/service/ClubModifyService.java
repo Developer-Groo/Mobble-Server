@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.club.core.service;
 
+import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
@@ -9,6 +10,7 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubWritePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
+import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
@@ -20,14 +22,12 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
-import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.refactor.adress.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.adress.entity.Address;
 import com.mobble.mobbleserver.refactor.adress.repository.AddressRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.article.JpaArticleRepository;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
@@ -59,6 +59,8 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
+    private final ArticleReadPort articleReadPort;
+    private final CommentReadPort commentReadPort;
 
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
@@ -68,8 +70,6 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final AddressRepository addressRepository;
     private final GroundRepository groundRepository;
     private final ClubGroundRepository clubGroundRepository;
-    private final JpaArticleRepository articleRepository;
-    private final JpaCommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
     private final ClubLikeRepository clubLikeRepository;
@@ -137,12 +137,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         chatRoomExitPort.delete(club.getId());
 
-        List<Long> articleIds = articleRepository.findArticleIdsByClubId(club.getId());
+        List<Long> articleIds = articleReadPort.findArticleIdsByClubId(club.getId());
 
         commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
-        commentRepository.deleteAllCommentByArticle_IdIn(articleIds);
+        commentReadPort.deleteAllCommentByArticle_IdIn(articleIds);
         articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
-        articleRepository.deleteAllArticleByClub_Id(club.getId());
+        articleReadPort.deleteAllArticleByClub_Id(club.getId());
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
