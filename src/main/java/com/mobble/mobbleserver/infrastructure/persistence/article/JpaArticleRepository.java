@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.article.repository;
 
-import com.mobble.mobbleserver.refactor.article.entity.Article;
+import com.mobble.mobbleserver.domain.article.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 

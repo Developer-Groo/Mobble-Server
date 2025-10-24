@@ -1,9 +1,9 @@
-package com.mobble.mobbleserver.refactor.article.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.article;
 
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
-import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
-import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeProjection;
+import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.article.ArticleType;
+import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
+import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeProjection;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.article.dto.response;
 
-import com.mobble.mobbleserver.refactor.article.entity.Article;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.refactor.article.repository.dto.ArticleLikeInfoDto;
 
 import java.time.LocalDateTime;

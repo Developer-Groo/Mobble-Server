@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.refactor.article.controller;
 import com.mobble.mobbleserver.refactor.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.refactor.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.refactor.article.dto.response.ArticleSummaryResponseDto;
-import com.mobble.mobbleserver.refactor.article.entity.ArticleType;
+import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.refactor.article.service.ArticleService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
