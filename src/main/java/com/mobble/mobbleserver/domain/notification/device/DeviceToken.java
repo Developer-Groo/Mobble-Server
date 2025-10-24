@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.device.entity;
+package com.mobble.mobbleserver.domain.notification.device;
 
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.Member;
