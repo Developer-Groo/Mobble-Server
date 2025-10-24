@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import static com.mobble.mobbleserver.application.notification.core.service.NotificationService.PushReadyEvent;
+import static com.mobble.mobbleserver.application.notification.core.service.NotificationModifyService.PushReadyEvent;
 
 @Component
 @RequiredArgsConstructor
