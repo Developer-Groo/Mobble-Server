@@ -1,14 +1,8 @@
-package com.mobble.mobbleserver.refactor.ground.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.ground;
 
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.Ground;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+public interface JpaGroundRepository extends JpaRepository<Ground, Long> {
 
-public interface GroundRepository extends JpaRepository<Ground, Long> {
-
-    List<Ground> findAllByCodeIn(List<Long> groundCodes);
-
-    Optional<Ground> findGroundByCode(Long groundCode);
 }
