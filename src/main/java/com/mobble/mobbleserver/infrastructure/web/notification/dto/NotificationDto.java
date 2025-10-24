@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.core.dto;
+package com.mobble.mobbleserver.infrastructure.web.notification.dto;
 
 import com.mobble.mobbleserver.domain.notification.core.Notification;
 import com.mobble.mobbleserver.domain.notification.core.NotificationTargetType;

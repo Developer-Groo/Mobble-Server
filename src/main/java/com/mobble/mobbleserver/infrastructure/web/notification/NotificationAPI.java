@@ -1,12 +1,12 @@
-package com.mobble.mobbleserver.refactor.notification.core.controller;
+package com.mobble.mobbleserver.infrastructure.web.notification;
 
 import com.mobble.mobbleserver.domain.notification.core.Notification;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
-import com.mobble.mobbleserver.refactor.notification.core.service.NotificationService;
+import com.mobble.mobbleserver.application.notification.core.service.NotificationService;
 import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
-import com.mobble.mobbleserver.refactor.notification.device.service.DeviceTokenService;
+import com.mobble.mobbleserver.application.notification.device.service.DeviceTokenService;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
-import com.mobble.mobbleserver.refactor.notification.setting.service.NotificationSettingService;
+import com.mobble.mobbleserver.application.notification.setting.service.NotificationSettingService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.mobble.mobbleserver.refactor.notification.core.dto.NotificationDto.*;
+import static com.mobble.mobbleserver.infrastructure.web.notification.dto.NotificationDto.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
-public class NotificationController {
+public class NotificationAPI {
 
     private final NotificationService notificationService;
     private final DeviceTokenService deviceTokenService;
