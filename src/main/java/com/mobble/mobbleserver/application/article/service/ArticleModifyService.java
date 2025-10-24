@@ -26,6 +26,7 @@ import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
@@ -68,7 +69,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     @Override
-    public ArticleResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
+    public ArticleUpdatedResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto) {
         Article article = findArticleByArticleIdAndMemberIdOrThrow(articleId, memberId);
         Long clubId = article.getClub().getId();
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
@@ -76,7 +77,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         assertCanPost(clubMember, dto.articleType());
         article.updateArticle(dto.articleType(), dto.title(), dto.content());
 
-        return convertToArticleResponseDto(article, memberId);
+        return ArticleUpdatedResponseDto.toDto(article);
     }
 
     @Override
