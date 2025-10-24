@@ -1,16 +1,16 @@
 package com.mobble.mobbleserver.application.member.service;
 
+import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
 import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
+import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
-import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,15 +25,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePort, MembersDeletePort {
 
-    private final GroundRepository groundRepository;
-
     private final MemberReadPort memberReadPort;
     private final MemberWritePort memberWritePort;
+    private final GroundReadPort groundReadPort;
 
     @Override
     public Member updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = findMemberByMemberIdOrThrow(memberId);
-        Ground ground = groundRepository.findGroundByCode(dto.groundCode())
+        Ground ground = groundReadPort.findById(dto.groundCode())
                 .orElseThrow();
 
         return member.updateMember(ground, dto.profileImage());

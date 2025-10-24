@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.refactor.ground.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.ground.dto.response;
 
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.Ground;
 
 public record GroundResponseDto(
         Long code,

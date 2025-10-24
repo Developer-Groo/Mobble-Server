@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.mobble.mobbleserver.domain.club.core.QClub.club;
+import static com.mobble.mobbleserver.domain.ground.QGround.ground;
 import static com.mobble.mobbleserver.refactor.adress.entity.QAddress.address;
 import static com.mobble.mobbleserver.refactor.club.clubGround.entity.QClubGround.clubGround;
 import static com.mobble.mobbleserver.refactor.clubCategory.entity.QClubCategory.clubCategory;
-import static com.mobble.mobbleserver.refactor.ground.entity.QGround.ground;
 import static com.mobble.mobbleserver.refactor.like.clubLike.entity.QClubLike.clubLike;
 
 @RequiredArgsConstructor

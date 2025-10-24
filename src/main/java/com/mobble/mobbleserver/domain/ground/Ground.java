@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.ground.entity;
+package com.mobble.mobbleserver.domain.ground;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
