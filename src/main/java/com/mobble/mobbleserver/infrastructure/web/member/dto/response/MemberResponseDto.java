@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.member.dto.response;
 
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 
 public record MemberResponseDto(
         Long memberId,

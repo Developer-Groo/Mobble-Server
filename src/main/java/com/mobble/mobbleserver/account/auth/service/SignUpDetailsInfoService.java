@@ -4,10 +4,10 @@ import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SignUpDetailsInfoResponseDto;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
+import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
-import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +19,8 @@ public class SignUpDetailsInfoService {
 
     private final TokenProvider tokenProvider;
     private final JpaMemberRepository memberRepository;
-    private final GroundRepository groundRepository;
 
+    private final GroundReadPort groundReadPort;
     public SignUpDetailsInfoResponseDto getSocialUserInfo(String signupToken) {
         SocialUserInfo userInfo = tokenProvider.getSignupTokenInfo(signupToken);
 
@@ -30,7 +30,8 @@ public class SignUpDetailsInfoService {
     @Transactional
     public String signup(String signupToken, SignUpRequestDto dto) {
         SocialUserInfo userInfo = tokenProvider.getSignupTokenInfo(signupToken);
-        Ground ground = groundRepository.findGroundByCode(dto.groundCode()).get();
+        Ground ground = groundReadPort.findById(dto.groundCode())
+                .orElseThrow();
         Member member = dto.toEntity(userInfo,ground);
         memberRepository.save(member);
 

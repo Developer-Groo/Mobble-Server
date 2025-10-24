@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.C
 import com.mobble.mobbleserver.infrastructure.web.address.dto.response.AddressResponseDto;
 import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
-import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 
 import java.util.List;
 

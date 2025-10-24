@@ -12,12 +12,14 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubWritePort
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
+import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
+import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
@@ -28,6 +30,7 @@ import com.mobble.mobbleserver.infrastructure.web.address.dto.request.AddressReq
 import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
@@ -35,9 +38,6 @@ import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
 import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
 import com.mobble.mobbleserver.refactor.clubCategory.repository.ClubCategoryRepository;
-import com.mobble.mobbleserver.refactor.ground.dto.response.GroundResponseDto;
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
-import com.mobble.mobbleserver.refactor.ground.repository.GroundRepository;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
@@ -62,13 +62,13 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubMemberReadPort clubMemberReadPort;
     private final ArticleReadPort articleReadPort;
     private final CommentReadPort commentReadPort;
+    private final GroundReadPort groundReadPort;
 
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
     private final ClubCategoryRepository clubCategoryRepository;
     private final AgeGroupRepository ageGroupRepository;
-    private final GroundRepository groundRepository;
     private final ClubGroundRepository clubGroundRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
@@ -182,7 +182,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     private List<ClubGround> createClubGroundList(List<Long> codeList, Club club) {
-        List<Ground> grounds = groundRepository.findAllById(codeList);
+        List<Ground> grounds = groundReadPort.findAllById(codeList);
         return grounds.stream()
                 .map(g -> ClubGround.createClubGround(club, g))
                 .toList();
@@ -198,7 +198,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
                 .map(cg -> cg.getGround().getCode())
                 .collect(Collectors.toList());
 
-        List<GroundResponseDto> groundList = groundRepository.findAllByCodeIn(groundCodes)
+        List<GroundResponseDto> groundList = groundReadPort.findAllById(groundCodes)
                 .stream()
                 .map(GroundResponseDto::toDto)
                 .toList();
