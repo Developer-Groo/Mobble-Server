@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.refactor.adress.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.address.dto.response;
 
-import com.mobble.mobbleserver.refactor.adress.entity.Address;
+import com.mobble.mobbleserver.domain.address.Address;
 
 public record AddressResponseDto(
         String roadAddress,

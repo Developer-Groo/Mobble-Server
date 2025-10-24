@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.refactor.adress.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.address.dto.request;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.refactor.adress.entity.Address;
+import com.mobble.mobbleserver.domain.address.Address;
 
 public record AddressRequestDto(
         String roadAddress,
