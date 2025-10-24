@@ -8,6 +8,7 @@ import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public class ArticleAPI {
     }
 
     @PatchMapping("/articles/{article-id}")
-    public ResponseEntity<ArticleResponseDto> updateArticle(
+    public ResponseEntity<ArticleUpdatedResponseDto> updateArticle(
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid ArticleRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
