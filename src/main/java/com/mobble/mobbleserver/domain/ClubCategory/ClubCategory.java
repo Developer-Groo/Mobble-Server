@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.clubCategory.entity;
+package com.mobble.mobbleserver.domain.ClubCategory;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
