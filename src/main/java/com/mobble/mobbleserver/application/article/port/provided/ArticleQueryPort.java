@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleSu
 import java.util.List;
 
 public interface ArticleQueryPort {
+
     List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId);
 
     ArticleResponseDto findArticleById(Long articleId, Long memberId);

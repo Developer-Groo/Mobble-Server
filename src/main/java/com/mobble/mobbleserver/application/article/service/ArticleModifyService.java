@@ -105,9 +105,10 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     private Article findArticleByArticleIdAndMemberIdOrThrow(Long articleId, Long memberId) {
-        return articleReadPort.findByIdAndMemberId(articleId,memberId)
+        return articleReadPort.findByIdAndMemberId(articleId, memberId)
                 .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND_TO_MEMBER));
     }
+
     private void assertCanPost(ClubMember clubMember, ArticleType articleType) {
         if (!clubMember.canPost(articleType)) {
             throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);

@@ -22,5 +22,4 @@ public interface ArticleReadPort {
 
     List<Long> findArticleIdsByClubId(Long clubId);
 
-
 }

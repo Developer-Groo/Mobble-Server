@@ -100,7 +100,8 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     }
 
     private void validateCommentByArticleIdOrThrow(Comment comment, Long articleId) {
-        if (!comment.getArticle().getId().equals(articleId)) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
+        if (!comment.getArticle().getId().equals(articleId))
+            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {

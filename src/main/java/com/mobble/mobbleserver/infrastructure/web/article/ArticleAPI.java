@@ -29,7 +29,6 @@ public class ArticleAPI {
     private final ArticleUpdatePort articleUpdatePort;
     private final ArticleDeletePort articleDeletePort;
 
-
     @PostMapping("/clubs/{club-id}/articles")
     public ResponseEntity<ArticleResponseDto> createArticle(
             @PathVariable("club-id") @Positive Long clubId,

@@ -150,6 +150,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         clubWritePort.delete(club);
     }
+
     private Club findClubByClubIdOrThrow(Long clubId) {
         return clubReadPort.findById(clubId)
                 .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
