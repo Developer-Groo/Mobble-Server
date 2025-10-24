@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
 import com.mobble.mobbleserver.domain.notification.device.Platform;
-import com.mobble.mobbleserver.refactor.notification.device.repository.DeviceTokenRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.device.DeviceTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

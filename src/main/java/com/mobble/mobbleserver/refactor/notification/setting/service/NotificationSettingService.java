@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
-import com.mobble.mobbleserver.refactor.notification.setting.repository.NotificationSettingRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.setting.NotificationSettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
