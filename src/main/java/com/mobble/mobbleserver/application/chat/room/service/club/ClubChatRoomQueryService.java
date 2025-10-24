@@ -43,25 +43,29 @@ public class ClubChatRoomQueryService implements ClubChatRoomQueryPort {
         Map<Long, ChatMessage> latestMessagesMap = messageReadPort.findLatestMessagesByChatRoomIds(chatRoomIds);
         Map<Long, Integer> unreadCountMap = messageReadPort.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
 
-        return clubMembers.stream()
-                .map(clubMember -> {
-                    Club club = clubMember.getClub();
-                    ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
-                    Long chatRoomId = chatRoom.getId();
-
-                    ChatMessage lastMessage = latestMessagesMap.get(chatRoomId);
-                    int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
-                    Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
-
-                    return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, lastMessage, unreadCount, lastReadMessageId);
-                })
-                .toList();
+        return List.of();
+        // Todo: 로직 수정 필요
+//                clubMembers.stream()
+//                .map(clubMember -> {
+//                    Club club = clubMember.getClub();
+//                    ChatRoom chatRoom = club.getClubRoomInfo().getChatRoom();
+//                    Long chatRoomId = chatRoom.getId();
+//
+//                    ChatMessage lastMessage = latestMessagesMap.get(chatRoomId);
+//                    int unreadCount = unreadCountMap.getOrDefault(chatRoomId, 0);
+//                    Long lastReadMessageId = lastReadMessageIdsByChatRoom.getOrDefault(chatRoomId, 0L);
+//
+//                    return ClubChatRoomPreviewResponseDto.toDto(chatRoom, club, lastMessage, unreadCount, lastReadMessageId);
+//                })
+//                .toList();
     }
 
     private List<Long> extractChatRoomIds(List<ClubMember> clubMembers) {
-        return clubMembers.stream()
-                .map(cm -> cm.getClub().getClubRoomInfo().getChatRoom().getId())
-                .toList();
+        return List.of();
+        // Todo: 로직 수정 필요
+//                clubMembers.stream()
+//                .map(cm -> cm.getClub().getClubRoomInfo().getChatRoom().getId())
+//                .toList();
     }
 
     private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
