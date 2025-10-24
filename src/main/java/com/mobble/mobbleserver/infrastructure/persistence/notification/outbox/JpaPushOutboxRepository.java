@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface PushOutboxRepository extends JpaRepository<PushOutbox, Long> {
+public interface JpaPushOutboxRepository extends JpaRepository<PushOutbox, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
