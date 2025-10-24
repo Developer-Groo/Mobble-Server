@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.setting.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.notification.setting;
 
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
 import org.springframework.data.jpa.repository.JpaRepository;

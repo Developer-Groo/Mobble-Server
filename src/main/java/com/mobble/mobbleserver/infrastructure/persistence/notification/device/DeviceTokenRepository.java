@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.device.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.notification.device;
 
 import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.outbox.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.notification.outbox;
 
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
 import com.mobble.mobbleserver.domain.notification.outbox.Status;

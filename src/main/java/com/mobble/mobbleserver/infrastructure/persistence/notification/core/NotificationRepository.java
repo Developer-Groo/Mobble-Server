@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.core.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.notification.core;
 
 import com.mobble.mobbleserver.domain.notification.core.Notification;
 import org.springframework.data.domain.Pageable;
