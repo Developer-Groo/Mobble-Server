@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.setting.service;
+package com.mobble.mobbleserver.application.notification.setting.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -6,18 +6,18 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.setting.NotificationSettingRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.setting.JpaNotificationSettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.mobble.mobbleserver.refactor.notification.core.dto.NotificationDto.Toggle;
+import static com.mobble.mobbleserver.infrastructure.web.notification.dto.NotificationDto.Toggle;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationSettingService {
 
-    private final NotificationSettingRepository settingRepository;
+    private final JpaNotificationSettingRepository settingRepository;
 
     private final MemberReadPort memberReadPort;
 

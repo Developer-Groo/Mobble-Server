@@ -1,16 +1,16 @@
-package com.mobble.mobbleserver.refactor.notification.core.service;
+package com.mobble.mobbleserver.application.notification.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.persistence.member.JpaMemberRepository;
 import com.mobble.mobbleserver.domain.notification.core.Notification;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.core.NotificationRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.core.JpaNotificationRepository;
 import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.device.DeviceTokenRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.device.JpaDeviceTokenRepository;
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.outbox.PushOutboxRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.outbox.JpaPushOutboxRepository;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.setting.NotificationSettingRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.setting.JpaNotificationSettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static com.mobble.mobbleserver.refactor.notification.core.dto.NotificationDto.ReadAllReq;
+import static com.mobble.mobbleserver.infrastructure.web.notification.dto.NotificationDto.ReadAllReq;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +30,10 @@ import static com.mobble.mobbleserver.refactor.notification.core.dto.Notificatio
 public class NotificationService {
 
     private final JpaMemberRepository memberRepository;
-    private final NotificationRepository notificationRepository;
-    private final NotificationSettingRepository settingRepository;
-    private final DeviceTokenRepository deviceTokenRepository;
-    private final PushOutboxRepository outboxRepository;
+    private final JpaNotificationRepository jpaNotificationRepository;
+    private final JpaNotificationSettingRepository settingRepository;
+    private final JpaDeviceTokenRepository jpaDeviceTokenRepository;
+    private final JpaPushOutboxRepository outboxRepository;
 
     private final ObjectMapper objectMapper;
     private final ApplicationEventPublisher events;
@@ -42,7 +42,7 @@ public class NotificationService {
     public Long issue(SendNotificationCommand command) {
         Member receiver = memberRepository.getReferenceById(command.receiverId());
 
-        Notification saved = notificationRepository.save(
+        Notification saved = jpaNotificationRepository.save(
                 Notification.create(receiver, command.type(), command.title(), command.content(), command.targetType(), command.targetId())
         );
 
@@ -51,7 +51,7 @@ public class NotificationService {
 
         if (!setting.allows(command.type())) return saved.getId();
 
-        List<DeviceToken> tokens = deviceTokenRepository.findByMember_IdAndEnabledTrue(receiver.getId());
+        List<DeviceToken> tokens = jpaDeviceTokenRepository.findByMember_IdAndEnabledTrue(receiver.getId());
 
         if (tokens.isEmpty()) return saved.getId();
 
@@ -71,12 +71,12 @@ public class NotificationService {
     }
 
     public List<Notification> getList(Long memberId, Long cursorId, int size) {
-        return notificationRepository.findSlice(memberId, cursorId, PageRequest.of(0, size));
+        return jpaNotificationRepository.findSlice(memberId, cursorId, PageRequest.of(0, size));
     }
 
     @Transactional
     public void markRead(Long memberId, Long notificationId) {
-        Notification n = notificationRepository.findById(notificationId)
+        Notification n = jpaNotificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NoSuchElementException("notification not found"));
         if (!Objects.equals(n.getReceiver().getId(), memberId)) throw new IllegalStateException("forbidden");
         n.markAsRead();
@@ -85,12 +85,12 @@ public class NotificationService {
     @Transactional
     public void markAllRead(Long memberId, ReadAllReq request) {
         Long upToId = request == null ? null : request.upToId();
-        notificationRepository.markAllRead(memberId, upToId);
+        jpaNotificationRepository.markAllRead(memberId, upToId);
     }
 
     @Transactional(readOnly = true)
     public long unreadCount(Long memberId) {
-        return notificationRepository.countByReceiver_IdAndIsReadFalse(memberId);
+        return jpaNotificationRepository.countByReceiver_IdAndIsReadFalse(memberId);
     }
 
     public record PushReadyEvent() {

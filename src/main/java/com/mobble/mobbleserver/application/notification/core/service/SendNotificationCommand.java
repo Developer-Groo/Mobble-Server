@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.core.service;
+package com.mobble.mobbleserver.application.notification.core.service;
 
 import com.mobble.mobbleserver.domain.notification.core.NotificationTargetType;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;

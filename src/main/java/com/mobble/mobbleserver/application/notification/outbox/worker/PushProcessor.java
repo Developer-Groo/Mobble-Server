@@ -1,11 +1,11 @@
-package com.mobble.mobbleserver.refactor.notification.outbox.worker;
+package com.mobble.mobbleserver.application.notification.outbox.worker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobble.mobbleserver.config.push.PushClient;
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
 import com.mobble.mobbleserver.domain.notification.outbox.Status;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.outbox.PushOutboxRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.notification.outbox.JpaPushOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PushProcessor {
 
-    private final PushOutboxRepository outboxRepository;
+    private final JpaPushOutboxRepository outboxRepository;
     private final PushClient pushClient;
     private final ObjectMapper objectMapper;
 

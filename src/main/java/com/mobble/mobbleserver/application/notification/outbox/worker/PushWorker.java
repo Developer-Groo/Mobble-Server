@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.outbox.worker;
+package com.mobble.mobbleserver.application.notification.outbox.worker;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import static com.mobble.mobbleserver.refactor.notification.core.service.NotificationService.PushReadyEvent;
+import static com.mobble.mobbleserver.application.notification.core.service.NotificationService.PushReadyEvent;
 
 @Component
 @RequiredArgsConstructor
