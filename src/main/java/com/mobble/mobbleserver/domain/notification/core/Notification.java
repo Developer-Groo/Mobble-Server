@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.notification.core.entity;
+package com.mobble.mobbleserver.domain.notification.core;
 
 import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
 import com.mobble.mobbleserver.domain.member.Member;
