@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.notification.device.repository;
 
-import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
+import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

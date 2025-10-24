@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.notification.core.service;
 
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationTargetType;
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
+import com.mobble.mobbleserver.domain.notification.core.NotificationTargetType;
+import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 
 public record SendNotificationCommand(
         Long receiverId,

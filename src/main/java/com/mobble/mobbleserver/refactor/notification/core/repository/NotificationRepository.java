@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.notification.core.repository;
 
-import com.mobble.mobbleserver.refactor.notification.core.entity.Notification;
+import com.mobble.mobbleserver.domain.notification.core.Notification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

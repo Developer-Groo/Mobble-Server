@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.notification.outbox.repository;
 
-import com.mobble.mobbleserver.refactor.notification.outbox.entity.PushOutbox;
-import com.mobble.mobbleserver.refactor.notification.outbox.entity.Status;
+import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
+import com.mobble.mobbleserver.domain.notification.outbox.Status;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

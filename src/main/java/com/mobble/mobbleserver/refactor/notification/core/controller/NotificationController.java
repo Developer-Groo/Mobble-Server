@@ -1,11 +1,11 @@
 package com.mobble.mobbleserver.refactor.notification.core.controller;
 
-import com.mobble.mobbleserver.refactor.notification.core.entity.Notification;
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
+import com.mobble.mobbleserver.domain.notification.core.Notification;
+import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import com.mobble.mobbleserver.refactor.notification.core.service.NotificationService;
-import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
+import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
 import com.mobble.mobbleserver.refactor.notification.device.service.DeviceTokenService;
-import com.mobble.mobbleserver.refactor.notification.setting.entity.NotificationSetting;
+import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
 import com.mobble.mobbleserver.refactor.notification.setting.service.NotificationSettingService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;

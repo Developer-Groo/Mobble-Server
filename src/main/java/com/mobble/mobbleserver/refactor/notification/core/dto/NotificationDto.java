@@ -1,10 +1,10 @@
 package com.mobble.mobbleserver.refactor.notification.core.dto;
 
-import com.mobble.mobbleserver.refactor.notification.core.entity.Notification;
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationTargetType;
-import com.mobble.mobbleserver.refactor.notification.core.entity.NotificationType;
-import com.mobble.mobbleserver.refactor.notification.device.entity.DeviceToken;
-import com.mobble.mobbleserver.refactor.notification.setting.entity.NotificationSetting;
+import com.mobble.mobbleserver.domain.notification.core.Notification;
+import com.mobble.mobbleserver.domain.notification.core.NotificationTargetType;
+import com.mobble.mobbleserver.domain.notification.core.NotificationType;
+import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
+import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
 
 import java.time.LocalDateTime;
 import java.util.List;
