@@ -22,4 +22,5 @@ public interface ArticleReadPort {
 
     List<Long> findArticleIdsByClubId(Long clubId);
 
+    void deleteAllArticleByClub_Id(Long clubId);
 }

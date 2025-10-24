@@ -57,4 +57,9 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
         return repository.countCommentsByArticleIds(articleIds);
     }
+
+    @Override
+    public void deleteAllCommentByArticle_IdIn(List<Long> articleIds) {
+        repository.deleteAllCommentByArticle_IdIn(articleIds);
+    }
 }

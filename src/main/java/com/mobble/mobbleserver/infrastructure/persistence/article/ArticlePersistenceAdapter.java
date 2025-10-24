@@ -49,6 +49,11 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     }
 
     @Override
+    public void deleteAllArticleByClub_Id(Long clubId) {
+        repository.deleteAllArticleByClub_Id(clubId);
+    }
+
+    @Override
     public Article save(Article article) {
         return repository.save(article);
     }
