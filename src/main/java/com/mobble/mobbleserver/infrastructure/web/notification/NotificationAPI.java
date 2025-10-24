@@ -1,12 +1,15 @@
 package com.mobble.mobbleserver.infrastructure.web.notification;
 
+import com.mobble.mobbleserver.application.notification.core.port.provided.NotificationMarkPort;
+import com.mobble.mobbleserver.application.notification.core.port.provided.NotificationQueryPort;
+import com.mobble.mobbleserver.application.notification.device.port.provided.DeviceTokenDisablePort;
+import com.mobble.mobbleserver.application.notification.device.port.provided.DeviceTokenRegisterPort;
+import com.mobble.mobbleserver.application.notification.setting.port.provided.NotificationSettingCommandPort;
+import com.mobble.mobbleserver.application.notification.setting.port.provided.NotificationSettingLoadPort;
 import com.mobble.mobbleserver.domain.notification.core.Notification;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
-import com.mobble.mobbleserver.application.notification.core.service.NotificationService;
 import com.mobble.mobbleserver.domain.notification.device.DeviceToken;
-import com.mobble.mobbleserver.application.notification.device.service.DeviceTokenService;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
-import com.mobble.mobbleserver.application.notification.setting.service.NotificationSettingService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +25,12 @@ import static com.mobble.mobbleserver.infrastructure.web.notification.dto.Notifi
 @RequestMapping("/api/notifications")
 public class NotificationAPI {
 
-    private final NotificationService notificationService;
-    private final DeviceTokenService deviceTokenService;
-    private final NotificationSettingService notificationSettingService;
+    private final NotificationMarkPort notificationMarkPort;
+    private final NotificationQueryPort notificationQueryPort;
+    private final DeviceTokenRegisterPort deviceTokenRegisterPort;
+    private final DeviceTokenDisablePort deviceTokenDisablePort;
+    private final NotificationSettingLoadPort notificationSettingLoadPort;
+    private final NotificationSettingCommandPort notificationSettingCommandPort;
 
     @GetMapping
     public Slice getNotificationList(
@@ -32,7 +38,7 @@ public class NotificationAPI {
             @RequestParam(required = false) Long cursorId,
             @RequestParam(defaultValue = "20") @Min(1) int size
     ) {
-        List<Notification> notifications = notificationService.getList(memberId, cursorId, size + 1);
+        List<Notification> notifications = notificationQueryPort.getList(memberId, cursorId, size + 1);
 
         return Slice.toDto(notifications, size);
     }
@@ -43,7 +49,7 @@ public class NotificationAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable Long id
     ) {
-        notificationService.markRead(memberId, id);
+        notificationMarkPort.markRead(memberId, id);
     }
 
     @PostMapping("/read-all")
@@ -52,14 +58,14 @@ public class NotificationAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody(required = false) ReadAllReq request
     ) {
-        notificationService.markAllRead(memberId, request);
+        notificationMarkPort.markAllRead(memberId, request);
     }
 
     @GetMapping("/unread-count")
     public UnreadCountRes getUnreadCount(
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        long count = notificationService.unreadCount(memberId);
+        long count = notificationQueryPort.unreadCount(memberId);
 
         return UnreadCountRes.toDto(count);
     }
@@ -70,7 +76,7 @@ public class NotificationAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody RegisterTokenReq request
     ) {
-        DeviceToken deviceToken = deviceTokenService.register(memberId, request);
+        DeviceToken deviceToken = deviceTokenRegisterPort.register(memberId, request);
 
         return DeviceTokenRes.toDto(deviceToken);
     }
@@ -81,14 +87,14 @@ public class NotificationAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable(name = "id") Long id
     ) {
-        deviceTokenService.disable(memberId, id);
+        deviceTokenDisablePort.disable(memberId, id);
     }
 
     @GetMapping("/settings")
     public SettingsRes getSettings(
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        NotificationSetting setting = notificationSettingService.getSettings(memberId);
+        NotificationSetting setting = notificationSettingLoadPort.getOrCreate(memberId);
 
         return SettingsRes.toDto(setting);
     }
@@ -99,7 +105,7 @@ public class NotificationAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody Toggle request
     ) {
-        notificationSettingService.toggleGlobal(memberId, request);
+        notificationSettingCommandPort.setGlobalEnabled(memberId, request);
     }
 
     @PatchMapping("/settings/{type}")
@@ -109,6 +115,6 @@ public class NotificationAPI {
             @PathVariable NotificationType type,
             @RequestBody Toggle request
     ) {
-        notificationSettingService.setType(memberId, request, type);
+        notificationSettingCommandPort.setTypeEnabled(memberId, request, type);
     }
 }
