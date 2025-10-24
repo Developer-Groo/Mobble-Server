@@ -41,9 +41,6 @@ public class Club extends BaseEntity {
     @Column(name = "isAutoJoin")
     private boolean isAutoJoin;
 
-    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY)
-    private ClubRoomInfo clubRoomInfo;
-
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
             ClubCategory category,
@@ -70,10 +67,6 @@ public class Club extends BaseEntity {
                 .headCount(headCount)
                 .isAutoJoin(isAutoJoin)
                 .build();
-    }
-
-    public void setClubChatRoomInternal(ClubRoomInfo chatRoom) {
-        this.clubRoomInfo = chatRoom;
     }
 
     public void updateClub(
