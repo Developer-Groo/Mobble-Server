@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.club.clubGround.entity;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.refactor.ground.entity.Ground;
+import com.mobble.mobbleserver.domain.ground.Ground;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
