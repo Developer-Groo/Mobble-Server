@@ -7,7 +7,6 @@ import com.mobble.mobbleserver.application.notification.core.port.provided.Notif
 import com.mobble.mobbleserver.application.notification.core.port.required.NotificationReadPort;
 import com.mobble.mobbleserver.application.notification.core.port.required.NotificationWritePort;
 import com.mobble.mobbleserver.application.notification.device.port.required.DeviceTokenReadPort;
-import com.mobble.mobbleserver.application.notification.outbox.port.required.OutBoxReadPort;
 import com.mobble.mobbleserver.application.notification.outbox.port.required.OutBoxWritePort;
 import com.mobble.mobbleserver.application.notification.setting.port.required.NotificationSettingReadPort;
 import com.mobble.mobbleserver.application.notification.setting.port.required.NotificationSettingWritePort;

@@ -6,10 +6,10 @@ import com.mobble.mobbleserver.application.notification.setting.port.provided.No
 import com.mobble.mobbleserver.application.notification.setting.port.required.NotificationSettingReadPort;
 import com.mobble.mobbleserver.application.notification.setting.port.required.NotificationSettingWritePort;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import com.mobble.mobbleserver.domain.notification.setting.NotificationSetting;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

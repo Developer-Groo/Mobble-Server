@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.club.clubGround.repository;
 
-import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import com.mobble.mobbleserver.domain.ground.Ground;
+import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

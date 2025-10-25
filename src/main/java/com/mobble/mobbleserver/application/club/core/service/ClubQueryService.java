@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
@@ -17,7 +18,6 @@ import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.C
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubSummaryDto;
-import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;

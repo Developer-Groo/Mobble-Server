@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
-import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
+import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
