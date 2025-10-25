@@ -1,7 +1,10 @@
-package com.mobble.mobbleserver.application.notification.outbox.push;
+package com.mobble.mobbleserver.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.mobble.mobbleserver.application.notification.outbox.push.FcmClient;
+import com.mobble.mobbleserver.application.notification.outbox.push.FcmProperties;
+import com.mobble.mobbleserver.application.notification.outbox.push.PushClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +20,12 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@EnableScheduling
 @EnableAsync
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
 @EnableConfigurationProperties(FcmProperties.class)
-public class PushConfig {
+public class FcmConfig {
 
     private final FcmProperties properties;
     private final ResourceLoader loader;
@@ -47,3 +50,4 @@ public class PushConfig {
         return new FcmClient(credentials, om, properties.getProjectId(), properties.isDryRun());
     }
 }
+
