@@ -2,10 +2,10 @@ package com.mobble.mobbleserver.application.notification.outbox.worker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mobble.mobbleserver.application.notification.outbox.port.required.OutBoxReadPort;
 import com.mobble.mobbleserver.application.notification.outbox.push.PushClient;
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
 import com.mobble.mobbleserver.domain.notification.outbox.Status;
-import com.mobble.mobbleserver.infrastructure.persistence.notification.outbox.JpaPushOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PushProcessor {
 
-    private final JpaPushOutboxRepository outboxRepository;
+    private final OutBoxReadPort outBoxReadPort;
+
     private final PushClient pushClient;
     private final ObjectMapper objectMapper;
 
@@ -29,7 +30,7 @@ public class PushProcessor {
 
     @Transactional
     public void processOnce() {
-        List<PushOutbox> batch = outboxRepository.pickPending(Status.PENDING, LocalDateTime.now(), PageRequest.of(0, BATCH));
+        List<PushOutbox> batch = outBoxReadPort.pickPending(Status.PENDING, LocalDateTime.now(), PageRequest.of(0, BATCH));
         if (batch.isEmpty()) return;
 
         for (PushOutbox outbox : batch) {
