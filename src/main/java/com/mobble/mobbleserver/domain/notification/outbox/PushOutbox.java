@@ -36,7 +36,7 @@ public class PushOutbox extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 16)
-    private Status status;
+    private PushStatus pushStatus;
 
     @Column(name = "attempts", nullable = false)
     private int attempts;
@@ -53,7 +53,7 @@ public class PushOutbox extends BaseEntity {
         this.title = title;
         this.body = body;
         this.dataJson = dataJson;
-        this.status = Status.PENDING;
+        this.pushStatus = PushStatus.PENDING;
         this.attempts = 0;
         this.nextAttemptAt = LocalDateTime.now();
     }
@@ -71,28 +71,29 @@ public class PushOutbox extends BaseEntity {
         }
     }
 
+    public void markProcessing() {
+        this.pushStatus = PushStatus.PROCESSING;
+    }
+
     public void markSent() {
-        this.status = Status.SENT;
+        this.pushStatus = PushStatus.SENT;
         this.lastError = null;
     }
 
     public void markForRetry(String error) {
-        this.status = Status.PENDING;
+        this.pushStatus = PushStatus.PENDING;
         this.attempts++;
         this.lastError = error;
-
-        long minutes = switch (attempts) {
-            case 1 -> 1;
-            case 2 -> 5;
-            case 3 -> 15;
-            case 4 -> 30;
-            default -> 60;
-        };
-        this.nextAttemptAt = LocalDateTime.now().plusMinutes(minutes);
+        this.nextAttemptAt = computeNextBackoff(attempts);
     }
 
     public void markFailed(String error) {
-        this.status = Status.FAILED;
+        this.pushStatus = PushStatus.FAILED;
         this.lastError = error;
+    }
+
+    private LocalDateTime computeNextBackoff(int attempts) {
+        long seconds = Math.min((long) Math.pow(2, attempts) * 5L, 600L);
+        return LocalDateTime.now().plusSeconds(seconds);
     }
 }

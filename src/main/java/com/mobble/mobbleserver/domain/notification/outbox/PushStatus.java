@@ -1,5 +1,5 @@
 package com.mobble.mobbleserver.domain.notification.outbox;
 
-public enum Status {
-    PENDING, SENT, FAILED
+public enum PushStatus {
+    PENDING, SENT, PROCESSING, FAILED
 }
