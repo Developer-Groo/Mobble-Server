@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.notification.outbox;
 
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
-import com.mobble.mobbleserver.domain.notification.outbox.Status;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,9 +16,9 @@ public interface JpaPushOutboxRepository extends JpaRepository<PushOutbox, Long>
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         SELECT p FROM PushOutbox p
-        WHERE p.status = :status
-          AND (p.nextAttemptAt IS NULL OR p.nextAttemptAt <= :now)
-        ORDER BY p.id ASC
+        WHERE p.pushStatus = 'PENDING'
+          AND p.nextAttemptAt <= :now
+        ORDER BY p.id
     """)
-    List<PushOutbox> pickPending(@Param("status") Status status, @Param("now") LocalDateTime now, Pageable pageable);
+    List<PushOutbox> findPending(@Param("now") LocalDateTime now, Pageable pageable);
 }

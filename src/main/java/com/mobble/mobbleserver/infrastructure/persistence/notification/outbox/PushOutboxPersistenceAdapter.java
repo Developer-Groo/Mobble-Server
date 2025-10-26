@@ -3,9 +3,8 @@ package com.mobble.mobbleserver.infrastructure.persistence.notification.outbox;
 import com.mobble.mobbleserver.application.notification.outbox.port.required.OutBoxReadPort;
 import com.mobble.mobbleserver.application.notification.outbox.port.required.OutBoxWritePort;
 import com.mobble.mobbleserver.domain.notification.outbox.PushOutbox;
-import com.mobble.mobbleserver.domain.notification.outbox.Status;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -23,9 +22,16 @@ public class PushOutboxPersistenceAdapter implements OutBoxWritePort, OutBoxRead
         return repository.save(pushOutbox);
     }
 
+    @Override
+    public void saveAll(List<PushOutbox> batch) {
+        repository.saveAll(batch);
+    }
+
     /* PushOutboxReadPort */
     @Override
-    public List<PushOutbox> pickPending(Status status, LocalDateTime now, Pageable pageable) {
-        return repository.pickPending(status, now, pageable);
+    public List<PushOutbox> claimPendingBatch(int size, LocalDateTime now) {
+        List<PushOutbox> list = repository.findPending(now, PageRequest.of(0, size));
+        list.forEach(PushOutbox::markProcessing);
+        return list;
     }
 }
