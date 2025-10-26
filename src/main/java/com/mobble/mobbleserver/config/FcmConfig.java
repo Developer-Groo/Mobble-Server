@@ -2,9 +2,9 @@ package com.mobble.mobbleserver.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.mobble.mobbleserver.application.notification.outbox.push.FcmClient;
-import com.mobble.mobbleserver.application.notification.outbox.push.FcmProperties;
-import com.mobble.mobbleserver.application.notification.outbox.push.PushClient;
+import com.mobble.mobbleserver.application.notification.outbox.port.required.PushProviderPort;
+import com.mobble.mobbleserver.infrastructure.push.notification.FcmClient;
+import com.mobble.mobbleserver.infrastructure.push.notification.FcmProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -45,8 +45,8 @@ public class FcmConfig {
     }
 
     @Bean
-    public PushClient pushClient(GoogleCredentials credentials, ObjectMapper om) {
-        if (!properties.isEnabled()) return new PushClient.Noop();
+    public PushProviderPort pushClient(GoogleCredentials credentials, ObjectMapper om) {
+        if (!properties.isEnabled()) return (token, title, body, data) -> {};
         return new FcmClient(credentials, om, properties.getProjectId(), properties.isDryRun());
     }
 }
