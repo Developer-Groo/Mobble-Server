@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePo
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
@@ -16,7 +17,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCo
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.request.CommentRequestDto;
-import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.refactor.club.policy.ClubPermissionPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

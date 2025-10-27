@@ -4,9 +4,9 @@ import com.mobble.mobbleserver.application.address.port.required.AddressWritePor
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.clbuCategory.port.ClubCategoryReadPort;
 import com.mobble.mobbleserver.application.club.ageGroup.port.required.AgeGroupReadPort;
 import com.mobble.mobbleserver.application.club.ageGroup.port.required.AgeGroupWritePort;
-import com.mobble.mobbleserver.application.clbuCategory.port.ClubCategoryReadPort;
 import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundReadPort;
 import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundWritePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
@@ -19,6 +19,7 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWr
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.domain.club.ageGroup.AgeGroup;
 import com.mobble.mobbleserver.domain.club.ageGroup.AgeGroupType;
@@ -39,7 +40,6 @@ import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequ
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.domain.club.clubGround.ClubGround;
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
