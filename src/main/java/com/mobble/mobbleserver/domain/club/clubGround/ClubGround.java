@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.clubGround.entity;
+package com.mobble.mobbleserver.domain.club.clubGround;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.ground.Ground;
