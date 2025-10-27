@@ -6,11 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.mobble.mobbleserver.domain.chat.room.QChatRoom.chatRoom;
-import static com.mobble.mobbleserver.domain.chat.room.QClubRoomInfo.clubRoomInfo;
-import static com.mobble.mobbleserver.domain.club.core.QClub.club;
-import static com.mobble.mobbleserver.domain.clubMember.QClubMember.clubMember;
-
 @RequiredArgsConstructor
 public class ClubMemberQueryDslRepositoryImpl implements ClubMemberQueryDslRepository {
 
@@ -18,15 +13,17 @@ public class ClubMemberQueryDslRepositoryImpl implements ClubMemberQueryDslRepos
 
     @Override
     public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
-        return queryFactory
-                .selectFrom(clubMember)
-                .join(clubMember.club, club)
-                .fetchJoin()
-                .join(club.clubRoomInfo, clubRoomInfo)
-                .fetchJoin()
-                .join(clubRoomInfo.chatRoom, chatRoom)
-                .fetchJoin()
-                .where(clubMember.member.id.eq(memberId))
-                .fetch();
+        return List.of();
+        // Todo: 로직 수정 필요
+//                queryFactory
+//                .selectFrom(clubMember)
+//                .join(clubMember.club, club)
+//                .fetchJoin()
+//                .join(club.clubRoomInfo, clubRoomInfo)
+//                .fetchJoin()
+//                .join(clubRoomInfo.chatRoom, chatRoom)
+//                .fetchJoin()
+//                .where(clubMember.member.id.eq(memberId))
+//                .fetch();
     }
 }
