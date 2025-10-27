@@ -8,7 +8,7 @@ import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
-import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
