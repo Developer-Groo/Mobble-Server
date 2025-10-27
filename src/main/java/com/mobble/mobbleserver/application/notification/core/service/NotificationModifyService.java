@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.notification.core.service;
 
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.application.notification.core.command.SendNotificationCommand;
 import com.mobble.mobbleserver.application.notification.core.port.provided.NotificationIssuePort;
 import com.mobble.mobbleserver.application.notification.core.port.provided.NotificationMarkPort;
 import com.mobble.mobbleserver.application.notification.core.port.required.NotificationReadPort;

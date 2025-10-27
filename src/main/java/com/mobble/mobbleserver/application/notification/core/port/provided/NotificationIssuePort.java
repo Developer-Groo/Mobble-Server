@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.notification.core.port.provided;
 
-import com.mobble.mobbleserver.application.notification.core.service.SendNotificationCommand;
+import com.mobble.mobbleserver.application.notification.core.command.SendNotificationCommand;
 
 public interface NotificationIssuePort {
 
