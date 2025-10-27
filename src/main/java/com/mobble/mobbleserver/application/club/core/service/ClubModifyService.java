@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.application.address.port.required.AddressWritePor
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.clbuCategory.port.ClubCategoryReadPort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubUpdatePort;
@@ -36,8 +37,7 @@ import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
 import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
 import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
-import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
-import com.mobble.mobbleserver.refactor.clubCategory.repository.ClubCategoryRepository;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
@@ -62,12 +62,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubMemberReadPort clubMemberReadPort;
     private final ArticleReadPort articleReadPort;
     private final CommentReadPort commentReadPort;
+    private final ClubCategoryReadPort clubCategoryReadPort;
     private final GroundReadPort groundReadPort;
 
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
-    private final ClubCategoryRepository clubCategoryRepository;
     private final AgeGroupRepository ageGroupRepository;
     private final ClubGroundRepository clubGroundRepository;
     private final CommentLikeRepository commentLikeRepository;
@@ -171,7 +171,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     private ClubCategory findCategoryOrThrow(String categoryName) {
-        return clubCategoryRepository.findByName(categoryName)
+        return clubCategoryReadPort.findByName(categoryName)
                 .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
     }
 

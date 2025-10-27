@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.infrastructure.web.club.core.dto.request;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.infrastructure.web.address.dto.request.AddressRequestDto;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
-import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
