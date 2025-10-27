@@ -1,7 +1,7 @@
 //package com.mobble.mobbleserver.refactor.club.core.entity;
 //
 //import com.mobble.mobbleserver.domain.chat.room.ClubChatRoom;
-//import com.mobble.mobbleserver.refactor.clubCategory.entity.ClubCategory;
+//import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 //import com.mobble.mobbleserver.global.exception.common.DomainException;
 //import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 //import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
