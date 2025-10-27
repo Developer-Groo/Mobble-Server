@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.ageGroup.entity;
+package com.mobble.mobbleserver.domain.club.ageGroup;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import jakarta.persistence.*;

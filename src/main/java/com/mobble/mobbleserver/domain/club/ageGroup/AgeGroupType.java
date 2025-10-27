@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.club.ageGroup.entity;
+package com.mobble.mobbleserver.domain.club.ageGroup;
 
 
 import lombok.Getter;
