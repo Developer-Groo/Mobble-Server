@@ -4,6 +4,8 @@ import com.mobble.mobbleserver.application.address.port.required.AddressWritePor
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.club.ageGroup.port.required.AgeGroupReadPort;
+import com.mobble.mobbleserver.application.club.ageGroup.port.required.AgeGroupWritePort;
 import com.mobble.mobbleserver.application.clbuCategory.port.ClubCategoryReadPort;
 import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundReadPort;
 import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundWritePort;
@@ -18,6 +20,8 @@ import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.address.Address;
+import com.mobble.mobbleserver.domain.club.ageGroup.AgeGroup;
+import com.mobble.mobbleserver.domain.club.ageGroup.AgeGroupType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
@@ -34,9 +38,6 @@ import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.Cl
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
-import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
-import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
-import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
 import com.mobble.mobbleserver.domain.club.clubGround.ClubGround;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
@@ -58,6 +59,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubMemberWritePort clubMemberWritePort;
     private final AddressWritePort addressWritePort;
     private final ClubGroundWritePort clubGroundWritePort;
+    private final AgeGroupWritePort ageGroupWritePort;
 
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
@@ -67,11 +69,11 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubCategoryReadPort clubCategoryReadPort;
     private final GroundReadPort groundReadPort;
     private final ClubGroundReadPort clubGroundReadPort;
+    private final AgeGroupReadPort ageGroupReadPort;
 
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
-    private final AgeGroupRepository ageGroupRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
     private final ClubLikeRepository clubLikeRepository;
@@ -96,7 +98,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         clubMemberWritePort.save(clubMember);
 
         List<AgeGroup> ageGroups = createClubAgeGroups(club, dto.ageGroup());
-        ageGroupRepository.saveAll(ageGroups);
+        ageGroupWritePort.saveAll(ageGroups);
 
         // Todo: 반환값이 Club 채팅방의 preview 에 필요한 데이터이기 때문에 반환 DTO에 포함 되어야 함
         ClubChatRoomPreviewResponseDto clubChatRoom = clubChatRoomCreatePort.createClubChatRoom(club.getId(), member.getId());
@@ -119,13 +121,14 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         address.updateAddress(addrDto);
         club.updateClub(category, dto.name(), address, dto.headcount(), dto.isAutoJoin());
 
-        ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
         clubGroundWritePort.deleteAllByClubId(club.getId());
 
-        List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
         List<ClubGround> newClubGrounds = createClubGroundList(dto.groundCodes(), club);
-        ageGroupRepository.saveAll(newAgeGroups);
         clubGroundWritePort.saveAll(newClubGrounds);
+        ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
+
+        List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
+        ageGroupWritePort.saveAll(newAgeGroups);
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -148,7 +151,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
         clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
-        ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
+        ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
 
         clubWritePort.delete(club);
     }
@@ -191,7 +194,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
-        List<AgeGroupType> ageGroupList = ageGroupRepository.findByClubId(club.getId()).stream()
+        List<AgeGroupType> ageGroupList = ageGroupReadPort.findByClubId(club.getId()).stream()
                 .map(AgeGroup::getAgeGroupType)
                 .toList();
 
