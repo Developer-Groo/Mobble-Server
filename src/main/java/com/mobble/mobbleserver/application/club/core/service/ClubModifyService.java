@@ -5,6 +5,8 @@ import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.clbuCategory.port.ClubCategoryReadPort;
+import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundReadPort;
+import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundWritePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubUpdatePort;
@@ -35,8 +37,7 @@ import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResp
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
-import com.mobble.mobbleserver.refactor.club.clubGround.entity.ClubGround;
-import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
+import com.mobble.mobbleserver.domain.club.clubGround.ClubGround;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
@@ -56,6 +57,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
     private final AddressWritePort addressWritePort;
+    private final ClubGroundWritePort clubGroundWritePort;
 
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
@@ -64,12 +66,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final CommentReadPort commentReadPort;
     private final ClubCategoryReadPort clubCategoryReadPort;
     private final GroundReadPort groundReadPort;
+    private final ClubGroundReadPort clubGroundReadPort;
 
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
     private final AgeGroupRepository ageGroupRepository;
-    private final ClubGroundRepository clubGroundRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
     private final ClubLikeRepository clubLikeRepository;
@@ -88,7 +90,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         List<Long> codeList = dto.groundCodes();
         List<ClubGround> clubGrounds = createClubGroundList(codeList, club);
-        clubGroundRepository.saveAll(clubGrounds);
+        clubGroundWritePort.saveAll(clubGrounds);
 
         ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
         clubMemberWritePort.save(clubMember);
@@ -118,12 +120,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         club.updateClub(category, dto.name(), address, dto.headcount(), dto.isAutoJoin());
 
         ageGroupRepository.deleteAllClubAgeGroupByClubId(club.getId());
-        clubGroundRepository.deleteAllByClubId(club.getId());
+        clubGroundWritePort.deleteAllByClubId(club.getId());
 
         List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
         List<ClubGround> newClubGrounds = createClubGroundList(dto.groundCodes(), club);
         ageGroupRepository.saveAll(newAgeGroups);
-        clubGroundRepository.saveAll(newClubGrounds);
+        clubGroundWritePort.saveAll(newClubGrounds);
 
         return buildClubResponse(club, member, member.getName());
     }
@@ -193,7 +195,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
                 .map(AgeGroup::getAgeGroupType)
                 .toList();
 
-        List<Long> groundCodes = clubGroundRepository.findByClubId(club.getId())
+        List<Long> groundCodes = clubGroundReadPort.findByClubId(club.getId())
                 .stream()
                 .map(cg -> cg.getGround().getCode())
                 .collect(Collectors.toList());

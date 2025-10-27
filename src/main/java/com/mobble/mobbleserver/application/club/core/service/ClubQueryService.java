@@ -1,10 +1,12 @@
 package com.mobble.mobbleserver.application.club.core.service;
 
+import com.mobble.mobbleserver.application.club.clubGround.port.required.ClubGroundReadPort;
 import com.mobble.mobbleserver.application.club.core.port.provided.ClubQueryPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
@@ -17,12 +19,10 @@ import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.C
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubSummaryDto;
-import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroup;
 import com.mobble.mobbleserver.refactor.club.ageGroup.entity.AgeGroupType;
 import com.mobble.mobbleserver.refactor.club.ageGroup.repository.AgeGroupRepository;
-import com.mobble.mobbleserver.refactor.club.clubGround.repository.ClubGroundRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +39,9 @@ public class ClubQueryService implements ClubQueryPort {
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final GroundReadPort groundReadPort;
+    private final ClubGroundReadPort clubGroundReadPort;
 
     private final AgeGroupRepository ageGroupRepository;
-    private final ClubGroundRepository clubGroundRepository;
 
     @Override
     public ClubResponseDto findClubById(Long clubId, Long memberId) {
@@ -61,7 +61,7 @@ public class ClubQueryService implements ClubQueryPort {
 
         return clubs.stream()
                 .map(club -> {
-                    List<Ground> groundList = clubGroundRepository.findGroundsByClubId(club.getId());
+                    List<Ground> groundList = clubGroundReadPort.findGroundsByClubId(club.getId());
                     ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), memberId);
                     return ClubSummaryDto.toDto(club, groundList, likeInfo);
                 })
@@ -83,7 +83,7 @@ public class ClubQueryService implements ClubQueryPort {
                 .map(AgeGroup::getAgeGroupType)
                 .toList();
 
-        List<Long> groundCodes = clubGroundRepository.findByClubId(club.getId())
+        List<Long> groundCodes = clubGroundReadPort.findByClubId(club.getId())
                 .stream()
                 .map(cg -> cg.getGround().getCode())
                 .collect(Collectors.toList());
