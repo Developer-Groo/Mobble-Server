@@ -27,8 +27,8 @@ public class ArticleLike extends AbstractLike {
 
     public static ArticleLike create(Long memberId, Long articleId) {
         return ArticleLike.builder()
-                .articleId(articleId)
                 .memberId(memberId)
+                .articleId(articleId)
                 .build();
     }
 }

@@ -27,8 +27,8 @@ public class CommentLike extends AbstractLike {
 
     public static CommentLike createCommentLike(Long memberId, Long commentId) {
         return CommentLike.builder()
-                .commentId(commentId)
                 .memberId(memberId)
+                .commentId(commentId)
                 .build();
     }
 }

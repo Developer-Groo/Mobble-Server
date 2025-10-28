@@ -27,8 +27,8 @@ public class ClubLike extends AbstractLike {
 
     public static ClubLike createClubLike(Long memberId, Long clubId) {
         return ClubLike.builder()
-                .clubId(clubId)
                 .memberId(memberId)
+                .clubId(clubId)
                 .build();
     }
 }
