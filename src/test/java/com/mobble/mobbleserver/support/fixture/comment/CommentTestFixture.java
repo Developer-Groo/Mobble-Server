@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.support.fixture.comment;
 
-import com.mobble.mobbleserver.domain.comment.entity.Comment;
+import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 

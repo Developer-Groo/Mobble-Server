@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.support.fixture.meeting;
 
-import com.mobble.mobbleserver.domain.clubMember.entity.ClubMember;
-import com.mobble.mobbleserver.domain.meeting.entity.Meeting;
-import com.mobble.mobbleserver.domain.meeting.entity.MeetingType;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.MeetingType;
 
 import java.time.LocalDateTime;
 

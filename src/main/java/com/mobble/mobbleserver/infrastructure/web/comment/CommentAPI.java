@@ -1,0 +1,77 @@
+package com.mobble.mobbleserver.infrastructure.web.comment;
+
+import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
+import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
+import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
+import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.infrastructure.web.comment.dto.request.CommentRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.CommentResponseDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@Validated
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/articles/{article-id}/comments")
+public class CommentAPI {
+
+    private final CommentCreatePort commentCreatePort;
+    private final CommentUpdatePort commentUpdatePort;
+    private final CommentDeletePort commentDeletePort;
+
+    @PostMapping
+    public ResponseEntity<CommentResponseDto> createRootComment(
+            @PathVariable("article-id") @Positive Long articleId,
+            @RequestBody @Valid CommentRequestDto dto,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        Comment comment = commentCreatePort.createRootComment(memberId, articleId, dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommentResponseDto.toDto(comment));
+    }
+
+    @PostMapping("/{parent-comment-id}/replies")
+    public ResponseEntity<CommentResponseDto> createReplyComment(
+            @PathVariable("article-id") @Positive Long articleId,
+            @PathVariable("parent-comment-id") @Positive Long parentCommentId,
+            @RequestBody @Valid CommentRequestDto dto,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        Comment comment = commentCreatePort.createReplyComment(memberId, articleId, parentCommentId, dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommentResponseDto.toDto(comment));
+    }
+
+    @PatchMapping("/{comment-id}")
+    public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable("article-id") @Positive Long articleId,
+            @PathVariable("comment-id") @Positive Long commentId,
+            @RequestBody @Valid CommentRequestDto dto,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        Comment comment = commentUpdatePort.updateComment(articleId, commentId, memberId, dto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommentResponseDto.toDto(comment));
+    }
+
+    @DeleteMapping("/{comment-id}")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable("article-id") @Positive Long articleId,
+            @PathVariable("comment-id") @Positive Long commentId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        commentDeletePort.deleteComment(articleId, commentId, memberId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+}

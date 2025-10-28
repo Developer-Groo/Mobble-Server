@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.jwt;
 
 import com.mobble.mobbleserver.account.auth.principal.AuthMember;
-import com.mobble.mobbleserver.domain.clubMember.entity.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
