@@ -1,7 +1,5 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.entity;
 
-import com.mobble.mobbleserver.domain.article.Article;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.refactor.like.baseLike.entity.AbstractLike;
@@ -15,24 +13,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "id", column = @Column(name = "article_like_id"))
 public class ArticleLike extends AbstractLike {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "article_id", nullable = false)
-    private Article article;
+    @Column(name = "article_id", nullable = false)
+    private Long articleId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ArticleLike(Article article, Member member) {
-        if (article == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
-        this.article = article;
-        assignMember(member);
+    private ArticleLike(Long memberId, Long articleId) {
+        super(memberId);
+        if (articleId == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
+        this.articleId = articleId;
     }
 
-    public static ArticleLike createArticleLike(Article article, Member member) {
+    public static ArticleLike create(Long memberId, Long articleId) {
         return ArticleLike.builder()
-                .article(article)
-                .member(member)
+                .articleId(articleId)
+                .memberId(memberId)
                 .build();
     }
 }
