@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
+import com.mobble.mobbleserver.domain.like.clubLike.ClubLike;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;

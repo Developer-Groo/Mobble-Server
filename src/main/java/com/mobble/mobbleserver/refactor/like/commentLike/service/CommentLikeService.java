@@ -4,9 +4,9 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.abstractLike.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.AbstractLikeService;
-import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
+import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

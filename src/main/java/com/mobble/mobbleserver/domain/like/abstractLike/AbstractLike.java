@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.like.baseLike.entity;
+package com.mobble.mobbleserver.domain.like.abstractLike;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

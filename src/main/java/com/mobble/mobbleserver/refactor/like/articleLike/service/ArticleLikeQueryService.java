@@ -4,10 +4,10 @@ import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
-import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.LikeType;
+import com.mobble.mobbleserver.domain.like.abstractLike.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.LikeQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
