@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.like.clubLike.entity;
+package com.mobble.mobbleserver.domain.like.clubLike;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;

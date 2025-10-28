@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.entity;
 
+import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;

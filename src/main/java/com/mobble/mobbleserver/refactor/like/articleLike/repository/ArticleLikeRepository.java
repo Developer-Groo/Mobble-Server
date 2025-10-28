@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.articleLike.repository;
 
-import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
+import com.mobble.mobbleserver.domain.like.articleLike.ArticleLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
