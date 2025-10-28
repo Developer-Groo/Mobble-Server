@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.refactor.like.commentLike.repository;
 
-import com.mobble.mobbleserver.domain.like.commentLike.CommentLike;
+import com.mobble.mobbleserver.domain.like.core.CommentLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 

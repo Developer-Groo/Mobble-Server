@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.refactor.like.baseLike.controller;
 
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeToggleResponseDto;
-import com.mobble.mobbleserver.domain.like.abstractLike.LikeType;
+import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.refactor.like.baseLike.service.LikeDispatcherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

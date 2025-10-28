@@ -1,8 +1,7 @@
-package com.mobble.mobbleserver.domain.like.clubLike;
+package com.mobble.mobbleserver.domain.like.core;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.domain.like.abstractLike.AbstractLike;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;

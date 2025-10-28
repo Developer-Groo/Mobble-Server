@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.refactor.like.baseLike.service;
 
 import com.mobble.mobbleserver.refactor.like.baseLike.dto.response.LikeMemberListResponseDto;
-import com.mobble.mobbleserver.domain.like.abstractLike.LikeType;
+import com.mobble.mobbleserver.domain.like.core.LikeType;
 
 public interface LikeQueryService {
 
