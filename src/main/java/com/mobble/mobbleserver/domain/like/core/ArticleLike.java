@@ -24,7 +24,7 @@ public class ArticleLike extends AbstractLike {
         this.articleId = articleId;
     }
 
-    public static ArticleLike create(Long memberId, Long articleId) {
+    public static ArticleLike createArticleLike(Long memberId, Long articleId) {
         return ArticleLike.builder()
                 .memberId(memberId)
                 .articleId(articleId)
