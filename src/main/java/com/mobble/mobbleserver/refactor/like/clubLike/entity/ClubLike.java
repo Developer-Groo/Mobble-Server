@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.refactor.like.baseLike.entity.BaseLike;
+import com.mobble.mobbleserver.refactor.like.baseLike.entity.AbstractLike;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "id", column = @Column(name = "club_like_id"))
-public class ClubLike extends BaseLike {
+public class ClubLike extends AbstractLike {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "club_id", nullable = false)
