@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.like.core.ClubLike;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.clubLike.JpaClubLikeRepository;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
@@ -21,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QueryDslConfig.class)
-class ClubLikeRepositoryTest {
+class JpaClubLikeRepositoryTest {
 
     @Autowired
-    private ClubLikeRepository clubLikeRepository;
+    private JpaClubLikeRepository jpaClubLikeRepository;
 
     @Autowired
     private EntityManager em;
@@ -51,7 +52,7 @@ class ClubLikeRepositoryTest {
             em.clear();
 
             // when
-            Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+            Optional<ClubLike> result = jpaClubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
 
             // then
             assertThat(result).isPresent();
@@ -74,7 +75,7 @@ class ClubLikeRepositoryTest {
             em.clear();
 
             // when
-            Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+            Optional<ClubLike> result = jpaClubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
 
             // then
             assertThat(result).isNotPresent();
@@ -102,12 +103,12 @@ class ClubLikeRepositoryTest {
             em.flush();
 
             // when
-            clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+            jpaClubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
             em.flush();
             em.clear();
 
             // then
-            Optional<ClubLike> result = clubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
+            Optional<ClubLike> result = jpaClubLikeRepository.findLikedByClubIdAndMemberId(club.getId(), member.getId());
             assertThat(result).isNotPresent();
         }
     }

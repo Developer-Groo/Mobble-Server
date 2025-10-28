@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.like.core.CommentLike;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike.JpaCommentLikeRepository;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentLikeRepositoryTest {
 
     @Autowired
-    private CommentLikeRepository commentLikeRepository;
+    private JpaCommentLikeRepository commentLikeRepository;
 
     @Autowired
     private EntityManager em;

@@ -1,14 +1,14 @@
-package com.mobble.mobbleserver.refactor.like.commentLike.repository;
+package com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.mobble.mobbleserver.refactor.like.commentLike.entity.QCommentLike.commentLike;
+import static com.mobble.mobbleserver.domain.like.commentLike.QCommentLike.commentLike;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentLikeRepositoryImpl implements CommentLikeQueryRepository {
+public class CommentLikeQueryDslRepositoryImpl implements CommentLikeQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 

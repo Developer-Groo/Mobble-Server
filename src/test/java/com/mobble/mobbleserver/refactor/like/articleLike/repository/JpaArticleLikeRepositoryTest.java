@@ -6,6 +6,7 @@ import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.like.core.ArticleLike;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike.JpaArticleLikeRepository;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -24,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QueryDslConfig.class)
-class ArticleLikeRepositoryTest {
+class JpaArticleLikeRepositoryTest {
 
     @Autowired
-    private ArticleLikeRepository articleLikeRepository;
+    private JpaArticleLikeRepository jpaArticleLikeRepository;
 
     @Autowired
     private EntityManager em;
@@ -55,7 +56,7 @@ class ArticleLikeRepositoryTest {
             em.clear();
 
             // when
-            Optional<ArticleLike> result = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
+            Optional<ArticleLike> result = jpaArticleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
 
             // then
             assertThat(result).isPresent();
@@ -80,7 +81,7 @@ class ArticleLikeRepositoryTest {
             em.clear();
 
             // when
-            Optional<ArticleLike> result = articleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
+            Optional<ArticleLike> result = jpaArticleLikeRepository.findLikedByArticleIdAndMemberId(article.getId(), member.getId());
 
             // then
             assertThat(result).isNotPresent();
@@ -110,7 +111,7 @@ class ArticleLikeRepositoryTest {
             em.clear();
 
             // when
-            List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+            List<ArticleLike> articleLikes = jpaArticleLikeRepository.findAllByArticleId(article.getId());
 
             // then
             assertThat(articleLikes).hasSize(2);
@@ -136,7 +137,7 @@ class ArticleLikeRepositoryTest {
             em.clear();
 
             // when
-            List<ArticleLike> articleLikes = articleLikeRepository.findAllByArticleId(article.getId());
+            List<ArticleLike> articleLikes = jpaArticleLikeRepository.findAllByArticleId(article.getId());
 
             // then
             assertThat(articleLikes)
@@ -170,12 +171,12 @@ class ArticleLikeRepositoryTest {
             em.flush();
 
             // when
-            articleLikeRepository.deleteAllByArticleId(article.getId());
+            jpaArticleLikeRepository.deleteAllByArticleId(article.getId());
             em.flush();
             em.clear();
 
             // then
-            List<ArticleLike> result = articleLikeRepository.findAllByArticleId(article.getId());
+            List<ArticleLike> result = jpaArticleLikeRepository.findAllByArticleId(article.getId());
             assertThat(result).isEmpty();
         }
 
@@ -205,12 +206,12 @@ class ArticleLikeRepositoryTest {
             List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
             // when
-            articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
+            jpaArticleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
             em.flush();
             em.clear();
 
             // then
-            List<ArticleLike> remainingLikes = articleLikeRepository.findAll();
+            List<ArticleLike> remainingLikes = jpaArticleLikeRepository.findAll();
             assertThat(remainingLikes).isEmpty();
         }
     }
