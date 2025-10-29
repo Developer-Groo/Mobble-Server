@@ -46,8 +46,8 @@ class CommentQueryDslRepositoryImplTest {
 
         Comment firstRootComment = Comment.createRootComment(member, article, "parent comment-1");
         Comment secondeRootComment = Comment.createRootComment(member, article, "parent comment-2");
-        Comment firstReplyComment = Comment.createReplyComment(member, article, firstRootComment, "reply comment-1");
-        Comment secondReplyComment = Comment.createReplyComment(member, article, secondeRootComment, "reply comment-2");
+        Comment firstReplyComment = Comment.createReplyComment(member, firstRootComment, "reply comment-1");
+        Comment secondReplyComment = Comment.createReplyComment(member, secondeRootComment, "reply comment-2");
         em.persist(firstRootComment);
         em.persist(secondeRootComment);
         em.persist(firstReplyComment);
