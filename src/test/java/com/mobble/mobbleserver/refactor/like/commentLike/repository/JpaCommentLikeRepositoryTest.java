@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QueryDslConfig.class)
-class CommentLikeRepositoryTest {
+class JpaCommentLikeRepositoryTest {
 
     @Autowired
     private JpaCommentLikeRepository commentLikeRepository;
