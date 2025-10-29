@@ -45,7 +45,7 @@ class JpaArticleLikeRepositoryTest {
             ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
             Club club = ClubTestFixture.createDefaultClub(clubCategory);
             Article article = ArticleTestFixture.createWithMemberAndClub(member, club);
-            ArticleLike articleLike = ArticleLike.createArticleLike(article, member);
+            ArticleLike articleLike = ArticleLike.createArticleLike(member.getId(), article.getId());
 
             em.persist(clubCategory);
             em.persist(member);
@@ -60,8 +60,8 @@ class JpaArticleLikeRepositoryTest {
 
             // then
             assertThat(result).isPresent();
-            assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
-            assertThat(result.get().getArticle().getId()).isEqualTo(article.getId());
+            assertThat(result.get().getMemberId()).isEqualTo(member.getId());
+            assertThat(result.get().getArticleId()).isEqualTo(article.getId());
         }
 
         @Test
@@ -103,8 +103,8 @@ class JpaArticleLikeRepositoryTest {
             em.persist(club);
             em.persist(article);
 
-            ArticleLike articleLike1 = ArticleLike.createArticleLike(article, member1);
-            ArticleLike articleLike2 = ArticleLike.createArticleLike(article, member2);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(member1.getId(), article.getId());
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(member2.getId(), article.getId());
             em.persist(articleLike1);
             em.persist(articleLike2);
             em.flush();
@@ -115,8 +115,8 @@ class JpaArticleLikeRepositoryTest {
 
             // then
             assertThat(articleLikes).hasSize(2);
-            assertThat(articleLikes).extracting(ArticleLike::getMember)
-                    .extracting(Member::getId)
+            assertThat(articleLikes).extracting(ArticleLike::getMemberId)
+//                    .extracting(Member::getId)
                     .containsExactlyInAnyOrder(member1.getId(), member2.getId());
         }
 
@@ -164,8 +164,8 @@ class JpaArticleLikeRepositoryTest {
             em.persist(club);
             em.persist(article);
 
-            ArticleLike articleLike1 = ArticleLike.createArticleLike(article, member);
-            ArticleLike articleLike2 = ArticleLike.createArticleLike(article, member);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(member.getId(), article.getId());
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(member.getId(), article.getId());
             em.persist(articleLike1);
             em.persist(articleLike2);
             em.flush();
@@ -197,8 +197,8 @@ class JpaArticleLikeRepositoryTest {
             em.persist(article1);
             em.persist(article2);
 
-            ArticleLike articleLike1 = ArticleLike.createArticleLike(article1, member);
-            ArticleLike articleLike2 = ArticleLike.createArticleLike(article2, member);
+            ArticleLike articleLike1 = ArticleLike.createArticleLike(member.getId(), article1.getId());
+            ArticleLike articleLike2 = ArticleLike.createArticleLike(member.getId(), article2.getId());
             em.persist(articleLike1);
             em.persist(articleLike2);
             em.flush();
@@ -206,7 +206,7 @@ class JpaArticleLikeRepositoryTest {
             List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
             // when
-            jpaArticleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
+            jpaArticleLikeRepository.deleteAllByArticleIdIn(articleIds);
             em.flush();
             em.clear();
 

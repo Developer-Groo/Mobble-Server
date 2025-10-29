@@ -90,9 +90,9 @@ class CommentQueryDslRepositoryImplTest {
         em.persist(comment1);
         em.persist(comment2);
 
-        CommentLike like1 = CommentLike.createCommentLike(comment1, member);
-        CommentLike like2 = CommentLike.createCommentLike(comment1, otherMember);
-        CommentLike like3 = CommentLike.createCommentLike(comment2, otherMember);
+        CommentLike like1 = CommentLike.createCommentLike(member.getId(), comment1.getId());
+        CommentLike like2 = CommentLike.createCommentLike(otherMember.getId(), comment1.getId());
+        CommentLike like3 = CommentLike.createCommentLike(otherMember.getId(), comment2.getId());
         em.persist(like1);
         em.persist(like2);
         em.persist(like3);

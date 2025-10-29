@@ -95,9 +95,9 @@ class ArticleRepositoryImplTest {
         em.persist(a1);
         em.persist(a2);
 
-        ArticleLike l1 = ArticleLike.createArticleLike(a1, me);
-        ArticleLike l2 = ArticleLike.createArticleLike(a1, other);
-        ArticleLike l3 = ArticleLike.createArticleLike(a2, other);
+        ArticleLike l1 = ArticleLike.createArticleLike(me.getId(), a1.getId());
+        ArticleLike l2 = ArticleLike.createArticleLike(other.getId(), a1.getId());
+        ArticleLike l3 = ArticleLike.createArticleLike(other.getId(), a2.getId());
 
         em.persist(l1);
         em.persist(l2);

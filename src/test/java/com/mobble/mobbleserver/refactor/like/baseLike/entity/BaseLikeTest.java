@@ -20,7 +20,7 @@ class BaseLikeTest {
     @DisplayName("Member 주입 성공")
     void assignMember_success() {
         // then
-        assertThat(mockTestLike.getMember()).isEqualTo(mockMember);
+        assertThat(mockTestLike.getMemberId()).isEqualTo(mockMember.getId());
     }
 
     @Test

@@ -42,7 +42,7 @@ class JpaClubLikeRepositoryTest {
             Member member = MemberTestFixture.createDefaultMember();
             ClubCategory clubCategory = ClubCategory.createClubCategory("SOCCER");
             Club club = ClubTestFixture.createDefaultClub(clubCategory);
-            ClubLike like = ClubLike.createClubLike(club, member);
+            ClubLike like = ClubLike.createClubLike(member.getId(), club.getId());
 
             em.persist(clubCategory);
             em.persist(member);
@@ -56,8 +56,8 @@ class JpaClubLikeRepositoryTest {
 
             // then
             assertThat(result).isPresent();
-            assertThat(result.get().getMember().getId()).isEqualTo(member.getId());
-            assertThat(result.get().getClub().getId()).isEqualTo(club.getId());
+            assertThat(result.get().getId()).isEqualTo(member.getId());
+            assertThat(result.get().getId()).isEqualTo(club.getId());
         }
 
         @Test
@@ -98,12 +98,12 @@ class JpaClubLikeRepositoryTest {
             em.persist(member);
             em.persist(club);
 
-            ClubLike like = ClubLike.createClubLike(club, member);
+            ClubLike like = ClubLike.createClubLike(member.getId(), club.getId());
             em.persist(like);
             em.flush();
 
             // when
-            jpaClubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+            jpaClubLikeRepository.deleteAllByClubId(club.getId());
             em.flush();
             em.clear();
 

@@ -42,8 +42,8 @@ public class ClubRepositoryImplTest {
         Club club = ClubTestFixture.createDefaultClub(category);
         em.persist(club);
 
-        ClubLike like1 = ClubLike.createClubLike(club, member);
-        ClubLike like2 = ClubLike.createClubLike(club, other);
+        ClubLike like1 = ClubLike.createClubLike(member.getId(), club.getId());
+        ClubLike like2 = ClubLike.createClubLike(other.getId(), club.getId());
         em.persist(like1);
         em.persist(like2);
 
@@ -73,7 +73,7 @@ public class ClubRepositoryImplTest {
         Club club = ClubTestFixture.createDefaultClub(category);
         em.persist(club);
 
-        ClubLike like = ClubLike.createClubLike(club, other);
+        ClubLike like = ClubLike.createClubLike(other.getId(), club.getId());
         em.persist(like);
 
         em.flush();

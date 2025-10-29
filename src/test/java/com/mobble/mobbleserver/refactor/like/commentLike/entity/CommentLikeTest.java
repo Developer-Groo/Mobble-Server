@@ -22,18 +22,18 @@ class CommentLikeTest {
     @DisplayName("CommentLike 생성 성공")
     void success_when_create_comment_like() {
         // when
-        CommentLike like = CommentLike.createCommentLike(mockComment, mockMember);
+        CommentLike like = CommentLike.createCommentLike(mockMember.getId(), mockComment.getId());
 
         // then
-        assertThat(like.getComment()).isEqualTo(mockComment);
-        assertThat(like.getMember()).isEqualTo(mockMember);
+        assertThat(like.getCommentId()).isEqualTo(mockComment.getId());
+        assertThat(like.getMemberId()).isEqualTo(mockMember.getId());
     }
 
     @Test
     @DisplayName("comment 가 null 인 경우 예외 발생")
     void fails_when_comment_is_null() {
         // when & then
-        assertThatThrownBy(() -> CommentLike.createCommentLike(null, mockMember))
+        assertThatThrownBy(() -> CommentLike.createCommentLike(mockMember.getId(), null))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(LikeErrorCode.COMMENT_REQUIRED.message());
     }
@@ -42,7 +42,7 @@ class CommentLikeTest {
     @DisplayName("member 가 null 인 경우 예외 발생")
     void fails_when_member_is_null() {
         // when & then
-        assertThatThrownBy(() -> CommentLike.createCommentLike(mockComment, null))
+        assertThatThrownBy(() -> CommentLike.createCommentLike(null, mockComment.getId()))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(LikeErrorCode.MEMBER_REQUIRED.message());
     }

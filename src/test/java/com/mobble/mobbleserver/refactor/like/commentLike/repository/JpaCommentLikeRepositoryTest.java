@@ -55,7 +55,7 @@ class JpaCommentLikeRepositoryTest {
             em.persist(article);
             em.persist(comment);
 
-            CommentLike like = CommentLike.createCommentLike(comment, member);
+            CommentLike like = CommentLike.createCommentLike(member.getId(), comment.getId());
             em.persist(like);
             em.flush();
             em.clear();
@@ -65,7 +65,7 @@ class JpaCommentLikeRepositoryTest {
 
             // then
             assertThat(result).isPresent();
-            assertThat(result.get().getComment().getId()).isEqualTo(comment.getId());
+            assertThat(result.get().getCommentId()).isEqualTo(comment.getId());
         }
 
         @Test
@@ -115,8 +115,8 @@ class JpaCommentLikeRepositoryTest {
             em.persist(comment1);
             em.persist(comment2);
 
-            CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
-            CommentLike commentLike2 = CommentLike.createCommentLike(comment2, member);
+            CommentLike commentLike1 = CommentLike.createCommentLike(member.getId(), comment1.getId());
+            CommentLike commentLike2 = CommentLike.createCommentLike(member.getId(), comment2.getId());
             em.persist(commentLike1);
             em.persist(commentLike2);
             em.flush();
@@ -172,8 +172,8 @@ class JpaCommentLikeRepositoryTest {
             em.persist(comment1);
             em.persist(comment2);
 
-            CommentLike commentLike1 = CommentLike.createCommentLike(comment1, member);
-            CommentLike commentLike2 = CommentLike.createCommentLike(comment1, member);
+            CommentLike commentLike1 = CommentLike.createCommentLike(member.getId(), comment1.getId());
+            CommentLike commentLike2 = CommentLike.createCommentLike(member.getId(), comment1.getId());
             em.persist(commentLike1);
             em.persist(commentLike2);
             em.flush();
@@ -181,7 +181,7 @@ class JpaCommentLikeRepositoryTest {
             List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
             // when
-            commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+            commentLikeRepository.deleteAllByArticleIds(articleIds);
             em.flush();
             em.clear();
 
@@ -209,7 +209,7 @@ class JpaCommentLikeRepositoryTest {
             List<Long> articleIds = List.of(article1.getId(), article2.getId());
 
             // when
-            commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
+            commentLikeRepository.deleteAllByArticleIds(articleIds);
             em.flush();
 
             // then
