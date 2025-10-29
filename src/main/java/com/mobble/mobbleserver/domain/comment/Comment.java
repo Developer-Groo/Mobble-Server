@@ -3,8 +3,6 @@ package com.mobble.mobbleserver.domain.comment;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+import static org.springframework.util.Assert.*;
 
 @Getter
 @Entity
@@ -49,7 +50,6 @@ public class Comment extends BaseEntity {
             Comment parent,
             String content
     ) {
-        validateCommon(member, article, content);
         this.article = article;
         this.member = member;
         this.parent = parent;
@@ -57,6 +57,8 @@ public class Comment extends BaseEntity {
     }
 
     public static Comment createRootComment(Member member, Article article, String content) {
+        assertCommon(member, article, content);
+
         return Comment.builder()
                 .member(member)
                 .article(article)
@@ -71,7 +73,8 @@ public class Comment extends BaseEntity {
             Comment parent,
             String content
     ) {
-        if (parent == null) throw new DomainException(CommentErrorCode.PARENT_REQUIRED);
+        assertCommon(member, article, content);
+        assertParent(parent);
 
         return Comment.builder()
                 .member(member)
@@ -82,7 +85,7 @@ public class Comment extends BaseEntity {
     }
 
     public Comment updateContent(String content) {
-        validateContent(content);
+        assertContent(content);
         this.content = content;
         return this;
     }
@@ -91,13 +94,20 @@ public class Comment extends BaseEntity {
         return this.parent != null;
     }
 
-    private void validateCommon(Member member, Article article, String content) {
-        if (member == null) throw new DomainException(CommentErrorCode.MEMBER_REQUIRED);
-        if (article == null) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
-        validateContent(content);
+    /* Assert 검증 */
+    private static void assertCommon(Member member, Article article, String content) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(article, "article must not be null");
+        requireNonNull(content, "content must not be null");
+        hasText(content, "content must not be empty");
     }
 
-    private void validateContent(String content) {
-        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+    private static void assertContent(String content) {
+        requireNonNull(content, "content must not be null");
+        hasText(content, "content must not be empty");
+    }
+
+    private static void assertParent(Comment comment) {
+        requireNonNull(comment, "comment must not be null");
     }
 }
