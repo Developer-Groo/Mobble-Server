@@ -28,8 +28,8 @@ import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleReq
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +53,8 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     private final CommentQueryPort commentQueryPort;
 
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository jpaArticleLikeRepository;
 
     @Override
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
@@ -96,7 +96,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         commentLikeRepository.deleteAllByArticleId(articleId);
         commentWritePort.deleteAll(comments);
-        articleLikeRepository.deleteAllByArticleId(articleId);
+        jpaArticleLikeRepository.deleteAllByArticleId(articleId);
         articleWritePort.delete(article);
     }
 

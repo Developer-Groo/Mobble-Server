@@ -40,9 +40,9 @@ import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequ
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
 import com.mobble.mobbleserver.domain.club.clubGround.ClubGround;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.clubLike.repository.ClubLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.clubLike.JpaClubLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,9 +74,9 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
-    private final ClubLikeRepository clubLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository jpaArticleLikeRepository;
+    private final JpaClubLikeRepository jpaClubLikeRepository;
 
     @Override
     public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
@@ -146,11 +146,11 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         commentLikeRepository.deleteAllCommentLikeByComment_Article_IdIn(articleIds);
         commentReadPort.deleteAllCommentByArticle_IdIn(articleIds);
-        articleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
+        jpaArticleLikeRepository.deleteAllArticleLikeByArticle_IdIn(articleIds);
         articleReadPort.deleteAllArticleByClub_Id(club.getId());
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
-        clubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
+        jpaClubLikeRepository.deleteClubLikeAllByClub_Id(club.getId());
         ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
 
         clubWritePort.delete(club);
