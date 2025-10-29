@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike
 
 import com.mobble.mobbleserver.domain.like.core.ArticleLike;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +14,5 @@ public interface JpaArticleLikeRepository extends JpaRepository<ArticleLike, Lon
 
     void deleteAllByArticleId(Long articleId);
 
-    @Modifying
-    void deleteAllArticleLikeByArticle_IdIn(List<Long> articleIds);
+    void deleteAllByArticleIdIn(List<Long> articleIds);
 }
