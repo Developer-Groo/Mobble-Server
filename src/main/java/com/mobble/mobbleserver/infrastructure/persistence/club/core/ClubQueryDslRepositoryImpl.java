@@ -13,7 +13,7 @@ import static com.mobble.mobbleserver.domain.address.QAddress.address;
 import static com.mobble.mobbleserver.domain.club.clubGround.QClubGround.clubGround;
 import static com.mobble.mobbleserver.domain.club.core.QClub.club;
 import static com.mobble.mobbleserver.domain.ground.QGround.ground;
-import static com.mobble.mobbleserver.refactor.like.clubLike.entity.QClubLike.clubLike;
+import static com.mobble.mobbleserver.domain.like.core.QClubLike.clubLike;
 
 @RequiredArgsConstructor
 public class ClubQueryDslRepositoryImpl implements ClubQueryDslRepository{
@@ -25,13 +25,13 @@ public class ClubQueryDslRepositoryImpl implements ClubQueryDslRepository{
         Long likeCount = queryFactory
                 .select(clubLike.count())
                 .from(clubLike)
-                .where(clubLike.club.id.eq(clubId))
+                .where(clubLike.clubId.eq(clubId))
                 .fetchOne();
 
         Boolean isLiked = queryFactory
                 .select(clubLike.isNotNull())
                 .from(clubLike)
-                .where(clubLike.club.id.eq(clubId), clubLike.member.id.eq(memberId))
+                .where(clubLike.clubId.eq(clubId), clubLike.memberId.eq(memberId))
                 .fetchOne();
 
         return ClubLikeInfoDto.toDto(
@@ -48,7 +48,7 @@ public class ClubQueryDslRepositoryImpl implements ClubQueryDslRepository{
                 .leftJoin(club.clubCategory, clubCategory).fetchJoin()
                 .leftJoin(clubGround).on(clubGround.club.eq(club))
                 .leftJoin(clubGround.ground, ground)
-                .leftJoin(clubLike).on(clubLike.club.eq(club));
+                .leftJoin(clubLike).on(clubLike.clubId.eq(club.id));
 
         if (req.name() != null && !req.name().isBlank()) {
             query.where(club.name.containsIgnoreCase(req.name()));
