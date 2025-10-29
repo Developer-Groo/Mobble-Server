@@ -6,7 +6,6 @@ import com.mobble.mobbleserver.application.liked.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.liked.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.like.core.ArticleLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -61,8 +60,8 @@ public class ArticleLikeModifyService {
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+    private void findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+        clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 }
