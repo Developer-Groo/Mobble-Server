@@ -1,11 +1,11 @@
 package com.mobble.mobbleserver.refactor.like.commentLike.repository;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.domain.article.Article;
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.refactor.like.commentLike.entity.CommentLike;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
