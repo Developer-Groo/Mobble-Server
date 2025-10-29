@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.domain.like.core;
 
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentLike extends AbstractLike {
 
-    @JoinColumn(name = "comment_id", nullable = false)
+    @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
     @Builder(access = AccessLevel.PRIVATE)
