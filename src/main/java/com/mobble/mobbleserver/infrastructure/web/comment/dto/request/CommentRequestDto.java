@@ -16,7 +16,7 @@ public record CommentRequestDto(
         return Comment.createRootComment(member, article, this.content);
     }
 
-    public Comment toEntity(Member member, Article article, Comment parent) {
-        return Comment.createReplyComment(member, article, parent, this.content);
+    public Comment toEntity(Member member, Comment parent) {
+        return Comment.createReplyComment(member, parent, this.content);
     }
 }

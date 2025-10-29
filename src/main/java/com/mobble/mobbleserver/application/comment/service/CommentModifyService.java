@@ -57,7 +57,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
         Comment parentComment = commentReadPort.findById(parentCommentId).orElseThrow();
 
         Member member = clubMember.getMember();
-        Comment comment = dto.toEntity(member, article, parentComment);
+        Comment comment = dto.toEntity(member, parentComment);
 
         return commentWritePort.save(comment);
     }
