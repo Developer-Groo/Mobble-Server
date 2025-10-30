@@ -1,11 +1,11 @@
-package com.mobble.mobbleserver.application.liked.service.dispatcher;
+package com.mobble.mobbleserver.application.liked.core.service.dispatcher;
 
-import com.mobble.mobbleserver.application.liked.port.provided.LikeMemberListPort;
-import com.mobble.mobbleserver.application.liked.port.provided.LikeTogglePort;
-import com.mobble.mobbleserver.application.liked.service.core.ArticleLikeModifyService;
-import com.mobble.mobbleserver.application.liked.service.core.ArticleLikeQueryService;
-import com.mobble.mobbleserver.application.liked.service.core.ClubLikeModifyService;
-import com.mobble.mobbleserver.application.liked.service.core.CommentLikeModifyService;
+import com.mobble.mobbleserver.application.liked.core.port.provided.LikeMemberListPort;
+import com.mobble.mobbleserver.application.liked.core.port.provided.LikeTogglePort;
+import com.mobble.mobbleserver.application.liked.core.service.core.ArticleLikeModifyService;
+import com.mobble.mobbleserver.application.liked.core.service.core.ArticleLikeQueryService;
+import com.mobble.mobbleserver.application.liked.core.service.core.ClubLikeModifyService;
+import com.mobble.mobbleserver.application.liked.core.service.core.CommentLikeModifyService;
 import com.mobble.mobbleserver.domain.like.core.AbstractLike;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

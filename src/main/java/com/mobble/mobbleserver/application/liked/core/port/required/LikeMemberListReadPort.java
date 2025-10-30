@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.liked.port.required;
+package com.mobble.mobbleserver.application.liked.core.port.required;
 
 import com.mobble.mobbleserver.domain.like.core.AbstractLike;
 

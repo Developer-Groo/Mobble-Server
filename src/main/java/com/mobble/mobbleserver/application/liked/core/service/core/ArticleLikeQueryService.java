@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.application.liked.service.core;
+package com.mobble.mobbleserver.application.liked.core.service.core;
 
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
-import com.mobble.mobbleserver.application.liked.port.required.LikeMemberListReadPort;
+import com.mobble.mobbleserver.application.liked.core.port.required.LikeMemberListReadPort;
 import com.mobble.mobbleserver.domain.like.core.ArticleLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;

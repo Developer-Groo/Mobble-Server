@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.like.dto.response;
 
-import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.domain.like.core.AbstractLike;
 
 import java.util.List;
 import java.util.function.Function;

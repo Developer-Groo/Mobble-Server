@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.like;
 
-import com.mobble.mobbleserver.application.liked.port.provided.LikeMemberListPort;
-import com.mobble.mobbleserver.application.liked.port.provided.LikeTogglePort;
+import com.mobble.mobbleserver.application.liked.core.port.provided.LikeMemberListPort;
+import com.mobble.mobbleserver.application.liked.core.port.provided.LikeTogglePort;
 import com.mobble.mobbleserver.domain.like.core.AbstractLike;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;

@@ -1,8 +1,8 @@
-package com.mobble.mobbleserver.application.liked.service.core;
+package com.mobble.mobbleserver.application.liked.core.service.core;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.liked.port.required.LikeReadPort;
-import com.mobble.mobbleserver.application.liked.port.required.LikeWritePort;
+import com.mobble.mobbleserver.application.liked.core.port.required.LikeReadPort;
+import com.mobble.mobbleserver.application.liked.core.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.like.core.ClubLike;

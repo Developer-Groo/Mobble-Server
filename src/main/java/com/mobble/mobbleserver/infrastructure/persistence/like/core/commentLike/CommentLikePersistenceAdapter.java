@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike;
 
-import com.mobble.mobbleserver.application.liked.port.required.LikeReadPort;
-import com.mobble.mobbleserver.application.liked.port.required.LikeWritePort;
+import com.mobble.mobbleserver.application.liked.core.port.required.LikeReadPort;
+import com.mobble.mobbleserver.application.liked.core.port.required.LikeWritePort;
 import com.mobble.mobbleserver.domain.like.core.CommentLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
