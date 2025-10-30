@@ -1,0 +1,11 @@
+package com.mobble.mobbleserver.application.liked.likeCounter.port.required;
+
+import com.mobble.mobbleserver.domain.like.core.LikeType;
+import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
+
+import java.util.Optional;
+
+public interface LikeCounterReadPort {
+
+    Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId);
+}
