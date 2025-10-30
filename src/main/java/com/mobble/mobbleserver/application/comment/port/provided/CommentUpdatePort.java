@@ -1,14 +1,10 @@
 package com.mobble.mobbleserver.application.comment.port.provided;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.infrastructure.web.comment.dto.request.CommentRequestDto;
+
+import static com.mobble.mobbleserver.application.comment.command.CommentCommand.UpdateCommentCommand;
 
 public interface CommentUpdatePort {
 
-    Comment updateComment(
-            Long articleId,
-            Long commentId,
-            Long memberId,
-            CommentRequestDto dto
-    );
+    Comment updateComment(UpdateCommentCommand command);
 }
