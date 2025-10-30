@@ -14,4 +14,6 @@ public interface JpaArticleRepository extends JpaRepository<Article, Long>, Arti
 
     @Modifying
     void deleteAllArticleByClub_Id(Long clubId);
+
+    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
 }
