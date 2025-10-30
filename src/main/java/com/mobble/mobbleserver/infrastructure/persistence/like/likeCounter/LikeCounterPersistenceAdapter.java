@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.like.counter;
+package com.mobble.mobbleserver.infrastructure.persistence.like.likeCounter;
 
 import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterWritePort;
