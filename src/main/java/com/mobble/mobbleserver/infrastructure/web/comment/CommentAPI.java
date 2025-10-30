@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.mobble.mobbleserver.application.comment.command.CommentCommand.*;
+
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class CommentAPI {
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentCreatePort.createRootComment(memberId, articleId, dto);
+        CreateRootCommentCommand command = CreateRootCommentCommand.create(memberId, articleId, dto.content());
+        Comment comment = commentCreatePort.createRootComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommentResponseDto.toDto(comment));
@@ -44,7 +47,8 @@ public class CommentAPI {
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentCreatePort.createReplyComment(memberId, articleId, parentCommentId, dto);
+        CreateReplyCommentCommand command = CreateReplyCommentCommand.create(memberId, articleId, parentCommentId, dto.content());
+        Comment comment = commentCreatePort.createReplyComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommentResponseDto.toDto(comment));
@@ -57,7 +61,8 @@ public class CommentAPI {
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentUpdatePort.updateComment(articleId, commentId, memberId, dto);
+        UpdateCommentCommand command = UpdateCommentCommand.create(memberId, articleId, commentId, dto.content());
+        Comment comment = commentUpdatePort.updateComment(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommentResponseDto.toDto(comment));
