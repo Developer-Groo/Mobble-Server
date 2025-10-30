@@ -20,7 +20,7 @@ import static com.mobble.mobbleserver.application.comment.command.CommentCommand
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/articles/{article-id}/comments")
+@RequestMapping("/api/clubs/{club-id}/articles/{article-id}/comments")
 public class CommentAPI {
 
     private final CommentCreatePort commentCreatePort;
@@ -29,11 +29,12 @@ public class CommentAPI {
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> createRootComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        CreateRootCommentCommand command = CreateRootCommentCommand.create(memberId, articleId, dto.content());
+        CreateRootCommentCommand command = CreateRootCommentCommand.create(memberId, clubId, articleId, dto.content());
         Comment comment = commentCreatePort.createRootComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,12 +43,13 @@ public class CommentAPI {
 
     @PostMapping("/{parent-comment-id}/replies")
     public ResponseEntity<CommentResponseDto> createReplyComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("parent-comment-id") @Positive Long parentCommentId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        CreateReplyCommentCommand command = CreateReplyCommentCommand.create(memberId, articleId, parentCommentId, dto.content());
+        CreateReplyCommentCommand command = CreateReplyCommentCommand.create(memberId, clubId, articleId, parentCommentId, dto.content());
         Comment comment = commentCreatePort.createReplyComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -56,12 +58,13 @@ public class CommentAPI {
 
     @PatchMapping("/{comment-id}")
     public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        UpdateCommentCommand command = UpdateCommentCommand.create(memberId, articleId, commentId, dto.content());
+        UpdateCommentCommand command = UpdateCommentCommand.create(memberId, clubId, articleId, commentId, dto.content());
         Comment comment = commentUpdatePort.updateComment(command);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -70,11 +73,12 @@ public class CommentAPI {
 
     @DeleteMapping("/{comment-id}")
     public ResponseEntity<Void> deleteComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        commentDeletePort.deleteComment(articleId, commentId, memberId);
+        commentDeletePort.deleteComment(memberId, clubId,  articleId, commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
