@@ -8,7 +8,6 @@ import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePo
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
 import com.mobble.mobbleserver.domain.article.Article;
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.comment.CommentBody;
@@ -36,10 +35,8 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment createRootComment(CreateRootCommentCommand command) {
-        Article article = assertArticleById(command.articleId());
-        // Todo: clubId api 에서 받기
-        Long clubId = article.getClub().getId();
-        Member member = assertMemberByClubIdAndMemberId(clubId, command.memberId());
+        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
 
         CommentBody commentBody = CommentBody.of(command.content());
         Comment comment = Comment.createRootComment(member, article, commentBody);
@@ -49,11 +46,9 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment createReplyComment(CreateReplyCommentCommand command) {
-        Article article = assertArticleById(command.articleId());
-        Long clubId = article.getClub().getId();
-        Member member = assertMemberByClubIdAndMemberId(clubId, command.memberId());
-
-        Comment parentComment = commentReadPort.findById(command.parentId()).orElseThrow();
+        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
+        Comment parentComment = assertCommentByCommentId(command.parentId());
 
         assertCommentByArticleId(parentComment, article.getId());
 
@@ -65,10 +60,9 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment updateComment(UpdateCommentCommand command) {
-        Article article = assertArticleById(command.articleId());
-        Club club = article.getClub();
-        Member member = assertMemberByClubIdAndMemberId(club.getId(), command.memberId());
-        Comment comment = commentReadPort.findByIdAndMemberId(command.commentId(), member.getId()).orElseThrow();
+        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
+        Comment comment = assertCommentByCommentIdAndMemberId(command.commentId(), member.getId());
 
         assertCommentByArticleId(comment, article.getId());
 
@@ -78,12 +72,10 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     }
 
     @Override
-    public void deleteComment(Long articleId, Long commentId, Long memberId) {
-        Article article = assertArticleById(articleId);
-        Club club = article.getClub();
-        Member member = assertMemberByClubIdAndMemberId(club.getId(), memberId);
-
-        Comment comment = commentReadPort.findByIdAndMemberId(commentId, member.getId()).orElseThrow();
+    public void deleteComment(Long memberId, Long clubId, Long articleId, Long commentId) {
+        Member member = assertMemberByClubIdAndMemberId(memberId, clubId);
+        Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
+        Comment comment = assertCommentByCommentIdAndMemberId(commentId, member.getId());
 
         // Todo: Club 권한 정책 로직 수정 필요
 //        if (ClubPermissionPolicy.isLeaderOrManager(clubMember)) {
@@ -97,20 +89,30 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
         commentWritePort.delete(comment);
     }
 
-    private void assertCommentByArticleId(Comment comment, Long articleId) {
-        if (!comment.getArticle().getId().equals(articleId))
-            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
+    private Comment assertCommentByCommentId(Long commentId) {
+        return commentReadPort.findById(commentId)
+                .orElseThrow(); // Todo: ErrorCode 수정 필요
     }
 
-    private Member assertMemberByClubIdAndMemberId(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+    private Comment assertCommentByCommentIdAndMemberId(Long commentId, Long memberId) {
+        return commentReadPort.findByIdAndMemberId(commentId, memberId)
+                .orElseThrow(); // Todo: ErrorCode 수정 필요
+    }
+
+    private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {
+        return articleReadPort.findByIdAndClubId(articleId, clubId)
+                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND)); // Todo: ErrorCode 수정 필요
+    }
+
+    private Member assertMemberByClubIdAndMemberId(Long memberId, Long clubId) {
+        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(memberId, clubId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
 
         return clubMember.getMember();
     }
 
-    private Article assertArticleById(Long articleId) {
-        return articleReadPort.findById(articleId)
-                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
+    private void assertCommentByArticleId(Comment comment, Long articleId) {
+        if (!comment.getArticle().getId().equals(articleId))
+            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
     }
 }
