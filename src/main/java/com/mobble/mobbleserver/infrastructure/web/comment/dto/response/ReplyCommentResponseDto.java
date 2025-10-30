@@ -26,7 +26,7 @@ public record ReplyCommentResponseDto(
                 comment.getMember().getId(),
                 comment.getMember().getName(),
                 comment.hasParent() ? comment.getParent().getId() : null,
-                comment.getContent(),
+                comment.getBody().getContent(),
                 info.likeCount(),
                 info.isLiked(),
                 comment.getCreatedAt(),
