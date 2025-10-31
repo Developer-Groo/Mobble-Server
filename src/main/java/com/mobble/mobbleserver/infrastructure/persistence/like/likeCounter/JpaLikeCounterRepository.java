@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Long>, LikeCounterQueryDslRepository {
+public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Long> {
 
     List<LikeCounter> findAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
 }
