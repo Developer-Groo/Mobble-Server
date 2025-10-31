@@ -23,7 +23,6 @@ public class LikeCounterQueryDslRepositoryImpl implements LikeCounterQueryDslRep
                 .where(likeCounter.likeType.eq(likeType),
                         likeCounter.targetId.eq(targetId))
                 .execute();
-
     }
 
     @Override
