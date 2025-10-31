@@ -7,6 +7,7 @@ import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -37,7 +38,7 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
      * LikeCounterReadPort
      */
     @Override
-    public Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
-        return jpaLikeCounterRepository.findByLikeTypeAndTargetId(likeType, targetId);
+    public List<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, List<Long> targetIds) {
+        return jpaLikeCounterRepository.findAllByLikeTypeAndTargetIdIn(likeType, targetIds);
     }
 }

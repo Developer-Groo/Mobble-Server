@@ -4,9 +4,9 @@ import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Long>, LikeCounterQueryDslRepository {
 
-    Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId);
+    List<LikeCounter> findAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
 }
