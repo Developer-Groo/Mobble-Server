@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.application.article.service;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
@@ -14,7 +15,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleSummaryResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +69,7 @@ public class ArticleQueryService implements ArticleQueryPort {
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
-        List<RootCommentResponseDto> comments = commentQueryPort.getCommentListByArticle(article.getId(), memberId);
+        List<RootCommentResult> comments = commentQueryPort.getCommentListByArticle(article.getId(), memberId);
         int commentCount = comments.size();
 
         boolean isMine = articleReadPort.existsArticleByIdAndMemberId(article.getId(), memberId);
