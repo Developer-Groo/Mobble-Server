@@ -19,18 +19,13 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
      * LikeCounterWritePort
      */
     @Override
-    public long increment(LikeType likeType, Long targetId) {
-        return jpaLikeCounterRepository.increment(likeType, targetId);
+    public void increment(LikeType likeType, Long targetId) {
+        jpaLikeCounterRepository.upsertIncrement(likeType.name(), targetId);
     }
 
     @Override
-    public long safeDecrement(LikeType likeType, Long targetId) {
-        return jpaLikeCounterRepository.safeDecrement(likeType, targetId);
-    }
-
-    @Override
-    public void createIfAbsent(LikeType likeType, Long targetId) {
-        jpaLikeCounterRepository.createIfAbsent(likeType, targetId);
+    public void safeDecrement(LikeType likeType, Long targetId) {
+        jpaLikeCounterRepository.safeDecrement(likeType.name(), targetId);
     }
 
     /**

@@ -16,12 +16,7 @@ public class LikeCounterModifyService implements LikeCounterModifyPort {
 
     @Override
     public void increment(LikeType likeType, Long targetId) {
-        long updateCounter = likeCounterWritePort.increment(likeType, targetId);
-
-        if (updateCounter == 0) {
-            likeCounterWritePort.createIfAbsent(likeType, targetId);
-            likeCounterWritePort.increment(likeType, targetId);
-        }
+        likeCounterWritePort.increment(likeType, targetId);
     }
 
     @Override

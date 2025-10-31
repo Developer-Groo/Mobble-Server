@@ -4,9 +4,7 @@ import com.mobble.mobbleserver.domain.like.core.LikeType;
 
 public interface LikeCounterWritePort {
 
-    long increment(LikeType likeType, Long targetId);
+    void increment(LikeType likeType, Long targetId);
 
-    long safeDecrement(LikeType likeType, Long targetId);
-
-    void createIfAbsent(LikeType likeType, Long targetId);
+    void safeDecrement(LikeType likeType, Long targetId);
 }
