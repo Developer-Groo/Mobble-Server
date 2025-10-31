@@ -1,9 +1,8 @@
 package com.mobble.mobbleserver.application.comment.port.provided;
 
+import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
 import com.mobble.mobbleserver.domain.comment.Comment;
-
-import static com.mobble.mobbleserver.application.comment.command.CommentCommand.CreateReplyCommentCommand;
-import static com.mobble.mobbleserver.application.comment.command.CommentCommand.CreateRootCommentCommand;
 
 public interface CommentCreatePort {
 

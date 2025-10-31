@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.comment;
 
+import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.UpdateCommentCommand;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
@@ -14,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import static com.mobble.mobbleserver.application.comment.command.CommentCommand.*;
 
 @Validated
 @RestController

@@ -2,6 +2,9 @@ package com.mobble.mobbleserver.application.comment.service;
 
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.UpdateCommentCommand;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
@@ -19,8 +22,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.mobble.mobbleserver.application.comment.command.CommentCommand.*;
 
 @Service
 @Transactional
@@ -75,9 +76,10 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     public void deleteComment(Long memberId, Long clubId, Long articleId, Long commentId) {
         Member member = assertMemberByClubIdAndMemberId(memberId, clubId);
         Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
-        Comment comment = assertCommentByCommentIdAndMemberId(commentId, member.getId());
 
         // Todo: Club 권한 정책 로직 수정 필요
+        Comment comment = assertCommentByCommentIdAndMemberId(commentId, member.getId());
+
 //        if (ClubPermissionPolicy.isLeaderOrManager(clubMember)) {
 //            comment = commentReadPort.findById(commentId).orElseThrow();
 //        } else {
@@ -89,6 +91,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
         commentWritePort.delete(comment);
     }
 
+    /* ==== Private Helper ==== */
     private Comment assertCommentByCommentId(Long commentId) {
         return commentReadPort.findById(commentId)
                 .orElseThrow(); // Todo: ErrorCode 수정 필요
@@ -113,6 +116,6 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     private void assertCommentByArticleId(Comment comment, Long articleId) {
         if (!comment.getArticle().getId().equals(articleId))
-            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
+            throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED); // Todo: ErrorCode 수정 필요
     }
 }
