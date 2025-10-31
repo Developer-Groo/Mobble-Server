@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.like.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.like.core.dto.response;
 
 import com.mobble.mobbleserver.domain.member.Member;
 

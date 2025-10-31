@@ -1,10 +1,11 @@
-package com.mobble.mobbleserver.infrastructure.web.like;
+package com.mobble.mobbleserver.infrastructure.web.like.core;
 
 import com.mobble.mobbleserver.application.liked.core.port.provided.LikeMemberListPort;
 import com.mobble.mobbleserver.application.liked.core.port.provided.LikeTogglePort;
 import com.mobble.mobbleserver.domain.like.core.AbstractLike;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.infrastructure.web.like.dto.response.LikeMemberListResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.like.core.dto.response.LikeMemberListResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.like.core.dto.response.LikeMemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class LikeAPI {
 
     private final LikeTogglePort likeTogglePort;
     private final LikeMemberListPort likeMemberListPort;
+    private final LikeMemberMapper likeMemberMapper;
 
     @PostMapping
     public ResponseEntity<Void> toggleLike(
@@ -41,6 +43,6 @@ public class LikeAPI {
         List<? extends AbstractLike> likes = likeMemberListPort.getLikeEntities(likeType, targetId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(LikeMemberListResponseDto.toDto(likes));
+                .body(LikeMemberListResponseDto.toDto(likes, likeMemberMapper));
     }
 }
