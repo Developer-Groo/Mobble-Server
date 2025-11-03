@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.application.liked.core.port.provided;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 
-public interface LikeTogglePort {
+public interface LikeModifyPort {
 
     void toggleLike(LikeType likeType, Long targetId, Long memberId);
 }
