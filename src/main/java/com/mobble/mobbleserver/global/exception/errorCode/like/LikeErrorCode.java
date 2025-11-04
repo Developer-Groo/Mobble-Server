@@ -10,7 +10,7 @@ public enum LikeErrorCode implements ErrorCode {
     CLUB_REQUIRED("좋아요 할 클럽은 필수입니다.", HttpStatus.BAD_REQUEST),
     ARTICLE_REQUIRED("좋아요 할 게시글은 필수입니다.", HttpStatus.BAD_REQUEST),
     COMMENT_REQUIRED("좋아요 할 댓글은 필수입니다.", HttpStatus.BAD_REQUEST),
-    NOT_SUPPORTED_TYPE("지원하지 않는 기능입니다.", HttpStatus.BAD_REQUEST),
+    NOT_SUPPORTED_TYPE("지원하지 않는 좋아요 타입입니다.", HttpStatus.BAD_REQUEST),
     LIKE_TYPE_REQUIRED("대상 타입은 필수입니다.", HttpStatus.BAD_REQUEST),
     TARGET_REQUIRED("대상은 필수입니다.", HttpStatus.BAD_REQUEST);
 
