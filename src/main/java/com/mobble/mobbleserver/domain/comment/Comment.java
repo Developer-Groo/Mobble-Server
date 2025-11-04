@@ -3,8 +3,6 @@ package com.mobble.mobbleserver.domain.comment;
 import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+import static org.springframework.util.Assert.isTrue;
 
 @Getter
 @Entity
@@ -29,61 +30,65 @@ public class Comment extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id",  nullable = false)
+    @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @Column(name = "content", nullable = false)
-    private String content;
+    @Embedded
+    private CommentBody body;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> children =  new ArrayList<>();
+    private List<Comment> children = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Comment(
             Article article,
             Member member,
             Comment parent,
-            String content
+            CommentBody body
     ) {
-        validateCommon(member, article, content);
         this.article = article;
         this.member = member;
         this.parent = parent;
-        this.content = content;
+        this.body = body;
     }
 
-    public static Comment createRootComment(Member member, Article article, String content) {
+    public static Comment createRootComment(Member member, Article article, CommentBody body) {
+        assertRoot(member, article);
+
         return Comment.builder()
                 .member(member)
                 .article(article)
                 .parent(null)
-                .content(content)
+                .body(body)
                 .build();
     }
 
     public static Comment createReplyComment(
             Member member,
-            Article article,
             Comment parent,
-            String content
+            CommentBody body
     ) {
-        if (parent == null) throw new DomainException(CommentErrorCode.PARENT_REQUIRED);
+        assertReply(member, parent);
 
-        return Comment.builder()
+        Comment child = Comment.builder()
                 .member(member)
-                .article(article)
+                .article(parent.article)
                 .parent(parent)
-                .content(content)
+                .body(body)
                 .build();
+
+        parent.addChild(child);
+
+        return child;
     }
 
-    public Comment updateContent(String content) {
-        validateContent(content);
-        this.content = content;
+    public Comment updateContent(CommentBody body) {
+        this.body = body;
+
         return this;
     }
 
@@ -91,13 +96,21 @@ public class Comment extends BaseEntity {
         return this.parent != null;
     }
 
-    private void validateCommon(Member member, Article article, String content) {
-        if (member == null) throw new DomainException(CommentErrorCode.MEMBER_REQUIRED);
-        if (article == null) throw new DomainException(CommentErrorCode.ARTICLE_REQUIRED);
-        validateContent(content);
+    private void addChild(Comment child) {
+        child.parent = this;
+        this.children.add(child);
     }
 
-    private void validateContent(String content) {
-        if (content == null || content.isBlank()) throw new DomainException(CommentErrorCode.CONTENT_REQUIRED);
+    /* Assert 검증 */
+    private static void assertRoot(Member member, Article article) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(article, "article must not be null");
+    }
+
+    private static void assertReply(Member member, Comment parent) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(parent, "parent must not be null");
+        requireNonNull(parent.article, "parent.article must not be null");
+        isTrue(!parent.hasParent(), "parent must be a root comment");
     }
 }

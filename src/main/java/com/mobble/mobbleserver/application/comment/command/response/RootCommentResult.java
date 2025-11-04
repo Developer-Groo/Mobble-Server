@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.comment.dto.response;
+package com.mobble.mobbleserver.application.comment.command.response;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.CommentLikeInfoDto;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public record RootCommentResponseDto(
+public record RootCommentResult(
         Long commentId,
         Long memberId,
         Long articleId,
@@ -17,24 +17,24 @@ public record RootCommentResponseDto(
         boolean isLiked,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<ReplyCommentResponseDto> replies
+        List<ReplyCommentResult> replies
 ) {
 
-    public static RootCommentResponseDto toDto(Comment comment, Map<Long, CommentLikeInfoDto> likeInfoMap) {
+    public static RootCommentResult toDto(Comment comment, Map<Long, CommentLikeInfoDto> likeInfoMap) {
         CommentLikeInfoDto info = likeInfoMap.getOrDefault(comment.getId(), new CommentLikeInfoDto(0, false));
 
-        return new RootCommentResponseDto(
+        return new RootCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getArticle().getId(),
                 comment.getMember().getName(),
-                comment.getContent(),
+                comment.getBody().getContent(),
                 info.likeCount(),
                 info.isLiked(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 comment.getChildren().stream()
-                        .map(reply -> ReplyCommentResponseDto.toDto(reply, likeInfoMap))
+                        .map(reply -> ReplyCommentResult.toDto(reply, likeInfoMap))
                         .toList()
         );
     }

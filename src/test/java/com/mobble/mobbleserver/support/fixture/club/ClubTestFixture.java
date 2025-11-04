@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.support.fixture.club;
 
-import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
+import com.mobble.mobbleserver.domain.club.core.Club;
 
 public class ClubTestFixture {
 

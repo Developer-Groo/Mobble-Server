@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
+import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
@@ -8,7 +9,6 @@ import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
