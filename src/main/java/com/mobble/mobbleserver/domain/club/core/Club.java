@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.club.core;
 
-import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.address.Address;
 import com.mobble.mobbleserver.global.exception.common.DomainException;

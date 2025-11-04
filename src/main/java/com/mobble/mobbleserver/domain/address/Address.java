@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.address;
 
-import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.infrastructure.web.address.dto.request.AddressRequestDto;
 import jakarta.persistence.*;
