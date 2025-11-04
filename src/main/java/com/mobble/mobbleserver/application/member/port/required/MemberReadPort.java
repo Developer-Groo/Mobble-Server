@@ -16,4 +16,6 @@ public interface MemberReadPort {
     List<Member> findAllByIsDeletedTrueAndDeletedAtBefore(LocalDateTime softDeletedDate);
 
     Optional<Member> findBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId);
+
+    List<Member> findAllByIdInAndIsDeletedFalse(List<Long> memberIds);
 }
