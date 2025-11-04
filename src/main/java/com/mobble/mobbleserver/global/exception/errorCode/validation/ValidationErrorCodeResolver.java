@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.global.exception.common.ErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubValidationErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.comment.CommentValidationErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberValidationErrorCode;
 
 import java.util.Arrays;
@@ -19,7 +18,6 @@ public class ValidationErrorCodeResolver {
         String code = parts[1];
 
         return switch (domain) {
-            case "COMMENT" -> resolveEnum(code, CommentValidationErrorCode.values());
             case "MEMBER" -> resolveEnum(code, MemberValidationErrorCode.values());
             case "ARTICLE" -> resolveEnum(code, ArticleValidationErrorCode.values());
             case "CLUB" -> resolveEnum(code, ClubValidationErrorCode.values());
