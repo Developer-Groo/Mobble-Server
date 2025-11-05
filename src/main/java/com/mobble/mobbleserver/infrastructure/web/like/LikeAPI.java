@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.like.core;
+package com.mobble.mobbleserver.infrastructure.web.like;
 
 import com.mobble.mobbleserver.application.liked.core.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
