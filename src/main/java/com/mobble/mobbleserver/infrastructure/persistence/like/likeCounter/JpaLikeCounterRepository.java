@@ -8,9 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Long> {
 
+    Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId);
+
+    List<LikeCounter> findAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
+
+    /**
+     * 증가&감소 반환값: 영향을 받은 행의 개수
+     * ex) 실패      -> 0
+     *     신규 생성 -> 1
+     *     업데이트  -> 2
+     */
     @Modifying
     @Query(value = """
     INSERT INTO like_counter (like_type, target_id, cnt)
@@ -28,6 +39,4 @@ public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Lon
     """, nativeQuery = true)
     int safeDecrement(@Param("likeType") String likeType,
                       @Param("targetId") Long targetId);
-
-    List<LikeCounter> findAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
 }
