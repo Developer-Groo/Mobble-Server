@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.liked.core.service.core;
+package com.mobble.mobbleserver.application.liked.core.service;
 
 import com.mobble.mobbleserver.application.liked.core.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.liked.core.port.required.LikeReadPort;
