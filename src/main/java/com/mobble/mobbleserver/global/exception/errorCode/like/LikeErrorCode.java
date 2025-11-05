@@ -12,7 +12,8 @@ public enum LikeErrorCode implements ErrorCode {
     COMMENT_REQUIRED("좋아요 할 댓글은 필수입니다.", HttpStatus.BAD_REQUEST),
     NOT_SUPPORTED_TYPE("지원하지 않는 좋아요 타입입니다.", HttpStatus.BAD_REQUEST),
     LIKE_TYPE_REQUIRED("대상 타입은 필수입니다.", HttpStatus.BAD_REQUEST),
-    TARGET_REQUIRED("대상은 필수입니다.", HttpStatus.BAD_REQUEST);
+    TARGET_REQUIRED("대상은 필수입니다.", HttpStatus.BAD_REQUEST),
+    TARGET_NOT_FOUND("대상을 찾을 수 없습니다", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus httpStatus;
