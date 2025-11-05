@@ -20,4 +20,6 @@ public interface CommentReadPort {
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
 
     void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
+
+    boolean existsById(Long commentId);
 }

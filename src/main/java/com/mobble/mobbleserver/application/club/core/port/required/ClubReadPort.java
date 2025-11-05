@@ -14,4 +14,6 @@ public interface ClubReadPort {
     Optional<Club> findById(Long id);
 
     List<Club> searchClubs(ClubSearchRequestDto dto);
+
+    boolean existsById(Long clubId);
 }

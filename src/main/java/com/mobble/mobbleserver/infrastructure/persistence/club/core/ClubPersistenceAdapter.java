@@ -41,4 +41,9 @@ public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
     public List<Club> searchClubs(ClubSearchRequestDto dto) {
         return repository.searchClubs(dto);
     }
+
+    @Override
+    public boolean existsById(Long clubId) {
+        return repository.existsById(clubId);
+    }
 }
