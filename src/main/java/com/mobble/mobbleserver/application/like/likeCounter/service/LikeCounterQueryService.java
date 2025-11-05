@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.application.like.likeCounter.service;
 
-import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountMapResult;
-import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountResult;
+import com.mobble.mobbleserver.application.like.core.command.LikeCountMapResult;
+import com.mobble.mobbleserver.application.like.core.command.LikeCountResult;
 import com.mobble.mobbleserver.application.like.likeCounter.port.provided.LikeCounterQueryPort;
 import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
