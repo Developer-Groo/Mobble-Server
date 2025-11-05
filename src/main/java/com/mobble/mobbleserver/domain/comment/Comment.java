@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.domain.comment;
 
-import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
 import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.comment.error.CommentError;
+import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static org.springframework.util.Assert.isTrue;
 
 @Getter
 @Entity
@@ -111,6 +112,7 @@ public class Comment extends BaseEntity {
         requireNonNull(member, "member must not be null");
         requireNonNull(parent, "parent must not be null");
         requireNonNull(parent.article, "parent.article must not be null");
-        isTrue(!parent.hasParent(), "parent must be a root comment");
+
+        if (parent.hasParent()) throw new DomainException(CommentError.INVALID_PARENT);
     }
 }

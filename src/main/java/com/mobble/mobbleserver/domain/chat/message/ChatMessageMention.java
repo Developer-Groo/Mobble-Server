@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.chat.message;
 
-import com.mobble.mobbleserver.common.baseEntity.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.common.entity.CreatedAtEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

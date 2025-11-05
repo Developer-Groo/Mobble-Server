@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.notification.setting;
 
-import com.mobble.mobbleserver.common.baseEntity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.domain.notification.core.NotificationType;
 import jakarta.persistence.*;

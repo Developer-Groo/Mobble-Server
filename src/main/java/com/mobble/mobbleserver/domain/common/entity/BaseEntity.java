@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.common.baseEntity;
+package com.mobble.mobbleserver.domain.common.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;

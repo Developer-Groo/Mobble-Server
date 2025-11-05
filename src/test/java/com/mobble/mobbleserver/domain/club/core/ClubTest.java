@@ -2,8 +2,8 @@
 //
 //import com.mobble.mobbleserver.domain.chat.room.ClubChatRoom;
 //import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-//import com.mobble.mobbleserver.global.exception.common.DomainException;
-//import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+//import com.mobble.mobbleserver.global.problem.common.DomainException;
+//import com.mobble.mobbleserver.global.problem.errorCode.club.ClubErrorCode;
 //import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 //import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
 //import org.junit.jupiter.web.DisplayName;

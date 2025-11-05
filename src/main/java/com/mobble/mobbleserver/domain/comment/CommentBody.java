@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.domain.comment;
 
+import com.mobble.mobbleserver.domain.comment.error.CommentError;
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -7,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import static java.util.Objects.requireNonNull;
-import static org.springframework.util.Assert.hasText;
-import static org.springframework.util.Assert.isTrue;
 
 @Value
 @Embeddable
@@ -20,8 +20,9 @@ public class CommentBody {
 
     private CommentBody(String content) {
         requireNonNull(content, "content must not be null");
-        hasText(content, "content must not be empty");
-        isTrue(content.length() <= 150, "content length must be less than or equal to 150");
+
+        if (content.isEmpty()) throw new DomainException(CommentError.EMPTY_CONTENT);
+        if (content.length() > 150) throw new DomainException(CommentError.CONTENT_TOO_LONG);
 
         this.content = content;
     }
