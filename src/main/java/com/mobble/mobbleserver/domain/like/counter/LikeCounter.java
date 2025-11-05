@@ -59,11 +59,11 @@ public class LikeCounter {
         if (targetId == null) throw new DomainException(LikeErrorCode.TARGET_REQUIRED);
     }
 
-    public void increase() {
-        this.count++;
-    }
-
-    public void decrease() {
-        if (this.count > 0) this.count--;
-    }
+//    public void increase() {
+//        this.count++;
+//    }
+//
+//    public void decrease() {
+//        if (this.count > 0) this.count--;
+//    }
 }
