@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface LikeCounterQueryPort {
 
-    List<LikeCountResponseDto> getCounts(LikeType likeType, List<Long> targetIds);
+    LikeCountResponseDto findCountByTargetId(LikeType likeType, Long targetId);
+
+    List<LikeCountResponseDto> findCountsByTargetIdList(LikeType likeType, List<Long> targetIds);
 }
