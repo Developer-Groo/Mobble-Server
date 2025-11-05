@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.application.like.core.service;
 
+import com.mobble.mobbleserver.application.like.core.command.MemberLikedTargetsResult;
+import com.mobble.mobbleserver.application.like.core.command.TargetLikedMembersResult;
 import com.mobble.mobbleserver.application.like.core.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
@@ -8,9 +10,6 @@ import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.application.like.core.command.MemberLikedTargetsResult;
-import com.mobble.mobbleserver.application.like.core.command.TargetLikedMembersResult;
-import com.mobble.mobbleserver.application.like.core.command.LikedMemberInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +33,7 @@ public class LikeQueryService implements LikeQueryPort {
             return TargetLikedMembersResult.toDto(targetId, List.of());
         }
 
-        List<Member> members = memberReadPort.findAllByIdInAndIsDeletedFalse(likedMemberIds);
-
-        List<LikedMemberInfoResult> likedMembers = members.stream()
-                .map(LikedMemberInfoResult::toDto)
-                .toList();
-
-        return TargetLikedMembersResult.toDto(targetId, likedMembers);
+        return TargetLikedMembersResult.toDto(targetId, likedMemberIds);
     }
 
     @Override
