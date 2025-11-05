@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.like.likeCounter.command;
+package com.mobble.mobbleserver.application.liked.likeCounter.command;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 
