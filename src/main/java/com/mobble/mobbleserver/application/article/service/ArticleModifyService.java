@@ -28,8 +28,8 @@ import com.mobble.mobbleserver.infrastructure.persistence.article.projection.Art
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
-import com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike.JpaArticleLikeRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike.JpaCommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

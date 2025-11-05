@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.like;
 
-import com.mobble.mobbleserver.application.like.core.port.provided.LikeModifyPort;
-import com.mobble.mobbleserver.domain.like.core.LikeType;
+import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like.likeCounter;
 
-import com.mobble.mobbleserver.domain.like.core.LikeType;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

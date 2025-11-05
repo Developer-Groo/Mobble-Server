@@ -13,7 +13,7 @@ import static com.mobble.mobbleserver.domain.address.QAddress.address;
 import static com.mobble.mobbleserver.domain.club.clubGround.QClubGround.clubGround;
 import static com.mobble.mobbleserver.domain.club.core.QClub.club;
 import static com.mobble.mobbleserver.domain.ground.QGround.ground;
-import static com.mobble.mobbleserver.domain.like.core.QClubLike.clubLike;
+import static com.mobble.mobbleserver.domain.like.QClubLike.clubLike;
 
 @RequiredArgsConstructor
 public class ClubQueryDslRepositoryImpl implements ClubQueryDslRepository{

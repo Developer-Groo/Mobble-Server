@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.mobble.mobbleserver.domain.article.QArticle.article;
-import static com.mobble.mobbleserver.domain.like.core.QArticleLike.articleLike;
+import static com.mobble.mobbleserver.domain.like.QArticleLike.articleLike;
 
 @Repository
 @RequiredArgsConstructor

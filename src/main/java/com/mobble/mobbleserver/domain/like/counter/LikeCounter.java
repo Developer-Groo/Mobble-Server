@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.like.counter;
 
-import com.mobble.mobbleserver.domain.like.core.LikeType;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import jakarta.persistence.*;

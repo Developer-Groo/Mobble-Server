@@ -40,9 +40,9 @@ import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.Cl
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.ground.dto.response.GroundResponseDto;
-import com.mobble.mobbleserver.infrastructure.persistence.like.core.articleLike.JpaArticleLikeRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.like.core.clubLike.JpaClubLikeRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.like.core.commentLike.JpaCommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.clubLike.JpaClubLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
