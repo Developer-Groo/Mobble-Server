@@ -32,9 +32,9 @@ public class LikeModifyService implements LikeModifyPort {
 
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        boolean already = likeReadPort.existsTargetLike(likeType, targetId, member.getId());
+        boolean existsTargetLike = likeReadPort.existsTargetLike(likeType, targetId, member.getId());
 
-        if (already) {
+        if (existsTargetLike) {
             likeWritePort.delete(likeType, targetId, member.getId());
             likeCounterWritePort.decrement(likeType, targetId);
         } else {
