@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.comment;
 
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.comment.error.CommentError;
 import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
-import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
