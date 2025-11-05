@@ -1,11 +1,10 @@
 package com.mobble.mobbleserver.application.liked.core.port.required;
 
-import com.mobble.mobbleserver.domain.like.core.AbstractLike;
+import com.mobble.mobbleserver.domain.like.core.LikeType;
 
-public interface LikeWritePort<T extends AbstractLike> {
+public interface LikeWritePort {
 
-    T save(T like);
+    void save(LikeType likeType, Long targetId, Long memberId);
 
-    void delete(T like);
-
+    void delete(LikeType likeType, Long targetId, Long memberId);
 }
