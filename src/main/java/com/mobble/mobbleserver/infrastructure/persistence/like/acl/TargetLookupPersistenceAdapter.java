@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.liked.core.port.required.TargetLookupPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetInfoResult;
+import com.mobble.mobbleserver.application.liked.core.command.TargetInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

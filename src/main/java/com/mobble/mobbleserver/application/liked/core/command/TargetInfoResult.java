@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.like.core.dto.command;
+package com.mobble.mobbleserver.application.liked.core.command;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 

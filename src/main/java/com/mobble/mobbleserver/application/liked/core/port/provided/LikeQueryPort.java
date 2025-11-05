@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.application.liked.core.port.provided;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.MemberLikedTargetsResult;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetLikedMembersResult;
+import com.mobble.mobbleserver.application.liked.core.command.MemberLikedTargetsResult;
+import com.mobble.mobbleserver.application.liked.core.command.TargetLikedMembersResult;
 
 import java.util.List;
 
