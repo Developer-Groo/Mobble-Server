@@ -14,11 +14,13 @@ public interface ArticleReadPort {
 
     Optional<Article> findByIdAndMemberId(Long articleId, Long memberId);
 
+    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
+
     boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
     List<Article> findArticlesByClubId(Long clubId, ArticleType articleType);
 
-    public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId);
+    Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId);
 
     List<Long> findArticleIdsByClubId(Long clubId);
 

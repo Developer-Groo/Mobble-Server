@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
+import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
-import com.mobble.mobbleserver.infrastructure.web.comment.dto.response.RootCommentResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ public record ArticleResponseDto(
         boolean isLiked,
         boolean isMine,
         int commentCount,
-        List<RootCommentResponseDto> comments,
+        List<RootCommentResult> comments,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -50,7 +50,7 @@ public record ArticleResponseDto(
             boolean isMine,
             ArticleLikeInfoDto likeInfo,
             int commentCount,
-            List<RootCommentResponseDto> comments
+            List<RootCommentResult> comments
     ) {
 
         return new ArticleResponseDto(

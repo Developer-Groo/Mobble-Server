@@ -22,7 +22,7 @@ public record CommentResponseDto(
                 comment.getArticle().getId(),
                 comment.getMember().getName(),
                 comment.hasParent() ? comment.getParent().getId() : null,
-                comment.getContent(),
+                comment.getBody().getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );

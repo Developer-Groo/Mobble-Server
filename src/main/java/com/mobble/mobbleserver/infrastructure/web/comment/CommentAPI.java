@@ -1,5 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.comment;
 
+import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.request.UpdateCommentCommand;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/articles/{article-id}/comments")
+@RequestMapping("/api/clubs/{club-id}/articles/{article-id}/comments")
 public class CommentAPI {
 
     private final CommentCreatePort commentCreatePort;
@@ -27,11 +30,13 @@ public class CommentAPI {
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> createRootComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentCreatePort.createRootComment(memberId, articleId, dto);
+        CreateRootCommentCommand command = CreateRootCommentCommand.create(memberId, clubId, articleId, dto.content());
+        Comment comment = commentCreatePort.createRootComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommentResponseDto.toDto(comment));
@@ -39,12 +44,14 @@ public class CommentAPI {
 
     @PostMapping("/{parent-comment-id}/replies")
     public ResponseEntity<CommentResponseDto> createReplyComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("parent-comment-id") @Positive Long parentCommentId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentCreatePort.createReplyComment(memberId, articleId, parentCommentId, dto);
+        CreateReplyCommentCommand command = CreateReplyCommentCommand.create(memberId, clubId, articleId, parentCommentId, dto.content());
+        Comment comment = commentCreatePort.createReplyComment(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommentResponseDto.toDto(comment));
@@ -52,12 +59,14 @@ public class CommentAPI {
 
     @PatchMapping("/{comment-id}")
     public ResponseEntity<CommentResponseDto> updateComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @RequestBody @Valid CommentRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        Comment comment = commentUpdatePort.updateComment(articleId, commentId, memberId, dto);
+        UpdateCommentCommand command = UpdateCommentCommand.create(memberId, clubId, articleId, commentId, dto.content());
+        Comment comment = commentUpdatePort.updateComment(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommentResponseDto.toDto(comment));
@@ -65,11 +74,12 @@ public class CommentAPI {
 
     @DeleteMapping("/{comment-id}")
     public ResponseEntity<Void> deleteComment(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @PathVariable("comment-id") @Positive Long commentId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        commentDeletePort.deleteComment(articleId, commentId, memberId);
+        commentDeletePort.deleteComment(memberId, clubId,  articleId, commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.comment.dto.response;
+package com.mobble.mobbleserver.application.comment.command.response;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.CommentLikeInfoDto;
@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.Com
 import java.time.LocalDateTime;
 import java.util.Map;
 
-public record ReplyCommentResponseDto(
+public record ReplyCommentResult(
         Long commentId,
         Long memberId,
         String name,
@@ -18,15 +18,15 @@ public record ReplyCommentResponseDto(
         LocalDateTime updatedAt
 ) {
 
-    public static ReplyCommentResponseDto toDto(Comment comment, Map<Long, CommentLikeInfoDto> likeInfoMap) {
+    public static ReplyCommentResult toDto(Comment comment, Map<Long, CommentLikeInfoDto> likeInfoMap) {
         CommentLikeInfoDto info = likeInfoMap.getOrDefault(comment.getId(), new CommentLikeInfoDto(0, false));
 
-        return new ReplyCommentResponseDto(
+        return new ReplyCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getMember().getName(),
                 comment.hasParent() ? comment.getParent().getId() : null,
-                comment.getContent(),
+                comment.getBody().getContent(),
                 info.likeCount(),
                 info.isLiked(),
                 comment.getCreatedAt(),
