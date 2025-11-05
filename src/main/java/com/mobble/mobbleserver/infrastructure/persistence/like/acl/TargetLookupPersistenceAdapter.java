@@ -5,7 +5,6 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.application.like.core.command.TargetInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +17,11 @@ public class TargetLookupPersistenceAdapter implements TargetLookupPort {
     private final CommentReadPort commentReadPort;
 
     @Override
-    public TargetInfoResult targetLoad(LikeType likeType, Long targetId) {
+    public boolean targetLoad(LikeType likeType, Long targetId) {
         return switch (likeType) {
-            case ARTICLE -> TargetInfoResult.toDto(likeType, targetId, articleReadPort.existsById(targetId));
-            case CLUB -> TargetInfoResult.toDto(likeType, targetId, clubReadPort.existsById(targetId));
-            case COMMENT -> TargetInfoResult.toDto(likeType, targetId, commentReadPort.existsById(targetId));
+            case ARTICLE -> articleReadPort.existsById(targetId);
+            case CLUB -> clubReadPort.existsById(targetId);
+            case COMMENT -> commentReadPort.existsById(targetId);
         };
     }
 }
