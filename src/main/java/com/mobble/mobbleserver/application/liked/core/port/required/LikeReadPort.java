@@ -1,8 +1,14 @@
 package com.mobble.mobbleserver.application.liked.core.port.required;
 
-import java.util.Optional;
+import com.mobble.mobbleserver.domain.like.core.LikeType;
 
-public interface LikeReadPort<T> {
+import java.util.List;
 
-    Optional<T> findLike(Long targetId, Long memberId);
+public interface LikeReadPort {
+
+    boolean existsTargetLike(LikeType likeType, Long targetId, Long memberId);
+
+    List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId);
+
+    List<Long> findLikedTargetIdListByMemberId(LikeType likeType, Long memberId, List<Long> targetIds);
 }
