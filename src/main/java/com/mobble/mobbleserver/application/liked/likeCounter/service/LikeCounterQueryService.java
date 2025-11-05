@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.application.liked.likeCounter.port.provided.LikeC
 import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
-import com.mobble.mobbleserver.infrastructure.web.like.likeCounter.dto.response.LikeCountResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.like.likeCounter.dto.response.LikeCountResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,24 +21,24 @@ public class LikeCounterQueryService implements LikeCounterQueryPort {
     private final LikeCounterReadPort likeCounterReadPort;
 
     @Override
-    public LikeCountResponseDto findCountByTargetId(LikeType likeType, Long targetId) {
+    public LikeCountResult findCountByTargetId(LikeType likeType, Long targetId) {
         return likeCounterReadPort.findByLikeTypeAndTargetId(likeType, targetId)
-                .map(counter -> LikeCountResponseDto.toDto(
+                .map(counter -> LikeCountResult.toDto(
                         likeType,
                         counter.getTargetId(),
                         counter.getCount()
                 ))
-                .orElseGet(() -> LikeCountResponseDto.toDto(likeType, targetId, 0L));
+                .orElseGet(() -> LikeCountResult.toDto(likeType, targetId, 0L));
     }
 
     @Override
-    public List<LikeCountResponseDto> findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
+    public List<LikeCountResult> findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
         Map<Long, Long> counterMap = toCounterMap(counters);
 
         return targetIds.stream()
-                .map(targetId -> LikeCountResponseDto.toDto(
+                .map(targetId -> LikeCountResult.toDto(
                         likeType,
                         targetId,
                         counterMap.getOrDefault(targetId, 0L)
