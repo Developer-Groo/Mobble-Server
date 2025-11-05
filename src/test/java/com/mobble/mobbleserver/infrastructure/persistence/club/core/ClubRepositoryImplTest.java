@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClubRepositoryImplTest {
 
     @Autowired
-    private JpaClubDslRepository clubRepository;
+    private JpaClubRepository clubRepository;
 
     @Autowired
     private EntityManager em;
