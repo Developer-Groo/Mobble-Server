@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.like.validate;
+package com.mobble.mobbleserver.infrastructure.persistence.like.acl;
 
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
