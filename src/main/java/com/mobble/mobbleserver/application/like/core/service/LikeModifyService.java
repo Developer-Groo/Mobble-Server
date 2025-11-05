@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.application.like.core.service;
 import com.mobble.mobbleserver.application.like.core.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.core.port.required.LikeWritePort;
-import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
+import com.mobble.mobbleserver.application.like.core.port.required.TargetExistencePort;
 import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
@@ -24,7 +24,7 @@ public class LikeModifyService implements LikeModifyPort {
     private final LikeReadPort likeReadPort;
     private final LikeCounterWritePort likeCounterWritePort;
     private final MemberReadPort memberReadPort;
-    private final TargetLookupPort targetLookupPort;
+    private final TargetExistencePort targetExistencePort;
 
     @Override
     public void toggleLike(LikeType likeType, Long targetId, Long memberId) {
@@ -44,7 +44,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     private void validateTarget(LikeType likeType, Long targetId) {
-        if (!targetLookupPort.targetLoad(likeType, targetId)) {
+        if (!targetExistencePort.existsTarget(likeType, targetId)) {
             throw new DomainException(LikeErrorCode.TARGET_NOT_FOUND);
         }
     }
