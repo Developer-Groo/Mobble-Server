@@ -21,6 +21,6 @@ public class LikeCounterModifyService implements LikeCounterModifyPort {
 
     @Override
     public void decrement(LikeType likeType, Long targetId) {
-        likeCounterWritePort.safeDecrement(likeType, targetId);
+        likeCounterWritePort.decrement(likeType, targetId);
     }
 }

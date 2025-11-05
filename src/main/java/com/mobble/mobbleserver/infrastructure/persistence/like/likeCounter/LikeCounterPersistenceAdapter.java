@@ -27,7 +27,7 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
     }
 
     @Override
-    public void safeDecrement(LikeType likeType, Long targetId) {
+    public void decrement(LikeType likeType, Long targetId) {
         retryOnDeadlock(() -> jpaLikeCounterRepository.safeDecrement(likeType.name(), targetId));
     }
 

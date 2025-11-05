@@ -6,5 +6,5 @@ public interface LikeCounterWritePort {
 
     void increment(LikeType likeType, Long targetId);
 
-    void safeDecrement(LikeType likeType, Long targetId);
+    void decrement(LikeType likeType, Long targetId);
 }

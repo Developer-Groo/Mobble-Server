@@ -37,7 +37,7 @@ public class LikeModifyService implements LikeModifyPort {
 
         if (already) {
             likeWritePort.delete(likeType, targetId, member.getId());
-            likeCounterWritePort.safeDecrement(likeType, targetId);
+            likeCounterWritePort.decrement(likeType, targetId);
         } else {
             likeWritePort.save(likeType, targetId, member.getId());
             likeCounterWritePort.increment(likeType, targetId);
