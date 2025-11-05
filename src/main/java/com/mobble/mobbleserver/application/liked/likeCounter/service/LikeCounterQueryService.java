@@ -21,13 +21,28 @@ public class LikeCounterQueryService implements LikeCounterQueryPort {
     private final LikeCounterReadPort likeCounterReadPort;
 
     @Override
-    public List<LikeCountResponseDto> getCounts(LikeType likeType, List<Long> targetIds) {
-        List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
+    public LikeCountResponseDto findCountByTargetId(LikeType likeType, Long targetId) {
+        return likeCounterReadPort.findByLikeTypeAndTargetId(likeType, targetId)
+                .map(counter -> LikeCountResponseDto.toDto(
+                        likeType,
+                        counter.getTargetId(),
+                        counter.getCount()
+                ))
+                .orElseGet(() -> LikeCountResponseDto.toDto(likeType, targetId, 0L));
+    }
 
+    @Override
+    public List<LikeCountResponseDto> findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
+
+        List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
         Map<Long, Long> counterMap = toCounterMap(counters);
 
         return targetIds.stream()
-                .map(targetId -> LikeCountResponseDto.toDto(targetId, counterMap.getOrDefault(targetId, 0L)))
+                .map(targetId -> LikeCountResponseDto.toDto(
+                        likeType,
+                        targetId,
+                        counterMap.getOrDefault(targetId, 0L)
+                ))
                 .toList();
     }
 
