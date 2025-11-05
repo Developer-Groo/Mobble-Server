@@ -10,7 +10,7 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.MemberLikedTargetsResult;
 import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetLikedMembersResult;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.response.LikedMemberInfoResult;
+import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.LikedMemberInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
