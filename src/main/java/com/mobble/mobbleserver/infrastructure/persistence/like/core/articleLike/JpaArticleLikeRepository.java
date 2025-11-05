@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface JpaArticleLikeRepository extends JpaRepository<ArticleLike, Long> {
+public interface JpaArticleLikeRepository extends JpaRepository<ArticleLike, Long>, ArticleLikeQueryDslRepository {
 
     Optional<ArticleLike> findLikedByArticleIdAndMemberId(Long articleId, Long memberId);
 
@@ -15,4 +15,8 @@ public interface JpaArticleLikeRepository extends JpaRepository<ArticleLike, Lon
     void deleteAllByArticleId(Long articleId);
 
     void deleteAllByArticleIdIn(List<Long> articleIds);
+
+    boolean existsByMemberIdAndArticleId(Long memberId, Long articleId);
+
+    void deleteByMemberIdAndArticleId(Long memberId, Long articleId);
 }
