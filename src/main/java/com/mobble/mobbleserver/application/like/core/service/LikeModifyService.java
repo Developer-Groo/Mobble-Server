@@ -4,7 +4,7 @@ import com.mobble.mobbleserver.application.like.core.port.provided.LikeModifyPor
 import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.core.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.like.core.port.required.TargetExistencePort;
-import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterWritePort;
+import com.mobble.mobbleserver.application.like.core.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
