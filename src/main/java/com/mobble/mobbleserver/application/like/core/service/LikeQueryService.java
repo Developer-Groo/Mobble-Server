@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.application.like.core.command.MemberLikedTargetsR
 import com.mobble.mobbleserver.application.like.core.command.TargetLikedMembersResult;
 import com.mobble.mobbleserver.application.like.core.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
-import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -23,7 +22,6 @@ public class LikeQueryService implements LikeQueryPort {
 
     private final LikeReadPort likeReadPort;
     private final MemberReadPort memberReadPort;
-    private final TargetLookupPort targetLookupPort;
 
     @Override
     public TargetLikedMembersResult findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
