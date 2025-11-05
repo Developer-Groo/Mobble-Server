@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.exception;
+package com.mobble.mobbleserver.infrastructure.web.problem;
 
 import com.mobble.mobbleserver.shared.error.ErrorCategory;
 import org.springframework.http.HttpStatus;
