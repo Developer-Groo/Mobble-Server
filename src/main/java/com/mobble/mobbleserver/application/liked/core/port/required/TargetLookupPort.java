@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.application.liked.core.port.required;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetInfo;
+import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetInfoResult;
 
 public interface TargetLookupPort {
 
-    TargetInfo targetLoad(LikeType likeType, Long targetId);
+    TargetInfoResult targetLoad(LikeType likeType, Long targetId);
 }

@@ -11,7 +11,7 @@ import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetInfo;
+import com.mobble.mobbleserver.infrastructure.web.like.core.dto.command.TargetInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +45,9 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     private void validateTarget(LikeType likeType, Long targetId) {
-        TargetInfo targetInfo = targetLookupPort.targetLoad(likeType, targetId);
+        TargetInfoResult targetInfoResult = targetLookupPort.targetLoad(likeType, targetId);
 
-        if (!targetInfo.exists()) {
+        if (!targetInfoResult.exists()) {
             throw new DomainException(LikeErrorCode.TARGET_NOT_FOUND);
         }
     }
