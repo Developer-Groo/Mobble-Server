@@ -10,9 +10,4 @@ public class LikeTestFixture extends AbstractLike {
 //        like.assignMember(member);
         return like;
     }
-
-    @Override
-    public Long getTargetId() {
-        return 1L;
-    }
 }
