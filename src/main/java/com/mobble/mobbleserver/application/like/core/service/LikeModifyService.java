@@ -30,7 +30,7 @@ public class LikeModifyService implements LikeModifyPort {
     public void toggleLike(LikeType likeType, Long targetId, Long memberId) {
         validateTarget(likeType, targetId);
 
-        Member member = findMemberOrThrow(memberId);
+        Member member = findMemberByMemberIdOrThrow(memberId);
 
         boolean already = likeReadPort.existsTargetLike(likeType, targetId, member.getId());
 
@@ -49,7 +49,7 @@ public class LikeModifyService implements LikeModifyPort {
         }
     }
 
-    private Member findMemberOrThrow(Long memberId) {
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
