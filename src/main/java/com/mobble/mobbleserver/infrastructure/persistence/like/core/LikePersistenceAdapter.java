@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like.core;
 
-import com.mobble.mobbleserver.application.liked.core.port.required.LikeReadPort;
-import com.mobble.mobbleserver.application.liked.core.port.required.LikeWritePort;
+import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
+import com.mobble.mobbleserver.application.like.core.port.required.LikeWritePort;
 import com.mobble.mobbleserver.domain.like.core.ArticleLike;
 import com.mobble.mobbleserver.domain.like.core.ClubLike;
 import com.mobble.mobbleserver.domain.like.core.CommentLike;

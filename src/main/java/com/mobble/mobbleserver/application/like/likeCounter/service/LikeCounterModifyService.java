@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.application.liked.likeCounter.service;
+package com.mobble.mobbleserver.application.like.likeCounter.service;
 
-import com.mobble.mobbleserver.application.liked.likeCounter.port.provided.LikeCounterModifyPort;
-import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterWritePort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.provided.LikeCounterModifyPort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

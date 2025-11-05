@@ -1,16 +1,16 @@
-package com.mobble.mobbleserver.application.liked.core.service;
+package com.mobble.mobbleserver.application.like.core.service;
 
-import com.mobble.mobbleserver.application.liked.core.port.provided.LikeQueryPort;
-import com.mobble.mobbleserver.application.liked.core.port.required.LikeReadPort;
-import com.mobble.mobbleserver.application.liked.core.port.required.TargetLookupPort;
+import com.mobble.mobbleserver.application.like.core.port.provided.LikeQueryPort;
+import com.mobble.mobbleserver.application.like.core.port.required.LikeReadPort;
+import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.application.liked.core.command.MemberLikedTargetsResult;
-import com.mobble.mobbleserver.application.liked.core.command.TargetLikedMembersResult;
-import com.mobble.mobbleserver.application.liked.core.command.LikedMemberInfoResult;
+import com.mobble.mobbleserver.application.like.core.command.MemberLikedTargetsResult;
+import com.mobble.mobbleserver.application.like.core.command.TargetLikedMembersResult;
+import com.mobble.mobbleserver.application.like.core.command.LikedMemberInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

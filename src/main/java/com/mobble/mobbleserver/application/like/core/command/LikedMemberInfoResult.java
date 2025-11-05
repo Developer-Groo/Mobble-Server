@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.liked.core.command;
+package com.mobble.mobbleserver.application.like.core.command;
 
 import com.mobble.mobbleserver.domain.member.Member;
 

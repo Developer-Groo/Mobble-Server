@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like.likeCounter;
 
-import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterReadPort;
-import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterWritePort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterReadPort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
 import lombok.RequiredArgsConstructor;

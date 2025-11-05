@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.liked.core.port.provided;
+package com.mobble.mobbleserver.application.like.core.port.provided;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 

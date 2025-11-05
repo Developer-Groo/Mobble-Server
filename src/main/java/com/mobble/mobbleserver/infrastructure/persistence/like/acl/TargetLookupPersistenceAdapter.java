@@ -3,9 +3,9 @@ package com.mobble.mobbleserver.infrastructure.persistence.like.acl;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
-import com.mobble.mobbleserver.application.liked.core.port.required.TargetLookupPort;
+import com.mobble.mobbleserver.application.like.core.port.required.TargetLookupPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.application.liked.core.command.TargetInfoResult;
+import com.mobble.mobbleserver.application.like.core.command.TargetInfoResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

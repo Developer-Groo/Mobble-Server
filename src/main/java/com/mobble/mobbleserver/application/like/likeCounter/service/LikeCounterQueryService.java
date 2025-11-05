@@ -1,10 +1,10 @@
-package com.mobble.mobbleserver.application.liked.likeCounter.service;
+package com.mobble.mobbleserver.application.like.likeCounter.service;
 
-import com.mobble.mobbleserver.application.liked.likeCounter.port.provided.LikeCounterQueryPort;
-import com.mobble.mobbleserver.application.liked.likeCounter.port.required.LikeCounterReadPort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.provided.LikeCounterQueryPort;
+import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
-import com.mobble.mobbleserver.application.liked.likeCounter.command.LikeCountResult;
+import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

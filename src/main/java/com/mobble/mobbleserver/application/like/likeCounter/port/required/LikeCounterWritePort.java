@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.liked.likeCounter.port.required;
+package com.mobble.mobbleserver.application.like.likeCounter.port.required;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 

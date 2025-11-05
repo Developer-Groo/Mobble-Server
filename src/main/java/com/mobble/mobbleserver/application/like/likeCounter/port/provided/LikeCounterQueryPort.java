@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.application.liked.likeCounter.port.provided;
+package com.mobble.mobbleserver.application.like.likeCounter.port.provided;
 
 import com.mobble.mobbleserver.domain.like.core.LikeType;
-import com.mobble.mobbleserver.application.liked.likeCounter.command.LikeCountResult;
+import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountResult;
 
 import java.util.List;
 
