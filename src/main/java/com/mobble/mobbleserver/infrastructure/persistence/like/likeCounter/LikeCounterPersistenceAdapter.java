@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -34,6 +35,11 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
      * LikeCounterReadPort
      */
     @Override
+    public Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
+        return jpaLikeCounterRepository.findByLikeTypeAndTargetId(likeType, targetId);
+    }
+
+    @Override
     public List<LikeCounter> findAllByLikeTypeAndTargetIds(LikeType likeType, List<Long> targetIds) {
         return jpaLikeCounterRepository.findAllByLikeTypeAndTargetIdIn(likeType, targetIds);
     }
@@ -41,6 +47,7 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
     /**
      * Deadlock 발생 시 재시도 로직
      */
+    // Todo 추후 재시도 로직 수정 필요
     private void retryOnDeadlock(Runnable dbOperation) {
         for (int attempt = 0; attempt < 2; attempt++) { // 기본 1회 + 재시도 1회
             try {
