@@ -22,7 +22,7 @@ public class LikeCounterQueryService implements LikeCounterQueryPort {
     private final LikeCounterReadPort likeCounterReadPort;
 
     @Override
-    public LikeCountResult findCountByTargetId(LikeType likeType, Long targetId) {
+    public LikeCountResult findLikeCountByTargetId(LikeType likeType, Long targetId) {
         return likeCounterReadPort.findByLikeTypeAndTargetId(likeType, targetId)
                 .map(counter -> LikeCountResult.toDto(
                         likeType,
@@ -33,7 +33,7 @@ public class LikeCounterQueryService implements LikeCounterQueryPort {
     }
 
     @Override
-    public LikeCountMapResult findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
+    public LikeCountMapResult findLikeCountsByTargetIds(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
         Map<Long, Long> countsByTargetId = toCounterMap(counters);

@@ -9,8 +9,8 @@ import java.util.List;
 public interface LikeQueryPort {
 
     // targetId 리스트에 좋아요 한 멤버 목록 조회
-    TargetLikedMembersResult findLikedMemberListByTargetId(LikeType likeType, Long targetId);
+    TargetLikedMembersResult findMemberIdsByTargetId(LikeType likeType, Long targetId);
 
     // targetId 리스트 중 memberId가 좋아요 한 목록 조회
-    MemberLikedTargetsResult findLikedTargetIdListByMemberId(LikeType likeType, Long memberId, List<Long> targetIds);
+    MemberLikedTargetsResult findLikedTargetIdsByMemberId(LikeType likeType, Long memberId, List<Long> targetIds);
 }

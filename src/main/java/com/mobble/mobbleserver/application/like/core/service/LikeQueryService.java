@@ -24,7 +24,7 @@ public class LikeQueryService implements LikeQueryPort {
     private final MemberReadPort memberReadPort;
 
     @Override
-    public TargetLikedMembersResult findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
+    public TargetLikedMembersResult findMemberIdsByTargetId(LikeType likeType, Long targetId) {
         List<Long> likedMemberIds = likeReadPort.findLikedMemberListByTargetId(likeType, targetId);
 
         if (likedMemberIds.isEmpty()) {
@@ -35,7 +35,7 @@ public class LikeQueryService implements LikeQueryPort {
     }
 
     @Override
-    public MemberLikedTargetsResult findLikedTargetIdListByMemberId(LikeType likeType, Long memberId, List<Long> targetIds) {
+    public MemberLikedTargetsResult findLikedTargetIdsByMemberId(LikeType likeType, Long memberId, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) {
             return MemberLikedTargetsResult.toDto(likeType, memberId, List.of());
         }
