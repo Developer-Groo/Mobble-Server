@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
 
-    private final JpaClubDslRepository repository;
+    private final JpaClubRepository repository;
 
     @Override
     public Club save(Club club) {
