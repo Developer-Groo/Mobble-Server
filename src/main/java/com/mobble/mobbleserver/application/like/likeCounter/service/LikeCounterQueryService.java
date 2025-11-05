@@ -1,10 +1,11 @@
 package com.mobble.mobbleserver.application.like.likeCounter.service;
 
+import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountMapResult;
+import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountResult;
 import com.mobble.mobbleserver.application.like.likeCounter.port.provided.LikeCounterQueryPort;
 import com.mobble.mobbleserver.application.like.likeCounter.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.domain.like.core.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
-import com.mobble.mobbleserver.application.like.likeCounter.command.LikeCountResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,18 +33,12 @@ public class LikeCounterQueryService implements LikeCounterQueryPort {
     }
 
     @Override
-    public List<LikeCountResult> findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
+    public LikeCountMapResult findCountsByTargetIdList(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
-        Map<Long, Long> counterMap = toCounterMap(counters);
+        Map<Long, Long> countsByTargetId = toCounterMap(counters);
 
-        return targetIds.stream()
-                .map(targetId -> LikeCountResult.toDto(
-                        likeType,
-                        targetId,
-                        counterMap.getOrDefault(targetId, 0L)
-                ))
-                .toList();
+        return LikeCountMapResult.toDto(likeType, countsByTargetId);
     }
 
     private Map<Long, Long> toCounterMap(List<LikeCounter> counters) {
