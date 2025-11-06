@@ -167,7 +167,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 

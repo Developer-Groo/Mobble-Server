@@ -20,7 +20,7 @@ public class MeetingQueryService implements MeetingQueryPort {
 
     @Override
     public List<Meeting> findMeetingsByClubId(Long memberId, Long clubId) {
-        clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId);
 
         return meetingReadPort.findByClubMember_Club_Id(clubId);
     }
