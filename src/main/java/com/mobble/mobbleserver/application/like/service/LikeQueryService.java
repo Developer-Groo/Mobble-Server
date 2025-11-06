@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,7 +75,14 @@ public class LikeQueryService implements LikeQueryPort {
     public LikeCountMapResult findLikeCountsByTargetIds(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
-        Map<Long, Long> countsByTargetId = toCounterMap(counters);
+        Map<Long, Long> counterMap = toCounterMap(counters);
+
+        Map<Long, Long> countsByTargetId = targetIds.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        id -> counterMap.getOrDefault(id, 0L)
+                ));
 
         return LikeCountMapResult.toDto(likeType, countsByTargetId);
     }
