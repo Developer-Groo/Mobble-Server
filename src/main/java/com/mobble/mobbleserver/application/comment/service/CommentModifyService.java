@@ -15,7 +15,7 @@ import com.mobble.mobbleserver.application.common.exception.BusinessException;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.domain.comment.CommentBody;
+import com.mobble.mobbleserver.domain.comment.CommentContent;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,8 +37,8 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
         Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
 
-        CommentBody commentBody = CommentBody.of(command.content());
-        Comment comment = Comment.createRootComment(member, article, commentBody);
+        CommentContent commentContent = CommentContent.of(command.content());
+        Comment comment = Comment.createRootComment(member, article, commentContent);
 
         return commentWritePort.save(comment);
     }
@@ -51,8 +51,8 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
         assertCommentByArticleId(parentComment, article.getId());
 
-        CommentBody commentBody = CommentBody.of(command.content());
-        Comment comment = Comment.createReplyComment(member, parentComment, commentBody);
+        CommentContent commentContent = CommentContent.of(command.content());
+        Comment comment = Comment.createReplyComment(member, parentComment, commentContent);
 
         return commentWritePort.save(comment);
     }
@@ -65,9 +65,9 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
         assertCommentByArticleId(comment, article.getId());
 
-        CommentBody commentBody = CommentBody.of(command.content());
+        CommentContent commentContent = CommentContent.of(command.content());
 
-        return comment.updateContent(commentBody);
+        return comment.updateContent(commentContent);
     }
 
     @Override
