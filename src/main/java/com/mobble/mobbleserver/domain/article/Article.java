@@ -3,13 +3,15 @@ package com.mobble.mobbleserver.domain.article;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
+
+import static java.util.Objects.*;
 
 @Entity
 @Getter
@@ -33,25 +35,19 @@ public class Article extends BaseEntity {
     @Column(name = "article_type")
     private ArticleType articleType;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "content")
-    private String content;
+    @Embedded
+    private ArticleContent content;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Article(
             Club club,
             Member member,
             ArticleType articleType,
-            String title,
-            String content
+            ArticleContent content
     ) {
-        validateCommon(club, member, articleType, title, content);
         this.club = club;
         this.member = member;
         this.articleType = articleType;
-        this.title = title;
         this.content = content;
     }
 
@@ -59,40 +55,39 @@ public class Article extends BaseEntity {
             Club club,
             Member member,
             ArticleType articleType,
-            String title,
-            String content
+            ArticleContent content
     ) {
+        assertCreateArticle(club, member, articleType, content);
+
         return Article.builder()
                 .club(club)
                 .member(member)
                 .articleType(articleType)
-                .title(title)
                 .content(content)
                 .build();
     }
 
-    public void updateArticle(ArticleType articleType, String title, String content) {
-        validateContent(articleType, title, content);
+    public void updateArticle(ArticleType articleType, ArticleContent content) {
+        assertUpdateArticle(articleType, content);
+
         this.articleType = articleType;
-        this.title = title;
         this.content = content;
     }
 
-    private void validateCommon(
+    private static void assertCreateArticle(
             Club club,
             Member member,
             ArticleType articleType,
-            String title,
-            String content
+            ArticleContent content
     ) {
-        if (club == null) throw new DomainException(ArticleErrorCode.CLUB_REQUIRED);
-        if (member == null) throw new DomainException(ArticleErrorCode.MEMBER_REQUIRED);
-        validateContent(articleType, title, content);
+        requireNonNull(club, "content must not be null");
+        requireNonNull(member, "member must not be null");
+        requireNonNull(articleType, "article type must not be null");
+        requireNonNull(content, "content must not be null");
     }
 
-    private void validateContent(ArticleType articleType, String title, String content) {
-        if (articleType == null) throw new DomainException(ArticleErrorCode.TYPE_REQUIRED);
-        if (title == null || title.isBlank()) throw new DomainException(ArticleErrorCode.TITLE_REQUIRED);
-        if (content == null || content.isBlank()) throw new DomainException(ArticleErrorCode.CONTENT_REQUIRED);
+    private void assertUpdateArticle(ArticleType articleType, ArticleContent content) {
+        requireNonNull(articleType, "article type must not be null");
+        requireNonNull(content, "content must not be null");
     }
 }
