@@ -11,7 +11,7 @@ import java.util.List;
 public record ArticleResponseDto(
         Long articleId,
         String title,
-        String content,
+        String body,
         ArticleType articleType,
         Long clubId,
         Long memberId,
@@ -29,8 +29,8 @@ public record ArticleResponseDto(
 
         return new ArticleResponseDto(
                 article.getId(),
-                article.getTitle(),
-                article.getContent(),
+                article.getContent().getTitle(),
+                article.getContent().getBody(),
                 article.getArticleType(),
                 article.getClub().getId(),
                 article.getMember().getId(),
@@ -55,8 +55,8 @@ public record ArticleResponseDto(
 
         return new ArticleResponseDto(
                 article.getId(),
-                article.getTitle(),
-                article.getContent(),
+                article.getContent().getTitle(),
+                article.getContent().getBody(),
                 article.getArticleType(),
                 article.getClub().getId(),
                 article.getMember().getId(),
