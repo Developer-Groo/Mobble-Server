@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ArticleError implements CommonError {
     EMPTY_CONTENT("content must not be empty", ErrorCategory.VALIDATION),
-    CONTENT_TOO_LONG("content length must be less than or equal to 200", ErrorCategory.VALIDATION);;
+    CONTENT_TOO_LONG("content length must be less than or equal to 800", ErrorCategory.VALIDATION);;
 
     private final String message;
     private final ErrorCategory category;

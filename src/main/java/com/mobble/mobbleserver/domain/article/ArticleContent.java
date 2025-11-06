@@ -18,7 +18,7 @@ public class ArticleContent {
     @Column(name = "title", nullable = false, length = 50)
     String title;
 
-    @Column(name = "content", nullable = false, length = 200)
+    @Column(name = "content", nullable = false, length = 800)
     String content;
 
     private ArticleContent(String title, String content) {
@@ -26,7 +26,7 @@ public class ArticleContent {
         requireNonNull(content, "content must not be null");
 
         if (title.isEmpty() || content.isEmpty()) throw new DomainException(ArticleError.EMPTY_CONTENT);
-        if (title.length() > 50 || content.length() > 200) throw new DomainException(ArticleError.CONTENT_TOO_LONG);
+        if (title.length() > 50 || content.length() > 800) throw new DomainException(ArticleError.CONTENT_TOO_LONG);
 
         this.title = title;
         this.content = content;
