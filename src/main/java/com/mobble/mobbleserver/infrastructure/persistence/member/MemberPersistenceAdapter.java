@@ -43,4 +43,9 @@ public class MemberPersistenceAdapter implements MemberWritePort, MemberReadPort
     public Optional<Member> findBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId) {
         return repository.findBySocialProviderAndSocialId(socialProvider, socialId);
     }
+
+    @Override
+    public List<Member> findAllByIdInAndIsDeletedFalse(List<Long> memberIds) {
+        return repository.findAllByIdInAndIsDeletedFalse(memberIds);
+    }
 }

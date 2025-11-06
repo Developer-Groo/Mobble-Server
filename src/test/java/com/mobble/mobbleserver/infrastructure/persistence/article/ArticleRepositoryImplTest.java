@@ -5,9 +5,9 @@ import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.like.ArticleLike;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
-import com.mobble.mobbleserver.refactor.like.articleLike.entity.ArticleLike;
 import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -95,9 +95,9 @@ class ArticleRepositoryImplTest {
         em.persist(a1);
         em.persist(a2);
 
-        ArticleLike l1 = ArticleLike.createArticleLike(a1, me);
-        ArticleLike l2 = ArticleLike.createArticleLike(a1, other);
-        ArticleLike l3 = ArticleLike.createArticleLike(a2, other);
+        ArticleLike l1 = ArticleLike.createArticleLike(me.getId(), a1.getId());
+        ArticleLike l2 = ArticleLike.createArticleLike(other.getId(), a1.getId());
+        ArticleLike l3 = ArticleLike.createArticleLike(other.getId(), a2.getId());
 
         em.persist(l1);
         em.persist(l2);

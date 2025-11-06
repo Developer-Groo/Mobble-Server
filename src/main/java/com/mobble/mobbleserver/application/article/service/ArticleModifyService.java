@@ -28,8 +28,8 @@ import com.mobble.mobbleserver.infrastructure.persistence.article.projection.Art
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +53,8 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     private final CommentQueryPort commentQueryPort;
 
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository jpaArticleLikeRepository;
 
     @Override
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
@@ -96,7 +96,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         commentLikeRepository.deleteAllByArticleId(articleId);
         commentWritePort.deleteAll(comments);
-        articleLikeRepository.deleteAllByArticleId(articleId);
+        jpaArticleLikeRepository.deleteAllByArticleId(articleId);
         articleWritePort.delete(article);
     }
 
@@ -127,7 +127,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 

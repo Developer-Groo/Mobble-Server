@@ -67,4 +67,9 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     public void delete(Article article) {
         repository.delete(article);
     }
+
+    @Override
+    public boolean existsById(Long articleId) {
+        return repository.existsById(articleId);
+    }
 }
