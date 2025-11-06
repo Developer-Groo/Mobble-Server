@@ -66,7 +66,7 @@ public class Article extends BaseEntity {
     }
 
     public Article updateArticle(ArticleContent content) {
-        assertUpdateArticle(content);
+        requireNonNull(content, "body must not be null");
         this.content = content;
 
         return this;
@@ -78,13 +78,9 @@ public class Article extends BaseEntity {
             ArticleType articleType,
             ArticleContent content
     ) {
-        requireNonNull(club, "content must not be null");
+        requireNonNull(club, "body must not be null");
         requireNonNull(member, "member must not be null");
         requireNonNull(articleType, "article type must not be null");
-        requireNonNull(content, "content must not be null");
-    }
-
-    private void assertUpdateArticle(ArticleContent content) {
-        requireNonNull(content, "content must not be null");
+        requireNonNull(content, "body must not be null");
     }
 }
