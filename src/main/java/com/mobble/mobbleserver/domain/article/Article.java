@@ -65,11 +65,11 @@ public class Article extends BaseEntity {
                 .build();
     }
 
-    public void updateArticle(ArticleType articleType, ArticleContent content) {
-        assertUpdateArticle(articleType, content);
-
-        this.articleType = articleType;
+    public Article updateArticle(ArticleContent content) {
+        assertUpdateArticle(content);
         this.content = content;
+
+        return this;
     }
 
     private static void assertCreateArticle(
@@ -84,8 +84,7 @@ public class Article extends BaseEntity {
         requireNonNull(content, "content must not be null");
     }
 
-    private void assertUpdateArticle(ArticleType articleType, ArticleContent content) {
-        requireNonNull(articleType, "article type must not be null");
+    private void assertUpdateArticle(ArticleContent content) {
         requireNonNull(content, "content must not be null");
     }
 }
