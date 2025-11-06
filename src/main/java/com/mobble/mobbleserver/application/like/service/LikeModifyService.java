@@ -31,7 +31,7 @@ public class LikeModifyService implements LikeModifyPort {
         validateTarget(likeType, targetId);
 
         Member member = findMemberByMemberIdOrThrow(memberId);
-
+        //Todo LikeType에 따른 권한 검증
         boolean existsTargetLike = likeReadPort.existsTargetLike(likeType, targetId, member.getId());
 
         if (existsTargetLike) {
