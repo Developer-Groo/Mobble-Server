@@ -1,9 +1,10 @@
-package com.mobble.mobbleserver.infrastructure.persistence.like.likeCounter;
+package com.mobble.mobbleserver.infrastructure.persistence.like;
 
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
+import com.mobble.mobbleserver.infrastructure.persistence.like.likeCounter.JpaLikeCounterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
