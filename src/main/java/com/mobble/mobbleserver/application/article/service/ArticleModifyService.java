@@ -1,27 +1,24 @@
 package com.mobble.mobbleserver.application.article.service;
 
+import com.mobble.mobbleserver.application.article.command.request.CreateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
+import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleCreatePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleUpdatePort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleWritePort;
-import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
-import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.application.common.exception.BusinessException;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
 import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
 import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,34 +36,30 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final CommentWritePort commentWritePort;
 
     private final ArticleReadPort articleReadPort;
-    private final MemberReadPort memberReadPort;
-    private final ClubReadPort clubReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final CommentReadPort commentReadPort;
-
-    private final CommentQueryPort commentQueryPort;
 
     private final CommentLikeRepository commentLikeRepository;
     private final ArticleLikeRepository articleLikeRepository;
 
     @Override
-    public Article createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
-        ClubMember clubMember = assertMemberByMemberIdAndClubId(memberId, clubId);
+    public Article createArticle(CreateArticleCommand command) {
+        ClubMember clubMember = assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
 
-        assertCanPost(clubMember, dto.articleType());
+        assertCanPost(clubMember, command.type());
 
-        ArticleContent content = ArticleContent.of(dto.title(), dto.content());
-        Article article = Article.createArticle(clubMember.getClub(), clubMember.getMember(), dto.articleType(), content);
+        ArticleContent content = ArticleContent.of(command.title(), command.content());
+        Article article = Article.createArticle(clubMember.getClub(), clubMember.getMember(), command.type(), content);
 
         return articleWritePort.save(article);
     }
 
     @Override
-    public Article updateArticle(Long clubId, Long articleId, Long memberId, ArticleRequestDto dto) {
-        ClubMember clubMember = assertMemberByMemberIdAndClubId(memberId, clubId);
-        Article article = assertArticleByArticleIdAndMemberId(articleId, memberId);
+    public Article updateArticle(UpdateArticleCommand command) {
+        assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
+        Article article = assertArticleByArticleIdAndMemberId(command.articleId(), command.memberId());
 
-        ArticleContent content = ArticleContent.of(dto.title(), dto.content());
+        ArticleContent content = ArticleContent.of(command.title(), command.content());
 
         return article.updateArticle(content);
     }
@@ -76,15 +69,14 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         ClubMember clubMember = assertMemberByMemberIdAndClubId(memberId, clubId);
         Article article = assertArticleByArticleId(articleId);
 
-        boolean isOwner = articleReadPort.existsArticleByIdAndMemberId(articleId, memberId);
-
-        if (!isOwner && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
-            throw new DomainException(ArticleErrorCode.NO_PERMISSION);
-        }
-
-        List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
+        // Todo: Club 권한 정책 로직 수정 필요
+//        if (!isOwner && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
+//            throw new DomainException(ArticleErrorCode.NO_PERMISSION);
+//        }
 
         // Todo: 댓글 삭제 시 댓글의 좋아요는 댓글 도메인에서 지우도록 수정
+        List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
+
         commentLikeRepository.deleteAllByArticleId(articleId);
         commentWritePort.deleteAll(comments);
         articleLikeRepository.deleteAllByArticleId(articleId);
@@ -94,12 +86,12 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     /* ==== Private Helper ==== */
     private Article assertArticleByArticleId(Long articleId) {
         return articleReadPort.findById(articleId)
-                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ArticleBusinessError.NOT_FOUND));
     }
 
     private Article assertArticleByArticleIdAndMemberId(Long articleId, Long memberId) {
         return articleReadPort.findByIdAndMemberId(articleId, memberId)
-                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND_TO_MEMBER));
+                .orElseThrow(() -> new BusinessException(ArticleBusinessError.NO_PERMISSION));
     }
 
     private ClubMember assertMemberByMemberIdAndClubId(Long memberId, Long clubId) {
@@ -108,7 +100,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     private void assertCanPost(ClubMember clubMember, ArticleType articleType) {
-        if (clubMember.canPost(articleType)) throw new DomainException(ArticleErrorCode.NOTICE_NO_PERMISSION);
+        if (clubMember.canPost(articleType)) throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
     }
 
 //    private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
