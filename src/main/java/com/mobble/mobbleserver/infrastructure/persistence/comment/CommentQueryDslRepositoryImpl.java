@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.mobble.mobbleserver.domain.comment.QComment.comment;
-import static com.mobble.mobbleserver.refactor.like.commentLike.entity.QCommentLike.commentLike;
+import static com.mobble.mobbleserver.domain.like.QCommentLike.commentLike;
 
 @RequiredArgsConstructor
 public class CommentQueryDslRepositoryImpl implements CommentQueryDslRepository {
@@ -44,11 +44,11 @@ public class CommentQueryDslRepositoryImpl implements CommentQueryDslRepository 
     public Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> commentIds, Long memberId) {
         List<CommentLikeProjection> results = queryFactory
                 .select(Projections.constructor(CommentLikeProjection.class,
-                        commentLike.member.id,
-                        commentLike.comment.id
+                        commentLike.memberId,
+                        commentLike.commentId
                 ))
                 .from(commentLike)
-                .where(commentLike.comment.id.in(commentIds))
+                .where(commentLike.commentId.in(commentIds))
                 .fetch();
 
         Map<Long, Integer> likeCountMap = createLikeCountMap(results);

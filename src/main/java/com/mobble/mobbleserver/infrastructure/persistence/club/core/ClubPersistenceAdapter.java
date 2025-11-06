@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
 
-    private final JpaClubDslRepository repository;
+    private final JpaClubRepository repository;
 
     @Override
     public Club save(Club club) {
@@ -40,5 +40,10 @@ public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
     @Override
     public List<Club> searchClubs(ClubSearchRequestDto dto) {
         return repository.searchClubs(dto);
+    }
+
+    @Override
+    public boolean existsById(Long clubId) {
+        return repository.existsById(clubId);
     }
 }

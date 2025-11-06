@@ -34,7 +34,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment createRootComment(CreateRootCommentCommand command) {
-        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Member member = assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
 
         CommentContent commentContent = CommentContent.of(command.content());
@@ -45,7 +45,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment createReplyComment(CreateReplyCommentCommand command) {
-        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Member member = assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
         Comment parentComment = assertCommentByCommentId(command.parentId());
 
@@ -59,7 +59,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public Comment updateComment(UpdateCommentCommand command) {
-        Member member = assertMemberByClubIdAndMemberId(command.memberId(), command.clubId());
+        Member member = assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
         Comment comment = assertCommentByCommentIdAndMemberId(command.commentId(), member.getId());
 
@@ -72,7 +72,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     @Override
     public void deleteComment(Long memberId, Long clubId, Long articleId, Long commentId) {
-        Member member = assertMemberByClubIdAndMemberId(memberId, clubId);
+        Member member = assertMemberByMemberIdAndClubId(memberId, clubId);
         Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
 
         // Todo: Club 권한 정책 로직 수정 필요
@@ -105,8 +105,8 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
                 .orElseThrow(); // Todo: ErrorCode 수정 필요
     }
 
-    private Member assertMemberByClubIdAndMemberId(Long memberId, Long clubId) {
-        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(memberId, clubId)
+    private Member assertMemberByMemberIdAndClubId(Long memberId, Long clubId) {
+        ClubMember clubMember = clubMemberReadPort.findClubMemberByMemberIdAndClubId(memberId, clubId)
                 .orElseThrow();
 
         return clubMember.getMember();

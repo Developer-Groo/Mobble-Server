@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
-import com.mobble.mobbleserver.refactor.like.clubLike.entity.ClubLike;
+import com.mobble.mobbleserver.domain.like.ClubLike;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClubRepositoryImplTest {
 
     @Autowired
-    private JpaClubDslRepository clubRepository;
+    private JpaClubRepository clubRepository;
 
     @Autowired
     private EntityManager em;
@@ -42,8 +42,8 @@ public class ClubRepositoryImplTest {
         Club club = ClubTestFixture.createDefaultClub(category);
         em.persist(club);
 
-        ClubLike like1 = ClubLike.createClubLike(club, member);
-        ClubLike like2 = ClubLike.createClubLike(club, other);
+        ClubLike like1 = ClubLike.createClubLike(member.getId(), club.getId());
+        ClubLike like2 = ClubLike.createClubLike(other.getId(), club.getId());
         em.persist(like1);
         em.persist(like2);
 
@@ -73,7 +73,7 @@ public class ClubRepositoryImplTest {
         Club club = ClubTestFixture.createDefaultClub(category);
         em.persist(club);
 
-        ClubLike like = ClubLike.createClubLike(club, other);
+        ClubLike like = ClubLike.createClubLike(other.getId(), club.getId());
         em.persist(like);
 
         em.flush();
