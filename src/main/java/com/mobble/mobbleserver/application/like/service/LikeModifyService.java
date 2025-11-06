@@ -43,16 +43,6 @@ public class LikeModifyService implements LikeModifyPort {
         }
     }
 
-    @Override
-    public void increment(LikeType likeType, Long targetId) {
-        likeCounterWritePort.increment(likeType, targetId);
-    }
-
-    @Override
-    public void decrement(LikeType likeType, Long targetId) {
-        likeCounterWritePort.decrement(likeType, targetId);
-    }
-
     private void validateTarget(LikeType likeType, Long targetId) {
         if (!targetExistencePort.existsTarget(likeType, targetId)) {
             throw new DomainException(LikeErrorCode.TARGET_NOT_FOUND);
