@@ -24,11 +24,6 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     }
 
     @Override
-    public Optional<Article> findByIdAndMemberId(Long articleId, Long memberId) {
-        return repository.findArticleByIdAndMemberId(articleId, memberId);
-    }
-
-    @Override
     public Optional<Article> findByIdAndClubId(Long articleId, Long clubId) {
         return repository.findByIdAndClubId(articleId, clubId);
     }
@@ -66,10 +61,5 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     @Override
     public void delete(Article article) {
         repository.delete(article);
-    }
-
-    @Override
-    public boolean existsById(Long articleId) {
-        return repository.existsById(articleId);
     }
 }

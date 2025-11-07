@@ -8,12 +8,10 @@ import java.util.Optional;
 
 public interface JpaArticleRepository extends JpaRepository<Article, Long>, ArticleQueryDslRepository {
 
-    Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
+    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
 
     boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
     @Modifying
     void deleteAllArticleByClub_Id(Long clubId);
-
-    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
 }
