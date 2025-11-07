@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum CommentBusinessError implements CommonError {
     NOT_FOUND("comment not found", ErrorCategory.NOT_FOUND),
     NO_PERMISSION("do not have permission to access this comment", ErrorCategory.PERMISSION_DENIED),
-    ARTICLE_MISMATCH("comment does not belong to the requested article", ErrorCategory.CONFLICT);
+    ARTICLE_MISMATCH("comment does not belong to the requested article", ErrorCategory.VALIDATION);
 
     private final String message;
     private final ErrorCategory category;
