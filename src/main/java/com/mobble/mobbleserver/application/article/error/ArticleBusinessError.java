@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ArticleBusinessError implements CommonError {
     NOT_FOUND("article not found", ErrorCategory.NOT_FOUND),
-    NO_PERMISSION("do not have permission to access this article", ErrorCategory.PERMISSION_DENIED);
+    NO_PERMISSION("do not have permission to access this article", ErrorCategory.PERMISSION_DENIED),
+    CLUB_MISMATCH("article does not belong to this club", ErrorCategory.VALIDATION);
 
     private final String message;
     private final ErrorCategory category;
