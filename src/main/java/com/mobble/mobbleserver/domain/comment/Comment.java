@@ -99,6 +99,12 @@ public class Comment extends BaseEntity {
         return this.parent != null;
     }
 
+    public boolean isOwner(Long memberId) {
+        requireNonNull(member, "member must not be null");
+
+        return this.member.getId().equals(memberId);
+    }
+
     private void addChild(Comment child) {
         requireNonNull(child, "child must not be null");
 
