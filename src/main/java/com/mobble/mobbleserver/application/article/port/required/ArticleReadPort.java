@@ -12,8 +12,6 @@ public interface ArticleReadPort {
 
     Optional<Article> findById(Long id);
 
-    Optional<Article> findByIdAndMemberId(Long articleId, Long memberId);
-
     Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
 
     boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
@@ -25,6 +23,4 @@ public interface ArticleReadPort {
     List<Long> findArticleIdsByClubId(Long clubId);
 
     void deleteAllArticleByClub_Id(Long clubId);
-
-    boolean existsById(Long articleId);
 }
