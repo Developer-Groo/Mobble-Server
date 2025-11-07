@@ -21,8 +21,6 @@ import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +38,6 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final ArticleReadPort articleReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final CommentReadPort commentReadPort;
-
-    private final JpaArticleLikeRepository articleLikeRepository;
 
     @Override
     public Article createArticle(CreateArticleCommand command) {
@@ -81,9 +77,11 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         commentWritePort.deleteAll(comments);
 
-        articleLikeRepository.deleteAllByArticleId(articleId);
+        // Todo: 아티클 좋아요 데이터 삭제 필요
         articleWritePort.delete(article);
     }
+
+    // Todo: delete All 메서드 필요
 
     /* ==== Private Helper ==== */
     private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {

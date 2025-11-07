@@ -82,9 +82,11 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
         assertCanDeleteComment(clubMember, comment);
 
-        // Todo: 좋아요 데이터 삭제 필요
+        // Todo: 댓글 좋아요 데이터 삭제 필요
         commentWritePort.delete(comment);
     }
+
+    // Todo: delete All 메서드 필요
 
     /* ==== Private Helper ==== */
     private Comment assertCommentByCommentIdAndArticleId(Long commentId, Long articleId) {
