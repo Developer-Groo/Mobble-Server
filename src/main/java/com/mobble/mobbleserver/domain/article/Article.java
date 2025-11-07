@@ -72,6 +72,13 @@ public class Article extends BaseEntity {
         return this;
     }
 
+    public boolean isOwner(Long memberId) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(this.member, "member must not be null");
+
+        return this.member.getId().equals(memberId);
+    }
+
     private static void assertCreateArticle(
             Club club,
             Member member,
