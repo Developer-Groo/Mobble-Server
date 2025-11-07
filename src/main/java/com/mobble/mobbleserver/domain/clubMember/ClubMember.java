@@ -78,4 +78,8 @@ public class ClubMember extends BaseEntity {
     public boolean canPost(ArticleType articleType) {
         return !(articleType == ArticleType.NOTICE && this.clubMemberRole == ClubMemberRole.MEMBER);
     }
+
+    public boolean canManage() {
+        return this.clubMemberRole == ClubMemberRole.LEADER || this.clubMemberRole == ClubMemberRole.MANAGER;
+    }
 }
