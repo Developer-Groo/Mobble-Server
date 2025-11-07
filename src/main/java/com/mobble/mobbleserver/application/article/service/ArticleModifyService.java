@@ -15,12 +15,14 @@ import com.mobble.mobbleserver.application.common.exception.BusinessException;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
-import com.mobble.mobbleserver.refactor.like.articleLike.repository.ArticleLikeRepository;
-import com.mobble.mobbleserver.refactor.like.commentLike.repository.CommentLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +41,11 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final ClubMemberReadPort clubMemberReadPort;
     private final CommentReadPort commentReadPort;
 
-    private final CommentLikeRepository commentLikeRepository;
-    private final ArticleLikeRepository articleLikeRepository;
+    private final JpaArticleLikeRepository articleLikeRepository;
 
     @Override
     public Article createArticle(CreateArticleCommand command) {
-        ClubMember clubMember = assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
+        ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
 
         assertCanPost(clubMember, command.type());
 
@@ -56,8 +57,12 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     @Override
     public Article updateArticle(UpdateArticleCommand command) {
-        assertMemberByMemberIdAndClubId(command.memberId(), command.clubId());
-        Article article = assertArticleByArticleIdAndMemberId(command.articleId(), command.memberId());
+        ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        Club club = clubMember.getClub();
+        Member member = clubMember.getMember();
+        Article article = assertArticleByArticleIdAndClubId(command.articleId(), club.getId());
+
+        assertCanUpdateArticle(member, article);
 
         ArticleContent content = ArticleContent.of(command.title(), command.content());
 
@@ -66,41 +71,45 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     @Override
     public void deleteArticle(Long clubId, Long articleId, Long memberId) {
-        ClubMember clubMember = assertMemberByMemberIdAndClubId(memberId, clubId);
-        Article article = assertArticleByArticleId(articleId);
+        ClubMember clubMember = assertMemberByClubIdAndMemberId(clubId, memberId);
+        Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
 
-        // Todo: Club 권한 정책 로직 수정 필요
-//        if (!isOwner && clubMember.getClubMemberRole() == ClubMemberRole.MEMBER) {
-//            throw new DomainException(ArticleErrorCode.NO_PERMISSION);
-//        }
+        assertCanDeleteArticle(article, clubMember);
 
         // Todo: 댓글 삭제 시 댓글의 좋아요는 댓글 도메인에서 지우도록 수정
         List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
 
-        commentLikeRepository.deleteAllByArticleId(articleId);
         commentWritePort.deleteAll(comments);
+
         articleLikeRepository.deleteAllByArticleId(articleId);
         articleWritePort.delete(article);
     }
 
     /* ==== Private Helper ==== */
-    private Article assertArticleByArticleId(Long articleId) {
-        return articleReadPort.findById(articleId)
-                .orElseThrow(() -> new BusinessException(ArticleBusinessError.NOT_FOUND));
+    private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {
+        return articleReadPort.findByIdAndClubId(articleId, clubId)
+                .orElseThrow(() -> new BusinessException(ArticleBusinessError.CLUB_MISMATCH));
     }
 
-    private Article assertArticleByArticleIdAndMemberId(Long articleId, Long memberId) {
-        return articleReadPort.findByIdAndMemberId(articleId, memberId)
-                .orElseThrow(() -> new BusinessException(ArticleBusinessError.NO_PERMISSION));
-    }
-
-    private ClubMember assertMemberByMemberIdAndClubId(Long memberId, Long clubId) {
-        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(memberId, clubId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+    private ClubMember assertMemberByClubIdAndMemberId(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: ErrorCode 수정 필요
     }
 
     private void assertCanPost(ClubMember clubMember, ArticleType articleType) {
-        if (clubMember.canPost(articleType)) throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
+        if (!clubMember.canPost(articleType)) throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
+    }
+
+    private void assertCanUpdateArticle(Member member, Article article) {
+        if (!article.isOwner(member.getId())) throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
+    }
+
+    private void assertCanDeleteArticle(Article article, ClubMember clubMember) {
+        if (clubMember.canManage()) return;
+
+        if (article.isOwner(clubMember.getMember().getId())) return;
+
+        throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
     }
 
 //    private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
