@@ -38,6 +38,7 @@ public class SocialLoginService {
         Member member = findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
+            // ClubMemberReadPort
             List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
             String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
 
