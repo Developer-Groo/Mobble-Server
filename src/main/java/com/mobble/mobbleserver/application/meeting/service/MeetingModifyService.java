@@ -68,7 +68,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId)
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 }
