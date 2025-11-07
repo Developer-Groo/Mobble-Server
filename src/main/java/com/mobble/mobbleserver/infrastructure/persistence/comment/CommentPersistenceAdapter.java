@@ -40,8 +40,8 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public Optional<Comment> findByIdAndMemberId(Long commentId, Long memberId) {
-        return repository.findByIdAndMemberId(commentId, memberId);
+    public Optional<Comment> findByIdAndArticleId(Long commentId, Long articleId) {
+        return repository.findByIdAndArticleId(commentId, articleId);
     }
 
     @Override
@@ -61,10 +61,5 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     @Override
     public void deleteAllCommentByArticle_IdIn(List<Long> articleIds) {
         repository.deleteAllCommentByArticle_IdIn(articleIds);
-    }
-
-    @Override
-    public boolean existsById(Long commentId) {
-        return repository.existsById(commentId);
     }
 }
