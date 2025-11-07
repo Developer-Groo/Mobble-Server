@@ -132,12 +132,12 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId)
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
 
     private boolean existsClubMember(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId).isPresent();
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).isPresent();
     }
 
     public void validateClubNotFull(Club club) {
