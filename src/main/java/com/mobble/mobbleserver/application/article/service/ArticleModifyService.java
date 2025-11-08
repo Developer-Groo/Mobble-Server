@@ -11,6 +11,7 @@ import com.mobble.mobbleserver.application.comment.command.response.RootCommentR
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
+import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
@@ -18,6 +19,7 @@ import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
@@ -28,8 +30,6 @@ import com.mobble.mobbleserver.infrastructure.persistence.article.projection.Art
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
-import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +50,9 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final ClubReadPort clubReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final CommentReadPort commentReadPort;
+    private final LikeModifyPort likeModifyPort;
 
     private final CommentQueryPort commentQueryPort;
-
-    private final JpaCommentLikeRepository commentLikeRepository;
-    private final JpaArticleLikeRepository jpaArticleLikeRepository;
 
     @Override
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
@@ -94,9 +92,11 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
 
-        commentLikeRepository.deleteAllByArticleId(articleId);
+        List<Long> commentIds = commentReadPort.findIdByArticleId(articleId);
+
+        likeModifyPort.deleteAllLikeAndCounterByTargetIds(LikeType.COMMENT, commentIds);
         commentWritePort.deleteAll(comments);
-        jpaArticleLikeRepository.deleteAllByArticleId(articleId);
+        likeModifyPort.deleteLikeAndCounterByTargetId(LikeType.ARTICLE, articleId);
         articleWritePort.delete(article);
     }
 
