@@ -32,6 +32,15 @@ public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, Like
         jpaLikeCounterRepository.decrement(likeType.name(), targetId);
     }
 
+    public void deleteByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
+        jpaLikeCounterRepository.deleteByLikeTypeAndTargetId(likeType, targetId);
+    }
+
+    @Override
+    public void deleteAllByLikeTypeAndTargetIds(LikeType likeType, List<Long> targetIds) {
+        jpaLikeCounterRepository.deleteAllByLikeTypeAndTargetIdIn(likeType, targetIds);
+    }
+
     /**
      * LikeCounterReadPort
      */
