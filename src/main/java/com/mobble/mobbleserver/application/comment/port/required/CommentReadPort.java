@@ -21,5 +21,5 @@ public interface CommentReadPort {
 
     void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
 
-    boolean existsById(Long commentId);
+    List<Long> findIdByArticleId(Long articleId);
 }
