@@ -64,7 +64,7 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public boolean existsById(Long commentId) {
-        return repository.existsById(commentId);
+    public List<Long> findIdByArticleId(Long articleId) {
+        return repository.findIdByArticleId(articleId);
     }
 }
