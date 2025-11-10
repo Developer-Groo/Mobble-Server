@@ -57,7 +57,8 @@ public class LikeModifyService implements LikeModifyPort {
     public void deleteAllLikeAndCounterByTargetIds(LikeType likeType, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return;
 
-        if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능"); // Todo 예외처리
+        // Todo 예외처리
+        if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능");
 
         List<Long> distinctIds = targetIds.stream()
                 .distinct()
