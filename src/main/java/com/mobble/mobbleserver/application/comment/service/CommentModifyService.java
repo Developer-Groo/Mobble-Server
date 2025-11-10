@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -82,11 +84,25 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
         assertCanDeleteComment(clubMember, comment);
 
-        // Todo: 댓글 좋아요 데이터 삭제 필요
+        // Todo: 댓글 단건 좋아요 데이터 삭제 필요
         commentWritePort.delete(comment);
     }
 
-    // Todo: delete All 메서드 필요
+    @Override
+    public void deleteAllComment(Long clubId, Long articleId) {
+        Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
+
+        // Todo: 댓글 다건 좋아요 데이터 삭제 필요
+        commentWritePort.deleteAllByArticleId(article.getId());
+    }
+
+    @Override
+    public void deleteAllCommentByArticleIds(List<Long> articleIds) {
+        if (articleIds == null || articleIds.isEmpty()) return;
+
+        // Todo: 댓글 다건 좋아요 데이터 삭제 필요
+        commentWritePort.deleteAllByArticleIdIn(articleIds);
+    }
 
     /* ==== Private Helper ==== */
     private Comment assertCommentByCommentIdAndArticleId(Long commentId, Long articleId) {
