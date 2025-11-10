@@ -5,5 +5,5 @@ import com.mobble.mobbleserver.domain.article.Article;
 
 public interface ArticleCreatePort {
 
-    Article createArticle(CreateArticleCommand command);
+    Article create(CreateArticleCommand command);
 }

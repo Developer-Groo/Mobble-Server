@@ -5,5 +5,5 @@ import com.mobble.mobbleserver.domain.comment.Comment;
 
 public interface CommentUpdatePort {
 
-    Comment updateComment(UpdateCommentCommand command);
+    Comment update(UpdateCommentCommand command);
 }

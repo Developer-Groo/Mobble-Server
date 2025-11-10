@@ -66,7 +66,7 @@ public class CommentAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         UpdateCommentCommand command = UpdateCommentCommand.create(memberId, clubId, articleId, commentId, dto.content());
-        Comment comment = commentUpdatePort.updateComment(command);
+        Comment comment = commentUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommentResponseDto.toDto(comment));
@@ -79,7 +79,7 @@ public class CommentAPI {
             @PathVariable("comment-id") @Positive Long commentId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        commentDeletePort.deleteComment(memberId, clubId,  articleId, commentId);
+        commentDeletePort.delete(memberId, clubId,  articleId, commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
