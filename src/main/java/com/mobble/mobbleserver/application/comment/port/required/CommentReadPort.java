@@ -20,6 +20,4 @@ public interface CommentReadPort {
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
 
     void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
-
-    List<Long> findCommentIdsByArticleIds(List<Long> articleIds);
 }

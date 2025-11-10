@@ -99,15 +99,4 @@ public class CommentQueryDslRepositoryImpl implements CommentQueryDslRepository 
                 .map(CommentLikeProjection::commentId)
                 .collect(Collectors.toSet());
     }
-
-    @Override
-    public List<Long> findCommentIdsByArticleIds(List<Long> articleIds) {
-        if (articleIds == null || articleIds.isEmpty()) return List.of();
-
-        return queryFactory
-                .select(comment.id)
-                .from(comment)
-                .where(comment.article.id.in(articleIds))
-                .fetch();
-    }
 }

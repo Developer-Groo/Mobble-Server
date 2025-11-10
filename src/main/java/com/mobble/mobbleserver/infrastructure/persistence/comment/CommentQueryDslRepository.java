@@ -13,6 +13,4 @@ public interface CommentQueryDslRepository {
     Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> commentIds, Long memberId);
 
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
-
-    List<Long> findCommentIdsByArticleIds(List<Long> articleIds);
 }

@@ -62,9 +62,4 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     public void deleteAllCommentByArticle_IdIn(List<Long> articleIds) {
         repository.deleteAllCommentByArticle_IdIn(articleIds);
     }
-
-    @Override
-    public List<Long> findCommentIdsByArticleIds(List<Long> articleIds) {
-        return repository.findCommentIdsByArticleIds(articleIds);
-    }
 }

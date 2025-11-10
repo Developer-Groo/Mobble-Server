@@ -18,8 +18,6 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
-import com.mobble.mobbleserver.application.like.port.required.LikeCounterWritePort;
-import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.address.Address;
@@ -31,7 +29,6 @@ import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.ground.Ground;
-import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
@@ -60,8 +57,6 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final AddressWritePort addressWritePort;
     private final ClubGroundWritePort clubGroundWritePort;
     private final AgeGroupWritePort ageGroupWritePort;
-    private final LikeWritePort likeWritePort;
-    private final LikeCounterWritePort likeCounterWritePort;
 
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
@@ -141,19 +136,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         chatRoomExitPort.delete(club.getId());
 
         List<Long> articleIds = articleReadPort.findArticleIdsByClubId(club.getId());
-        List<Long> commentIds = commentReadPort.findCommentIdsByArticleIds(articleIds);
 
-        likeWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
-        likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
-        commentReadPort.deleteAllCommentByArticle_IdIn(articleIds); //Todo 왜 ReadPort임?
+        commentReadPort.deleteAllCommentByArticle_IdIn(articleIds);
 
-        likeWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.ARTICLE, articleIds);
-        likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.ARTICLE, articleIds);
         articleReadPort.deleteAllArticleByClub_Id(club.getId());
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
-        likeWritePort.deleteByLikeTypeAndTargetId(LikeType.CLUB, club.getId());
-        likeCounterWritePort.deleteByLikeTypeAndTargetId(LikeType.CLUB, club.getId());
         ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
 
         clubWritePort.delete(club);

@@ -11,8 +11,6 @@ import com.mobble.mobbleserver.application.comment.command.response.RootCommentR
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
-import com.mobble.mobbleserver.application.like.port.required.LikeCounterWritePort;
-import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
@@ -20,7 +18,6 @@ import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
@@ -45,8 +42,6 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     private final ArticleWritePort articleWritePort;
     private final CommentWritePort commentWritePort;
-    private final LikeWritePort likeWritePort;
-    private final LikeCounterWritePort likeCounterWritePort;
 
     private final ArticleReadPort articleReadPort;
     private final MemberReadPort memberReadPort;
@@ -94,16 +89,8 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
 
-        List<Long> commentIds = comments.stream()
-                .map(Comment::getId)
-                .toList();
-
-        likeWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
-        likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
         commentWritePort.deleteAll(comments);
 
-        likeWritePort.deleteByLikeTypeAndTargetId(LikeType.COMMENT, articleId);
-        likeCounterWritePort.deleteByLikeTypeAndTargetId(LikeType.COMMENT, articleId);
         articleWritePort.delete(article);
     }
 
