@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -41,6 +43,29 @@ public class LikeModifyService implements LikeModifyPort {
             likeWritePort.save(likeType, targetId, member.getId());
             likeCounterWritePort.increment(likeType, targetId);
         }
+    }
+
+    @Override
+    public void deleteLike(LikeType likeType, Long targetId) {
+        if (targetId == null) return;
+
+        likeWritePort.deleteByLikeTypeAndTargetId(likeType, targetId);
+        likeCounterWritePort.deleteByLikeTypeAndTargetId(likeType, targetId);
+    }
+
+    @Override
+    public void deleteAllLike(LikeType likeType, List<Long> targetIds) {
+        if (targetIds == null || targetIds.isEmpty()) return;
+
+        // Todo 예외처리
+        if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능");
+
+        List<Long> distinctIds = targetIds.stream()
+                .distinct()
+                .toList();
+
+        likeWritePort.deleteAllByLikeTypeAndTargetIds(likeType, distinctIds);
+        likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(likeType, distinctIds);
     }
 
     private void validateTarget(LikeType likeType, Long targetId) {
