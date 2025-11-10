@@ -12,6 +12,4 @@ public interface ArticleQueryDslRepository {
     List<Article> findArticlesByClubId(Long clubId, ArticleType articleType);
 
     Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId);
-
-    List<Long> findArticleIdsByClubId(Long clubId);
 }
