@@ -12,11 +12,13 @@ import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -32,6 +34,7 @@ import java.util.List;
 public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePort, ArticleDeletePort {
 
     private final CommentDeletePort commentDeletePort;
+    private final LikeModifyPort likeModifyPort;
 
     private final ArticleWritePort articleWritePort;
 
@@ -40,7 +43,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public Article createArticle(CreateArticleCommand command) {
+    public Article create(CreateArticleCommand command) {
         ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
 
         assertCanPost(clubMember, command.type());
@@ -52,7 +55,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     @Override
-    public Article updateArticle(UpdateArticleCommand command) {
+    public Article update(UpdateArticleCommand command) {
         ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
@@ -66,29 +69,27 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     }
 
     @Override
-    public void deleteArticle(Long clubId, Long articleId, Long memberId) {
+    public void delete(Long clubId, Long articleId, Long memberId) {
         ClubMember clubMember = assertMemberByClubIdAndMemberId(clubId, memberId);
         Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
 
         assertCanDeleteArticle(article, clubMember);
 
-        commentDeletePort.deleteAllComment(clubMember.getId(), article.getId());
-
-        // Todo: 아티클 좋아요 데이터 삭제 필요
+        commentDeletePort.deleteAll(clubMember.getId(), article.getId());
+        likeModifyPort.delete(LikeType.ARTICLE, article.getId());
         articleWritePort.delete(article);
     }
 
     @Override
-    public void deleteAllArticle(Long clubId) {
+    public void deleteAll(Long clubId) {
         Club club = assertClubByClubId(clubId);
 
-        List<Long> articleIds = articleReadPort.findIdsByClubId(clubId);
+        List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
         if (articleIds.isEmpty()) return;
 
-        commentDeletePort.deleteAllCommentByArticleIds(articleIds);
-
-        // Todo: 아티클 좋아요 데이터 삭제 필요
-        articleWritePort.deleteAllByClubId(club.getId());
+        commentDeletePort.deleteAll(articleIds);
+        likeModifyPort.deleteAll(LikeType.ARTICLE, articleIds);
+        articleWritePort.deleteAll(club.getId());
     }
 
     /* ==== Private Helper ==== */
