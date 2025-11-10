@@ -92,8 +92,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteAllByArticleIdIn(targetIds);
             case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
-            case CLUB -> throw new IllegalArgumentException("지원하지 않는 기능");
-            // Todo ClubLike 다건 삭제 예외처리
+            default -> throw new IllegalArgumentException("Not support LikeType: " + likeType.name());
         }
     }
 }
