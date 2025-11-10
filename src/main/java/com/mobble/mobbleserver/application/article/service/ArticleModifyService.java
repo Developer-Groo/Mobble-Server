@@ -55,7 +55,6 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     private final CommentReadPort commentReadPort;
 
     private final CommentQueryPort commentQueryPort;
-    //Todo QueryPort(Provided Port)에 접근해도 됨???
 
     @Override
     public ArticleResponseDto createArticle(Long memberId, Long clubId, ArticleRequestDto dto) {
