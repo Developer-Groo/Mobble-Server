@@ -6,10 +6,10 @@ import com.mobble.mobbleserver.infrastructure.persistence.article.projection.Art
 
 import java.time.LocalDateTime;
 
-public record ArticleSummaryResponseDto(
+public record ArticlePreviewResponseDto(
         Long articleId,
         String title,
-        String content,
+        String body,
         ArticleType articleType,
         Long clubId,
         String memberName,
@@ -21,12 +21,12 @@ public record ArticleSummaryResponseDto(
         LocalDateTime updatedAt
 ) {
 
-    public static ArticleSummaryResponseDto toDto(Article article,ArticleLikeInfoDto likeInfo, int commentCount ){
-        String summarizedContent = summarize(article.getContent());
+    public static ArticlePreviewResponseDto toDto(Article article, ArticleLikeInfoDto likeInfo, int commentCount ){
+        String summarizedContent = summarize(article.getContent().getBody());
 
-        return new ArticleSummaryResponseDto(
+        return new ArticlePreviewResponseDto(
                 article.getId(),
-                article.getTitle(),
+                article.getContent().getTitle(),
                 summarizedContent,
                 article.getArticleType(),
                 article.getClub().getId(),

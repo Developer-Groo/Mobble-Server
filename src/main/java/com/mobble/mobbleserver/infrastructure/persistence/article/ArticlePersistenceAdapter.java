@@ -18,14 +18,31 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
 
     private final JpaArticleRepository repository;
 
+    /* ArticleWritePort */
+    @Override
+    public Article save(Article article) {
+        return repository.save(article);
+    }
+
+    @Override
+    public void delete(Article article) {
+        repository.delete(article);
+    }
+
+    @Override
+    public void deleteAllByClubId(Long clubId) {
+        repository.deleteAllByClubId(clubId);
+    }
+
+    /* ArticleReadPort */
     @Override
     public Optional<Article> findById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public Optional<Article> findByIdAndMemberId(Long articleId, Long memberId) {
-        return repository.findArticleByIdAndMemberId(articleId, memberId);
+    public List<Long> findIdsByClubId(Long clubId) {
+        return repository.findIdsByClubId(clubId);
     }
 
     @Override
@@ -46,30 +63,5 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     @Override
     public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId) {
         return repository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
-    }
-
-    @Override
-    public List<Long> findArticleIdsByClubId(Long clubId) {
-        return repository.findArticleIdsByClubId(clubId);
-    }
-
-    @Override
-    public void deleteAllArticleByClub_Id(Long clubId) {
-        repository.deleteAllArticleByClub_Id(clubId);
-    }
-
-    @Override
-    public Article save(Article article) {
-        return repository.save(article);
-    }
-
-    @Override
-    public void delete(Article article) {
-        repository.delete(article);
-    }
-
-    @Override
-    public boolean existsById(Long articleId) {
-        return repository.existsById(articleId);
     }
 }

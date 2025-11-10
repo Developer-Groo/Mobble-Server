@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.refactor.clubImage.entity;
+package com.mobble.mobbleserver.domain.clubImage.entity;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.common.entity.CreatedAtEntity;

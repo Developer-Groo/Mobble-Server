@@ -1,8 +1,9 @@
 package com.mobble.mobbleserver.application.article.port.provided;
 
-import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
+import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
+import com.mobble.mobbleserver.domain.article.Article;
 
 public interface ArticleUpdatePort {
-    ArticleUpdatedResponseDto updateArticle(Long articleId, Long memberId, ArticleRequestDto dto);
+
+    Article updateArticle(UpdateArticleCommand command);
 }

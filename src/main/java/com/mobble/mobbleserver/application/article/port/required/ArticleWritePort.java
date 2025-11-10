@@ -7,4 +7,6 @@ public interface ArticleWritePort {
     Article save(Article article);
 
     void delete(Article article);
+
+    void deleteAllByClubId(Long clubId);
 }

@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.refactor.clubImage.repository;
+package com.mobble.mobbleserver.domain.clubImage.repository;
 
-import com.mobble.mobbleserver.refactor.clubImage.entity.ClubImage;
+import com.mobble.mobbleserver.domain.clubImage.entity.ClubImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClubImageRepository extends JpaRepository<ClubImage, Long> {

@@ -11,13 +11,11 @@ public interface CommentReadPort {
 
     Optional<Comment> findById(Long id);
 
-    Optional<Comment> findByIdAndMemberId(Long commentId, Long memberId);
+    Optional<Comment> findByIdAndArticleId(Long commentId, Long articleId);
 
     List<Comment> findCommentsWithRepliesByArticleId(Long articleId);
 
     Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> ids, Long memberId);
 
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
-
-    void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
 }

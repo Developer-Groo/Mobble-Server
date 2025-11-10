@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.mobble.mobbleserver.domain.article.QArticle.article;
-import static com.mobble.mobbleserver.domain.like.QArticleLike.articleLike;
+import static com.mobble.mobbleserver.refactor.like.articleLike.entity.QArticleLike.articleLike;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,11 +40,11 @@ public class ArticleQueryDslRepositoryImpl implements ArticleQueryDslRepository 
     public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId) {
         List<ArticleLikeProjection> results = queryFactory
                 .select(Projections.constructor(ArticleLikeProjection.class,
-                        articleLike.articleId,
-                        articleLike.memberId
+                        articleLike.article.id,
+                        articleLike.member.id
                 ))
                 .from(articleLike)
-                .where(articleLike.articleId.in(articleIds))
+                .where(articleLike.article.id.in(articleIds))
                 .fetch();
 
         Map<Long, Integer> likeCountMap = createLikeCountMap(results);
@@ -60,14 +60,6 @@ public class ArticleQueryDslRepositoryImpl implements ArticleQueryDslRepository 
                                 likedArticleIds.contains(id)
                         )
                 ));
-    }
-
-    @Override
-    public List<Long> findArticleIdsByClubId(Long clubId) {
-        return queryFactory.select(article.id)
-                .from(article)
-                .where(article.club.id.eq(clubId))
-                .fetch();
     }
 
     private Map<Long, Integer> createLikeCountMap(List<ArticleLikeProjection> results) {

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentPersistenceAdapter implements CommentWritePort, CommentReadPort  {
+public class CommentPersistenceAdapter implements CommentWritePort, CommentReadPort {
 
     private final JpaCommentRepository repository;
 
@@ -29,8 +29,13 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public void deleteAll(List<Comment> comments) {
-        repository.deleteAll(comments);
+    public void deleteAllByArticleId(Long articleId) {
+        repository.deleteAllByArticleId(articleId);
+    }
+
+    @Override
+    public void deleteAllByArticleIdIn(List<Long> articleIds) {
+        repository.deleteAllByArticleIdIn(articleIds);
     }
 
     /* CommentReadPort */
@@ -40,8 +45,8 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public Optional<Comment> findByIdAndMemberId(Long commentId, Long memberId) {
-        return repository.findByIdAndMemberId(commentId, memberId);
+    public Optional<Comment> findByIdAndArticleId(Long commentId, Long articleId) {
+        return repository.findByIdAndArticleId(commentId, articleId);
     }
 
     @Override
@@ -56,10 +61,5 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
 
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
         return repository.countCommentsByArticleIds(articleIds);
-    }
-
-    @Override
-    public void deleteAllCommentByArticle_IdIn(List<Long> articleIds) {
-        repository.deleteAllCommentByArticle_IdIn(articleIds);
     }
 }

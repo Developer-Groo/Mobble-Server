@@ -13,7 +13,7 @@ class CommentTest {
 //    private final Comment mockComment = CommentTestFixture.createDefaultRootComment();
     private final Member mockMember = MemberTestFixture.createDefaultMember();
     private final Article mockArticle = ArticleTestFixture.createDefaultArticle();
-    private static final String CONTENT = "content";
+    private static final String CONTENT = "body";
 
     @Nested
     @DisplayName("댓글 생성 테스트")
@@ -113,7 +113,7 @@ class CommentTest {
         }
 
         @Test
-        @DisplayName("content 가 null 인 경우 예외 발생")
+        @DisplayName("body 가 null 인 경우 예외 발생")
         void fails_with_null_content() {
             // when & then
 //            assertThatThrownBy(() -> Comment.createRootComment(mockMember, mockArticle, null))

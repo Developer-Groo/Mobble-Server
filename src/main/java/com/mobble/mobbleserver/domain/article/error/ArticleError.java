@@ -1,21 +1,20 @@
-package com.mobble.mobbleserver.application.comment.error;
+package com.mobble.mobbleserver.domain.article.error;
 
 import com.mobble.mobbleserver.shared.error.CommonError;
 import com.mobble.mobbleserver.shared.error.ErrorCategory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum CommentBusinessError implements CommonError {
-    NOT_FOUND("comment not found", ErrorCategory.NOT_FOUND),
-    NO_PERMISSION("do not have permission to access this comment", ErrorCategory.PERMISSION_DENIED),
-    ARTICLE_MISMATCH("comment does not belong to the requested article", ErrorCategory.VALIDATION);
+public enum ArticleError implements CommonError {
+    EMPTY_CONTENT("content must not be empty", ErrorCategory.VALIDATION),
+    CONTENT_TOO_LONG("content length must be less than or equal to 800", ErrorCategory.VALIDATION);;
 
     private final String message;
     private final ErrorCategory category;
 
     @Override
     public String code() {
-        return "COMMENT_BUSINESS" + name();
+        return "ARTICLE." + name();
     }
 
     @Override

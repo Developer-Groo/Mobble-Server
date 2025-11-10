@@ -17,8 +17,8 @@ public record ArticleUpdatedResponseDto(
     public static ArticleUpdatedResponseDto toDto(Article article ){
         return new ArticleUpdatedResponseDto(
                 article.getId(),
-                article.getTitle(),
-                summarize(article.getContent()),
+                article.getContent().getTitle(),
+                summarize(article.getContent().getBody()),
                 article.getArticleType(),
                 article.getClub().getId(),
                 article.getMember().getId(),

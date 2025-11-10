@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.support.fixture.article;
 
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.article.Article;
+import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -17,8 +18,8 @@ public class ArticleTestFixture {
         return Article.createArticle(
                 club,
                 MemberTestFixture.createDefaultMember(),
-                ArticleType.FREE, "title",
-                "content"
+                ArticleType.FREE,
+                ArticleContent.of("title", "body")
         );
     }
 
@@ -26,8 +27,8 @@ public class ArticleTestFixture {
         return Article.createArticle(
                 club,
                 member,
-                ArticleType.FREE, "title",
-                "content"
+                ArticleType.FREE,
+                ArticleContent.of("title", "body")
         );
     }
 }

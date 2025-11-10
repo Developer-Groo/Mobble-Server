@@ -14,7 +14,7 @@ import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCo
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticlePreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class ArticleQueryService implements ArticleQueryPort {
     private final CommentQueryPort commentQueryPort;
 
     @Override
-    public List<ArticleSummaryResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
+    public List<ArticlePreviewResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
         Club club = findClubByClubIdOrThrow(clubId);
         List<Article> articles = articleReadPort.findArticlesByClubId(clubId, articleType);
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
@@ -44,7 +44,7 @@ public class ArticleQueryService implements ArticleQueryPort {
                 .map(article -> {
                     ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), ArticleLikeInfoDto.toDto(0, false));
                     int commentCount = commentCountMap.getOrDefault(article.getId(), 0);
-                    return ArticleSummaryResponseDto.toDto(article, likeInfo, commentCount);
+                    return ArticlePreviewResponseDto.toDto(article, likeInfo, commentCount);
                 })
                 .toList();
     }
