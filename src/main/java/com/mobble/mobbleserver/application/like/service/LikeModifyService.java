@@ -46,7 +46,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     @Override
-    public void deleteLikeAndCounterByTargetId(LikeType likeType, Long targetId) {
+    public void deleteLike(LikeType likeType, Long targetId) {
         if (targetId == null) return;
 
         likeWritePort.deleteByLikeTypeAndTargetId(likeType, targetId);
@@ -54,7 +54,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     @Override
-    public void deleteAllLikeAndCounterByTargetIds(LikeType likeType, List<Long> targetIds) {
+    public void deleteAllLike(LikeType likeType, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return;
 
         // Todo 예외처리

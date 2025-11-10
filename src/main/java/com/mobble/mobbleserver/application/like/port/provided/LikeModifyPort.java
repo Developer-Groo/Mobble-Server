@@ -8,7 +8,7 @@ public interface LikeModifyPort {
 
     void toggleLike(LikeType likeType, Long targetId, Long memberId);
 
-    void deleteLikeAndCounterByTargetId(LikeType likeType, Long targetId);
+    void deleteLike(LikeType likeType, Long targetId);
 
-    void deleteAllLikeAndCounterByTargetIds(LikeType likeType, List<Long> targetIds);
+    void deleteAllLike(LikeType likeType, List<Long> targetIds);
 }
