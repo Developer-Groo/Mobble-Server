@@ -95,8 +95,8 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
 
         List<Long> commentIds = comments.stream()
-                        .map(Comment::getId)
-                                .toList();
+                .map(Comment::getId)
+                .toList();
 
         likeWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
         likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(LikeType.COMMENT, commentIds);
