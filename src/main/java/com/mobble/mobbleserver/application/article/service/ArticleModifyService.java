@@ -8,16 +8,15 @@ import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePo
 import com.mobble.mobbleserver.application.article.port.provided.ArticleUpdatePort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleWritePort;
+import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
-import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
+import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.common.exception.BusinessException;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -32,12 +31,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePort, ArticleDeletePort {
 
+    private final CommentDeletePort commentDeletePort;
+
     private final ArticleWritePort articleWritePort;
-    private final CommentWritePort commentWritePort;
 
     private final ArticleReadPort articleReadPort;
+    private final ClubReadPort clubReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
-    private final CommentReadPort commentReadPort;
 
     @Override
     public Article createArticle(CreateArticleCommand command) {
@@ -72,18 +72,31 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         assertCanDeleteArticle(article, clubMember);
 
-        // Todo: 댓글 삭제 시 댓글의 좋아요는 댓글 도메인에서 지우도록 수정
-        List<Comment> comments = commentReadPort.findCommentsWithRepliesByArticleId(articleId);
-
-        commentWritePort.deleteAll(comments);
+        commentDeletePort.deleteAllComment(clubMember.getId(), article.getId());
 
         // Todo: 아티클 좋아요 데이터 삭제 필요
         articleWritePort.delete(article);
     }
 
-    // Todo: delete All 메서드 필요
+    @Override
+    public void deleteAllArticle(Long clubId) {
+        Club club = assertClubByClubId(clubId);
+
+        List<Long> articleIds = articleReadPort.findIdsByClubId(clubId);
+        if (articleIds.isEmpty()) return;
+
+        commentDeletePort.deleteAllCommentByArticleIds(articleIds);
+
+        // Todo: 아티클 좋아요 데이터 삭제 필요
+        articleWritePort.deleteAllByClubId(club.getId());
+    }
 
     /* ==== Private Helper ==== */
+    private Club assertClubByClubId(Long clubId) {
+        return clubReadPort.findById(clubId)
+                .orElseThrow(); // // Todo: ErrorCode 수정 필요
+    }
+
     private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {
         return articleReadPort.findByIdAndClubId(articleId, clubId)
                 .orElseThrow(() -> new BusinessException(ArticleBusinessError.CLUB_MISMATCH));
