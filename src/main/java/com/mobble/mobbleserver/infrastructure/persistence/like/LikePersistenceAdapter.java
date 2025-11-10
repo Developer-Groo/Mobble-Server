@@ -77,4 +77,22 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
             case COMMENT -> commentLikeRepository.deleteByMemberIdAndCommentId(memberId, targetId);
         }
     }
+
+    @Override
+    public void deleteByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
+        switch (likeType) {
+            case ARTICLE -> articleLikeRepository.deleteByArticleId(targetId);
+            case COMMENT -> commentLikeRepository.deleteByCommentId(targetId);
+            case CLUB -> clubLikeRepository.deleteByClubId(targetId);
+        }
+    }
+
+    @Override
+    public void deleteAllByLikeTypeAndTargetIds(LikeType likeType, List<Long> targetIds) {
+        switch (likeType) {
+            case ARTICLE -> articleLikeRepository.deleteAllByArticleIdIn(targetIds);
+            case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
+            default -> throw new IllegalArgumentException("Not support LikeType: " + likeType.name());
+        }
+    }
 }

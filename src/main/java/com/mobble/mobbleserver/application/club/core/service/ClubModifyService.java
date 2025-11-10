@@ -144,13 +144,9 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
 
-        commentLikeRepository.deleteAllByArticleIds(articleIds);
-        jpaArticleLikeRepository.deleteAllByArticleIdIn(articleIds);
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
 
-        jpaClubLikeRepository.deleteAllByClubId(club.getId());
         ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
-
         clubWritePort.delete(club);
     }
 

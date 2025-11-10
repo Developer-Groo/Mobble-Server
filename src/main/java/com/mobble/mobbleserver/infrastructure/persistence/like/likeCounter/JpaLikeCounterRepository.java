@@ -16,6 +16,11 @@ public interface JpaLikeCounterRepository extends JpaRepository<LikeCounter, Lon
 
     List<LikeCounter> findAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
 
+    void deleteByLikeTypeAndTargetId(LikeType likeType, Long targetId);
+
+    void deleteAllByLikeTypeAndTargetIdIn(LikeType likeType, List<Long> targetIds);
+
+
     /**
      * 증가&감소 반환값: 영향을 받은 행의 개수
      * ex) 실패  -> 0
