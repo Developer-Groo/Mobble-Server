@@ -30,7 +30,7 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     }
 
     @Override
-    public void deleteAllByClubId(Long clubId) {
+    public void deleteAll(Long clubId) {
         repository.deleteAllByClubId(clubId);
     }
 

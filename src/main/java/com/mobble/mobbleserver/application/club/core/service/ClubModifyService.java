@@ -74,6 +74,10 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
+    private final JpaCommentLikeRepository commentLikeRepository;
+    private final JpaArticleLikeRepository jpaArticleLikeRepository;
+    private final JpaClubLikeRepository jpaClubLikeRepository;
+
     @Override
     public ClubResponseDto createClub(Long memberId, ClubRequestDto dto) {
         ClubCategory category = findCategoryOrThrow(dto.category());
@@ -140,8 +144,8 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
 
-        commentReadPort.deleteAllCommentByArticle_IdIn(articleIds);
         clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
+
         ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
         clubWritePort.delete(club);
     }

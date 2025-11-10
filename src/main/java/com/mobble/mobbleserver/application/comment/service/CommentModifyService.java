@@ -13,10 +13,12 @@ import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePo
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
 import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.comment.CommentContent;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -32,6 +34,7 @@ import java.util.List;
 public class CommentModifyService implements CommentCreatePort, CommentUpdatePort, CommentDeletePort {
 
     private final CommentWritePort commentWritePort;
+    private final LikeModifyPort likeModifyPort;
 
     private final CommentReadPort commentReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
@@ -63,7 +66,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     }
 
     @Override
-    public Comment updateComment(UpdateCommentCommand command) {
+    public Comment update(UpdateCommentCommand command) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         Member member = clubMember.getMember();
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), command.clubId());
@@ -77,30 +80,38 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
     }
 
     @Override
-    public void deleteComment(Long memberId, Long clubId, Long articleId, Long commentId) {
+    public void delete(Long memberId, Long clubId, Long articleId, Long commentId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
         Comment comment = assertCommentByCommentIdAndArticleId(commentId, article.getId());
 
         assertCanDeleteComment(clubMember, comment);
 
-        // Todo: 댓글 단건 좋아요 데이터 삭제 필요
+        likeModifyPort.delete(LikeType.COMMENT, comment.getId());
         commentWritePort.delete(comment);
     }
 
     @Override
-    public void deleteAllComment(Long clubId, Long articleId) {
+    public void deleteAll(Long clubId, Long articleId) {
         Article article = assertArticleByArticleIdAndClubId(articleId, clubId);
+        List<Long> commentIds = commentReadPort.findIdsByArticleId(article.getId());
 
-        // Todo: 댓글 다건 좋아요 데이터 삭제 필요
+        if (commentIds.isEmpty()) return;
+
+        likeModifyPort.deleteAll(LikeType.COMMENT, commentIds);
         commentWritePort.deleteAllByArticleId(article.getId());
     }
 
     @Override
-    public void deleteAllCommentByArticleIds(List<Long> articleIds) {
+    public void deleteAll(List<Long> articleIds) {
         if (articleIds == null || articleIds.isEmpty()) return;
 
-        // Todo: 댓글 다건 좋아요 데이터 삭제 필요
+        List<Long> commentIds = commentReadPort.findIdsByArticleIdIn(articleIds);
+
+        if (!commentIds.isEmpty()) {
+            likeModifyPort.deleteAll(LikeType.COMMENT, commentIds);
+        }
+
         commentWritePort.deleteAllByArticleIdIn(articleIds);
     }
 

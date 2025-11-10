@@ -8,5 +8,5 @@ public interface ArticleWritePort {
 
     void delete(Article article);
 
-    void deleteAllByClubId(Long clubId);
+    void deleteAll(Long clubId);
 }

@@ -5,5 +5,5 @@ import com.mobble.mobbleserver.domain.article.Article;
 
 public interface ArticleUpdatePort {
 
-    Article updateArticle(UpdateArticleCommand command);
+    Article update(UpdateArticleCommand command);
 }

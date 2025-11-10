@@ -42,7 +42,7 @@ public class ArticleAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         CreateArticleCommand command = CreateArticleCommand.create(memberId, clubId, dto.articleType(), dto.title(), dto.content());
-        Article article = articleCreatePort.createArticle(command);
+        Article article = articleCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ArticleResponseDto.toDto(article));
@@ -78,7 +78,7 @@ public class ArticleAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         UpdateArticleCommand command = UpdateArticleCommand.create(memberId, clubId, articleId, dto.title(), dto.content());
-        Article article = articleUpdatePort.updateArticle(command);
+        Article article = articleUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ArticleUpdatedResponseDto.toDto(article));
@@ -90,7 +90,7 @@ public class ArticleAPI {
             @PathVariable("article-id") @Positive Long articleId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        articleDeletePort.deleteArticle(clubId, articleId, memberId);
+        articleDeletePort.delete(clubId, articleId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

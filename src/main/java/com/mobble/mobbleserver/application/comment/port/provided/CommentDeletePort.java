@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface CommentDeletePort {
 
-    void deleteComment(Long memberId, Long clubId, Long articleId, Long commentId);
+    void delete(Long memberId, Long clubId, Long articleId, Long commentId);
 
-    void deleteAllComment(Long clubId, Long articleId);
+    void deleteAll(Long clubId, Long articleId);
 
-    void deleteAllCommentByArticleIds(List<Long> articleIds);
+    void deleteAll(List<Long> articleIds);
 }
