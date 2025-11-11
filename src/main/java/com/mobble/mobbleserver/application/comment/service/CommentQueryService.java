@@ -38,8 +38,11 @@ public class CommentQueryService implements CommentQueryPort {
                 .toList();
     }
 
+    @Override
+    public Map<Long, Integer> getCountComments(List<Long> articleIds) {
+        if (articleIds == null || articleIds.isEmpty()) return Map.of();
 
-        return commentReadPort.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
+        return commentReadPort.countCommentsByArticleIds(articleIds);
     }
 
     /* ==== Private Helper ==== */
