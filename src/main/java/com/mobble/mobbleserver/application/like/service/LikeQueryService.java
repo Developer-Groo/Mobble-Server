@@ -1,9 +1,5 @@
 package com.mobble.mobbleserver.application.like.service;
 
-import com.mobble.mobbleserver.application.like.command.LikeCountMapResult;
-import com.mobble.mobbleserver.application.like.command.LikeCountResult;
-import com.mobble.mobbleserver.application.like.command.MemberLikedTargetsResult;
-import com.mobble.mobbleserver.application.like.command.TargetLikedMembersResult;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
@@ -17,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,61 +29,45 @@ public class LikeQueryService implements LikeQueryPort {
     private final MemberReadPort memberReadPort;
 
     @Override
-    public TargetLikedMembersResult findMemberIdsByTargetId(LikeType likeType, Long targetId) {
+    public List<Long> getLikedMemberIds(LikeType likeType, Long targetId) {
         List<Long> likedMemberIds = likeReadPort.findLikedMemberListByTargetId(likeType, targetId);
 
-        if (likedMemberIds.isEmpty()) {
-            return TargetLikedMembersResult.toDto(targetId, List.of());
-        }
+        if (likedMemberIds.isEmpty()) return Collections.emptyList();
 
-        return TargetLikedMembersResult.toDto(targetId, likedMemberIds);
+        return likedMemberIds;
     }
 
     @Override
-    public MemberLikedTargetsResult findLikedTargetIdsByMemberId(LikeType likeType, Long memberId, List<Long> targetIds) {
-        if (targetIds == null || targetIds.isEmpty()) {
-            return MemberLikedTargetsResult.toDto(likeType, memberId, List.of());
-        }
+    public List<Long> getLikedIds(LikeType likeType, Long memberId, List<Long> targetIds) {
+        if (targetIds == null || targetIds.isEmpty()) return Collections.emptyList();
 
         Member member = findMemberByMemberIdOrThrow(memberId);
 
-        List<Long> isLikedListByMember = likeReadPort.findLikedTargetIdListByMemberId(likeType, member.getId(), targetIds);
-
-        return MemberLikedTargetsResult.toDto(likeType, member.getId(), isLikedListByMember);
-    }
-
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
-        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+        return likeReadPort.findLikedTargetIdListByMemberId(likeType, member.getId(), targetIds);
     }
 
     @Override
-    public LikeCountResult findLikeCountByTargetId(LikeType likeType, Long targetId) {
+    public Long getLikeCount(LikeType likeType, Long targetId) {
         return likeCounterReadPort.findByLikeTypeAndTargetId(likeType, targetId)
-                .map(counter -> LikeCountResult.toDto(
-                        likeType,
-                        counter.getTargetId(),
-                        counter.getCount()
-                ))
-                .orElseGet(() -> LikeCountResult.toDto(likeType, targetId, 0L));
+                .map(LikeCounter::getCount)
+                .orElse(0L);
     }
 
     @Override
-    public LikeCountMapResult findLikeCountsByTargetIds(LikeType likeType, List<Long> targetIds) {
+    public Map<Long, Long> getLikeCounts(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
         Map<Long, Long> counterMap = toCounterMap(counters);
 
-        Map<Long, Long> countsByTargetId = targetIds.stream()
+        return targetIds.stream()
                 .distinct()
                 .collect(Collectors.toMap(
                         Function.identity(),
                         id -> counterMap.getOrDefault(id, 0L)
                 ));
-
-        return LikeCountMapResult.toDto(likeType, countsByTargetId);
     }
 
+    /* ==== Private Helper ==== */
     private Map<Long, Long> toCounterMap(List<LikeCounter> counters) {
         return counters.stream()
                 .collect(Collectors.toMap(
@@ -94,5 +75,10 @@ public class LikeQueryService implements LikeQueryPort {
                         LikeCounter::getCount,
                         (a, b) -> b
                 ));
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 }
