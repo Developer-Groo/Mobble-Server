@@ -19,7 +19,5 @@ public interface CommentReadPort {
 
     List<Long> findIdsByArticleIdIn(List<Long> articleIds);
 
-    Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> ids, Long memberId);
-
     Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds);
 }

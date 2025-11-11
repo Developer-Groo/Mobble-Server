@@ -38,14 +38,6 @@ public class CommentQueryService implements CommentQueryPort {
                 .toList();
     }
 
-    private Map<Long, CommentLikeInfoDto> getCommentLikeInfo(List<Comment> comments, Long memberId) {
-        List<Long> commentIds = comments.stream()
-                .flatMap(comment -> Stream.concat(
-                        Stream.of(comment.getId()),
-                        comment.getChildren().stream().map(Comment::getId)
-                ))
-                .distinct()
-                .toList();
 
         return commentReadPort.findLikeInfoByCommentIdsAndMemberId(commentIds, memberId);
     }
