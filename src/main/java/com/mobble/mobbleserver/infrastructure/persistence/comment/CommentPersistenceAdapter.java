@@ -65,10 +65,6 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> ids, Long memberId) {
-        return repository.findLikeInfoByCommentIdsAndMemberId(ids, memberId);
-    }
-
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
         return repository.countCommentsByArticleIds(articleIds);
     }
