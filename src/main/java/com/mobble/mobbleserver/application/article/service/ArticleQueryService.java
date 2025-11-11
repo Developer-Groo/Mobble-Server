@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArticleQueryService implements ArticleQueryPort {
 
     private final ArticleReadPort articleReadPort;
@@ -69,7 +69,7 @@ public class ArticleQueryService implements ArticleQueryPort {
     private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
         Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
         ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
-        List<RootCommentResult> comments = commentQueryPort.getCommentListByArticle(article.getId(), memberId);
+        List<RootCommentResult> comments = commentQueryPort.getCommentList(article.getId(), memberId);
         int commentCount = comments.size();
 
         boolean isMine = articleReadPort.existsArticleByIdAndMemberId(article.getId(), memberId);
