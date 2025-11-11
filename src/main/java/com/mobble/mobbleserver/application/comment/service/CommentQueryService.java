@@ -45,6 +45,6 @@ public class CommentQueryService implements CommentQueryPort {
     /* ==== Private Helper ==== */
     private Article assertArticleByArticleId(Long articleId) {
         return articleReadPort.findById(articleId)
-                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ArticleBusinessError.NOT_FOUND));
     }
 }
