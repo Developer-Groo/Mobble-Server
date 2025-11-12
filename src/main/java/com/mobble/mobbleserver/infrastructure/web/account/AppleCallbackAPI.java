@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.controller.dev;
+package com.mobble.mobbleserver.infrastructure.web.account;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/apple")
-public class AppleCallbackController {
+public class AppleCallbackAPI {
 
     @PostMapping("/callback")
     public ResponseEntity<String> appleCallback(

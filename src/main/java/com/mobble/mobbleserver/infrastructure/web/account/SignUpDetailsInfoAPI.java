@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.controller;
+package com.mobble.mobbleserver.infrastructure.web.account;
 
 import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.account.auth.dto.response.SignUpDetailsInfoResponseDto;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class SignUpDetailsInfoController {
+public class SignUpDetailsInfoAPI {
 
     private final SignUpDetailsInfoService signUpDetailsInfoService;
 
