@@ -123,24 +123,4 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
     }
-
-//    private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
-//        Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
-//        ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
-//        List<RootCommentResult> comments = commentQueryPort.getCommentListByArticle(article.getId(), memberId);
-//        int commentCount = comments.size();
-//
-//        boolean isMine = articleReadPort.existsArticleByIdAndMemberId(article.getId(), memberId);
-//
-//        return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
-//    }
-
-//    private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
-//        List<Long> articleIds = articles.stream()
-//                .map(Article::getId)
-//                .distinct()
-//                .toList();
-//
-//        return articleReadPort.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
-//    }
 }
