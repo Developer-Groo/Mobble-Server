@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class LikeModifyService implements LikeModifyPort {
 
     private final LikeWritePort likeWritePort;
@@ -46,7 +46,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     @Override
-    public void deleteLike(LikeType likeType, Long targetId) {
+    public void delete(LikeType likeType, Long targetId) {
         if (targetId == null) return;
 
         likeWritePort.deleteByLikeTypeAndTargetId(likeType, targetId);
@@ -54,10 +54,9 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     @Override
-    public void deleteAllLike(LikeType likeType, List<Long> targetIds) {
+    public void deleteAll(LikeType likeType, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return;
 
-        // Todo 예외처리
         if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능");
 
         List<Long> distinctIds = targetIds.stream()

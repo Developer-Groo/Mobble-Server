@@ -1,13 +1,17 @@
 package com.mobble.mobbleserver.infrastructure.web.article;
 
+import com.mobble.mobbleserver.application.article.command.request.CreateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleCreatePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleUpdatePort;
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleCreateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleUpdateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleSummaryResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticlePreviewResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -23,6 +27,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/clubs/{club-id}/articles")
 public class ArticleAPI {
 
     private final ArticleCreatePort articleCreatePort;
@@ -30,28 +35,34 @@ public class ArticleAPI {
     private final ArticleUpdatePort articleUpdatePort;
     private final ArticleDeletePort articleDeletePort;
 
-    @PostMapping("/clubs/{club-id}/articles")
+    @PostMapping
     public ResponseEntity<ArticleResponseDto> createArticle(
             @PathVariable("club-id") @Positive Long clubId,
-            @RequestBody @Valid ArticleRequestDto dto,
+            @RequestBody @Valid ArticleCreateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        CreateArticleCommand command = CreateArticleCommand.create(memberId, clubId, dto.articleType(), dto.title(), dto.content());
+        Article article = articleCreatePort.create(command);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(articleCreatePort.createArticle(memberId, clubId, dto));
+                .body(ArticleResponseDto.toDto(article));
     }
 
-    @GetMapping("/clubs/{club-id}/articles")
-    public ResponseEntity<List<ArticleSummaryResponseDto>> findArticlesByClubId(
+    @GetMapping
+    public ResponseEntity<List<ArticlePreviewResponseDto>> findArticlesPreview(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestParam(value = "articleType", required = false) ArticleType articleType,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        List<ArticlePreviewResponseDto> articlesByClubId = articleQueryPort.findArticlesByClubId(clubId, articleType, memberId);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleQueryPort.findArticlesByClubId(clubId, articleType, memberId));
     }
 
-    @GetMapping("/articles/{article-id}")
-    public ResponseEntity<ArticleResponseDto> findArticle(
+    @GetMapping("/{article-id}")
+    public ResponseEntity<ArticleResponseDto> findArticleDetail(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
@@ -59,22 +70,27 @@ public class ArticleAPI {
                 .body(articleQueryPort.findArticleById(articleId, memberId));
     }
 
-    @PatchMapping("/articles/{article-id}")
+    @PatchMapping("/{article-id}")
     public ResponseEntity<ArticleUpdatedResponseDto> updateArticle(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
-            @RequestBody @Valid ArticleRequestDto dto,
+            @RequestBody @Valid ArticleUpdateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        UpdateArticleCommand command = UpdateArticleCommand.create(memberId, clubId, articleId, dto.title(), dto.content());
+        Article article = articleUpdatePort.update(command);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleUpdatePort.updateArticle(articleId, memberId, dto));
+                .body(ArticleUpdatedResponseDto.toDto(article));
     }
 
-    @DeleteMapping("/articles/{article-id}")
+    @DeleteMapping("/{article-id}")
     public ResponseEntity<Void> deleteArticle(
+            @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        articleDeletePort.deleteArticle(articleId, memberId);
+        articleDeletePort.delete(clubId, articleId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();

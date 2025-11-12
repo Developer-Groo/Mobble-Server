@@ -62,14 +62,6 @@ public class ArticleQueryDslRepositoryImpl implements ArticleQueryDslRepository 
                 ));
     }
 
-    @Override
-    public List<Long> findArticleIdsByClubId(Long clubId) {
-        return queryFactory.select(article.id)
-                .from(article)
-                .where(article.club.id.eq(clubId))
-                .fetch();
-    }
-
     private Map<Long, Integer> createLikeCountMap(List<ArticleLikeProjection> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(

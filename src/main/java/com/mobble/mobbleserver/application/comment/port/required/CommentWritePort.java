@@ -10,5 +10,7 @@ public interface CommentWritePort {
 
     void delete(Comment comment);
 
-    void deleteAll(List<Comment> comments);
+    void deleteAllByArticleId(Long articleId);
+
+    void deleteAllByArticleIdIn(List<Long> articleIds);
 }

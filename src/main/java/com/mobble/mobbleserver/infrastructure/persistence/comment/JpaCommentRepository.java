@@ -8,7 +8,13 @@ import java.util.Optional;
 
 public interface JpaCommentRepository extends JpaRepository<Comment, Long>, CommentQueryDslRepository {
 
-    Optional<Comment> findByIdAndMemberId(Long commentId, Long memberId);
+    Optional<Comment> findByIdAndArticleId(Long commentId, Long articleId);
 
-    void deleteAllCommentByArticle_IdIn(List<Long> articleIds);
+    List<Long> findIdsByArticleId(Long articleId);
+
+    List<Long> findIdsByArticleIdIn(List<Long> articleIds);
+
+    void deleteAllByArticleId(Long articleId);
+
+    void deleteAllByArticleIdIn(List<Long> articleIds);
 }

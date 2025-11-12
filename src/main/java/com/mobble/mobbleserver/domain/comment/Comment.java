@@ -39,7 +39,7 @@ public class Comment extends BaseEntity {
     private Comment parent;
 
     @Embedded
-    private CommentBody body;
+    private CommentContent content;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
@@ -49,29 +49,29 @@ public class Comment extends BaseEntity {
             Article article,
             Member member,
             Comment parent,
-            CommentBody body
+            CommentContent content
     ) {
         this.article = article;
         this.member = member;
         this.parent = parent;
-        this.body = body;
+        this.content = content;
     }
 
-    public static Comment createRootComment(Member member, Article article, CommentBody body) {
+    public static Comment createRootComment(Member member, Article article, CommentContent body) {
         assertRoot(member, article);
 
         return Comment.builder()
                 .member(member)
                 .article(article)
                 .parent(null)
-                .body(body)
+                .content(body)
                 .build();
     }
 
     public static Comment createReplyComment(
             Member member,
             Comment parent,
-            CommentBody body
+            CommentContent body
     ) {
         assertReply(member, parent);
 
@@ -79,7 +79,7 @@ public class Comment extends BaseEntity {
                 .member(member)
                 .article(parent.article)
                 .parent(parent)
-                .body(body)
+                .content(body)
                 .build();
 
         parent.addChild(child);
@@ -87,8 +87,10 @@ public class Comment extends BaseEntity {
         return child;
     }
 
-    public Comment updateContent(CommentBody body) {
-        this.body = body;
+    public Comment updateContent(CommentContent content) {
+        requireNonNull(content, "content must not be null");
+
+        this.content = content;
 
         return this;
     }
@@ -97,7 +99,15 @@ public class Comment extends BaseEntity {
         return this.parent != null;
     }
 
+    public boolean isOwner(Long memberId) {
+        requireNonNull(member, "member must not be null");
+
+        return this.member.getId().equals(memberId);
+    }
+
     private void addChild(Comment child) {
+        requireNonNull(child, "child must not be null");
+
         child.parent = this;
         this.children.add(child);
     }

@@ -2,18 +2,17 @@ package com.mobble.mobbleserver.infrastructure.persistence.article;
 
 import com.mobble.mobbleserver.domain.article.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface JpaArticleRepository extends JpaRepository<Article, Long>, ArticleQueryDslRepository {
 
-    Optional<Article> findArticleByIdAndMemberId(Long articleId, Long memberId);
+    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
+
+    List<Long> findIdsByClubId(Long clubId);
 
     boolean existsArticleByIdAndMemberId(Long articleId, Long memberId);
 
-    @Modifying
-    void deleteAllArticleByClub_Id(Long clubId);
-
-    Optional<Article> findByIdAndClubId(Long articleId, Long clubId);
+    void deleteAllByClubId(Long clubId);
 }

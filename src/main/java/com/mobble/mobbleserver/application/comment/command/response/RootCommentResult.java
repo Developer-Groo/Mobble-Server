@@ -28,7 +28,7 @@ public record RootCommentResult(
                 comment.getMember().getId(),
                 comment.getArticle().getId(),
                 comment.getMember().getName(),
-                comment.getBody().getContent(),
+                comment.getContent().getBody(),
                 info.likeCount(),
                 info.isLiked(),
                 comment.getCreatedAt(),

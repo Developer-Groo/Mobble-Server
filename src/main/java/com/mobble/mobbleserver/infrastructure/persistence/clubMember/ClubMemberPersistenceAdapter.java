@@ -28,8 +28,8 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public Optional<ClubMember> findClubMemberByMemberIdAndClubId(Long memberId, Long clubId) {
-        return repository.findClubMemberByMemberIdAndClubId(memberId, clubId);
+    public Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
+        return repository.findClubMemberByClubIdAndMemberId(clubId, memberId);
     }
 
     @Override

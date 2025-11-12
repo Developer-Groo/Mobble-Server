@@ -13,7 +13,6 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCo
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
-import com.mobble.mobbleserver.refactor.club.policy.ClubPermissionPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +28,11 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     @Override
     public Meeting createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
-        ClubMember hostMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(hostMember);
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
 
-        Meeting meeting = dto.toEntity(hostMember);
+        assertCanManageMeeting(clubMember);
+
+        Meeting meeting = dto.toEntity(clubMember);
 
         return meetingWritePort.save(meeting);
     }
@@ -40,7 +40,9 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public Meeting updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(clubMember);
+
+        assertCanManageMeeting(clubMember);
+
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
         return meeting.updateMeeting(
@@ -56,7 +58,9 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
         ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-        ClubPermissionPolicy.validateLeaderOrManagerOrThrow(clubMember);
+
+        assertCanManageMeeting(clubMember);
+
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
         meetingWritePort.delete(meeting);
@@ -68,7 +72,11 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     }
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByMemberIdAndClubId(clubId, memberId)
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+    }
+
+    private void assertCanManageMeeting(ClubMember clubMember) {
+        if (!clubMember.canManage()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
 }

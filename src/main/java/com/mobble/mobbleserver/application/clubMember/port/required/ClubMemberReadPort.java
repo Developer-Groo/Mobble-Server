@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ClubMemberReadPort {
 
-    Optional<ClubMember> findClubMemberByMemberIdAndClubId(Long memberId, Long clubId);
+    Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId);
 
     long countByClubIdAndJoinStatus(Long id, JoinStatus joinStatus);
 
