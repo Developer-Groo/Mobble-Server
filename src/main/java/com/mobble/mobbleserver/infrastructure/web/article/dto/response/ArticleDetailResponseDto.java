@@ -7,7 +7,7 @@ import com.mobble.mobbleserver.domain.article.ArticleType;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult.*;
+import static com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult.ArticleLikedMembers;
 
 public record ArticleDetailResponseDto(
         Long clubId,
