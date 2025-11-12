@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.account;
 
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SignUpDetailsInfoResponseDto;
-import com.mobble.mobbleserver.account.auth.service.SignUpDetailsInfoService;
+import com.mobble.mobbleserver.application.account.service.SignUpDetailsInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

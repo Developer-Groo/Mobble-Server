@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.service;
+package com.mobble.mobbleserver.application.account.service;
 
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SocialLoginResponseDto;

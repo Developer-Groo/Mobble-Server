@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.account;
 
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SocialLoginResponseDto;
-import com.mobble.mobbleserver.account.auth.service.SocialLoginService;
+import com.mobble.mobbleserver.application.account.service.SocialLoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
