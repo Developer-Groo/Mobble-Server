@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.auth.service;
 
-import com.mobble.mobbleserver.account.auth.dto.request.SignUpRequestDto;
-import com.mobble.mobbleserver.account.auth.dto.response.SignUpDetailsInfoResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SignUpRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SignUpDetailsInfoResponseDto;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
 import com.mobble.mobbleserver.application.ground.required.GroundReadPort;

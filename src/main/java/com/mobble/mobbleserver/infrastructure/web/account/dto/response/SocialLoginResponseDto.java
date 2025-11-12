@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.dto.response;
+package com.mobble.mobbleserver.infrastructure.web.account.dto.response;
 
 public record SocialLoginResponseDto(String jwtToken, boolean isNewMember) {
 

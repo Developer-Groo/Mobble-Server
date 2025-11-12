@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.auth.service;
 
-import com.mobble.mobbleserver.account.auth.dto.request.SocialLoginRequestDto;
-import com.mobble.mobbleserver.account.auth.dto.response.SocialLoginResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SocialLoginResponseDto;
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory;
