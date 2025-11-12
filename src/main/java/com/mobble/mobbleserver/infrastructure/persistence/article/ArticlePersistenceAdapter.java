@@ -4,12 +4,10 @@ import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort
 import com.mobble.mobbleserver.application.article.port.required.ArticleWritePort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
-import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -41,27 +39,22 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     }
 
     @Override
-    public List<Long> findIdsByClubId(Long clubId) {
-        return repository.findIdsByClubId(clubId);
-    }
-
-    @Override
     public Optional<Article> findByIdAndClubId(Long articleId, Long clubId) {
         return repository.findByIdAndClubId(articleId, clubId);
     }
 
     @Override
-    public boolean existsArticleByIdAndMemberId(Long articleId, Long memberId) {
-        return repository.existsArticleByIdAndMemberId(articleId, memberId);
+    public List<Article> findByClubId(Long clubId) {
+        return repository.findByClubId(clubId);
     }
 
     @Override
-    public List<Article> findArticlesByClubId(Long clubId, ArticleType articleType) {
-        return repository.findArticlesByClubId(clubId, articleType);
+    public List<Article> findByClubIdAndArticleType(Long clubId, ArticleType articleType) {
+        return repository.findByClubIdAndArticleType(clubId, articleType);
     }
 
     @Override
-    public Map<Long, ArticleLikeInfoDto> findLikeInfoByArticleIdsAndMemberId(List<Long> articleIds, Long memberId) {
-        return repository.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
+    public List<Long> findIdsByClubId(Long clubId) {
+        return repository.findIdsByClubId(clubId);
     }
 }
