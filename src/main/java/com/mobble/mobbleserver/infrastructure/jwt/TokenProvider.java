@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.jwt;
+package com.mobble.mobbleserver.infrastructure.jwt;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;

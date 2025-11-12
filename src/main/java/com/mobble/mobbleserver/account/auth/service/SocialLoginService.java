@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
-import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.infrastructure.jwt.TokenProvider;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.Member;

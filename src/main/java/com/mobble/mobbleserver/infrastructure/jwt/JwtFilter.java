@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.account.jwt;
+package com.mobble.mobbleserver.infrastructure.jwt;
 
-import com.mobble.mobbleserver.account.auth.principal.AuthMember;
+import com.mobble.mobbleserver.infrastructure.jwt.principal.AuthMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

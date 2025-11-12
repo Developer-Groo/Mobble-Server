@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.clubMember.service;
 
-import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.infrastructure.jwt.TokenProvider;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberCreatePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberDeletePort;
