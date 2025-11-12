@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.oauth.service;
+package com.mobble.mobbleserver.application.account.command;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

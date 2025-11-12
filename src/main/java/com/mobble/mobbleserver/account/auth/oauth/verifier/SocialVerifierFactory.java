@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.AppleTokenVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.GoogleTokenVerifier;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.provider.KakaoTokenVerifier;

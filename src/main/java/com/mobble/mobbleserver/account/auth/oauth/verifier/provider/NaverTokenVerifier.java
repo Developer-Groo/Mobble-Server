@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.account.auth.oauth.verifier.provider;
 
 import com.mobble.mobbleserver.account.auth.oauth.dto.response.NaverUserInfoResponse;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.AbstractSocialTokenVerifier;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 

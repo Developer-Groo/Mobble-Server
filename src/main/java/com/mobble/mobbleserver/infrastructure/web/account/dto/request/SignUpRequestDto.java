@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.account.dto.request;
 
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;

@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.account.dto.response;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 
 public record SignUpDetailsInfoResponseDto(
         String email,

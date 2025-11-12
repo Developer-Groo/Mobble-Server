@@ -6,7 +6,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mobble.mobbleserver.account.auth.oauth.dto.response.AppleUserInfoResponse;
 import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import lombok.RequiredArgsConstructor;

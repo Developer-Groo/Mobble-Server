@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.account.auth.oauth.verifier;
 
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 
 public interface SocialVerifier {
 
