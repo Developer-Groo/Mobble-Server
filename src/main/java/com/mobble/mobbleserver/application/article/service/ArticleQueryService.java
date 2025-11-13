@@ -56,7 +56,6 @@ public class ArticleQueryService implements ArticleQueryPort {
         List<Long> likedIds = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), articleIds);
         Map<Long, Integer> commentCounts = commentQueryPort.getCountComments(articleIds);
 
-        // Todo: isOwner 필요
         return ArticlePreviewResult.create(articles, likeCounts, likedIds, commentCounts);
     }
 
@@ -70,10 +69,17 @@ public class ArticleQueryService implements ArticleQueryPort {
         Long likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
         List<Member> likedMembers = isLikedMembers(article.getId());
 
+        boolean isLiked = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), List.of(article.getId()))
+                .contains(article.getId());
+
+        boolean isOwner = article.isOwner(member.getId());
+
+        int commentCount = commentQueryPort.getCountComments(List.of(article.getId()))
+                .getOrDefault(article.getId(), 0);
+
         List<RootCommentResult> commentList = commentQueryPort.getCommentList(article.getId(), member.getId());
 
-        // Todo: isOwner, isLiked, Comment Count 필요
-        return ArticleDetailResult.create(article, likeCount, likedMembers, commentList);
+        return ArticleDetailResult.create(article, likeCount, likedMembers, isLiked, isOwner, commentCount, commentList);
     }
 
     /* ==== Private Helper ==== */
