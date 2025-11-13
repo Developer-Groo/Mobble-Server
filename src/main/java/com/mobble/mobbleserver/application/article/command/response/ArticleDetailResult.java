@@ -15,19 +15,24 @@ public record ArticleDetailResult(
         String title,
         String body,
         String ownerName,
+        boolean isOwner,
+        boolean isLiked,
         Long likeCount,
         List<ArticleLikedMembers> likedMembers,
+        int commentCount,
         List<RootCommentResult> commentList,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
         // todo: Owner 의 프로필 이미지 데이터 추가
-        // todo: isOwner, isLiked, Comment Count 고려
 ) {
 
     public static ArticleDetailResult create(
             Article article,
             Long likeCount,
             List<Member> likedMembers,
+            boolean isLiked,
+            boolean isOwner,
+            int commentCount,
             List<RootCommentResult> commentList
     ) {
         return new ArticleDetailResult(
@@ -37,10 +42,13 @@ public record ArticleDetailResult(
                 article.getContent().getTitle(),
                 article.getContent().getBody(),
                 article.getMember().getName(),
+                isOwner,
+                isLiked,
                 likeCount,
                 likedMembers.stream()
                         .map(ArticleLikedMembers::create)
                         .toList(),
+                commentCount,
                 commentList,
                 article.getCreatedAt(),
                 article.getUpdatedAt()

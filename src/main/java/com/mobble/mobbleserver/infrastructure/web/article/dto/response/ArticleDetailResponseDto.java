@@ -16,13 +16,15 @@ public record ArticleDetailResponseDto(
         String title,
         String body,
         String ownerName,
+        boolean isOwner,
+        boolean isLiked,
         Long likeCount,
         List<ArticleLikedMembers> likedMembers,
+        int commentCount,
         List<RootCommentResult> commentList,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
         // todo: Owner 의 프로필 이미지 데이터 추가
-        // todo: isOwner, isLiked, Comment Count 고려
 ) {
 
     public static ArticleDetailResponseDto create(ArticleDetailResult result) {
@@ -33,8 +35,11 @@ public record ArticleDetailResponseDto(
                 result.title(),
                 result.body(),
                 result.ownerName(),
+                result.isOwner(),
+                result.isLiked(),
                 result.likeCount(),
                 result.likedMembers(),
+                result.commentCount(),
                 result.commentList(),
                 result.createdAt(),
                 result.updatedAt()
