@@ -1,71 +1,33 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
-import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record ArticleResponseDto(
+        Long clubId,
         Long articleId,
+        ArticleType articleType,
         String title,
         String body,
-        ArticleType articleType,
-        Long clubId,
-        Long memberId,
-        String memberName,
-        // todo: 글작성 회원 프로필 사진 추가
-        int likeCount,
-        boolean isLiked,
-        boolean isMine,
-        int commentCount,
-        List<RootCommentResult> comments,
+        Long ownerId,
+        String ownerName,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
+        // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
-    public static ArticleResponseDto toDto(Article article) {
+
+    public static ArticleResponseDto create(Article article) {
 
         return new ArticleResponseDto(
+                article.getClub().getId(),
                 article.getId(),
+                article.getArticleType(),
                 article.getContent().getTitle(),
                 article.getContent().getBody(),
-                article.getArticleType(),
-                article.getClub().getId(),
                 article.getMember().getId(),
                 article.getMember().getName(),
-                0,
-                false,
-                false,
-                0,
-                List.of(),
-                article.getCreatedAt(),
-                article.getUpdatedAt()
-        );
-    }
-
-    public static ArticleResponseDto toDto(
-            Article article,
-            boolean isMine,
-            ArticleLikeInfoDto likeInfo,
-            int commentCount,
-            List<RootCommentResult> comments
-    ) {
-
-        return new ArticleResponseDto(
-                article.getId(),
-                article.getContent().getTitle(),
-                article.getContent().getBody(),
-                article.getArticleType(),
-                article.getClub().getId(),
-                article.getMember().getId(),
-                article.getMember().getName(),
-                likeInfo.likeCount(),
-                likeInfo.isLiked(),
-                isMine,
-                commentCount,
-                comments,
                 article.getCreatedAt(),
                 article.getUpdatedAt()
         );

@@ -3,7 +3,6 @@ package com.mobble.mobbleserver.infrastructure.persistence.comment;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.CommentLikeInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -50,8 +49,8 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public List<Comment> findCommentsWithRepliesByArticleId(Long articleId) {
-        return repository.findCommentsWithRepliesByArticleId(articleId);
+    public List<Comment> findCommentsByArticleId(Long articleId) {
+        return repository.findByArticleIdAndParentIdIsNullOrderByCreatedAtAsc(articleId);
     }
 
     @Override
@@ -65,10 +64,6 @@ public class CommentPersistenceAdapter implements CommentWritePort, CommentReadP
     }
 
     @Override
-    public Map<Long, CommentLikeInfoDto> findLikeInfoByCommentIdsAndMemberId(List<Long> ids, Long memberId) {
-        return repository.findLikeInfoByCommentIdsAndMemberId(ids, memberId);
-    }
-
     public Map<Long, Integer> countCommentsByArticleIds(List<Long> articleIds) {
         return repository.countCommentsByArticleIds(articleIds);
     }

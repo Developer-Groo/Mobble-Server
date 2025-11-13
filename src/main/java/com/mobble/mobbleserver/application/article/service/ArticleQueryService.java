@@ -1,97 +1,110 @@
 package com.mobble.mobbleserver.application.article.service;
 
+import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
-import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
-import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
+import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.like.LikeType;
+import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
-import com.mobble.mobbleserver.infrastructure.persistence.article.projection.ArticleLikeInfoDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticlePreviewResponseDto;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArticleQueryService implements ArticleQueryPort {
 
-    private final ArticleReadPort articleReadPort;
-    private final ClubReadPort clubReadPort;
-    private final CommentReadPort commentReadPort;
-
     private final CommentQueryPort commentQueryPort;
+    private final LikeQueryPort likeQueryPort;
+
+    private final ClubMemberReadPort clubMemberReadPort;
+    private final MemberReadPort memberReadPort;
+    private final ArticleReadPort articleReadPort;
 
     @Override
-    public List<ArticlePreviewResponseDto> findArticlesByClubId(Long clubId, ArticleType articleType, Long memberId) {
-        Club club = findClubByClubIdOrThrow(clubId);
-        List<Article> articles = articleReadPort.findArticlesByClubId(clubId, articleType);
-        Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(articles, memberId);
-        Map<Long, Integer> commentCountMap = getArticleCommentCount(articles);
+    public List<ArticlePreviewResult> getArticlesPreview(Long clubId, Long memberId, ArticleType articleType) {
+        ClubMember clubMember = assertMemberByClubIdAndMemberId(clubId, memberId);
+        Club club = clubMember.getClub();
+        Member member = clubMember.getMember();
 
-        return articles.stream()
-                .map(article -> {
-                    ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), ArticleLikeInfoDto.toDto(0, false));
-                    int commentCount = commentCountMap.getOrDefault(article.getId(), 0);
-                    return ArticlePreviewResponseDto.toDto(article, likeInfo, commentCount);
-                })
-                .toList();
+        List<Article> articles = (articleType == null)
+                ? articleReadPort.findByClubId(club.getId())
+                : articleReadPort.findByClubIdAndArticleType(club.getId(), articleType);
+
+        List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
+
+        Map<Long, Long> likeCounts = likeQueryPort.getLikeCounts(LikeType.ARTICLE, articleIds);
+        List<Long> likedIds = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), articleIds);
+        Map<Long, Integer> commentCounts = commentQueryPort.getCountComments(articleIds);
+
+        return ArticlePreviewResult.create(articles, likeCounts, likedIds, commentCounts);
     }
 
     @Override
-    public ArticleResponseDto findArticleById(Long articleId, Long memberId) {
-        Article article = findArticleByArticleIdOrThrow(articleId);
+    public ArticleDetailResult getArticleDetail(Long clubId, Long articleId, Long memberId) {
+        ClubMember clubMember = assertMemberByClubIdAndMemberId(clubId, memberId);
+        Club club = clubMember.getClub();
+        Member member = clubMember.getMember();
+        Article article = assertArticleByArticleIdAndClubId(articleId, club.getId());
 
-        return convertToArticleResponseDto(article, memberId);
+        Long likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
+        List<Member> likedMembers = isLikedMembers(article.getId());
+
+        boolean isLiked = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), List.of(article.getId()))
+                .contains(article.getId());
+
+        boolean isOwner = article.isOwner(member.getId());
+
+        int commentCount = commentQueryPort.getCountComments(List.of(article.getId()))
+                .getOrDefault(article.getId(), 0);
+
+        List<RootCommentResult> commentList = commentQueryPort.getCommentList(article.getId(), member.getId());
+
+        return ArticleDetailResult.create(article, likeCount, likedMembers, isLiked, isOwner, commentCount, commentList);
     }
 
-    private Article findArticleByArticleIdOrThrow(Long articleId) {
-        return articleReadPort.findById(articleId)
-                .orElseThrow(() -> new DomainException(ArticleErrorCode.NOT_FOUND));
+    /* ==== Private Helper ==== */
+    private ClubMember assertMemberByClubIdAndMemberId(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: ErrorCode 수정 필요
     }
 
-    private Club findClubByClubIdOrThrow(Long clubId) {
-        return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
+    private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {
+        return articleReadPort.findByIdAndClubId(articleId, clubId)
+                .orElseThrow(() -> new BusinessException(ArticleBusinessError.CLUB_MISMATCH));
     }
 
-    private ArticleResponseDto convertToArticleResponseDto(Article article, Long memberId) {
-        Map<Long, ArticleLikeInfoDto> likeInfoMap = getArticleLikeInfo(List.of(article), memberId);
-        ArticleLikeInfoDto likeInfo = likeInfoMap.getOrDefault(article.getId(), new ArticleLikeInfoDto(0, false));
-        List<RootCommentResult> comments = commentQueryPort.getCommentListByArticle(article.getId(), memberId);
-        int commentCount = comments.size();
+    private List<Member> isLikedMembers(Long articleId) {
+        List<Long> memberIds = likeQueryPort.getLikedMemberIds(LikeType.ARTICLE, articleId);
 
-        boolean isMine = articleReadPort.existsArticleByIdAndMemberId(article.getId(), memberId);
+        if (memberIds.isEmpty()) return Collections.emptyList();
 
-        return ArticleResponseDto.toDto(article, isMine, likeInfo, commentCount, comments);
-    }
+        List<Member> existingMembers = memberReadPort.findAllByIdInAndIsDeletedFalse(memberIds);
 
-    private Map<Long, ArticleLikeInfoDto> getArticleLikeInfo(List<Article> articles, Long memberId) {
-        List<Long> articleIds = articles.stream()
-                .map(Article::getId)
-                .distinct()
+        Map<Long, Member> memberMap = existingMembers.stream()
+                .collect(Collectors.toMap(Member::getId, member -> member));
+
+        return memberIds.stream()
+                .map(memberMap::get)
                 .toList();
-
-        return articleReadPort.findLikeInfoByArticleIdsAndMemberId(articleIds, memberId);
-    }
-
-    private Map<Long, Integer> getArticleCommentCount(List<Article> articles) {
-        List<Long> articleIds = articles.stream()
-                .map(Article::getId)
-                .distinct()
-                .toList();
-
-        return commentReadPort.countCommentsByArticleIds(articleIds);
     }
 }

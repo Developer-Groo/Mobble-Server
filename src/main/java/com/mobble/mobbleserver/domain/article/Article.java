@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter

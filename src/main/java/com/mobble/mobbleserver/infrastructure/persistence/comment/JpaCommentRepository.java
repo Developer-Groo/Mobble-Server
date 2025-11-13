@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.persistence.comment;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public interface JpaCommentRepository extends JpaRepository<Comment, Long>, Comm
     List<Long> findIdsByArticleId(Long articleId);
 
     List<Long> findIdsByArticleIdIn(List<Long> articleIds);
+
+    @EntityGraph(attributePaths = "children")
+    List<Comment> findByArticleIdAndParentIdIsNullOrderByCreatedAtAsc(Long articleId);
 
     void deleteAllByArticleId(Long articleId);
 
