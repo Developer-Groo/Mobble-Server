@@ -2,6 +2,8 @@ package com.mobble.mobbleserver.infrastructure.web.article;
 
 import com.mobble.mobbleserver.application.article.command.request.CreateArticleCommand;
 import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleCreatePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
@@ -10,9 +12,9 @@ import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleCreateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleUpdateRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleDetailResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticlePreviewResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleUpdatedResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.article.dto.response.ArticleResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -45,33 +47,35 @@ public class ArticleAPI {
         Article article = articleCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ArticleResponseDto.toDto(article));
+                .body(ArticleResponseDto.create(article));
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticlePreviewResponseDto>> findArticlesPreview(
+    public ResponseEntity<List<ArticlePreviewResponseDto>> getArticlesPreview(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestParam(value = "articleType", required = false) ArticleType articleType,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        List<ArticlePreviewResponseDto> articlesByClubId = articleQueryPort.findArticlesByClubId(clubId, articleType, memberId);
+        List<ArticlePreviewResult> previews = articleQueryPort.getArticlesPreview(clubId, memberId, articleType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleQueryPort.findArticlesByClubId(clubId, articleType, memberId));
+                .body(ArticlePreviewResponseDto.create(previews));
     }
 
     @GetMapping("/{article-id}")
-    public ResponseEntity<ArticleResponseDto> findArticleDetail(
+    public ResponseEntity<ArticleDetailResponseDto> getArticleDetail(
             @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        ArticleDetailResult detail = articleQueryPort.getArticleDetail(clubId, articleId, memberId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleQueryPort.findArticleById(articleId, memberId));
+                .body(ArticleDetailResponseDto.create(detail));
     }
 
     @PatchMapping("/{article-id}")
-    public ResponseEntity<ArticleUpdatedResponseDto> updateArticle(
+    public ResponseEntity<ArticleResponseDto> updateArticle(
             @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("article-id") @Positive Long articleId,
             @RequestBody @Valid ArticleUpdateRequestDto dto,
@@ -81,7 +85,7 @@ public class ArticleAPI {
         Article article = articleUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticleUpdatedResponseDto.toDto(article));
+                .body(ArticleResponseDto.create(article));
     }
 
     @DeleteMapping("/{article-id}")

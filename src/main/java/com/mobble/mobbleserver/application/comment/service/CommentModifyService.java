@@ -108,10 +108,9 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
         List<Long> commentIds = commentReadPort.findIdsByArticleIdIn(articleIds);
 
-        if (!commentIds.isEmpty()) {
-            likeModifyPort.deleteAll(LikeType.COMMENT, commentIds);
-        }
+        if (commentIds.isEmpty()) return;
 
+        likeModifyPort.deleteAll(LikeType.COMMENT, commentIds);
         commentWritePort.deleteAllByArticleIdIn(articleIds);
     }
 

@@ -1,45 +1,46 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
+import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record ArticlePreviewResponseDto(
+import static com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult.ArticleLikedMembers;
+
+public record ArticleDetailResponseDto(
         Long clubId,
         Long articleId,
         ArticleType articleType,
         String title,
         String body,
-        Long ownerId,
         String ownerName,
-        Long likeCount,
+        boolean isOwner,
         boolean isLiked,
+        Long likeCount,
+        List<ArticleLikedMembers> likedMembers,
         int commentCount,
+        List<RootCommentResult> commentList,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
         // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
 
-    public static List<ArticlePreviewResponseDto> create(List<ArticlePreviewResult> results) {
-        return results.stream()
-                .map(ArticlePreviewResponseDto::toDto)
-                .toList();
-    }
-
-    private static ArticlePreviewResponseDto toDto(ArticlePreviewResult result) {
-        return new ArticlePreviewResponseDto(
+    public static ArticleDetailResponseDto create(ArticleDetailResult result) {
+        return new ArticleDetailResponseDto(
                 result.clubId(),
                 result.articleId(),
                 result.articleType(),
                 result.title(),
                 result.body(),
-                result.ownerId(),
                 result.ownerName(),
-                result.likeCount(),
+                result.isOwner(),
                 result.isLiked(),
+                result.likeCount(),
+                result.likedMembers(),
                 result.commentCount(),
+                result.commentList(),
                 result.createdAt(),
                 result.updatedAt()
         );

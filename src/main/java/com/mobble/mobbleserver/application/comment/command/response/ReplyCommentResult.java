@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.application.comment.command.response;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
-import com.mobble.mobbleserver.infrastructure.persistence.comment.projection.CommentLikeInfoDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public record ReplyCommentResult(
@@ -18,17 +18,15 @@ public record ReplyCommentResult(
         LocalDateTime updatedAt
 ) {
 
-    public static ReplyCommentResult toDto(Comment comment, Map<Long, CommentLikeInfoDto> likeInfoMap) {
-        CommentLikeInfoDto info = likeInfoMap.getOrDefault(comment.getId(), new CommentLikeInfoDto(0, false));
-
+    public static ReplyCommentResult toDto(Comment comment, Map<Long, Long> likeCounts, List<Long> isLikedList) {
         return new ReplyCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getMember().getName(),
                 comment.hasParent() ? comment.getParent().getId() : null,
                 comment.getContent().getBody(),
-                info.likeCount(),
-                info.isLiked(),
+                likeCounts.getOrDefault(comment.getId(), 0L).intValue(),
+                isLikedList.contains(comment.getId()),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
