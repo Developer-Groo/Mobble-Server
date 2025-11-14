@@ -1,19 +1,20 @@
 package com.mobble.mobbleserver.application.account.service;
 
-import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SocialLoginResponseDto;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifier;
-import com.mobble.mobbleserver.account.auth.oauth.verifier.SocialVerifierFactory;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
-import com.mobble.mobbleserver.infrastructure.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
+import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
+import com.mobble.mobbleserver.application.account.required.SignUpTokenPort;
+import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
-import com.mobble.mobbleserver.infrastructure.persistence.clubMember.JpaClubMemberRepository;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
+import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,33 +24,32 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SocialLoginService {
+public class SocialLoginService implements SocialLoginPort {
 
-    private final SocialVerifierFactory verifierFactory;
-    private final TokenProvider tokenProvider;
-    private final JpaClubMemberRepository clubMemberRepository;
+    private final SocialIdentityClientPort socialIdentityClientPort;
+    private final JwtTokenIssuerPort jwtTokenIssuerPort;
+    private final SignUpTokenPort signUpTokenPort;
 
     private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
 
-    public SocialLoginResponseDto socialLogin(SocialLoginRequestDto dto) {
-        SocialVerifier verifier = verifierFactory.getVerifier(dto.socialProvider());
-        SocialUserInfo userInfo = verifier.verify(dto.accessToken());
+    public SocialLoginResult socialLogin(SocialLoginRequestDto dto) {
+        SocialUserInfo userInfo = socialIdentityClientPort.fetchUserInfo(dto.socialProvider(), dto.accessToken());
 
         Member member = findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
-            // ClubMemberReadPort
-            List<ClubMemberRole> roles = clubMemberRepository.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
-            String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
+            List<ClubMemberRole> roles = clubMemberReadPort.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
+            String jwtToken = jwtTokenIssuerPort.issueJwtToken(member.getId(), roles);
 
-            return SocialLoginResponseDto.existMember(jwtToken);
+            return SocialLoginResult.existMember(jwtToken);
         }
 
         if (userInfo.email() == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO); // for Apple Login
 
-        String signupToken = tokenProvider.createSignupToken(userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
+        String signupToken = signUpTokenPort.issueSignUpToken(userInfo.email(), userInfo.socialProvider(), userInfo.socialId());
 
-        return SocialLoginResponseDto.newMember(signupToken);
+        return SocialLoginResult.newMember(signupToken);
     }
 
     private Member findMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
