@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.account;
 
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SocialLoginResponseDto;
+import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
 import com.mobble.mobbleserver.application.account.service.SocialLoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class SocialLoginAPI {
     public ResponseEntity<Void> socialLogin(
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
-        SocialLoginResponseDto result = socialLoginService.socialLogin(dto);
+        SocialLoginResult result = socialLoginService.socialLogin(dto);
 
         return ResponseEntity.status(result.isNewMember() ? HttpStatus.FORBIDDEN : HttpStatus.OK)
                 .header("Authorization", "Bearer " + result.jwtToken())
