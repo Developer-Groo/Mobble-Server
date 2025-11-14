@@ -2,6 +2,9 @@ package com.mobble.mobbleserver.infrastructure.jwt;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
+import com.mobble.mobbleserver.application.account.required.JwtTokenVerifierPort;
+import com.mobble.mobbleserver.application.account.required.SignUpTokenPort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +20,7 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class TokenProvider {
+public class TokenProvider implements JwtTokenIssuerPort, JwtTokenVerifierPort, SignUpTokenPort {
 
     private final Key key;
 
@@ -30,13 +33,18 @@ public class TokenProvider {
      *  Create Token
      * ======================= */
 
-    // Jwt Token 생성
-    public String createJwtToken(Long memberId, List<ClubMemberRole> roles) {
+    // Jwt Token 발급 (roles 포함)
+    @Override
+    public String issueJwtToken(Long memberId, List<ClubMemberRole> roles) {
 
         Date now = new Date();
 
         Map<String, Object> claims = new HashMap<>();
-        if (roles != null && !roles.isEmpty()) claims.put("roles", roles.stream().map(Enum::name).toList());
+        if (roles != null && !roles.isEmpty())
+            claims.put("roles", roles
+                        .stream()
+                        .map(Enum::name)
+                        .toList());
 
         return Jwts.builder()
                 .setSubject(memberId.toString())
@@ -46,13 +54,15 @@ public class TokenProvider {
                 .compact();
     }
 
-    // roles 없이 토큰 생성 (클럽 미가입, 일반 유저용)
-    public String createJwtToken(Long memberId) {
-        return createJwtToken(memberId, List.of());
+    // Jwt Token 발급 (roles 미포함)
+    @Override
+    public String issueJwtToken(Long memberId) {
+        return issueJwtToken(memberId, List.of());
     }
 
     // 회원가입용 Signup Token 생성
-    public String createSignupToken(String email, SocialProvider socialProvider, String socialId) {
+    @Override
+    public String issueSignUpToken(String email, SocialProvider socialProvider, String socialId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 1000L * 60 * 10); // Valid Time: 10 minute
 
@@ -74,8 +84,9 @@ public class TokenProvider {
      *  Parse / Validate
      * ======================= */
 
-    // Access Token -> memberId
-    public Optional<Long> getMemberIdByJwtToken(String token) {
+    // Jwt Token -> memberId 추출
+    @Override
+    public Optional<Long> extractMemberId(String token) {
         String subject = parse(token).getSubject();
 
         if (!subject.matches("\\d+")) {
@@ -85,8 +96,9 @@ public class TokenProvider {
         return Optional.of(Long.valueOf(subject));
     }
 
-    // Access Token -> roles (없으면 빈 리스트)
-    public List<ClubMemberRole> getRolesByJwtToken(String jwtToken) {
+    // Jwt Token -> roles 추출 (없으면 빈 리스트)
+    @Override
+    public List<ClubMemberRole> extractRoles(String jwtToken) {
         List<?> roles = parse(jwtToken).get("roles", List.class);
         if (roles == null) return List.of();
         return roles.stream()
@@ -95,8 +107,9 @@ public class TokenProvider {
                 .toList();
     }
 
-    // Signup Token -> SocialUserInfo
-    public SocialUserInfo getSignupTokenInfo(String signupToken) {
+    // Signup Token -> SocialUserInfo 추출
+    @Override
+    public SocialUserInfo extractSignUpInfo(String signupToken) {
         Claims claims = parse(signupToken);
 
         String email = (String) claims.get("email");
@@ -110,7 +123,8 @@ public class TokenProvider {
      *  Validate
      * ======================= */
 
-    public boolean validateToken(String jwtToken) {
+    @Override
+    public boolean isValid(String jwtToken) {
         try {
             parse(jwtToken);
             return true;
@@ -125,7 +139,7 @@ public class TokenProvider {
      *  Internal
      * ======================= */
 
-    Claims parse(String token) {
+    private Claims parse(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
