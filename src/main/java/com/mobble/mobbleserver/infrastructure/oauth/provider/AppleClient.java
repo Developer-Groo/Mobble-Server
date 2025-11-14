@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.oauth;
+package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

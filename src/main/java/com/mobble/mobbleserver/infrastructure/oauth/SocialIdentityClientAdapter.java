@@ -3,6 +3,10 @@ package com.mobble.mobbleserver.infrastructure.oauth;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.AppleClient;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.GoogleClient;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.KakaoClient;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.NaverClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

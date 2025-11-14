@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.infrastructure.oauth;
+package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.KakaoUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.GoogleUserInfoResponse;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -15,14 +15,14 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoClient {
+public class GoogleClient {
 
-    private final RestClient kakaoRestClient;
+    private final RestClient googleRestClient;
 
     public SocialUserInfo fetchUserInfo(String accessToken) {
         try {
-            Map<String, Object> response = kakaoRestClient.get()
-                    .uri("/v2/user/me")
+            Map<String, Object> response = googleRestClient.get()
+                    .uri("/oauth2/v3/userinfo")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (req, res) -> {
@@ -31,7 +31,7 @@ public class KakaoClient {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {
                     });
 
-            KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(response);
+            GoogleUserInfoResponse userInfo = new GoogleUserInfoResponse(response);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),

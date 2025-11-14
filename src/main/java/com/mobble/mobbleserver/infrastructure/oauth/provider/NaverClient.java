@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.infrastructure.oauth;
+package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.GoogleUserInfoResponse;
+import com.mobble.mobbleserver.account.auth.oauth.dto.response.NaverUserInfoResponse;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -15,14 +15,14 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class GoogleClient {
+public class NaverClient {
 
-    private final RestClient googleRestClient;
+    private final RestClient naverRestClient;
 
     public SocialUserInfo fetchUserInfo(String accessToken) {
         try {
-            Map<String, Object> response = googleRestClient.get()
-                    .uri("/oauth2/v3/userinfo")
+            Map<String, Object> response = naverRestClient.get()
+                    .uri("/v1/nid/me")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (req, res) -> {
@@ -31,7 +31,7 @@ public class GoogleClient {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {
                     });
 
-            GoogleUserInfoResponse userInfo = new GoogleUserInfoResponse(response);
+            NaverUserInfoResponse userInfo = new NaverUserInfoResponse(response);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),
