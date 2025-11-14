@@ -28,12 +28,6 @@ public class AppleUserInfoResponse implements OAuth2UserInfo {
     }
 
     @Override
-    public String getName() {
-        // Apple은 이름을 제공하지 않으므로 null 반환 (본인인증으로 대체)
-        return null;
-    }
-
-    @Override
     public String getEmail() {
         // null 체크X (첫 로그인 시만 email 제공 그 이후는 제공 안 함)
         return jwt.getClaim("email").asString();

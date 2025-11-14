@@ -28,13 +28,6 @@ public class GoogleUserInfoResponse implements OAuth2UserInfo {
     }
 
     @Override
-    public String getName() {
-        if (attributes.get("name") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
-
-        return attributes.get("name").toString();
-    }
-
-    @Override
     public String getEmail() {
         if (attributes.get("email") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
 

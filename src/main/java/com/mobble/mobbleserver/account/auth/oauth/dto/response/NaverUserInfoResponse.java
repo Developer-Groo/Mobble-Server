@@ -30,13 +30,6 @@ public class NaverUserInfoResponse implements OAuth2UserInfo {
     }
 
     @Override
-    public String getName() {
-        if (response.get("name") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
-
-        return response.get("name").toString();
-    }
-
-    @Override
     public String getEmail() {
         if (response.get("email") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
 

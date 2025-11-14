@@ -28,14 +28,6 @@ public class KakaoUserInfoResponse implements OAuth2UserInfo {
     }
 
     @Override
-    public String getName() {
-        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        if (kakaoAccount == null || kakaoAccount.get("name") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
-
-        return kakaoAccount.get("name").toString();
-    }
-
-    @Override
     public String getEmail() {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         if (kakaoAccount == null || kakaoAccount.get("email") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
