@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.member;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 

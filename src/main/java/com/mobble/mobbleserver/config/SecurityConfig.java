@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.config;
 
-import com.mobble.mobbleserver.account.jwt.JwtFilter;
-import com.mobble.mobbleserver.account.jwt.TokenProvider;
+import com.mobble.mobbleserver.infrastructure.jwt.JwtFilter;
+import com.mobble.mobbleserver.infrastructure.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

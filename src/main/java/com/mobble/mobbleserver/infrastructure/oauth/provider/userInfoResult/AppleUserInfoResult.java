@@ -1,0 +1,35 @@
+package com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult;
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
+
+
+public class AppleUserInfoResult implements OAuth2UserInfo {
+
+    private final DecodedJWT jwt;
+
+    private final SocialProvider socialProvider = SocialProvider.APPLE;
+
+    public AppleUserInfoResult(DecodedJWT jwt) {
+        if (jwt == null || jwt.getSubject() == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
+        this.jwt = jwt;
+    }
+
+    @Override
+    public SocialProvider getProvider() {
+        return socialProvider;
+    }
+
+    @Override
+    public String getProviderId() {
+        return jwt.getSubject();
+    }
+
+    @Override
+    public String getEmail() {
+        // null 체크X (첫 로그인 시만 email 제공 그 이후는 제공 안 함)
+        return jwt.getClaim("email").asString();
+    }
+}

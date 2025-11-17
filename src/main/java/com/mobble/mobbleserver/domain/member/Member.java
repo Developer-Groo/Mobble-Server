@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.domain.member;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
 import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
