@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.clubMember.service;
 
-import com.mobble.mobbleserver.infrastructure.jwt.TokenProvider;
+import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberCreatePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberDeletePort;
@@ -38,7 +38,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
     private final MemberReadPort memberReadPort;
     private final ClubReadPort clubReadPort;
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenIssuerPort jwtTokenIssuerPort;
 
     @Override
     public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
@@ -116,7 +116,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
 
         // 권한 변경으로 Access Token 재발급
         List<ClubMemberRole> roles = clubMemberReadPort.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
-        String jwtToken = tokenProvider.createJwtToken(member.getId(), roles);
+        String jwtToken = jwtTokenIssuerPort.issueJwtToken(member.getId(), roles);
 
         return ClubMemberRoleUpdateResultDto.toDto(clubMember, jwtToken);
     }
