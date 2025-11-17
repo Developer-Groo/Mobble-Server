@@ -33,6 +33,7 @@ public class SocialLoginService implements SocialLoginPort {
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
 
+    @Override
     public SocialLoginResult socialLogin(SocialLoginRequestDto dto) {
         SocialUserInfo userInfo = socialIdentityClientPort.fetchUserInfo(dto.socialProvider(), dto.accessToken());
 
