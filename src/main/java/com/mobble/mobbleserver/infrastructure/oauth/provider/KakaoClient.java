@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.KakaoUserInfoResponse;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.KakaoUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -31,7 +31,7 @@ public class KakaoClient {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {
                     });
 
-            KakaoUserInfoResponse userInfo = new KakaoUserInfoResponse(response);
+            KakaoUserInfoResult userInfo = new KakaoUserInfoResult(response);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),

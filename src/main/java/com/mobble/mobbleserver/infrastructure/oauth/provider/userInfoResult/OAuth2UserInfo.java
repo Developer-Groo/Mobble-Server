@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.oauth.dto.response;
+package com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 

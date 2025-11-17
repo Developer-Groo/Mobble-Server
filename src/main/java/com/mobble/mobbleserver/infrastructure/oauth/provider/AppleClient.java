@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.AppleUserInfoResponse;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.AppleUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -49,7 +49,7 @@ public class AppleClient {
             Algorithm algorithm = Algorithm.RSA256(publicKey, null);
             algorithm.verify(jwt); // 서명 검증 실패 시 예외 발생
 
-            AppleUserInfoResponse userInfo = new AppleUserInfoResponse(jwt);
+            AppleUserInfoResult userInfo = new AppleUserInfoResult(jwt);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),

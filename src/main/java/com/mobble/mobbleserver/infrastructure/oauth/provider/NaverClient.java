@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.NaverUserInfoResponse;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.NaverUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -31,7 +31,7 @@ public class NaverClient {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {
                     });
 
-            NaverUserInfoResponse userInfo = new NaverUserInfoResponse(response);
+            NaverUserInfoResult userInfo = new NaverUserInfoResult(response);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),

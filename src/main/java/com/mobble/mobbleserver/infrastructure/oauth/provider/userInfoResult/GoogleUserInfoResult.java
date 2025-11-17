@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.account.auth.oauth.dto.response;
+package com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -6,13 +6,13 @@ import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 
 import java.util.Map;
 
-public class GoogleUserInfoResponse implements OAuth2UserInfo {
+public class GoogleUserInfoResult implements OAuth2UserInfo {
 
     private final Map<String, Object> attributes;
 
     private final SocialProvider socialProvider = SocialProvider.GOOGLE;
 
-    public GoogleUserInfoResponse(Map<String, Object> attributes) {
+    public GoogleUserInfoResult(Map<String, Object> attributes) {
         if (attributes == null || attributes.get("sub") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
         this.attributes = attributes;
     }

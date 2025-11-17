@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
-import com.mobble.mobbleserver.account.auth.oauth.dto.response.GoogleUserInfoResponse;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.GoogleUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
@@ -31,7 +31,7 @@ public class GoogleClient {
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {
                     });
 
-            GoogleUserInfoResponse userInfo = new GoogleUserInfoResponse(response);
+            GoogleUserInfoResult userInfo = new GoogleUserInfoResult(response);
 
             return new SocialUserInfo(
                     userInfo.getEmail(),
