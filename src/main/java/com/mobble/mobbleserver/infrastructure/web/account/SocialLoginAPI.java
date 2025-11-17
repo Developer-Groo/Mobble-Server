@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.account;
 
-import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
-import com.mobble.mobbleserver.application.account.service.SocialLoginService;
+import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
+import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class SocialLoginAPI {
 
-    private final SocialLoginService socialLoginService;
+    private final SocialLoginPort socialLoginPort;
 
     @PostMapping("/login")
     public ResponseEntity<Void> socialLogin(
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
-        SocialLoginResult result = socialLoginService.socialLogin(dto);
+        SocialLoginResult result = socialLoginPort.socialLogin(dto);
 
         return ResponseEntity.status(result.isNewMember() ? HttpStatus.FORBIDDEN : HttpStatus.OK)
                 .header("Authorization", "Bearer " + result.jwtToken())

@@ -1,8 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.web.account;
 
+import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
+import com.mobble.mobbleserver.application.account.provided.SignUpDetailsPort;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SignUpRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.response.SignUpDetailsInfoResponseDto;
-import com.mobble.mobbleserver.application.account.service.SignUpDetailsInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class SignUpDetailsInfoAPI {
 
-    private final SignUpDetailsInfoService signUpDetailsInfoService;
+    private final SignUpDetailsPort signUpDetailsPort;
 
     @GetMapping("/details-info")
     public ResponseEntity<SignUpDetailsInfoResponseDto> getSocialUserInfo(
             @RequestHeader("Authorization") String authHeader
     ) {
-        String signupToken = authHeader.replace("Bearer ", "");
+        String signUpToken = authHeader.replace("Bearer ", "");
+
+        SocialUserInfo userInfo = signUpDetailsPort.getSocialUserInfo(signUpToken);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(signUpDetailsInfoService.getSocialUserInfo(signupToken));
+                .body(SignUpDetailsInfoResponseDto.toDto(userInfo));
     }
 
     @PostMapping("/sign-up")
@@ -31,7 +34,7 @@ public class SignUpDetailsInfoAPI {
             @RequestBody SignUpRequestDto dto
     ) {
         String signupToken = authHeader.replace("Bearer ", "");
-        String jwtToken = signUpDetailsInfoService.signup(signupToken, dto);
+        String jwtToken = signUpDetailsPort.signUp(signupToken, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Authorization", "Bearer " + jwtToken)
