@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.clubImage.entity;
 
 import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.domain.common.entity.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.common.CreatedAtEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

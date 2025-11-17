@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.common.entity;
+package com.mobble.mobbleserver.domain.common;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -12,5 +12,4 @@ public abstract class BaseEntity extends CreatedAtEntity {
 
     @LastModifiedDate
     protected LocalDateTime updatedAt;
-
 }

@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.comment;
 
 import com.mobble.mobbleserver.domain.comment.error.CommentError;
-import com.mobble.mobbleserver.domain.common.exception.DomainException;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.domain.common.entity;
+package com.mobble.mobbleserver.domain.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -17,5 +17,4 @@ public abstract class CreatedAtEntity {
     @CreatedDate
     @Column(updatable = false)
     protected LocalDateTime createdAt;
-
 }
