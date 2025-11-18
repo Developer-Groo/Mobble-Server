@@ -1,9 +1,7 @@
-package com.mobble.mobbleserver.infrastructure.web.club.core.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.club.dto.request;
 
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-import com.mobble.mobbleserver.domain.club.ageGroup.AgeGroupType;
-import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.infrastructure.web.address.dto.request.AddressRequestDto;
+import com.mobble.mobbleserver.domain.club.AgeGroup;
+import com.mobble.mobbleserver.domain.club.Club;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
@@ -19,8 +17,6 @@ public record ClubRequestDto(
 //        String profileImage,
 //        List<String> infoImage,
 
-        AddressRequestDto addressDto,
-
         List<Long> groundCodes,
 
         @Min(value = 2, message = "CLUB:HEADCOUNT_MIN")
@@ -28,18 +24,9 @@ public record ClubRequestDto(
         int headcount,
 
         @NotEmpty(message = "CLUB:AGE_GROUP_NOT_EMPTY")
-        List<AgeGroupType> ageGroup,
+        List<AgeGroup> ageGroup,
 
         @NotNull(message = "CLUB:JOIN_TYPE_REQUIRED")
         Boolean isAutoJoin
 ) {
-
-    public Club toEntity(ClubCategory clubCategory) {
-        return Club.createClub(
-                clubCategory,
-                this.name,
-                this.headcount,
-                this.isAutoJoin
-        );
-    }
 }

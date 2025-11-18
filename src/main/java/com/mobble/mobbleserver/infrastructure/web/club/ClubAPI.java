@@ -1,13 +1,13 @@
-package com.mobble.mobbleserver.infrastructure.web.club.core;
+package com.mobble.mobbleserver.infrastructure.web.club;
 
-import com.mobble.mobbleserver.application.club.core.port.provided.ClubCreatePort;
-import com.mobble.mobbleserver.application.club.core.port.provided.ClubDeletePort;
-import com.mobble.mobbleserver.application.club.core.port.provided.ClubQueryPort;
-import com.mobble.mobbleserver.application.club.core.port.provided.ClubUpdatePort;
-import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubSearchRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.club.core.dto.response.ClubSummaryDto;
+import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
+import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
+import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
+import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubSummaryDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;

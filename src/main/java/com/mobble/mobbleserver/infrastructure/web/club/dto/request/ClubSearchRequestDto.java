@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.web.club.core.dto.request;
+package com.mobble.mobbleserver.infrastructure.web.club.dto.request;
 
 public record ClubSearchRequestDto(
         String name,
