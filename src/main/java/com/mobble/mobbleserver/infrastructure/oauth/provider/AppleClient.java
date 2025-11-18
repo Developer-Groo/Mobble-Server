@@ -64,10 +64,8 @@ public class AppleClient implements SocialIdentityClient{
                     userInfo.getProviderId()
             );
         } catch (DomainException e) {
-            // 우리가 명시적으로 던진 예외는 그대로 전달
             throw e;
         } catch (Exception e) {
-            // 통신 실패, 키 생성 실패, 검증 실패 등 나머지 예외들
             throw new DomainException(OAuthErrorCode.FAILED_TO_REQUEST_USER_INFO);
         }
     }
