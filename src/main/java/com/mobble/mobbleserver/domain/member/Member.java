@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
-import com.mobble.mobbleserver.domain.ground.Ground;
+import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.persistence.*;
@@ -39,9 +39,8 @@ public class Member extends BaseEntity {
     @Column(name = "phone")
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ground_code")
-    private Ground ground;
+    @Embedded
+    private Location location;
 
     @Column(name = "profile_image")
     private String profileImage;
@@ -72,7 +71,7 @@ public class Member extends BaseEntity {
             Gender gender,
             String email,
             String phone,
-            Ground ground,
+            Location location,
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
@@ -86,7 +85,7 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.email = email;
         this.phone = phone;
-        this.ground = ground;
+        this.location = location;
         this.profileImage = profileImage;
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
@@ -104,7 +103,7 @@ public class Member extends BaseEntity {
             Gender gender,
             String email,
             String phone,
-            Ground ground,
+            Location location,
             String profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
@@ -118,7 +117,7 @@ public class Member extends BaseEntity {
                 .gender(gender)
                 .email(email)
                 .phone(phone)
-                .ground(ground)
+                .location(location)
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
@@ -128,8 +127,8 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Member updateMember(Ground ground, String profileImage) {
-        this.ground = ground;
+    public Member updateMember(Location location, String profileImage) {
+        this.location = location;
         this.profileImage = profileImage;
         return this;
     }
@@ -153,7 +152,7 @@ public class Member extends BaseEntity {
         if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
     }
 
-    public void setGround(Ground ground) {
-        this.ground = ground;
+    public void setGround(Location location) {
+        this.location = location;
     }
 }
