@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.common.exception;
+package com.mobble.mobbleserver.application.exception;
 
 import com.mobble.mobbleserver.shared.error.CommonError;
 import lombok.Getter;
