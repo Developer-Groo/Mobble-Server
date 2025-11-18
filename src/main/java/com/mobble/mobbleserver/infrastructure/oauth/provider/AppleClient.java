@@ -31,7 +31,7 @@ public class AppleClient {
 
             // Apple의 공개키(JWK Set)를 가져와서 key ID(kid)가 일치하는 키를 찾음
             JsonNode jwkResponse = appleRestClient.get()
-                    .uri("/auth/keys") // baseUrl + "/auth/keys"
+                    .uri("/auth/keys")
                     .retrieve()
                     .body(JsonNode.class);
 
