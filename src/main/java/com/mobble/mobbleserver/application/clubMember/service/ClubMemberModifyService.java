@@ -1,14 +1,14 @@
 package com.mobble.mobbleserver.application.clubMember.service;
 
 import com.mobble.mobbleserver.account.jwt.TokenProvider;
-import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberCreatePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberDeletePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberUpdatePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;

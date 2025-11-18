@@ -1,12 +1,10 @@
 package com.mobble.mobbleserver.application.member.service;
 
-import com.mobble.mobbleserver.application.ground.required.GroundReadPort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
 import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
-import com.mobble.mobbleserver.domain.ground.Ground;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
@@ -27,15 +25,15 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
 
     private final MemberReadPort memberReadPort;
     private final MemberWritePort memberWritePort;
-    private final GroundReadPort groundReadPort;
 
     @Override
     public Member updateMember(Long memberId, MemberUpdateRequestDto dto) {
         Member member = findMemberByMemberIdOrThrow(memberId);
-        Ground ground = groundReadPort.findById(dto.groundCode())
-                .orElseThrow();
+//        Ground ground = groundReadPort.findById(dto.groundCode())
+//                .orElseThrow();
 
-        return member.updateMember(ground, dto.profileImage());
+//        return member.updateMember(ground, dto.profileImage());
+        return null;
     }
 
     @Override

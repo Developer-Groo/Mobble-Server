@@ -12,7 +12,7 @@ import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePo
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
