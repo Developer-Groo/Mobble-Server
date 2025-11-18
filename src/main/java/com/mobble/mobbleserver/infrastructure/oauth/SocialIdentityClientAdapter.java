@@ -3,29 +3,33 @@ package com.mobble.mobbleserver.infrastructure.oauth;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.AppleClient;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.GoogleClient;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.KakaoClient;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.NaverClient;
-import lombok.RequiredArgsConstructor;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.SocialIdentityClient;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Component
-@RequiredArgsConstructor
 public class SocialIdentityClientAdapter implements SocialIdentityClientPort {
 
-    private final AppleClient appleClient;
-    private final GoogleClient googleClient;
-    private final NaverClient naverClient;
-    private final KakaoClient kakaoClient;
+    private final Map<SocialProvider, SocialIdentityClient> clientMap;
+
+    public SocialIdentityClientAdapter(List<SocialIdentityClient> clients) {
+        this.clientMap = clients.stream()
+                .collect(Collectors.toMap(
+                        SocialIdentityClient::getProvider,
+                        client -> client
+                ));
+    }
 
     @Override
-    public SocialUserInfo fetchUserInfo(SocialProvider socialProvider, String accessToken) {
-        return switch (socialProvider) {
-            case APPLE -> appleClient.fetchUserInfo(accessToken);
-            case GOOGLE -> googleClient.fetchUserInfo(accessToken);
-            case NAVER -> naverClient.fetchUserInfo(accessToken);
-            case KAKAO -> kakaoClient.fetchUserInfo(accessToken);
-        };
+    public SocialUserInfo fetchUserInfo(SocialProvider socialProvider, String token) {
+        SocialIdentityClient client = clientMap.get(socialProvider);
+        if (client == null) throw new DomainException(OAuthErrorCode.UNSUPPORTED_SOCIAL_PROVIDER);
+
+        return client.fetchUserInfo(token);
     }
 }
