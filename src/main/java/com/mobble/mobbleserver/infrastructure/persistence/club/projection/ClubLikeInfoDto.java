@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.club.core.projection;
+package com.mobble.mobbleserver.infrastructure.persistence.club.projection;
 
 public record ClubLikeInfoDto(int likeCount, boolean isLiked) {
 

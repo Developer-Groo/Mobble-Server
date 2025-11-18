@@ -1,10 +1,10 @@
-package com.mobble.mobbleserver.infrastructure.persistence.club.core;
+package com.mobble.mobbleserver.infrastructure.persistence.club;
 
-import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.club.core.port.required.ClubWritePort;
-import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
-import com.mobble.mobbleserver.infrastructure.web.club.core.dto.request.ClubSearchRequestDto;
+import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
+import com.mobble.mobbleserver.domain.club.Club;
+import com.mobble.mobbleserver.infrastructure.persistence.club.projection.ClubLikeInfoDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
