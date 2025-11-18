@@ -1,8 +1,6 @@
 package com.mobble.mobbleserver.domain.member;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
-import com.mobble.mobbleserver.domain.common.BaseEntity;
-import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.persistence.*;

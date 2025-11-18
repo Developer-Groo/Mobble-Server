@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.member;
 
-import com.mobble.mobbleserver.account.auth.oauth.service.SocialProvider;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
 import com.mobble.mobbleserver.domain.member.Member;
