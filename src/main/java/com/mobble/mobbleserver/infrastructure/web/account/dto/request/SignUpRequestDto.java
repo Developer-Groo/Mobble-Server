@@ -1,12 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.account.dto.request;
 
-<<<<<<< HEAD:src/main/java/com/mobble/mobbleserver/account/auth/dto/request/SignUpRequestDto.java
-import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
-import com.mobble.mobbleserver.domain.common.Location;
-=======
+
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
-import com.mobble.mobbleserver.domain.ground.Ground;
->>>>>>> develop:src/main/java/com/mobble/mobbleserver/infrastructure/web/account/dto/request/SignUpRequestDto.java
+import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
@@ -26,7 +22,7 @@ public record SignUpRequestDto(
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "MEMBER:WRONG_PHONE_PATTERN")
         String phone,
 
-        Long groundCode,
+        Location location,
 
         String profileImage,
 
