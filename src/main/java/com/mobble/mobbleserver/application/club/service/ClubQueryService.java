@@ -1,0 +1,90 @@
+package com.mobble.mobbleserver.application.club.service;
+
+import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
+import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.club.Club;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubSummaryDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ClubQueryService implements ClubQueryPort {
+
+    private final ClubReadPort clubReadPort;
+    private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
+
+    @Override
+    public ClubResponseDto findClubById(Long clubId, Long memberId) {
+        Club club = findClubByClubIdOrThrow(clubId);
+        ClubMember leader = clubMemberReadPort
+                .findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER).get();
+
+        String leaderName = leader.getMember().getName();
+        Member member = findMemberByMemberIdOrThrow(memberId);
+
+//        return buildClubResponse(club, member, leaderName);
+        return null;
+    }
+
+    @Override
+    public List<ClubSummaryDto> searchClubs(ClubSearchRequestDto dto, Long memberId) {
+        List<Club> clubs = clubReadPort.searchClubs(dto);
+
+
+        return List.of();
+//        return clubs.stream()
+//                .map(club -> {
+//                    List<Ground> groundList = clubGroundReadPort.findGroundsByClubId(club.getId());
+//                    ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), memberId);
+//                    return ClubSummaryDto.toDto(club, groundList, likeInfo);
+//                })
+//                .toList();
+    }
+
+    private Club findClubByClubIdOrThrow(Long clubId) {
+        return clubReadPort.findById(clubId)
+                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
+    }
+
+    private Member findMemberByMemberIdOrThrow(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+//    private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
+//        List<AgeGroupType> ageGroupList = ageGroupReadPort.findByClubId(club.getId()).stream()
+//                .map(AgeGroup::getAgeGroupType)
+//                .toList();
+//
+//        List<Long> groundCodes = clubGroundReadPort.findByClubId(club.getId())
+//                .stream()
+//                .map(cg -> cg.getGround().getCode())
+//                .collect(Collectors.toList());
+//
+//        List<GroundResponseDto> groundList = groundReadPort.findAllById(groundCodes)
+//                .stream()
+//                .map(GroundResponseDto::toDto)
+//                .toList();
+//
+//        Address address = club.getAddress();
+//        ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
+//
+//        return ClubResponseDto.toDto(club, leaderName, address, ageGroupList, groundList, likeInfo);
+//    }
+}
