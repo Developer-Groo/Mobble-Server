@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.AppleUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -20,10 +21,16 @@ import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
-public class AppleClient {
+public class AppleClient implements SocialIdentityClient{
 
     private final RestClient appleRestClient;
 
+    @Override
+    public SocialProvider getProvider() {
+        return SocialProvider.APPLE;
+    }
+
+    @Override
     public SocialUserInfo fetchUserInfo(String idToken) {
         try {
             // 전달받은 id_token 디코드 (검증 전 상태)

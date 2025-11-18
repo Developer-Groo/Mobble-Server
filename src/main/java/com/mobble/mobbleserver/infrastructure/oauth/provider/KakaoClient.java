@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.KakaoUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -15,10 +16,16 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoClient {
+public class KakaoClient implements SocialIdentityClient{
 
     private final RestClient kakaoRestClient;
 
+    @Override
+    public SocialProvider getProvider() {
+        return SocialProvider.KAKAO;
+    }
+
+    @Override
     public SocialUserInfo fetchUserInfo(String accessToken) {
         try {
             Map<String, Object> response = kakaoRestClient.get()

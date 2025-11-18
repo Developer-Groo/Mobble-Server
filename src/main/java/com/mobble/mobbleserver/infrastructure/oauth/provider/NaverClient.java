@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
+import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.NaverUserInfoResult;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
@@ -15,10 +16,16 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class NaverClient {
+public class NaverClient implements SocialIdentityClient{
 
     private final RestClient naverRestClient;
 
+    @Override
+    public SocialProvider getProvider() {
+        return SocialProvider.NAVER;
+    }
+
+    @Override
     public SocialUserInfo fetchUserInfo(String accessToken) {
         try {
             Map<String, Object> response = naverRestClient.get()
