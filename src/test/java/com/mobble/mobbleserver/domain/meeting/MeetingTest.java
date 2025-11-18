@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;

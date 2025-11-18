@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.problem;
 
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.shared.error.CommonError;
 import com.mobble.mobbleserver.util.DateTimeUtils;

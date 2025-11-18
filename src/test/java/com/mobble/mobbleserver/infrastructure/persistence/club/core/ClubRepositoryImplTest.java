@@ -2,9 +2,10 @@ package com.mobble.mobbleserver.infrastructure.persistence.club.core;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
 import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.persistence.club.core.projection.ClubLikeInfoDto;
+import com.mobble.mobbleserver.infrastructure.persistence.club.JpaClubRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.club.projection.ClubLikeInfoDto;
 import com.mobble.mobbleserver.domain.like.ClubLike;
 import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
