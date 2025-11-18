@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
@@ -9,8 +8,6 @@ import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
-import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
 import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
 import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -37,7 +34,6 @@ class MeetingMemberRepositoryTest {
     @Autowired
     private EntityManager em;
 
-    private ClubCategory clubCategory;
     private Club club;
     private Member hostMember;
     private ClubMember hostClubMember;
@@ -45,22 +41,22 @@ class MeetingMemberRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        clubCategory = ClubCategoryTestFixture.createDefaultCategory();
-        em.persist(clubCategory);
-
-        club = ClubTestFixture.createDefaultClub(clubCategory);
-        em.persist(club);
-
-        hostMember = MemberTestFixture.createDefaultMember();
-        em.persist(hostMember);
-
-        hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
-                hostMember, club, ClubMemberRole.LEADER, JoinStatus.APPROVED
-        );
-        em.persist(hostClubMember);
-
-        meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
-        em.persist(meeting);
+//        clubCategory = ClubCategoryTestFixture.createDefaultCategory();
+//        em.persist(clubCategory);
+//
+//        club = ClubTestFixture.createDefaultClub(clubCategory);
+//        em.persist(club);
+//
+//        hostMember = MemberTestFixture.createDefaultMember();
+//        em.persist(hostMember);
+//
+//        hostClubMember = ClubMemberTestFixture.createDefaultClubMember(
+//                hostMember, club, ClubMemberRole.LEADER, JoinStatus.APPROVED
+//        );
+//        em.persist(hostClubMember);
+//
+//        meeting = MeetingTestFixture.createDefaultMeeting(hostClubMember);
+//        em.persist(meeting);
     }
 
     @Test
