@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.account.auth.dto.request;
 
 import com.mobble.mobbleserver.account.auth.oauth.verifier.dto.SocialUserInfo;
-import com.mobble.mobbleserver.domain.ground.Ground;
+import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
@@ -32,14 +32,14 @@ public record SignUpRequestDto(
         boolean privacyAgreed
 ) {
 
-    public Member toEntity(SocialUserInfo userInfo, Ground ground) {
+    public Member toEntity(SocialUserInfo userInfo, Location location) {
         return Member.createMember(
                 this.name,
                 this.age,
                 this.gender,
                 userInfo.email(),
                 this.phone,
-                ground,
+                location,
                 this.profileImage,
                 this.termsAgreed,
                 this.privacyAgreed,
