@@ -1,43 +1,60 @@
 package com.mobble.mobbleserver.infrastructure.web.club.dto.response;
 
+import com.mobble.mobbleserver.application.club.result.ClubResult;
+import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
-import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.infrastructure.persistence.club.projection.ClubLikeInfoDto;
-
-import java.util.List;
 
 public record ClubResponseDto(
         Long id,
-        String leader,
         String name,
-        String category,
-        int headcount,
-        List<AgeGroup> ageGroup,
-//        String profileImage,
-//        List<String> infoImage,
+        String description,
+        boolean isAutoJoin,
+        AgeGroup ageGroup,
+        CategoryCode categoryCode,
+
+        String address1,
+        String address2,
+        String city,
+        String district,
+        Double latitude,
+        Double longitude,
+
+        Long mainImageId,
+        String mainImageUrl,
+
+        int memberCount,
+        Long leaderId,
+        String leaderName,
+
         int likeCount,
-        boolean liked,
-        boolean isAutoJoin
+        boolean isLiked
 ) {
 
-    public static ClubResponseDto toDto(
-            Club club,
-            String leaderName,
-            List<AgeGroup> ageGroup,
-//            List<GroundResponseDto> groundList,
-            ClubLikeInfoDto likeInfo
-    ){
+    public static ClubResponseDto toDto(ClubResult result) {
         return new ClubResponseDto(
-                club.getId(),
-                leaderName,
-                club.getName(),
-                "",
-//                groundList,
-                club.getHeadCount(),
-                ageGroup,
-                likeInfo.likeCount(),
-                likeInfo.isLiked(),
-                club.isAutoJoin()
+                result.id(),
+                result.name(),
+                result.description(),
+                result.isAutoJoin(),
+                result.ageGroup(),
+                result.categoryCode(),
+
+                result.address1(),
+                result.address2(),
+                result.city(),
+                result.district(),
+                result.latitude(),
+                result.longitude(),
+
+                result.mainImageId(),
+                result.mainImageUrl(),
+
+                result.memberCount(),
+                result.leaderId(),
+                result.leaderName(),
+
+                result.likeCount(),
+                result.isLiked()
         );
     }
 }
