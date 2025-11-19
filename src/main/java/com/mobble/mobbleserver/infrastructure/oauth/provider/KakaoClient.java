@@ -2,23 +2,19 @@ package com.mobble.mobbleserver.infrastructure.oauth.provider;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.KakaoUserInfoResult;
-import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
+import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.OAuth2UserInfo;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
 @Component
-@RequiredArgsConstructor
-public class KakaoClient implements SocialIdentityClient{
+public class KakaoClient extends AbstractSocialClient{
 
-    private final RestClient kakaoRestClient;
+    public KakaoClient(@Qualifier("kakaoRestClient") RestClient restClient) {
+        super(restClient);
+    }
 
     @Override
     public SocialProvider getProvider() {
@@ -26,29 +22,12 @@ public class KakaoClient implements SocialIdentityClient{
     }
 
     @Override
-    public SocialUserInfo fetchUserInfo(String accessToken) {
-        try {
-            Map<String, Object> response = kakaoRestClient.get()
-                    .uri("/v2/user/me")
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                    .retrieve()
-                    .onStatus(HttpStatusCode::isError, (req, res) -> {
-                        throw new DomainException(OAuthErrorCode.INVALID_ACCESS_TOKEN);
-                    })
-                    .body(new ParameterizedTypeReference<Map<String, Object>>() {
-                    });
+    protected String getUserInfoUri() {
+        return "/v2/user/me";
+    }
 
-            KakaoUserInfoResult userInfo = new KakaoUserInfoResult(response);
-
-            return new SocialUserInfo(
-                    userInfo.getEmail(),
-                    userInfo.getProvider(),
-                    userInfo.getProviderId()
-            );
-        } catch (DomainException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new DomainException(OAuthErrorCode.FAILED_TO_REQUEST_USER_INFO);
-        }
+    @Override
+    protected OAuth2UserInfo parseUserInfo(Map<String, Object> attributes) {
+        return new KakaoUserInfoResult(attributes);
     }
 }
