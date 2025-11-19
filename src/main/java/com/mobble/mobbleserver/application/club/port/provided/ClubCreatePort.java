@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.application.club.port.provided;
 
-import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.application.club.command.request.CreateClubCommand;
+import com.mobble.mobbleserver.domain.club.Club;
 
 public interface ClubCreatePort {
 
-    ClubResponseDto createClub(Long memberId, ClubRequestDto dto);
+    Club create(CreateClubCommand command);
 }

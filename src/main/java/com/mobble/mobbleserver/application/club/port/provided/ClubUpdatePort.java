@@ -5,5 +5,5 @@ import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponse
 
 public interface ClubUpdatePort {
 
-    ClubResponseDto updateClub(Long clubId, Long memberId, ClubRequestDto dto);
+    ClubResponseDto update(Long clubId, Long memberId, ClubRequestDto dto);
 }
