@@ -1,9 +1,11 @@
 package com.mobble.mobbleserver.infrastructure.web.club;
 
+import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
 import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
+import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
@@ -31,12 +33,29 @@ public class ClubAPI {
     private final ClubDeletePort clubDeletePort;
 
     @PostMapping
-    public ResponseEntity<ClubResponseDto> createClub(
+    public ResponseEntity<ClubResponseDto> create(
             @RequestBody @Valid ClubRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        CreateClubCommand command = CreateClubCommand.create(
+                memberId,
+                dto.name(),
+                dto.description(),
+                dto.isAutoJoin(),
+                dto.category(),
+                dto.ageGroup(),
+                dto.address1(),
+                dto.address2(),
+                dto.city(),
+                dto.district(),
+                dto.latitude(),
+                dto.longitude(),
+                dto.mainImageId()
+        );
+        ClubResult result = clubCreatePort.create(command);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(clubCreatePort.create(memberId, dto));
+                .body(ClubResponseDto.toDto(result));
     }
 
     @GetMapping("/{club-id}")
