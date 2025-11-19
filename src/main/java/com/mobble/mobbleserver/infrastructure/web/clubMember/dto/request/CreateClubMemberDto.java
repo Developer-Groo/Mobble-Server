@@ -14,7 +14,7 @@ public record CreateClubMemberDto(
 ) {
 
     public ClubMember toEntity() {
-        return ClubMember.createClubMember(
+        return ClubMember.create(
                 this.member,
                 this.club,
                 this.clubMemberRole,

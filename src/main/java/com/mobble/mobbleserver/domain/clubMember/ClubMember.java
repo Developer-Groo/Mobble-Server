@@ -49,7 +49,7 @@ public class ClubMember extends BaseEntity {
         this.joinStatus = joinStatus;
     }
 
-    public static ClubMember createClubMember(
+    public static ClubMember create(
             Member member,
             Club club,
             ClubMemberRole clubMemberRole,

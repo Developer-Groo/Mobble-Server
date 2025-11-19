@@ -52,7 +52,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
 
         JoinStatus joinStatus = determineJoinStatus(club);
 
-        ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, joinStatus);
+        ClubMember clubMember = ClubMember.create(member, club, ClubMemberRole.MEMBER, joinStatus);
         clubMemberWritePort.save(clubMember);
 
         return ClubMemberUpsertResponseDto.toDto(clubMember);

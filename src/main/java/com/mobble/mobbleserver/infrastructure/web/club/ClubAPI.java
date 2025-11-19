@@ -36,7 +36,7 @@ public class ClubAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(clubCreatePort.createClub(memberId, dto));
+                .body(clubCreatePort.create(memberId, dto));
     }
 
     @GetMapping("/{club-id}")
@@ -55,7 +55,7 @@ public class ClubAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubUpdatePort.updateClub(clubId, memberId, dto));
+                .body(clubUpdatePort.update(clubId, memberId, dto));
     }
 
     @DeleteMapping("/{club-id}")
@@ -63,7 +63,7 @@ public class ClubAPI {
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ){
-        clubDeletePort.deleteClub(clubId, memberId);
+        clubDeletePort.delete(clubId, memberId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
