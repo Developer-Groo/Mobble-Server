@@ -47,28 +47,28 @@ public class LikeQueryService implements LikeQueryPort {
     }
 
     @Override
-    public Long getLikeCount(LikeType likeType, Long targetId) {
+    public int getLikeCount(LikeType likeType, Long targetId) {
         return likeCounterReadPort.findByLikeTypeAndTargetId(likeType, targetId)
                 .map(LikeCounter::getCount)
-                .orElse(0L);
+                .orElse(0);
     }
 
     @Override
-    public Map<Long, Long> getLikeCounts(LikeType likeType, List<Long> targetIds) {
+    public Map<Long, Integer> getLikeCounts(LikeType likeType, List<Long> targetIds) {
 
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
-        Map<Long, Long> counterMap = toCounterMap(counters);
+        Map<Long, Integer> counterMap = toCounterMap(counters);
 
         return targetIds.stream()
                 .distinct()
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        id -> counterMap.getOrDefault(id, 0L)
+                        id -> counterMap.getOrDefault(id, 0)
                 ));
     }
 
     /* ==== Private Helper ==== */
-    private Map<Long, Long> toCounterMap(List<LikeCounter> counters) {
+    private Map<Long, Integer> toCounterMap(List<LikeCounter> counters) {
         return counters.stream()
                 .collect(Collectors.toMap(
                         LikeCounter::getTargetId,
