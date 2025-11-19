@@ -12,14 +12,4 @@ public record CreateClubMemberDto(
         ClubMemberRole clubMemberRole,
         JoinStatus joinStatus
 ) {
-
-    public ClubMember toEntity() {
-        return ClubMember.create(
-                this.member,
-                this.club,
-                this.clubMemberRole,
-                this.joinStatus
-        );
-    }
-
 }
