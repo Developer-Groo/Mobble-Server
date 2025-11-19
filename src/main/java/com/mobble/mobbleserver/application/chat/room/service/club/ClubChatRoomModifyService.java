@@ -26,7 +26,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
+    public void createClubChatRoom(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
@@ -37,8 +37,6 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
 
         clubChatRoom.addParticipant(member);
         chatRoomWritePort.save(clubChatRoom);
-
-        return ClubChatRoomPreviewResponseDto.toDto(clubChatRoom, club, null, 0, null);
     }
 
     @Override
