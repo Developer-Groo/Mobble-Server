@@ -1,10 +1,10 @@
-package com.mobble.mobbleserver.application.club.command.request;
+package com.mobble.mobbleserver.application.club.command;
 
 import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
 
 public record CreateClubCommand(
-        Long ownerId,
+        Long leaderId,
         String name,
         String description,
         boolean isAutoJoin,
@@ -20,7 +20,7 @@ public record CreateClubCommand(
 ) {
 
     public static CreateClubCommand create(
-            Long ownerId,
+            Long leaderId,
             String name,
             String description,
             boolean isAutoJoin,
@@ -35,7 +35,7 @@ public record CreateClubCommand(
             Long mainImageId // Todo: 확인 필요
     ) {
         return new CreateClubCommand(
-                ownerId,
+                leaderId,
                 name,
                 description,
                 isAutoJoin,
