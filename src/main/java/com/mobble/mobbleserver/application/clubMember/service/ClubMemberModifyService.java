@@ -52,7 +52,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
 
         JoinStatus joinStatus = determineJoinStatus(club);
 
-        ClubMember clubMember = ClubMember.create(member, club, ClubMemberRole.MEMBER, joinStatus);
+        ClubMember clubMember = ClubMember.createMember(member, club, joinStatus);
         clubMemberWritePort.save(clubMember);
 
         return ClubMemberUpsertResponseDto.toDto(clubMember);
@@ -142,7 +142,7 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
 
     public void validateClubNotFull(Club club) {
         long approvedCount = clubMemberReadPort.countByClubIdAndJoinStatus(club.getId(), JoinStatus.APPROVED);
-        if (approvedCount >= club.getHeadCount()) {
+        if (approvedCount >= club.getMemberCount()) {
             throw new DomainException(ClubMemberErrorCode.CLUB_IS_FULL);
         }
     }

@@ -49,17 +49,28 @@ public class ClubMember extends BaseEntity {
         this.joinStatus = joinStatus;
     }
 
-    public static ClubMember create(
+    public static ClubMember createLeader(
             Member member,
-            Club club,
-            ClubMemberRole clubMemberRole,
-            JoinStatus joinStatus
+            Club club
     ) {
         return ClubMember.builder()
                 .member(member)
                 .club(club)
-                .clubMemberRole(clubMemberRole)
-                .joinStatus(joinStatus)
+                .clubMemberRole(ClubMemberRole.LEADER)
+                .joinStatus(JoinStatus.APPROVED)
+                .build();
+    }
+
+    public static ClubMember createMember(
+            Member member,
+            Club club,
+            JoinStatus status
+    ) {
+        return ClubMember.builder()
+                .member(member)
+                .club(club)
+                .clubMemberRole(ClubMemberRole.MEMBER)
+                .joinStatus(status)
                 .build();
     }
 
