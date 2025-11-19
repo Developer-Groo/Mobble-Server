@@ -27,7 +27,7 @@ public record ClubSummaryDto(
                 club.getName(),
                 "",
                 groundList,
-                club.getHeadCount(),
+                club.getMemberCount(),
                 likeInfo.likeCount(),
                 likeInfo.isLiked(),
                 club.isAutoJoin()
