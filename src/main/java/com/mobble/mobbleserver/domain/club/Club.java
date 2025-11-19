@@ -25,8 +25,8 @@ public class Club extends BaseEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Member owner;
+    @JoinColumn(name = "leader_id", nullable = false)
+    private Member leader;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_image_id")
@@ -49,30 +49,35 @@ public class Club extends BaseEntity {
     @Column(name = "isAutoJoin")
     private boolean isAutoJoin;
 
+    @Column(name = "member_count", nullable = false)
+    private int memberCount;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
             String name,
-            Member owner,
+            Member leader,
             Image mainImage,
             Category category,
             Location location,
             AgeGroup ageGroup,
             String description,
-            boolean isAutoJoin
+            boolean isAutoJoin,
+            int memberCount
     ) {
         this.name = name;
-        this.owner = owner;
+        this.leader = leader;
         this.mainImage = mainImage;
         this.category = category;
         this.location = location;
         this.ageGroup = ageGroup;
         this.description = description;
         this.isAutoJoin = isAutoJoin;
+        this.memberCount = memberCount;
     }
 
     public static Club create(
             String name,
-            Member owner,
+            Member leader,
             Image mainImage,
             Category category,
             Location location,
@@ -81,16 +86,25 @@ public class Club extends BaseEntity {
             boolean isAutoJoin
     ) {
         // Todo: 유효성 검증 필요
-
         return Club.builder()
                 .name(name)
-                .owner(owner)
+                .leader(leader)
                 .mainImage(mainImage)
                 .category(category)
                 .location(location)
                 .ageGroup(ageGroup)
                 .description(description)
                 .isAutoJoin(isAutoJoin)
+                .memberCount(1)
                 .build();
+    }
+
+    public void increaseMemberCount() {
+        this.memberCount++;
+    }
+
+    public void decreaseMemberCount() {
+        this.memberCount--;
+        if (this.memberCount < 0) this.memberCount = 0;
     }
 }
