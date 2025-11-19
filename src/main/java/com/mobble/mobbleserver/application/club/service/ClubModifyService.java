@@ -1,22 +1,23 @@
 package com.mobble.mobbleserver.application.club.service;
 
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.application.category.port.required.CategoryReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
-import com.mobble.mobbleserver.application.club.command.request.CreateClubCommand;
+import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
 import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
 import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
+import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
+import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.category.Category;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -24,7 +25,6 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -38,21 +38,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDeletePort {
 
+    private final ClubChatRoomCreatePort clubChatRoomCreatePort;
+
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
+
+    private final ImageReadPort imageReadPort;
+    private final CategoryReadPort categoryReadPort;
 
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final ArticleReadPort articleReadPort;
 
-    private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
 
     @Override
-    public Club create(CreateClubCommand command) {
-        Member owner = assertMemberBymemberId(command.ownerId());
+    public ClubResult create(CreateClubCommand command) {
+        Member leader = assertMemberBymemberId(command.leaderId());
 
+        // Todo: helper 메서드로 분리 및 커스텀 error 적용 필요
         Image mainImage = imageReadPort.findById(command.mainImageId())
                 .orElseThrow();
 
@@ -70,24 +75,23 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         Club club = Club.create(
                 command.name(),
-                owner,
+                leader,
                 mainImage,
                 category,
                 location,
-                command.ageGroup(), // Todo: 열거형 변환 확인 필요
+                command.ageGroup(),
                 command.description(),
                 command.isAutoJoin()
         );
 
         clubWritePort.save(club);
 
-        // Todo: 생성자 2개로 분기 (createLeader, createMember)
-        ClubMember ownerMembership = ClubMember.create(owner, club, ClubMemberRole.LEADER, JoinStatus.APPROVED);
-        clubMemberWritePort.save(ownerMembership);
+        ClubMember leaderMembership = ClubMember.createLeader(leader, club);
+        clubMemberWritePort.save(leaderMembership);
 
-        clubChatRoomCreatePort.createClubChatRoom(club.getId(), owner.getId());
+        clubChatRoomCreatePort.createClubChatRoom(club.getId(), leader.getId());
 
-        return club;
+        return ClubResult.create(club, 0, List.of());
     }
 
     @Override
