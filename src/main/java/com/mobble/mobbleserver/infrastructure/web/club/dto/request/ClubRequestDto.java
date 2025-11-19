@@ -1,32 +1,52 @@
 package com.mobble.mobbleserver.infrastructure.web.club.dto.request;
 
+import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
-import com.mobble.mobbleserver.domain.club.Club;
 import jakarta.validation.constraints.*;
 
-import java.util.List;
-
 public record ClubRequestDto(
-        @NotBlank(message = "CLUB:NAME_NOT_BLANK")
-        @Size(max = 20, message = "CLUB:NAME_TOO_LONG")
+        @NotBlank(message = "club name must not be blank")
+        @Size(max = 20, message = "club name must be 20 characters or fewer")
         String name,
 
-        @NotBlank(message = "CLUB:CATEGORY_NOT_BLANK")
-        String category,
+        @Size(max = 300, message = "description must be 300 characters or fewer")
+        String description,
 
-//        String profileImage,
-//        List<String> infoImage,
+        @NotNull(message = "auto join flag must not be null")
+        Boolean isAutoJoin,
 
-        List<Long> groundCodes,
+        @NotNull(message = "category must not be null")
+        CategoryCode category,
 
-        @Min(value = 2, message = "CLUB:HEADCOUNT_MIN")
-        @Max(value = 1000, message = "CLUB:HEADCOUNT_MAX")
-        int headcount,
+        @NotNull(message = "age group must not be null")
+        AgeGroup ageGroup,
 
-        @NotEmpty(message = "CLUB:AGE_GROUP_NOT_EMPTY")
-        List<AgeGroup> ageGroup,
+        @NotBlank(message = "address1 must not be blank")
+        @Size(max = 100, message = "address1 must be 100 characters or fewer")
+        String address1,
 
-        @NotNull(message = "CLUB:JOIN_TYPE_REQUIRED")
-        Boolean isAutoJoin
+        @Size(max = 100, message = "address2 must be 100 characters or fewer")
+        String address2,
+
+        @NotBlank(message = "city must not be blank")
+        @Size(max = 50, message = "city must be 50 characters or fewer")
+        String city,
+
+        @NotBlank(message = "district must not be blank")
+        @Size(max = 50, message = "district must be 50 characters or fewer")
+        String district,
+
+        @NotNull(message = "latitude must not be null")
+        @DecimalMin(value = "-90.0", message = "latitude must be greater than or equal to -90.0")
+        @DecimalMax(value = "90.0", message = "latitude must be less than or equal to 90.0")
+        Double latitude,
+
+        @NotNull(message = "longitude must not be null")
+        @DecimalMin(value = "-180.0", message = "longitude must be greater than or equal to -180.0")
+        @DecimalMax(value = "180.0", message = "longitude must be less than or equal to 180.0")
+        Double longitude,
+
+        @Positive(message = "main image id must be positive")
+        Long mainImageId
 ) {
 }
