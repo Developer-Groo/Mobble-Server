@@ -1,6 +1,10 @@
 package com.mobble.mobbleserver.domain.club;
 
+import com.mobble.mobbleserver.domain.category.Category;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
+import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,8 +24,27 @@ public class Club extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "head_count")
-    private int headCount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Member owner;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_image_id")
+    private Image mainImage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @Embedded
+    private Location location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "age_group", nullable = false)
+    private AgeGroup ageGroup;
+
+    @Column(name = "description", length = 300)
+    private String description;
 
     @Column(name = "isAutoJoin")
     private boolean isAutoJoin;
@@ -29,33 +52,45 @@ public class Club extends BaseEntity {
     @Builder(access = AccessLevel.PRIVATE)
     private Club(
             String name,
-            int headCount,
+            Member owner,
+            Image mainImage,
+            Category category,
+            Location location,
+            AgeGroup ageGroup,
+            String description,
             boolean isAutoJoin
     ) {
         this.name = name;
-        this.headCount = headCount;
+        this.owner = owner;
+        this.mainImage = mainImage;
+        this.category = category;
+        this.location = location;
+        this.ageGroup = ageGroup;
+        this.description = description;
         this.isAutoJoin = isAutoJoin;
     }
 
-    public static Club createClub(
+    public static Club create(
             String name,
-            int headCount,
+            Member owner,
+            Image mainImage,
+            Category category,
+            Location location,
+            AgeGroup ageGroup,
+            String description,
             boolean isAutoJoin
     ) {
+        // Todo: 유효성 검증 필요
+
         return Club.builder()
                 .name(name)
-                .headCount(headCount)
+                .owner(owner)
+                .mainImage(mainImage)
+                .category(category)
+                .location(location)
+                .ageGroup(ageGroup)
+                .description(description)
                 .isAutoJoin(isAutoJoin)
                 .build();
-    }
-
-    public void updateClub(
-            String name,
-            int headCount,
-            boolean isAutoJoin
-    ) {
-        this.name = name;
-        this.headCount = headCount;
-        this.isAutoJoin = isAutoJoin;
     }
 }
