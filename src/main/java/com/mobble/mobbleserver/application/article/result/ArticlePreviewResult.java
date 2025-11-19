@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.article.command.response;
+package com.mobble.mobbleserver.application.article.result;
 
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
@@ -15,7 +15,7 @@ public record ArticlePreviewResult(
         String body,
         Long ownerId,
         String ownerName,
-        Long likeCount,
+        int likeCount,
         boolean isLiked,
         int commentCount,
         LocalDateTime createdAt,
@@ -25,13 +25,13 @@ public record ArticlePreviewResult(
 
     public static List<ArticlePreviewResult> create(
             List<Article> articles,
-            Map<Long, Long> likeCounts,
+            Map<Long, Integer> likeCounts,
             List<Long> likedIds,
             Map<Long, Integer> commentCounts
     ) {
         return articles.stream()
                 .map(article -> {
-                    Long likeCount = likeCounts.getOrDefault(article.getId(), 0L);
+                    Integer likeCount = likeCounts.getOrDefault(article.getId(), 0);
                     boolean isLiked = likedIds.contains(article.getId());
                     Integer commentCount = commentCounts.getOrDefault(article.getId(), 0);
 
@@ -40,7 +40,7 @@ public record ArticlePreviewResult(
                 .toList();
     }
 
-    private static ArticlePreviewResult from(Article article, Long likeCount, boolean isLiked, Integer commentCount) {
+    private static ArticlePreviewResult from(Article article, Integer likeCount, boolean isLiked, Integer commentCount) {
         String previewContent = summarize(article.getContent().getBody());
 
         return new ArticlePreviewResult(

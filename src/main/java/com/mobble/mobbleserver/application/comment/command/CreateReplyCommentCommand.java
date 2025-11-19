@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.comment.command.request;
+package com.mobble.mobbleserver.application.comment.command;
 
 public record CreateReplyCommentCommand(Long memberId, Long clubId, Long articleId, Long parentId, String content) {
 

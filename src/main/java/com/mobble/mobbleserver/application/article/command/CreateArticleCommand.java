@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.article.command.request;
+package com.mobble.mobbleserver.application.article.command;
 
 import com.mobble.mobbleserver.domain.article.ArticleType;
 

@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.application.comment.service;
 
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
@@ -36,7 +36,7 @@ public class CommentQueryService implements CommentQueryPort {
                 .map(Comment::getId)
                 .toList();
 
-        Map<Long, Long> likeCounts = likeQueryPort.getLikeCounts(LikeType.COMMENT, commentIds);
+        Map<Long, Integer> likeCounts = likeQueryPort.getLikeCounts(LikeType.COMMENT, commentIds);
         List<Long> likedList = likeQueryPort.getLikedIds(LikeType.COMMENT, memberId, commentIds);
 
         return RootCommentResult.create(comments, likeCounts, likedList);

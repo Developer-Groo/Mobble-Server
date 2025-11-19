@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.comment.command.request;
+package com.mobble.mobbleserver.application.comment.command;
 
 public record UpdateCommentCommand(
         Long memberId,

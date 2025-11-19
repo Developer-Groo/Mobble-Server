@@ -1,12 +1,12 @@
 package com.mobble.mobbleserver.application.article.service;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
@@ -52,7 +52,7 @@ public class ArticleQueryService implements ArticleQueryPort {
 
         List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
 
-        Map<Long, Long> likeCounts = likeQueryPort.getLikeCounts(LikeType.ARTICLE, articleIds);
+        Map<Long, Integer> likeCounts = likeQueryPort.getLikeCounts(LikeType.ARTICLE, articleIds);
         List<Long> likedIds = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), articleIds);
         Map<Long, Integer> commentCounts = commentQueryPort.getCountComments(articleIds);
 
@@ -66,7 +66,7 @@ public class ArticleQueryService implements ArticleQueryPort {
         Member member = clubMember.getMember();
         Article article = assertArticleByArticleIdAndClubId(articleId, club.getId());
 
-        Long likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
+        int likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
         List<Member> likedMembers = isLikedMembers(article.getId());
 
         boolean isLiked = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), List.of(article.getId()))

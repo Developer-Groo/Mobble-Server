@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.comment.command.response;
+package com.mobble.mobbleserver.application.comment.result;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
 
@@ -18,14 +18,14 @@ public record ReplyCommentResult(
         LocalDateTime updatedAt
 ) {
 
-    public static ReplyCommentResult toDto(Comment comment, Map<Long, Long> likeCounts, List<Long> isLikedList) {
+    public static ReplyCommentResult toDto(Comment comment, Map<Long, Integer> likeCounts, List<Long> isLikedList) {
         return new ReplyCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getMember().getName(),
                 comment.hasParent() ? comment.getParent().getId() : null,
                 comment.getContent().getBody(),
-                likeCounts.getOrDefault(comment.getId(), 0L).intValue(),
+                likeCounts.getOrDefault(comment.getId(), 0),
                 isLikedList.contains(comment.getId()),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()

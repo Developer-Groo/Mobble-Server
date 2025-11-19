@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.application.article.service;
 
-import com.mobble.mobbleserver.application.article.command.request.CreateArticleCommand;
-import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.CreateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.UpdateArticleCommand;
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleCreatePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;

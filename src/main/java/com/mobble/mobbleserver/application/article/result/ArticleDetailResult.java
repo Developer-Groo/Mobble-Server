@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.application.article.command.response;
+package com.mobble.mobbleserver.application.article.result;
 
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -17,7 +17,7 @@ public record ArticleDetailResult(
         String ownerName,
         boolean isOwner,
         boolean isLiked,
-        Long likeCount,
+        int likeCount,
         List<ArticleLikedMembers> likedMembers,
         int commentCount,
         List<RootCommentResult> commentList,
@@ -28,7 +28,7 @@ public record ArticleDetailResult(
 
     public static ArticleDetailResult create(
             Article article,
-            Long likeCount,
+            int likeCount,
             List<Member> likedMembers,
             boolean isLiked,
             boolean isOwner,

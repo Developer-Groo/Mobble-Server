@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.comment.command.response;
+package com.mobble.mobbleserver.application.comment.result;
 
 import com.mobble.mobbleserver.domain.comment.Comment;
 
@@ -19,20 +19,20 @@ public record RootCommentResult(
         List<ReplyCommentResult> replies
 ) {
 
-    public static List<RootCommentResult> create(List<Comment> comments, Map<Long, Long> likeCounts, List<Long> likedIds) {
+    public static List<RootCommentResult> create(List<Comment> comments, Map<Long, Integer> likeCounts, List<Long> isLikedList) {
         return comments.stream()
-                .map(comment -> toRoot(comment, likeCounts, likedIds))
+                .map(comment -> toRoot(comment, likeCounts, isLikedList))
                 .toList();
     }
 
-    private static RootCommentResult toRoot(Comment comment, Map<Long, Long> likeCounts, List<Long> isLikedList) {
+    private static RootCommentResult toRoot(Comment comment, Map<Long, Integer> likeCounts, List<Long> isLikedList) {
         return new RootCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),
                 comment.getArticle().getId(),
                 comment.getMember().getName(),
                 comment.getContent().getBody(),
-                likeCounts.getOrDefault(comment.getId(), 0L).intValue(),
+                likeCounts.getOrDefault(comment.getId(), 0),
                 isLikedList.contains(comment.getId()),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
