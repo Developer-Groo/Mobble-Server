@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.club.dto.response;
 
-import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
+import com.mobble.mobbleserver.domain.club.Club;
 
 public record ClubResponseDto(
         Long id,
@@ -24,37 +24,31 @@ public record ClubResponseDto(
 
         int memberCount,
         Long leaderId,
-        String leaderName,
-
-        int likeCount,
-        boolean isLiked
+        String leaderName
 ) {
 
-    public static ClubResponseDto toDto(ClubResult result) {
+    public static ClubResponseDto toDto(Club club) {
         return new ClubResponseDto(
-                result.id(),
-                result.name(),
-                result.description(),
-                result.isAutoJoin(),
-                result.ageGroup(),
-                result.categoryCode(),
+                club.getId(),
+                club.getName(),
+                club.getDescription(),
+                club.isAutoJoin(),
+                club.getAgeGroup(),
+                club.getCategory().getCode(),
 
-                result.address1(),
-                result.address2(),
-                result.city(),
-                result.district(),
-                result.latitude(),
-                result.longitude(),
+                club.getLocation().getAddress1(),
+                club.getLocation().getAddress2(),
+                club.getLocation().getCity(),
+                club.getLocation().getDistrict(),
+                club.getLocation().getLatitude(),
+                club.getLocation().getLongitude(),
 
-                result.mainImageId(),
-                result.mainImageUrl(),
+                club.getMainImage().getId(),
+                club.getMainImage().getUrl(),
 
-                result.memberCount(),
-                result.leaderId(),
-                result.leaderName(),
-
-                result.likeCount(),
-                result.isLiked()
+                club.getMemberCount(),
+                club.getLeader().getId(),
+                club.getLeader().getName()
         );
     }
 }
