@@ -99,6 +99,25 @@ public class Club extends BaseEntity {
                 .build();
     }
 
+    public void update(
+            String name,
+            Image mainImage,
+            Category category,
+            Location location,
+            AgeGroup ageGroup,
+            String description,
+            boolean isAutoJoin
+    ) {
+        // Todo: 유효성 검증 필요
+        this.name = name;
+        this.mainImage = mainImage;
+        this.category = category;
+        this.location = location;
+        this.ageGroup = ageGroup;
+        this.description = description;
+        this.isAutoJoin = isAutoJoin;
+    }
+
     public void increaseMemberCount() {
         this.memberCount++;
     }
