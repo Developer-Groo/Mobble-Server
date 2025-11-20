@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.infrastructure.persistence.club.projection.ClubLi
 
 import java.util.List;
 
-public record ClubSummaryDto(
+public record ClubPreviewResponseDto(
         Long id,
         String name,
         String category,
@@ -17,12 +17,12 @@ public record ClubSummaryDto(
         boolean isAutoJoin
 ) {
 
-    public static ClubSummaryDto toDto(
+    public static ClubPreviewResponseDto toDto(
             Club club,
             List<Location> groundList,
             ClubLikeInfoDto likeInfo
     ) {
-        return new ClubSummaryDto(
+        return new ClubPreviewResponseDto(
                 club.getId(),
                 club.getName(),
                 "",
