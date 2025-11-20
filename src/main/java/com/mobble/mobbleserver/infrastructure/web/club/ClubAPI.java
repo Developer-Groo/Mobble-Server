@@ -1,15 +1,16 @@
 package com.mobble.mobbleserver.infrastructure.web.club;
 
 import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
+import com.mobble.mobbleserver.application.club.command.UpdateClubCommand;
 import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
-import com.mobble.mobbleserver.application.club.result.ClubResult;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubSummaryDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubPreviewResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -37,44 +38,24 @@ public class ClubAPI {
             @RequestBody @Valid ClubRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        CreateClubCommand command = CreateClubCommand.create(
-                memberId,
-                dto.name(),
-                dto.description(),
-                dto.isAutoJoin(),
-                dto.category(),
-                dto.ageGroup(),
-                dto.address1(),
-                dto.address2(),
-                dto.city(),
-                dto.district(),
-                dto.latitude(),
-                dto.longitude(),
-                dto.mainImageId()
-        );
-        ClubResult result = clubCreatePort.create(command);
+        CreateClubCommand command = dto.toCreateCommand(memberId);
+        Club result = clubCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ClubResponseDto.toDto(result));
     }
 
-    @GetMapping("/{club-id}")
-    public ResponseEntity<ClubResponseDto> findClubById(
-            @PathVariable("club-id") @Positive Long clubId,
-            @AuthenticationPrincipal(expression = "memberId") Long memberId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(clubQueryPort.findClubById(clubId, memberId));
-    }
-
     @PatchMapping("/{club-id}")
-    public ResponseEntity<ClubResponseDto> updateClub(
+    public ResponseEntity<ClubResponseDto> update(
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody @Valid ClubRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        UpdateClubCommand command = dto.toUpdateCommand(clubId, memberId);
+        Club result = clubUpdatePort.update(command);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubUpdatePort.update(clubId, memberId, dto));
+                .body(ClubResponseDto.toDto(result));
     }
 
     @DeleteMapping("/{club-id}")
@@ -88,8 +69,17 @@ public class ClubAPI {
                 .build();
     }
 
+    @GetMapping("/{club-id}")
+    public ResponseEntity<ClubResponseDto> findClubById(
+            @PathVariable("club-id") @Positive Long clubId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(clubQueryPort.findClubById(clubId, memberId));
+    }
+
     @GetMapping("/search")
-    public ResponseEntity<List<ClubSummaryDto>> searchClubs(
+    public ResponseEntity<List<ClubPreviewResponseDto>> searchClubs(
             @Validated ClubSearchRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
