@@ -16,7 +16,7 @@ public record CreateClubCommand(
         String district,
         Double latitude,
         Double longitude,
-        Long mainImageId // Todo: 확인 필요
+        Long mainImageId
 ) {
 
     public static CreateClubCommand create(
@@ -32,7 +32,7 @@ public record CreateClubCommand(
             String district,
             Double latitude,
             Double longitude,
-            Long mainImageId // Todo: 확인 필요
+            Long mainImageId
     ) {
         return new CreateClubCommand(
                 leaderId,
