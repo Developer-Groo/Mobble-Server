@@ -1,6 +1,5 @@
 package com.mobble.mobbleserver.application.club.result;
 
-import com.mobble.mobbleserver.application.like.service.LikeQueryService;
 import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
 import com.mobble.mobbleserver.domain.club.Club;
