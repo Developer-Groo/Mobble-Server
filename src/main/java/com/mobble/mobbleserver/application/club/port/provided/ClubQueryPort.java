@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.application.club.port.provided;
 
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubPreviewResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
 
 import java.util.List;
 

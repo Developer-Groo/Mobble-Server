@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.account.service;
 
+import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
@@ -14,7 +15,6 @@ import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
-import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

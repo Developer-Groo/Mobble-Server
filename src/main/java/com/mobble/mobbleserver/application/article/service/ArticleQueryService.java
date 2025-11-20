@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.application.article.service;
 
-import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
-import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;

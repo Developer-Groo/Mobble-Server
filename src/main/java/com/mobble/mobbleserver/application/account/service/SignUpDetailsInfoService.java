@@ -5,7 +5,6 @@ import com.mobble.mobbleserver.application.account.provided.SignUpDetailsPort;
 import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
 import com.mobble.mobbleserver.application.account.required.SignUpTokenPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
-import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SignUpRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
