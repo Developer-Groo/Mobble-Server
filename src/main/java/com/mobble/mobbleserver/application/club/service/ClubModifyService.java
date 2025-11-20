@@ -5,28 +5,25 @@ import com.mobble.mobbleserver.application.category.port.required.CategoryReadPo
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
+import com.mobble.mobbleserver.application.club.command.UpdateClubCommand;
 import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
-import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
-import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.category.Category;
+import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,26 +40,20 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
 
+    private final MemberReadPort memberReadPort;
     private final ImageReadPort imageReadPort;
     private final CategoryReadPort categoryReadPort;
 
-    private final ClubReadPort clubReadPort;
-    private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
     private final ArticleReadPort articleReadPort;
 
     private final ChatRoomExitPort chatRoomExitPort;
 
     @Override
-    public ClubResult create(CreateClubCommand command) {
-        Member leader = assertMemberBymemberId(command.leaderId());
-
-        // Todo: helper 메서드로 분리 및 커스텀 error 적용 필요
-        Image mainImage = imageReadPort.findById(command.mainImageId())
-                .orElseThrow();
-
-        Category category = categoryReadPort.findByCode(command.categoryCode())
-                .orElseThrow();
+    public Club create(CreateClubCommand command) {
+        Member leader = assertMemberByMemberId(command.leaderId());
+        Category category = assertCategoryByCode(command.categoryCode());
+        Image mainImage = resolveMainImage(command.mainImageId());
 
         Location location = Location.create(
                 command.address1(),
@@ -91,40 +82,44 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         clubChatRoomCreatePort.createClubChatRoom(club.getId(), leader.getId());
 
-        return ClubResult.create(club, 0, List.of());
+        return club;
     }
 
     @Override
-    public ClubResponseDto update(Long clubId, Long memberId, ClubRequestDto dto) {
-        Club club = findClubByClubIdOrThrow(clubId);
-        Member member = assertMemberBymemberId(memberId);
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+    public Club update(UpdateClubCommand command) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+
         assertLeader(clubMember);
 
-//        ClubCategory category = findCategoryOrThrow(dto.category());
-//
-//        Address address = club.getAddress();
-//        AddressRequestDto addrDto = dto.addressDto();
-//
-//        address.updateAddress(addrDto);
-//        club.updateClub(category, dto.name(), address, dto.headcount(), dto.isAutoJoin());
-//
-////        clubGroundWritePort.deleteAllByClubId(club.getId());
-////
-////        List<ClubGround> newClubGrounds = createClubGroundList(dto.groundCodes(), club);
-////        clubGroundWritePort.saveAll(newClubGrounds);
-//        ageGroupWritePort.deleteAllClubAgeGroupByClubId(club.getId());
-//
-//        List<AgeGroup> newAgeGroups = createClubAgeGroups(club, dto.ageGroup());
-//        ageGroupWritePort.saveAll(newAgeGroups);
-//
-//        return buildClubResponse(club, member, member.getName());
-        return null;
+        Club club = clubMember.getClub();
+        Category category = assertCategoryByCode(command.categoryCode());
+        Image mainImage = resolveMainImage(command.mainImageId());
+
+        Location location = Location.create(
+                command.address1(),
+                command.address2(),
+                command.city(),
+                command.district(),
+                command.latitude(),
+                command.longitude()
+        );
+
+        club.update(
+                command.name(),
+                mainImage,
+                category,
+                location,
+                command.ageGroup(),
+                command.description(),
+                command.isAutoJoin()
+        );
+
+        return club;
     }
 
     @Override
     public void delete(Long clubId, Long memberId) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         Club club = clubMember.getClub();
 
         assertLeader(clubMember);
@@ -139,23 +134,34 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     /* ==== Private Helper ==== */
-    private Club findClubByClubIdOrThrow(Long clubId) {
-        return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
-    }
-
-    private Member assertMemberBymemberId(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER)); // Todo: Error 수정 필요
     }
 
-    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+    private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: Error 수정 필요
+    }
+
+    private Category assertCategoryByCode(CategoryCode code) {
+        return categoryReadPort.findByCode(code)
+                .orElseThrow(); // Todo: Error 수정 필요
     }
 
     private void assertLeader(ClubMember clubMember) {
-        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION); // Todo: Error 수정 필요
+    }
+
+    private Image resolveMainImage(Long imageId) {
+        return (imageId == null)
+                ? null // Todo: getDefaultImage 메서드 호출
+                : assertImageByImageId(imageId);
+    }
+
+    private Image assertImageByImageId(Long imageId) {
+        return imageReadPort.findById(imageId)
+                .orElseThrow(); // Todo: Error 수정 필요
     }
 
 //    private ClubCategory findCategoryOrThrow(String categoryName) {
