@@ -48,7 +48,7 @@ public class MeetingAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
+        List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MeetingResponseDto.toDto(meetings));
