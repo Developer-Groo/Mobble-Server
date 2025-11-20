@@ -1,5 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.club.dto.request;
 
+import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
+import com.mobble.mobbleserver.application.club.command.UpdateClubCommand;
 import com.mobble.mobbleserver.domain.category.CategoryCode;
 import com.mobble.mobbleserver.domain.club.AgeGroup;
 import jakarta.validation.constraints.*;
@@ -49,4 +51,41 @@ public record ClubRequestDto(
         @Positive(message = "main image id must be positive")
         Long mainImageId
 ) {
+
+    public CreateClubCommand toCreateCommand(Long leaderId) {
+        return CreateClubCommand.create(
+                leaderId,
+                name,
+                description,
+                isAutoJoin,
+                category,
+                ageGroup,
+                address1,
+                address2,
+                city,
+                district,
+                latitude,
+                longitude,
+                mainImageId
+        );
+    }
+
+    public UpdateClubCommand toUpdateCommand(Long clubId, Long leaderId) {
+        return UpdateClubCommand.create(
+                clubId,
+                leaderId,
+                name,
+                description,
+                isAutoJoin,
+                category,
+                ageGroup,
+                address1,
+                address2,
+                city,
+                district,
+                latitude,
+                longitude,
+                mainImageId
+        );
+    }
 }
