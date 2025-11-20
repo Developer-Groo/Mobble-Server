@@ -13,7 +13,7 @@ import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubSummaryDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +43,7 @@ public class ClubQueryService implements ClubQueryPort {
     }
 
     @Override
-    public List<ClubSummaryDto> searchClubs(ClubSearchRequestDto dto, Long memberId) {
+    public List<ClubPreviewResponseDto> searchClubs(ClubSearchRequestDto dto, Long memberId) {
         List<Club> clubs = clubReadPort.searchClubs(dto);
 
 
