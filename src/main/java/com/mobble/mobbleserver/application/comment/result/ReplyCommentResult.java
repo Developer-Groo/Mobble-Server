@@ -18,7 +18,7 @@ public record ReplyCommentResult(
         LocalDateTime updatedAt
 ) {
 
-    public static ReplyCommentResult toDto(Comment comment, Map<Long, Integer> likeCounts, List<Long> isLikedList) {
+    public static ReplyCommentResult create(Comment comment, Map<Long, Integer> likeCounts, List<Long> isLikedList) {
         return new ReplyCommentResult(
                 comment.getId(),
                 comment.getMember().getId(),

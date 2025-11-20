@@ -37,7 +37,7 @@ public record RootCommentResult(
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 comment.getChildren().stream()
-                        .map(reply -> ReplyCommentResult.toDto(reply, likeCounts, isLikedList))
+                        .map(reply -> ReplyCommentResult.create(reply, likeCounts, isLikedList))
                         .toList()
         );
     }
