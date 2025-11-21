@@ -77,6 +77,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         meetingWritePort.delete(meeting);
     }
 
+    /* ==== Private Helper ==== */
     private Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingReadPort.findById(meetingId)
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
