@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting;
 
+import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
@@ -37,7 +38,18 @@ public class MeetingAPI {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        Meeting meeting = meetingCreatePort.createMeeting(memberId, clubId, dto);
+        CreateMeetingCommand command = CreateMeetingCommand.create(
+                memberId,
+                clubId,
+                dto.title(),
+                dto.schedule(),
+                dto.location(),
+                dto.cost(),
+                dto.memberLimit(),
+                dto.type()
+        );
+
+        Meeting meeting = meetingCreatePort.createMeeting(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(MeetingResponseDto.toDto(meeting));
