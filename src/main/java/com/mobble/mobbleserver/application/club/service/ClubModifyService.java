@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.club.service;
 
-import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.category.port.required.CategoryReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
@@ -13,6 +13,7 @@ import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
+import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.category.Category;
 import com.mobble.mobbleserver.domain.category.CategoryCode;
@@ -20,6 +21,7 @@ import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
@@ -28,26 +30,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDeletePort {
 
+    private final ArticleDeletePort articleDeletePort;
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
+    private final ChatRoomExitPort chatRoomExitPort;
+    private final LikeModifyPort likeModifyPort;
 
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
 
     private final MemberReadPort memberReadPort;
+    private final ClubMemberReadPort clubMemberReadPort;
     private final ImageReadPort imageReadPort;
     private final CategoryReadPort categoryReadPort;
-
-    private final ClubMemberReadPort clubMemberReadPort;
-    private final ArticleReadPort articleReadPort;
-
-    private final ChatRoomExitPort chatRoomExitPort;
 
     @Override
     public Club create(CreateClubCommand command) {
@@ -70,7 +69,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
                 mainImage,
                 category,
                 location,
-                command.ageGroup(),
+                command.ageGroup(), // Todo: List 로 여러 type 을 선택하게 할지 결정 필요
                 command.description(),
                 command.isAutoJoin()
         );
@@ -124,12 +123,16 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         assertLeader(clubMember);
 
+        articleDeletePort.deleteAll(club.getId());
+        likeModifyPort.delete(LikeType.CLUB, club.getId());
         chatRoomExitPort.delete(club.getId());
 
-        List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
+        // Todo:
+        //  1. Meeting -> Service port
+        //  2. Image delete -> Service port
+        //  3. Notification delete -> Service port
 
-        clubMemberWritePort.deleteAllClubMemberByClubId(club.getId());
-
+        clubMemberWritePort.deleteAllByClubId(club.getId());
         clubWritePort.delete(club);
     }
 
@@ -163,36 +166,4 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         return imageReadPort.findById(imageId)
                 .orElseThrow(); // Todo: Error 수정 필요
     }
-
-//    private ClubCategory findCategoryOrThrow(String categoryName) {
-//        return clubCategoryReadPort.findByName(categoryName)
-//                .orElseThrow(() -> new DomainException(ClubErrorCode.CATEGORY_NOT_FOUND));
-//    }
-//
-//    private List<AgeGroup> createClubAgeGroups(Club club, List<AgeGroup> ageGroups) {
-//        return ageGroups.stream()
-//                .map(age -> AgeGroup.createAgeGroup(club, age))
-//                .toList();
-//    }
-
-//    private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
-//        List<AgeGroup> ageGroupList = ageGroupReadPort.findByClubId(club.getId()).stream()
-//                .map(AgeGroup::getAgeGroupType)
-//                .toList();
-//
-//        List<Long> groundCodes = clubGroundReadPort.findByClubId(club.getId())
-//                .stream()
-//                .map(cg -> cg.getGround().getCode())
-//                .collect(Collectors.toList());
-//
-//        List<GroundResponseDto> groundList = groundReadPort.findAllById(groundCodes)
-//                .stream()
-//                .map(GroundResponseDto::toDto)
-//                .toList();
-//
-//        ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
-//
-//        return ClubResponseDto.toDto(club, leaderName, address, ageGroupList, groundList, likeInfo);
-//        return null;
-//    }
 }
