@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.meeting.service;
 
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
@@ -8,10 +9,10 @@ import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingWritePort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
+import com.mobble.mobbleserver.domain.meeting.MeetingSchedule;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,21 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public Meeting createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
+    public Meeting createMeeting(CreateMeetingCommand command) {
+        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
-        Meeting meeting = dto.toEntity(clubMember);
+        MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
+
+        Meeting meeting = Meeting.createMeeting(
+                clubMember,
+                command.title(),
+                meetingSchedule,
+                command.location(),
+                command.cost(),
+                command.memberLimit(),
+                command.type()
+        );
 
         return meetingWritePort.save(meeting);
     }
