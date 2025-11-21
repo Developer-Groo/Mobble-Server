@@ -29,7 +29,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     @Override
     public Meeting createMeeting(CreateMeetingCommand command) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(command.clubId(), command.memberId());
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
         MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
@@ -49,12 +49,12 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     @Override
     public Meeting updateMeeting(UpdateMeetingCommand command) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(command.clubId(), command.memberId());
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
         MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
 
-        Meeting meeting = findMeetingByMeetingIdOrThrow(command.meetingId());
+        Meeting meeting = assertMeetingByMeetingId(command.meetingId());
 
         return meeting.updateMeeting(
                 command.title(),
@@ -68,22 +68,21 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     @Override
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         assertCanManageMeeting(clubMember);
 
-        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
+        Meeting meeting = assertMeetingByMeetingId(meetingId);
 
         meetingWritePort.delete(meeting);
     }
 
     /* ==== Private Helper ==== */
-    private Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
+    private Meeting assertMeetingByMeetingId(Long meetingId) {
         return meetingReadPort.findById(meetingId)
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
     }
 
-    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+    private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
     }
