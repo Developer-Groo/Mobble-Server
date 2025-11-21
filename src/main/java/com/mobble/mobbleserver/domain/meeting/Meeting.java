@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
+import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -26,41 +27,45 @@ public class Meeting {
     @Column(name = "meeting_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_member_id")
     private ClubMember clubMember;
 
+    @Column(name = "title", nullable = false, length = 50)
     private String title;
 
-    private LocalDateTime datetime;
+    @Embedded
+    private MeetingSchedule schedule;
 
+    @Column(name = "location", nullable = false)
     private String location;
 
+    @Column(name = "cost", nullable = false)
     private String cost;
 
-    @Column(name = "member_limit")
+    @Column(name = "member_limit", nullable = false)
     private int memberLimit;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private MeetingType type;
 
     @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY)
     private List<MeetingMember> meetingMembers = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    private MeetingType type;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Meeting(
             ClubMember clubMember,
             String title,
-            LocalDateTime datetime,
+            MeetingSchedule schedule,
             String location,
             String cost,
             int memberLimit,
             MeetingType type
     ) {
-        validateCommon(clubMember, title, datetime, location, cost, memberLimit, type);
         this.clubMember = clubMember;
         this.title = title;
-        this.datetime = datetime;
+        this.schedule = schedule;
         this.location = location;
         this.cost = cost;
         this.memberLimit = memberLimit;
@@ -70,16 +75,18 @@ public class Meeting {
     public static Meeting createMeeting(
             ClubMember clubMember,
             String title,
-            LocalDateTime datetime,
+            MeetingSchedule schedule,
             String location,
             String cost,
             int memberLimit,
             MeetingType type
     ) {
+        assertCommon(clubMember, title, schedule, location, cost, memberLimit, type);
+
         return Meeting.builder()
                 .clubMember(clubMember)
                 .title(title)
-                .datetime(datetime)
+                .schedule(schedule)
                 .location(location)
                 .cost(cost)
                 .memberLimit(memberLimit)
@@ -89,59 +96,66 @@ public class Meeting {
 
     public Meeting updateMeeting(
             String title,
-            LocalDateTime dateTime,
+            MeetingSchedule schedule,
             String location,
             String cost,
             Integer memberLimit,
             MeetingType type
     ) {
-        validateContents(title, dateTime, location, cost, memberLimit, type);
+        assertContents(title, schedule, location, cost, memberLimit, type);
+
         this.title = title;
-        this.datetime = dateTime;
+        this.schedule = schedule;
         this.location = location;
         this.cost = cost;
         this.memberLimit = memberLimit;
         this.type = type;
+        
         return this;
-    }
-
-    private void validateCommon(
-            ClubMember clubMember,
-            String title,
-            LocalDateTime datetime,
-            String location,
-            String cost,
-            int memberLimit,
-            MeetingType type
-    ) {
-        if (clubMember == null) throw new DomainException(MeetingErrorCode.CLUB_MEMBER_REQUIRED);
-        validateContents(title, datetime, location, cost, memberLimit, type);
-    }
-
-    private void validateContents(
-            String title,
-            LocalDateTime datetime,
-            String location,
-            String cost,
-            int memberLimit,
-            MeetingType type
-    ) {
-        if (title == null || title.isBlank()) throw new DomainException(MeetingErrorCode.TITLE_REQUIRED);
-        if (datetime == null) throw new DomainException(MeetingErrorCode.DATETIME_REQUIRED);
-        if (location == null || location.isBlank()) throw new DomainException(MeetingErrorCode.LOCATION_REQUIRED);
-        if (cost == null || cost.isBlank()) throw new DomainException(MeetingErrorCode.COST_REQUIRED);
-        if (memberLimit <= 0) throw new DomainException(MeetingErrorCode.INVALID_MEMBER_LIMIT);
-        if (type == null) throw new DomainException(MeetingErrorCode.TYPE_REQUIRED);
     }
 
     public int getAttendeeCount() {
         return meetingMembers.size();
     }
 
+    public boolean isFull(int currentCount) {
+        return currentCount >= memberLimit;
+    }
+
     public int calculateDDay() {
         LocalDate today = LocalDate.now();
-        LocalDate meetingDate = this.datetime.toLocalDate();
+        LocalDate meetingDate = this.schedule.getDatetime().toLocalDate();
 
         return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
+    }
+
+    /* Assert 검증 */
+    private static void assertContents(
+            String title,
+            MeetingSchedule schedule,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        requireNonNull(title, "title must not be null");
+        requireNonNull(schedule, "schedule must not be null");
+        requireNonNull(location, "location must not be null");
+        requireNonNull(cost, "cost must not be null");
+        requireNonNull(type, "type must not be null");
+        if (memberLimit < 1) throw new DomainException(MeetingError.INVALID_MEMBER_LIMIT);
+    }
+
+    private static void assertCommon(
+            ClubMember clubMember,
+            String title,
+            MeetingSchedule schedule,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        requireNonNull(clubMember, "clubMember must not be null");
+        assertContents(title, schedule, location, cost, memberLimit, type);
     }
 }
