@@ -6,5 +6,5 @@ public interface ClubMemberWritePort {
 
     ClubMember save(ClubMember clubMember);
 
-    void deleteAllClubMemberByClubId(Long clubId);
+    void deleteAllByClubId(Long clubId);
 }

@@ -23,8 +23,8 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public void deleteAllClubMemberByClubId(Long clubId) {
-        repository.deleteAllClubMemberByClubId(clubId);
+    public void deleteAllByClubId(Long clubId) {
+        repository.deleteAllByClubId(clubId);
     }
 
     @Override
