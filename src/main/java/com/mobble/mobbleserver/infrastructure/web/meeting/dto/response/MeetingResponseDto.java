@@ -27,7 +27,7 @@ public record MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
                 meeting.getTitle(),
-                meeting.getDatetime(),
+                meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),
