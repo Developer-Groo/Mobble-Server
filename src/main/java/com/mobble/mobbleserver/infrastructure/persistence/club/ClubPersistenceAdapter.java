@@ -3,12 +3,9 @@ package com.mobble.mobbleserver.infrastructure.persistence.club;
 import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
 import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.infrastructure.persistence.club.projection.ClubLikeInfoDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +14,7 @@ public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
 
     private final JpaClubRepository repository;
 
+    /* ClubWritePort */
     @Override
     public Club save(Club club) {
         return repository.save(club);
@@ -27,23 +25,9 @@ public class ClubPersistenceAdapter implements ClubWritePort, ClubReadPort {
         repository.delete(club);
     }
 
-    @Override
-    public ClubLikeInfoDto findLikeInfoByClubIdAndMemberId(Long clubId, Long memberId) {
-        return repository.findLikeInfoByClubIdAndMemberId(clubId, memberId);
-    }
-
+    /* ClubReadPort */
     @Override
     public Optional<Club> findById(Long id) {
         return repository.findById(id);
-    }
-
-    @Override
-    public List<Club> searchClubs(ClubSearchRequestDto dto) {
-        return repository.searchClubs(dto);
-    }
-
-    @Override
-    public boolean existsById(Long clubId) {
-        return repository.existsById(clubId);
     }
 }
