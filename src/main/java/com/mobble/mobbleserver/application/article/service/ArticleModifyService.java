@@ -8,6 +8,7 @@ import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePo
 import com.mobble.mobbleserver.application.article.port.provided.ArticleUpdatePort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleWritePort;
+import com.mobble.mobbleserver.application.club.error.ClubBusinessError;
 import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
@@ -95,7 +96,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     /* ==== Private Helper ==== */
     private Club assertClubByClubId(Long clubId) {
         return clubReadPort.findById(clubId)
-                .orElseThrow(); // // Todo: ErrorCode 수정 필요
+                .orElseThrow(() -> new BusinessException(ClubBusinessError.NOT_FOUND));
     }
 
     private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {
