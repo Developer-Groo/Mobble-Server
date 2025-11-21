@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting;
 
 import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.request.UpdateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -72,9 +72,21 @@ public class MeetingAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("meeting-id") @Positive Long meetingId,
-            @RequestBody MeetingUpdateRequestDto dto
+            @RequestBody MeetingRequestDto dto
     ) {
-        Meeting meeting = meetingUpdatePort.updateMeeting(memberId, clubId, meetingId, dto);
+        UpdateMeetingCommand command = UpdateMeetingCommand.create(
+                memberId,
+                clubId,
+                meetingId,
+                dto.title(),
+                dto.schedule(),
+                dto.location(),
+                dto.cost(),
+                dto.memberLimit(),
+                dto.type()
+        );
+
+        Meeting meeting = meetingUpdatePort.updateMeeting(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MeetingResponseDto.toDto(meeting));
