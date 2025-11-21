@@ -6,10 +6,10 @@ import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
+import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubPreviewResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubDetailResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -20,8 +20,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +27,9 @@ import java.util.List;
 public class ClubAPI {
 
     private final ClubCreatePort clubCreatePort;
-    private final ClubQueryPort clubQueryPort;
     private final ClubUpdatePort clubUpdatePort;
     private final ClubDeletePort clubDeletePort;
+    private final ClubQueryPort clubQueryPort;
 
     @PostMapping
     public ResponseEntity<ClubResponseDto> create(
@@ -59,7 +57,7 @@ public class ClubAPI {
     }
 
     @DeleteMapping("/{club-id}")
-    public ResponseEntity<Void> deleteClub(
+    public ResponseEntity<Void> delete(
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ){
@@ -70,20 +68,13 @@ public class ClubAPI {
     }
 
     @GetMapping("/{club-id}")
-    public ResponseEntity<ClubResponseDto> findClubById(
+    public ResponseEntity<ClubDetailResponseDto> findClubById(
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(clubQueryPort.findClubById(clubId, memberId));
-    }
+        ClubResult result = clubQueryPort.getClub(clubId, memberId);
 
-    @GetMapping("/search")
-    public ResponseEntity<List<ClubPreviewResponseDto>> searchClubs(
-            @Validated ClubSearchRequestDto dto,
-            @AuthenticationPrincipal(expression = "memberId") Long memberId
-    ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubQueryPort.searchClubs(dto, memberId));
+                .body(ClubDetailResponseDto.create(result));
     }
 }
