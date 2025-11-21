@@ -21,7 +21,7 @@ public class MeetingSchedule {
     LocalDateTime datetime;
 
     private MeetingSchedule(LocalDateTime datetime) {
-        requireNonNull(datetime, "dateTime must not be null");
+        requireNonNull(datetime, "schedule must not be null");
 
         LocalDateTime now = LocalDateTime.now();
         if (datetime.isBefore(now)) throw new DomainException(MeetingError.INVALID_DATETIME);
