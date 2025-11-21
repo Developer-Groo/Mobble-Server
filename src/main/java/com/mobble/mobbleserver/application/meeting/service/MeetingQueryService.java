@@ -44,6 +44,6 @@ public class MeetingQueryService implements MeetingQueryPort {
 
     private Club findClubByClubIdOrThrow(Long clubId) {
         return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
+                .orElseThrow(() -> new DomainException(ClubErrorCode.NOT_FOUND));
     }
 }
