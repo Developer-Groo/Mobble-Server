@@ -7,4 +7,7 @@ import java.util.List;
 public interface MeetingQueryPort {
 
     List<Meeting> findMeetingsByClubId(Long clubId);
+
+    List<Meeting> findUpcomingMeetingsByClubId(Long memberId, Long clubId);
+
 }

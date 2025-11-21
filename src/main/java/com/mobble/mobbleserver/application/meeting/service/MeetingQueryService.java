@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.application.meeting.service;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
@@ -23,14 +22,24 @@ public class MeetingQueryService implements MeetingQueryPort {
 
     private final MeetingReadPort meetingReadPort;
     private final ClubReadPort clubReadPort;
-    private final ClubMemberReadPort clubMemberReadPort;
 
     // 전체 미팅 조회
     @Override
     public List<Meeting> findMeetingsByClubId(Long clubId) {
         Club club = findClubByClubIdOrThrow(clubId);
 
+        // Todo MeetingMember도 반환 해줘야 되지 않을까?
         return meetingReadPort.findByClubMember_Club_Id(club.getId());
+    }
+
+    // 다가오는 미팅 조회
+    @Override
+    public List<Meeting> findUpcomingMeetingsByClubId(Long memberId, Long clubId) {
+        Club club = findClubByClubIdOrThrow(clubId);
+
+        LocalDateTime today = LocalDate.now().atStartOfDay();
+
+        return meetingReadPort.findUpcomingMeetingsByClubId(club.getId(), today);
     }
 
     private Club findClubByClubIdOrThrow(Long clubId) {
