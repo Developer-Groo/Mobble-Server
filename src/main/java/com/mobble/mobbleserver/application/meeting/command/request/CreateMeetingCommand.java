@@ -14,7 +14,7 @@ public record CreateMeetingCommand(
         Integer memberLimit,
         MeetingType type
 ) {
-    
+
     public static CreateMeetingCommand create(
             Long memberId,
             Long clubId,
