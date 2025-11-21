@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.club.service;
 
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
+import com.mobble.mobbleserver.application.category.error.CategoryBusinessError;
 import com.mobble.mobbleserver.application.category.port.required.CategoryReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
@@ -12,6 +13,8 @@ import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
 import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
@@ -25,7 +28,6 @@ import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,7 +141,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER)); // Todo: Error 수정 필요
+                .orElseThrow(); // Todo: Error 수정 필요
     }
 
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
@@ -149,7 +151,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
     private Category assertCategoryByCode(CategoryCode code) {
         return categoryReadPort.findByCode(code)
-                .orElseThrow(); // Todo: Error 수정 필요
+                .orElseThrow(() -> new BusinessException(CategoryBusinessError.NOT_FOUND));
     }
 
     private void assertLeader(ClubMember clubMember) {
@@ -164,6 +166,6 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
     private Image assertImageByImageId(Long imageId) {
         return imageReadPort.findById(imageId)
-                .orElseThrow(); // Todo: Error 수정 필요
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
     }
 }
