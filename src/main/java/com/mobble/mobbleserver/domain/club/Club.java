@@ -1,8 +1,10 @@
 package com.mobble.mobbleserver.domain.club;
 
 import com.mobble.mobbleserver.domain.category.Category;
+import com.mobble.mobbleserver.domain.club.error.ClubError;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
 import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
@@ -10,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -85,7 +89,9 @@ public class Club extends BaseEntity {
             String description,
             boolean isAutoJoin
     ) {
-        // Todo: 유효성 검증 필요
+        assertCreate(name, leader, mainImage, category, location, ageGroup);
+        assertName(name);
+
         return Club.builder()
                 .name(name)
                 .leader(leader)
@@ -108,7 +114,9 @@ public class Club extends BaseEntity {
             String description,
             boolean isAutoJoin
     ) {
-        // Todo: 유효성 검증 필요
+        assertUpdate(name, mainImage, category, location, ageGroup);
+        assertName(name);
+
         this.name = name;
         this.mainImage = mainImage;
         this.category = category;
@@ -125,5 +133,40 @@ public class Club extends BaseEntity {
     public void decreaseMemberCount() {
         this.memberCount--;
         if (this.memberCount < 0) this.memberCount = 0;
+    }
+
+    /* Assert 검증 */
+    private static void assertName(String name) {
+        if (name.isBlank() || name.length() > 20) throw new DomainException(ClubError.CONTENT_TOO_LONG);
+    }
+
+    private static void assertCreate(
+            String name,
+            Member leader,
+            Image mainImage,
+            Category category,
+            Location location,
+            AgeGroup ageGroup
+    ) {
+        requireNonNull(name, "name must not be null");
+        requireNonNull(leader, "leader must not be null");
+        requireNonNull(mainImage, "main image must not be null");
+        requireNonNull(category, "category must not be null");
+        requireNonNull(location, "location must not be null");
+        requireNonNull(ageGroup, "age group must not be null");
+    }
+
+    private static void assertUpdate(
+            String name,
+            Image mainImage,
+            Category category,
+            Location location,
+            AgeGroup ageGroup
+    ) {
+        requireNonNull(name, "name must not be null");
+        requireNonNull(mainImage, "main image must not be null");
+        requireNonNull(category, "category must not be null");
+        requireNonNull(location, "location must not be null");
+        requireNonNull(ageGroup, "age group must not be null");
     }
 }
