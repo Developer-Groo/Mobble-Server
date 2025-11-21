@@ -1,19 +1,14 @@
 package com.mobble.mobbleserver.application.club.service;
 
+import com.mobble.mobbleserver.application.club.error.ClubBusinessError;
 import com.mobble.mobbleserver.application.club.port.provided.ClubQueryPort;
 import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.club.result.ClubResult;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.request.ClubSearchRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubPreviewResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.club.dto.response.ClubResponseDto;
+import com.mobble.mobbleserver.domain.like.LikeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,66 +20,32 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ClubQueryService implements ClubQueryPort {
 
+    private final LikeQueryPort likeQueryPort;
+
     private final ClubReadPort clubReadPort;
     private final MemberReadPort memberReadPort;
-    private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public ClubResponseDto findClubById(Long clubId, Long memberId) {
-        Club club = findClubByClubIdOrThrow(clubId);
-        ClubMember leader = clubMemberReadPort
-                .findByClubIdAndClubMemberRole(clubId, ClubMemberRole.LEADER).get();
+    public ClubResult getClub(Long clubId, Long memberId) {
+        assertMemberByMemberId(memberId);
+        Club club = assertClubByClubId(clubId);
 
-        String leaderName = leader.getMember().getName();
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        int likeCount = likeQueryPort.getLikeCount(LikeType.CLUB, club.getId());
+        List<Long> likedIds = likeQueryPort.getLikedIds(LikeType.CLUB, memberId, List.of(club.getId()));
 
-//        return buildClubResponse(club, member, leaderName);
-        return null;
+        return ClubResult.create(club, likeCount, likedIds);
     }
 
-    @Override
-    public List<ClubPreviewResponseDto> searchClubs(ClubSearchRequestDto dto, Long memberId) {
-        List<Club> clubs = clubReadPort.searchClubs(dto);
+    // Todo: 여러 조건 으로 Club 검색 기능 필요
 
-
-        return List.of();
-//        return clubs.stream()
-//                .map(club -> {
-//                    List<Ground> groundList = clubGroundReadPort.findGroundsByClubId(club.getId());
-//                    ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), memberId);
-//                    return ClubSummaryDto.toDto(club, groundList, likeInfo);
-//                })
-//                .toList();
+    /* ==== Private Helper ==== */
+    private void assertMemberByMemberId(Long memberId) {
+        memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(); // Todo: Error 수정 필요
     }
 
-    private Club findClubByClubIdOrThrow(Long clubId) {
+    private Club assertClubByClubId(Long clubId) {
         return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
+                .orElseThrow(() -> new BusinessException(ClubBusinessError.NOT_FOUND));
     }
-
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
-        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
-    }
-
-//    private ClubResponseDto buildClubResponse(Club club, Member member, String leaderName) {
-//        List<AgeGroupType> ageGroupList = ageGroupReadPort.findByClubId(club.getId()).stream()
-//                .map(AgeGroup::getAgeGroupType)
-//                .toList();
-//
-//        List<Long> groundCodes = clubGroundReadPort.findByClubId(club.getId())
-//                .stream()
-//                .map(cg -> cg.getGround().getCode())
-//                .collect(Collectors.toList());
-//
-//        List<GroundResponseDto> groundList = groundReadPort.findAllById(groundCodes)
-//                .stream()
-//                .map(GroundResponseDto::toDto)
-//                .toList();
-//
-//        Address address = club.getAddress();
-//        ClubLikeInfoDto likeInfo = clubReadPort.findLikeInfoByClubIdAndMemberId(club.getId(), member.getId());
-//
-//        return ClubResponseDto.toDto(club, leaderName, address, ageGroupList, groundList, likeInfo);
-//    }
 }
