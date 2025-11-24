@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MeetingError implements CommonError {
     INVALID_DATETIME("datetime must not be in the past", ErrorCategory.VALIDATION),
-    INVALID_MEMBER_LIMIT("memberLimit must be at least 1", ErrorCategory.VALIDATION);
+    INVALID_MEMBER_LIMIT("memberLimit must be at least 1", ErrorCategory.VALIDATION),
+    FULL_CAPACITY("meeting has reached full capacity", ErrorCategory.CONFLICT);
 
 
     private final String message;
