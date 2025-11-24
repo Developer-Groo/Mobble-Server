@@ -1,25 +1,24 @@
-package com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult;
+package com.mobble.mobbleserver.infrastructure.oauth.provider.apple;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
+import com.mobble.mobbleserver.infrastructure.oauth.common.OAuth2UserInfo;
 
 
-public class AppleUserInfoResult implements OAuth2UserInfo {
+public class AppleUserInfo implements OAuth2UserInfo {
 
     private final DecodedJWT jwt;
 
-    private final SocialProvider socialProvider = SocialProvider.APPLE;
-
-    public AppleUserInfoResult(DecodedJWT jwt) {
+    public AppleUserInfo(DecodedJWT jwt) {
         if (jwt == null || jwt.getSubject() == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
         this.jwt = jwt;
     }
 
     @Override
     public SocialProvider getProvider() {
-        return socialProvider;
+        return SocialProvider.APPLE;
     }
 
     @Override
