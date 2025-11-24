@@ -57,7 +57,6 @@ public class MeetingAPI {
 
     @GetMapping
     public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
-            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
         List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(clubId);
