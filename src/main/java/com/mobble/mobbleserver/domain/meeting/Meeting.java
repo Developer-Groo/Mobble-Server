@@ -162,6 +162,7 @@ public class Meeting {
     /* MeetingMember */
     public void toggleAttend(Member member) {
         requireNonNull(member, "member must not be null");
+        requireNonNull(member.getId(), "memberId must not be null");
 
         MeetingMember existing = meetingMembers.stream()
                 .filter(meetingMember -> meetingMember.getMember().getId().equals(member.getId()))
