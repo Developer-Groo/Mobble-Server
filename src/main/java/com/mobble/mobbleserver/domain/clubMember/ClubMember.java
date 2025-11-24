@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static java.util.Objects.requireNonNull;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,6 +55,8 @@ public class ClubMember extends BaseEntity {
             Member member,
             Club club
     ) {
+        assertCreateLeader(member, club);
+
         return ClubMember.builder()
                 .member(member)
                 .club(club)
@@ -66,6 +70,8 @@ public class ClubMember extends BaseEntity {
             Club club,
             JoinStatus status
     ) {
+        assertCreateMember(member, club, status);
+
         return ClubMember.builder()
                 .member(member)
                 .club(club)
@@ -75,10 +81,14 @@ public class ClubMember extends BaseEntity {
     }
 
     public void updateStatus(JoinStatus joinStatus) {
+        requireNonNull(joinStatus, "join status must not be null");
+
         this.joinStatus = joinStatus;
     }
 
     public void updateRole(ClubMemberRole newRole) {
+        requireNonNull(newRole, "role must not be null");
+
         this.clubMemberRole = newRole;
     }
 
@@ -92,5 +102,17 @@ public class ClubMember extends BaseEntity {
 
     public boolean canManage() {
         return this.clubMemberRole == ClubMemberRole.LEADER || this.clubMemberRole == ClubMemberRole.MANAGER;
+    }
+
+    /* Assert 검증 */
+    private static void assertCreateLeader(Member member, Club club) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(club, "club must not be null");
+    }
+
+    private static void assertCreateMember(Member member, Club club, JoinStatus joinStatus) {
+        requireNonNull(member, "member must not be null");
+        requireNonNull(club, "club must not be null");
+        requireNonNull(joinStatus, "join status must not be null");
     }
 }
