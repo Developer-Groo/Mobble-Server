@@ -33,7 +33,7 @@ public class SocialIdentityClientAdapter implements SocialIdentityClientPort {
 
     private AbstractSocialClient findClient(SocialProvider provider) {
         return clientList.stream()
-                .filter(client -> client.getProvider() == provider)
+                .filter(client -> provider.equals(client.getProvider()))
                 .findFirst()
                 .orElseThrow(() -> new DomainException(OAuthErrorCode.UNSUPPORTED_SOCIAL_PROVIDER));
     }
