@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.meetingMember.port.required;
 
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 
 public interface MeetingMemberWritePort {
 

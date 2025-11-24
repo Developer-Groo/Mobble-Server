@@ -3,7 +3,6 @@ package com.mobble.mobbleserver.domain.meeting;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

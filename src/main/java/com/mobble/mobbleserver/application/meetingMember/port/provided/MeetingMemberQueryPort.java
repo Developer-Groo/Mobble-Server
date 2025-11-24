@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.meetingMember.port.provided;
 
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
 
 import java.util.List;

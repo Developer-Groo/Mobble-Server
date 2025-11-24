@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
 import com.mobble.mobbleserver.application.meetingMember.port.required.MeetingMemberReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.required.MeetingMemberWritePort;
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

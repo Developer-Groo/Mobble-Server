@@ -6,7 +6,7 @@ import com.mobble.mobbleserver.application.meetingMember.port.required.MeetingMe
 import com.mobble.mobbleserver.application.meetingMember.port.required.MeetingMemberWritePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;

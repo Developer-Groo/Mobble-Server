@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.persistence.meetingMember;
 
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
