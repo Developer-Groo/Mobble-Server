@@ -11,7 +11,7 @@ public record ClubMemberResponseDto(
         JoinStatus joinStatus
 ) {
 
-    public static ClubMemberResponseDto toEntity(ClubMember clubMember) {
+    public static ClubMemberResponseDto toDto(ClubMember clubMember) {
         return new ClubMemberResponseDto(
                 clubMember.getMember().getId(),
                 clubMember.getMember().getName(),
