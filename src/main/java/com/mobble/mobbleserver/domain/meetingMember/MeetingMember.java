@@ -2,13 +2,13 @@ package com.mobble.mobbleserver.domain.meetingMember;
 
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingMemberErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -43,7 +43,7 @@ public class MeetingMember {
     }
 
     private void validateMeetingMember(Meeting meeting, Member member) {
-        if (meeting == null) throw new DomainException(MeetingMemberErrorCode.MEETING_REQUIRED);
-        if (member == null) throw new DomainException(MeetingMemberErrorCode.MEMBER_REQUIRED);
+        requireNonNull(meeting, "meeting must not be null");
+        requireNonNull(member, "member must not be null");
     }
 }
