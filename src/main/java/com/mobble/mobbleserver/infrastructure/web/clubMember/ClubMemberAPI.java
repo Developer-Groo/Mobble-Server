@@ -1,9 +1,10 @@
 package com.mobble.mobbleserver.infrastructure.web.clubMember;
 
-import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberCreatePort;
+import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberJoinPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberDeletePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberQueryPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberUpdatePort;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberResponseDto;
@@ -25,31 +26,21 @@ import java.util.List;
 @RequestMapping("/api/clubs")
 public class ClubMemberAPI {
 
-    private final ClubMemberCreatePort clubMemberCreatePort;
+    private final ClubMemberJoinPort clubMemberJoinPort;
     private final ClubMemberQueryPort clubMemberQueryPort;
     private final ClubMemberUpdatePort clubMemberUpdatePort;
     private final ClubMemberDeletePort clubMemberDeletePort;
 
-
     @PostMapping("/join/{club-id}")
-    public ResponseEntity<ClubMemberUpsertResponseDto> joinClub(
+    public ResponseEntity<ClubMemberResponseDto> join(
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
 
     ) {
+        ClubMember join = clubMemberJoinPort.join(memberId, clubId);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(clubMemberCreatePort.joinClub(memberId, clubId));
-    }
-
-    @DeleteMapping("/{club-id}/members/withdraw")
-    public ResponseEntity<ClubMemberUpsertResponseDto> leaveClub(
-            @PathVariable("club-id") @Positive Long clubId,
-            @AuthenticationPrincipal(expression = "memberId") Long memberId
-    ) {
-        clubMemberDeletePort.leaveClub(memberId, clubId);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .build();
+                .body(ClubMemberResponseDto.toDto(join));
     }
 
     @PatchMapping("/{club-id}/members/status")
@@ -74,6 +65,17 @@ public class ClubMemberAPI {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", "Bearer " + result.jwtToken())
                 .body(result.clubMember());
+    }
+
+    @DeleteMapping("/{club-id}/members/withdraw")
+    public ResponseEntity<ClubMemberUpsertResponseDto> leave(
+            @PathVariable("club-id") @Positive Long clubId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId
+    ) {
+        clubMemberDeletePort.leaveClub(memberId, clubId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @GetMapping("/{club-id}/members")

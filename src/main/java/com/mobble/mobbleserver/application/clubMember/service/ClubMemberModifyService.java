@@ -44,7 +44,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public ClubMember join(Long memberId, Long clubId) {
         assertNotJoined(clubId, memberId);
-        
+
         Club club = assertClubByClubId(clubId);
         Member member = assertMemberByMemberId(memberId);
 
