@@ -30,8 +30,8 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
 
     @Override
     public void attendMeeting(Long meetingId, Long memberId) {
-        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Meeting meeting = assertMeetingByMeetingId(meetingId);
+        Member member = assertMemberByMemberId(memberId);
 
         Optional<MeetingMember> result = meetingMemberReadPort.findMeetingMemberByMeetingIdAndMemberId(meetingId, memberId);
 
@@ -45,12 +45,12 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
         }
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
-    public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
+    public Meeting assertMeetingByMeetingId(Long meetingId) {
         return meetingReadPort.findById(meetingId)
                 .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
     }
