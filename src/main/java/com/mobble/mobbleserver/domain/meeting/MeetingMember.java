@@ -34,7 +34,7 @@ public class MeetingMember {
         this.member = member;
     }
 
-    public static MeetingMember createMeetingMember(Meeting meeting, Member member) {
+    static MeetingMember createMeetingMember(Meeting meeting, Member member) {
         return MeetingMember.builder()
                 .meeting(meeting)
                 .member(member)
