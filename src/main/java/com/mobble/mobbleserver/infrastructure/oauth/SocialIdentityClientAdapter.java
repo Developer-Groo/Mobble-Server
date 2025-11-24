@@ -5,8 +5,8 @@ import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.AbstractSocialClient;
-import com.mobble.mobbleserver.infrastructure.oauth.provider.userInfoResult.OAuth2UserInfo;
+import com.mobble.mobbleserver.infrastructure.oauth.common.AbstractSocialClient;
+import com.mobble.mobbleserver.infrastructure.oauth.common.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
