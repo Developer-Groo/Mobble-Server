@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
 import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,10 +38,10 @@ public class Meeting {
     @Embedded
     private MeetingSchedule schedule;
 
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", nullable = false, length = 50)
     private String location;
 
-    @Column(name = "cost", nullable = false)
+    @Column(name = "cost", nullable = false, length = 10)
     private String cost;
 
     @Column(name = "member_limit", nullable = false)
@@ -50,7 +51,7 @@ public class Meeting {
     @Column(name = "type")
     private MeetingType type;
 
-    @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "meeting", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MeetingMember> meetingMembers = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
@@ -72,7 +73,7 @@ public class Meeting {
         this.type = type;
     }
 
-    public static Meeting createMeeting(
+    public static Meeting create(
             ClubMember clubMember,
             String title,
             MeetingSchedule schedule,
@@ -81,7 +82,7 @@ public class Meeting {
             int memberLimit,
             MeetingType type
     ) {
-        assertCommon(clubMember, title, schedule, location, cost, memberLimit, type);
+        assertCreate(clubMember, title, schedule, location, cost, memberLimit, type);
 
         return Meeting.builder()
                 .clubMember(clubMember)
@@ -94,7 +95,7 @@ public class Meeting {
                 .build();
     }
 
-    public Meeting updateMeeting(
+    public Meeting update(
             String title,
             MeetingSchedule schedule,
             String location,
@@ -102,7 +103,7 @@ public class Meeting {
             Integer memberLimit,
             MeetingType type
     ) {
-        assertContents(title, schedule, location, cost, memberLimit, type);
+        assertUpdate(title, schedule, location, cost, memberLimit, type);
 
         this.title = title;
         this.schedule = schedule;
@@ -110,7 +111,7 @@ public class Meeting {
         this.cost = cost;
         this.memberLimit = memberLimit;
         this.type = type;
-        
+
         return this;
     }
 
@@ -130,7 +131,7 @@ public class Meeting {
     }
 
     /* Assert 검증 */
-    private static void assertContents(
+    private static void assertUpdate(
             String title,
             MeetingSchedule schedule,
             String location,
@@ -146,7 +147,7 @@ public class Meeting {
         if (memberLimit < 1) throw new DomainException(MeetingError.INVALID_MEMBER_LIMIT);
     }
 
-    private static void assertCommon(
+    private static void assertCreate(
             ClubMember clubMember,
             String title,
             MeetingSchedule schedule,
@@ -156,6 +157,25 @@ public class Meeting {
             MeetingType type
     ) {
         requireNonNull(clubMember, "clubMember must not be null");
-        assertContents(title, schedule, location, cost, memberLimit, type);
+        assertUpdate(title, schedule, location, cost, memberLimit, type);
+    }
+
+    /* MeetingMember */
+    public void toggleAttend(Member member) {
+        requireNonNull(member, "member must not be null");
+
+        MeetingMember existing = meetingMembers.stream()
+                .filter(meetingMember -> meetingMember.getMember().getId().equals(member.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existing != null) {
+            meetingMembers.remove(existing);
+        } else {
+            if (isFull(meetingMembers.size())) throw new DomainException(MeetingError.FULL_CAPACITY);
+
+            MeetingMember newMeetingMember = MeetingMember.createMeetingMember(this, member);
+            meetingMembers.add(newMeetingMember);
+        }
     }
 }

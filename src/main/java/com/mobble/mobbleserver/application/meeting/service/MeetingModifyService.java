@@ -34,7 +34,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
         MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
 
-        Meeting meeting = Meeting.createMeeting(
+        Meeting meeting = Meeting.create(
                 clubMember,
                 command.title(),
                 meetingSchedule,
@@ -56,7 +56,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
         Meeting meeting = assertMeetingByMeetingId(command.meetingId());
 
-        return meeting.updateMeeting(
+        return meeting.update(
                 command.title(),
                 meetingSchedule,
                 command.location(),

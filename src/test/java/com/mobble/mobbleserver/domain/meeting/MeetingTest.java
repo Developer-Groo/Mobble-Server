@@ -49,7 +49,7 @@ class MeetingTest {
         @DisplayName("모임 생성 성공")
         void success_when_create_meeting() {
             // given & when
-            Meeting meeting = Meeting.createMeeting(
+            Meeting meeting = Meeting.create(
                     mockClubMember,
                     TITLE,
                     DATETIME,
@@ -74,7 +74,7 @@ class MeetingTest {
         @DisplayName("ClubMember 가 null 이면 예외 발생")
         void fails_when_club_member_is_null() {
             // when & then
-            assertThatThrownBy(() -> Meeting.createMeeting(
+            assertThatThrownBy(() -> Meeting.create(
                     null,
                     TITLE,
                     DATETIME,
@@ -96,7 +96,7 @@ class MeetingTest {
         @DisplayName("모임 수정 성공")
         void success_when_update_meeting() {
             // given & when
-            mockMeeting.updateMeeting(
+            mockMeeting.update(
                     "수정된 title",
                     DATETIME.plusDays(2),
                     "다른 체육관",
@@ -125,7 +125,7 @@ class MeetingTest {
         void fails_when_title_is_null() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(null, DATETIME, LOCATION, COST, LIMIT, TYPE))
+                    mockMeeting.update(null, DATETIME, LOCATION, COST, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
         }
@@ -135,7 +135,7 @@ class MeetingTest {
         void fails_when_title_is_blank() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(" ", DATETIME, LOCATION, COST, LIMIT, TYPE))
+                    mockMeeting.update(" ", DATETIME, LOCATION, COST, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
         }
@@ -145,7 +145,7 @@ class MeetingTest {
         void fails_when_datetime_is_null() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, null, LOCATION, COST, LIMIT, TYPE))
+                    mockMeeting.update(TITLE, null, LOCATION, COST, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.DATETIME_REQUIRED.message());
         }
@@ -155,7 +155,7 @@ class MeetingTest {
         void fails_when_location_is_null() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, null, COST, LIMIT, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, null, COST, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
         }
@@ -165,7 +165,7 @@ class MeetingTest {
         void fails_when_location_is_blank() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, " ", COST, LIMIT, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, " ", COST, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
         }
@@ -175,7 +175,7 @@ class MeetingTest {
         void fails_when_cost_is_null() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, null, LIMIT, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, LOCATION, null, LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
         }
@@ -185,7 +185,7 @@ class MeetingTest {
         void fails_when_cost_is_blank() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, " ", LIMIT, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, LOCATION, " ", LIMIT, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
         }
@@ -195,7 +195,7 @@ class MeetingTest {
         void fails_when_member_limit_is_zero() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
         }
@@ -205,7 +205,7 @@ class MeetingTest {
         void fails_when_member_limit_is_negative() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
+                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
         }
@@ -215,7 +215,7 @@ class MeetingTest {
         void fails_when_type_is_null() {
             // when & then
             assertThatThrownBy(() ->
-                    mockMeeting.updateMeeting(TITLE, DATETIME, LOCATION, COST, LIMIT, null))
+                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, LIMIT, null))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingErrorCode.TYPE_REQUIRED.message());
         }

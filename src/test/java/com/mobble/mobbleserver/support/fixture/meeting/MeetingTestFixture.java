@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class MeetingTestFixture {
 
     public static Meeting createDefaultMeeting(ClubMember clubMember) {
-        return Meeting.createMeeting(
+        return Meeting.create(
                 clubMember,
                 "정기 모임",
                 LocalDateTime.of(2025, 10, 10, 19, 0),
