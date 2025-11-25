@@ -35,7 +35,7 @@ public class SocialLoginService implements SocialLoginPort {
 
     @Override
     public SocialLoginResult socialLogin(SocialLoginRequestDto dto) {
-        SocialUserInfo userInfo = socialIdentityClientPort.fetchUserInfo(dto.socialProvider(), dto.accessToken());
+        SocialUserInfo userInfo = socialIdentityClientPort.verify(dto.socialProvider(), dto.accessToken());
 
         Member member = findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 

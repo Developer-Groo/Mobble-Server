@@ -5,5 +5,5 @@ import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 
 public interface SocialIdentityClientPort {
 
-    SocialUserInfo fetchUserInfo(SocialProvider socialProvider, String accessToken);
+    SocialUserInfo verify(SocialProvider socialProvider, String accessToken);
 }
