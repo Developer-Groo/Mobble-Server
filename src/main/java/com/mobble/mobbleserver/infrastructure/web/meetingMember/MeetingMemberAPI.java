@@ -35,15 +35,6 @@ public class MeetingMemberAPI {
                 .build();
     }
 
-    @GetMapping
-    public ResponseEntity<MeetingAttendanceResponseDto> getIsAttended(
-            @AuthenticationPrincipal(expression = "memberId") Long memberId,
-            @PathVariable("meeting-id") @Positive Long meetingId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(meetingMemberQueryPort.getIsAttended(memberId, meetingId));
-    }
-
     @GetMapping("/members")
     public ResponseEntity<MeetingMemberListResponseDto> getMeetingMembers(
             @PathVariable("meeting-id") @Positive Long meetingId
