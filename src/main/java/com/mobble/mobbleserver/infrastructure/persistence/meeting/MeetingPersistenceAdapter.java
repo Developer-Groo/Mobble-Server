@@ -38,6 +38,6 @@ public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadP
 
     @Override
     public List<Meeting> findUpcomingMeetingsByClubId(Long clubId, LocalDateTime today) {
-        return jpaMeetingRepository.findByClubIdAndDatetimeGreaterThanEqualOrderByDatetimeAsc(clubId, today);
+        return jpaMeetingRepository.findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(clubId, today);
     }
 }

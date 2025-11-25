@@ -10,5 +10,5 @@ public interface JpaMeetingRepository extends JpaRepository<Meeting, Long> {
 
     List<Meeting> findByClubMember_Club_Id(Long clubId);
 
-    List<Meeting> findByClubIdAndDatetimeGreaterThanEqualOrderByDatetimeAsc(Long clubId, LocalDateTime dateTime);
+    List<Meeting> findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(Long clubId, LocalDateTime dateTime);
 }
