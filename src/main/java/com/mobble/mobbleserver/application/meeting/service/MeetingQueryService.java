@@ -33,11 +33,11 @@ public class MeetingQueryService implements MeetingQueryPort {
 
     // 전체 미팅 조회
     @Override
-    public List<MeetingResult> findMeetingsByClubId(Long memberId, Long clubId) {
+    public List<MeetingResult> findMeetings(Long memberId, Long clubId) {
         Member member = assertMemberByMemberId(memberId);
         Club club = assertClubByClubId(clubId);
 
-        List<Meeting> meetings = meetingReadPort.findByClubMember_Club_Id(club.getId());
+        List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(club.getId());
         List<Long> atendedList = meetingMemberQueryPort.getIsAttended(member.getId(), club.getId());
 
         return MeetingResult.create(meetings, atendedList);
@@ -45,7 +45,7 @@ public class MeetingQueryService implements MeetingQueryPort {
 
     // 다가오는 미팅 조회
     @Override
-    public List<MeetingResult> findUpcomingMeetingsByClubId(Long memberId, Long clubId) {
+    public List<MeetingResult> findUpcomingMeetings(Long memberId, Long clubId) {
         Member member = assertMemberByMemberId(memberId);
         Club club = assertClubByClubId(clubId);
 

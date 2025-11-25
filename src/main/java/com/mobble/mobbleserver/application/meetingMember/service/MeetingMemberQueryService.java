@@ -32,7 +32,7 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
         Member member = assertMemberByMemberId(memberId);
         Club club = assertClubByClubId(clubId);
 
-        List<Meeting> meetings = meetingReadPort.findByClubMember_Club_Id(club.getId());
+        List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(club.getId());
 
         return meetings.stream()
                 .filter(meeting -> meeting.hasAttendee(member.getId()))

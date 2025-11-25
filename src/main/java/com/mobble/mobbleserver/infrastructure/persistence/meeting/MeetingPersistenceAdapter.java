@@ -37,7 +37,7 @@ public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadP
     }
 
     @Override
-    public List<Meeting> findByClubMember_Club_Id(Long clubId) {
+    public List<Meeting> findMeetingsByClubId(Long clubId) {
         return jpaMeetingRepository.findByClubMember_Club_Id(clubId);
     }
 

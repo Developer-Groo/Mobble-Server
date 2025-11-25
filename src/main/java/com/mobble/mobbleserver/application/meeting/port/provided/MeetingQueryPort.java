@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface MeetingQueryPort {
 
-    List<MeetingResult> findMeetingsByClubId(Long memberId, Long clubId);
+    List<MeetingResult> findMeetings(Long memberId, Long clubId);
 
-    List<MeetingResult> findUpcomingMeetingsByClubId(Long memberId, Long clubId);
+    List<MeetingResult> findUpcomingMeetings(Long memberId, Long clubId);
 
 }

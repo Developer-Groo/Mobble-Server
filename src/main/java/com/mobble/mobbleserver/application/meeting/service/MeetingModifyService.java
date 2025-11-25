@@ -83,7 +83,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         assertIsLeader(clubMember);
 
-        List<Meeting> meetings = meetingReadPort.findByClubMember_Club_Id(clubId);
+        List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);
         if (meetings.isEmpty()) return;
 
         meetingWritePort.deleteAll(meetings);

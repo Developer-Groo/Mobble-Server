@@ -62,7 +62,7 @@ public class MeetingAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        List<MeetingResult> results = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
+        List<MeetingResult> results = meetingQueryPort.findMeetings(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MeetingDetailResponseDto.create(results));
@@ -73,7 +73,7 @@ public class MeetingAPI {
             @AuthenticationPrincipal(expression = "meberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        List<MeetingResult> results = meetingQueryPort.findUpcomingMeetingsByClubId(memberId, clubId);
+        List<MeetingResult> results = meetingQueryPort.findUpcomingMeetings(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MeetingDetailResponseDto.create(results));
