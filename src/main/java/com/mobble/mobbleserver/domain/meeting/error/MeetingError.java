@@ -16,7 +16,7 @@ public enum MeetingError implements CommonError {
 
     @Override
     public String code() {
-        return "COMMENT." + name();
+        return "Meeting." + name();
     }
 
     @Override
