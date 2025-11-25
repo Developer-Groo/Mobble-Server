@@ -4,15 +4,12 @@ import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface JpaMeetingMemberRepository extends JpaRepository<MeetingMember, Long> {
 
-    Optional<MeetingMember> findMeetingMemberByMeetingIdAndMemberId(Long meetingId, Long memberId);
-
     boolean existsByMeeting_IdAndMember_Id(Long meetingId, Long memberId);
 
-    List<MeetingMember> findByMeetingId(Long meetingId);
+    List<MeetingMember> findMeetingIdsByMemberIdAndMeeting_Club_Id(Long meetingId, Long clubId);
 
-    int countByMeetingId(Long meetingId);
+    List<MeetingMember> findByMeetingId(Long meetingId);
 }
