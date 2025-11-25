@@ -1,13 +1,12 @@
 package com.mobble.mobbleserver.application.meetingMember.port.provided;
 
 import com.mobble.mobbleserver.domain.meeting.MeetingMember;
-import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
 
 import java.util.List;
 
 public interface MeetingMemberQueryPort {
 
-    MeetingAttendanceResponseDto getIsAttended(Long meetingId, Long memberId);
+    List<Long> getIsAttended(Long memberId, Long clubId);
 
     List<MeetingMember> getMeetingMembers(Long meetingId);
 }
