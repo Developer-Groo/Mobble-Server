@@ -29,7 +29,7 @@ public class MeetingMemberAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
-        attendMeetingPort.attendMeeting(meetingId, memberId);
+        attendMeetingPort.toggleAttend(meetingId, memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .build();

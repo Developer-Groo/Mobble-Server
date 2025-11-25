@@ -21,7 +21,7 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
     private final MemberReadPort memberReadPort;
 
     @Override
-    public void attendMeeting(Long meetingId, Long memberId) {
+    public void toggleAttend(Long meetingId, Long memberId) {
         Meeting meeting = assertMeetingByMeetingId(meetingId);
         Member member = assertMemberByMemberId(memberId);
 
