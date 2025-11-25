@@ -114,12 +114,10 @@ public class Meeting {
         return this;
     }
 
+    //Todo meetingMembers > Member 뽑기
+
     public int getAttendeeCount() {
         return meetingMembers.size();
-    }
-
-    public boolean isFull(int currentCount) {
-        return currentCount >= memberLimit;
     }
 
     public int calculateDDay() {
@@ -129,7 +127,47 @@ public class Meeting {
         return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
     }
 
+    public boolean hasAttendee(Long memberId) {
+        requireNonNull(memberId, "memberId must not be null");
+
+        return meetingMembers.stream()
+                .anyMatch(meetingMember -> meetingMember.getMember().getId().equals(memberId));
+    }
+
+    public void attend(Member member) {
+        requireNonNull(member, "member must not be null");
+
+        if (hasAttendee(member.getId())) return;
+        if (memberLimit <= meetingMembers.size()) throw new DomainException(MeetingError.FULL_CAPACITY);
+
+        MeetingMember newMeetingMember = MeetingMember.createMeetingMember(this, member);
+        meetingMembers.add(newMeetingMember);
+    }
+
+    public void cancelAttend(Long memberId) {
+        requireNonNull(memberId, "memberId must not be null");
+
+        meetingMembers.removeIf(meetingMember -> {
+            boolean equals = meetingMember.getMember().getId().equals(memberId);
+            if (equals) meetingMember.detach();
+            return equals;
+        });
+    }
+
     /* Assert 검증 */
+    private static void assertCreate(
+            ClubMember clubMember,
+            String title,
+            MeetingSchedule schedule,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        requireNonNull(clubMember, "clubMember must not be null");
+        assertUpdate(title, schedule, location, cost, memberLimit, type);
+    }
+
     private static void assertUpdate(
             String title,
             MeetingSchedule schedule,
@@ -144,38 +182,5 @@ public class Meeting {
         requireNonNull(cost, "cost must not be null");
         requireNonNull(type, "type must not be null");
         if (memberLimit < 1) throw new DomainException(MeetingError.INVALID_MEMBER_LIMIT);
-    }
-
-    private static void assertCreate(
-            ClubMember clubMember,
-            String title,
-            MeetingSchedule schedule,
-            String location,
-            String cost,
-            int memberLimit,
-            MeetingType type
-    ) {
-        requireNonNull(clubMember, "clubMember must not be null");
-        assertUpdate(title, schedule, location, cost, memberLimit, type);
-    }
-
-    /* MeetingMember */
-    public void toggleAttend(Member member) {
-        requireNonNull(member, "member must not be null");
-        requireNonNull(member.getId(), "memberId must not be null");
-
-        MeetingMember existing = meetingMembers.stream()
-                .filter(meetingMember -> meetingMember.getMember().getId().equals(member.getId()))
-                .findFirst()
-                .orElse(null);
-
-        if (existing != null) {
-            meetingMembers.remove(existing);
-        } else {
-            if (isFull(meetingMembers.size())) throw new DomainException(MeetingError.FULL_CAPACITY);
-
-            MeetingMember newMeetingMember = MeetingMember.createMeetingMember(this, member);
-            meetingMembers.add(newMeetingMember);
-        }
     }
 }
