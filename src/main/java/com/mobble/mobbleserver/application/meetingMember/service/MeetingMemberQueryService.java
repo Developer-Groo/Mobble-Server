@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.application.meetingMember.service;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
 import com.mobble.mobbleserver.application.meetingMember.response.MeetingMemberResult;
@@ -10,7 +12,6 @@ import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,6 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
 
     public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingReadPort.findById(meetingId)
-                .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+                .orElseThrow(() -> new BusinessException(MeetingBusinessError.NOT_FOUND));
     }
 }
