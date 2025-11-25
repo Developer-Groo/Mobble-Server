@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.application.meetingMember.service;
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
+import com.mobble.mobbleserver.application.meetingMember.response.MeetingMemberResult;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
@@ -40,10 +41,11 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
     }
 
     @Override
-    public List<Member> getMeetingMembers(Long meetingId) {
+    public MeetingMemberResult getMeetingMembers(Long meetingId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
+        List<Member> attendedMembers = meeting.getAttendedMembers();
 
-        return meeting.getAttendedMembers();
+        return MeetingMemberResult.create(meeting.getId(), attendedMembers);
     }
 
     private Member assertMemberByMemberId(Long memberId) {
