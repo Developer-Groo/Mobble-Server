@@ -54,10 +54,11 @@ public record MeetingResult(
                 .toList();
     }
 
-    private record MemberInfo(String name, String profileImage) {
+    private record MemberInfo(Long memberId, String name, String profileImage) {
 
         public static MemberInfo toMemberInfo(Member member) {
             return new MemberInfo(
+                    member.getId(),
                     member.getName(),
                     member.getProfileImage()
             );
