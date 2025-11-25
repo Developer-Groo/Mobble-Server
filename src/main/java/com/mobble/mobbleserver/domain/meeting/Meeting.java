@@ -114,8 +114,6 @@ public class Meeting {
         return this;
     }
 
-    //Todo meetingMembers > Member 뽑기
-
     public int getAttendeeCount() {
         return meetingMembers.size();
     }
@@ -125,6 +123,12 @@ public class Meeting {
         LocalDate meetingDate = this.schedule.getDatetime().toLocalDate();
 
         return (int) Duration.between(today.atStartOfDay(), meetingDate.atStartOfDay()).toDays();
+    }
+
+    public List<Member> getAttendedMembers() {
+        return meetingMembers.stream()
+                .map(MeetingMember::getMember)
+                .toList();
     }
 
     public boolean hasAttendee(Long memberId) {
