@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.application.meeting.command.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mobble.mobbleserver.application.meetingMember.command.response.MeetingMemberInfoResult;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meeting.MeetingType;
-import com.mobble.mobbleserver.domain.member.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ public record MeetingResult(
         int attendeeCount,
         MeetingType type,
         int dDay,
-        List<MemberInfo> attendedMembers,
+        List<MeetingMemberInfoResult> attendedMembers,
         boolean isAttended
 ) {
 
@@ -48,20 +48,9 @@ public record MeetingResult(
         );
     }
 
-    private static List<MemberInfo> toAttendedMembers(Meeting meeting) {
+    private static List<MeetingMemberInfoResult> toAttendedMembers(Meeting meeting) {
         return meeting.getAttendedMembers().stream()
-                .map(MemberInfo::toMemberInfo)
+                .map(MeetingMemberInfoResult::toMeetingMemberInfo)
                 .toList();
-    }
-
-    private record MemberInfo(Long memberId, String name, String profileImage) {
-
-        public static MemberInfo toMemberInfo(Member member) {
-            return new MemberInfo(
-                    member.getId(),
-                    member.getName(),
-                    member.getProfileImage()
-            );
-        }
     }
 }
