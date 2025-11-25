@@ -2,7 +2,6 @@ package com.mobble.mobbleserver.infrastructure.persistence.clubMember;
 
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,13 +11,9 @@ import java.util.Optional;
 
 public interface JpaClubMemberRepository extends JpaRepository<ClubMember, Long>, ClubMemberQueryDslRepository {
 
-    Optional<ClubMember> findByClubIdAndClubMemberRole(Long clubId, ClubMemberRole clubMemberRole);
-
     Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long memberId, Long clubId);
 
     void deleteAllByClubId(Long clubId);
-
-    long countByClubIdAndJoinStatus(Long clubId, JoinStatus joinStatus);
 
     List<ClubMember> findByClubId(Long clubId);
 
