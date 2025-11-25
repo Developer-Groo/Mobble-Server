@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -76,6 +78,17 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         meetingWritePort.delete(meeting);
     }
 
+    @Override
+    public void deleteAll(Long memberId, Long clubId) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        assertIsLeader(clubMember);
+
+        List<Meeting> meetings = meetingReadPort.findByClubMember_Club_Id(clubId);
+        if (meetings.isEmpty()) return;
+
+        meetingWritePort.deleteAll(meetings);
+    }
+
     /* ==== Private Helper ==== */
     private Meeting assertMeetingByMeetingId(Long meetingId) {
         return meetingReadPort.findById(meetingId)
@@ -89,5 +102,9 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     private void assertCanManageMeeting(ClubMember clubMember) {
         if (!clubMember.canManage()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+    }
+
+    private void assertIsLeader(ClubMember clubMember) {
+        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
     }
 }
