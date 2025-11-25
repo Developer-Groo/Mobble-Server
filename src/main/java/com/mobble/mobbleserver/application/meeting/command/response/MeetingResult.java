@@ -48,6 +48,7 @@ public record MeetingResult(
         );
     }
 
+    /* ==== Private Helper ==== */
     private static List<MeetingMemberInfoResult> toAttendedMembers(Meeting meeting) {
         return meeting.getAttendedMembers().stream()
                 .map(MeetingMemberInfoResult::toMeetingMemberInfo)

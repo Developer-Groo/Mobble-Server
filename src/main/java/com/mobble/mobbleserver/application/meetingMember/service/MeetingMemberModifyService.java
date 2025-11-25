@@ -32,6 +32,7 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
         }
     }
 
+    /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));

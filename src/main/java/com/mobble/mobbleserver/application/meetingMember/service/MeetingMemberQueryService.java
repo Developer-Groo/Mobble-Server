@@ -48,6 +48,7 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
         return MeetingMemberResult.create(meeting.getId(), attendedMembers);
     }
 
+    /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
