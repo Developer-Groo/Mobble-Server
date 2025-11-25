@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeetingMember {
+class MeetingMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,10 @@ public class MeetingMember {
                 .meeting(meeting)
                 .member(member)
                 .build();
+    }
+
+    void detach() {
+        this.meeting = null;
     }
 
     private void validateMeetingMember(Meeting meeting, Member member) {
