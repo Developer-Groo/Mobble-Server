@@ -24,9 +24,9 @@ public class ClubMemberQueryService implements ClubMemberQueryPort {
 
     @Override
     public List<ClubMemberResponseDto> findClubMembers(Long clubId) {
-        Club club = findClubByClubIdOrThrow(clubId);
+        Club club = assertClubByClubId(clubId);
 
-        List<ClubMember> clubMembers = clubMemberReadPort.findByClubId(clubId);
+        List<ClubMember> clubMembers = clubMemberReadPort.findByClubId(club.getId());
 
 //        return clubMembers.stream()
 //                .map(ClubMemberResponseDto::toEntity)
@@ -36,7 +36,7 @@ public class ClubMemberQueryService implements ClubMemberQueryPort {
     }
 
     /* ==== Private Helper ==== */
-    private Club findClubByClubIdOrThrow(Long clubId) {
+    private Club assertClubByClubId(Long clubId) {
         return clubReadPort.findById(clubId)
                 .orElseThrow(() -> new BusinessException(ClubBusinessError.NOT_FOUND));
     }
