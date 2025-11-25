@@ -43,8 +43,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
 
         Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .map(existingMember -> {
-                    if (existingMember.isActive()) throw new IllegalStateException();
-                    if (!existingMember.canRejoin()) throw new IllegalStateException();
+                    if (existingMember.isActive()) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
+                    if (!existingMember.canRejoin()) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
                     return existingMember;
                 });
 
@@ -63,7 +63,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         ClubMember saved = clubMemberWritePort.save(clubMember);
 
         // Todo: 알림 처리 (구현 예정)
-        // handleJoinNotification(club, member, joinStatus);
+         handleJoinNotification(club, member, joinStatus);
 
         return saved;
     }
@@ -77,9 +77,9 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         JoinStatus current = targetMember.getJoinStatus();
         JoinStatus target = command.targetStatus();
 
-        if (command.leaderId().equals(command.targetMemberId())) throw new IllegalStateException();
+        if (command.leaderId().equals(command.targetMemberId())) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
 
-        if (!current.canTransitionTo(target)) throw new IllegalStateException();
+        if (!current.canTransitionTo(target)) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
 
         if (current == JoinStatus.WAITING && target == JoinStatus.APPROVED) {
             targetMember.getClub().increaseMemberCount();
@@ -109,7 +109,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         ClubMemberRole currentRole = targetMember.getClubMemberRole();
         ClubMemberRole newRole = command.newRole();
 
-        if (!currentRole.canChangeTo(newRole)) throw new IllegalStateException();
+        if (!currentRole.canChangeTo(newRole)) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
 
         targetMember.updateRole(command.newRole());
 
