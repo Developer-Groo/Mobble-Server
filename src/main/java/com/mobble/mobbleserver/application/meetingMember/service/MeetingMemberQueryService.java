@@ -1,16 +1,16 @@
 package com.mobble.mobbleserver.application.meetingMember.service;
 
+import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
-import com.mobble.mobbleserver.application.meetingMember.port.required.MeetingMemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
-import com.mobble.mobbleserver.domain.meeting.MeetingMember;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingAttendanceResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,30 +22,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingMemberQueryService implements MeetingMemberQueryPort {
 
-    private final MeetingMemberReadPort meetingMemberReadPort;
     private final MemberReadPort memberReadPort;
     private final MeetingReadPort meetingReadPort;
+    private final ClubReadPort clubReadPort;
 
     @Override
-    public MeetingAttendanceResponseDto getIsAttended(Long meetingId, Long memberId) {
-        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
-        Member member = findMemberByMemberIdOrThrow(memberId);
+    public List<Long> getIsAttended(Long memberId, Long clubId) {
+        Member member = assertMemberByMemberId(memberId);
+        Club club = assertClubByClubId(clubId);
 
-        boolean isAttended = meetingMemberReadPort.existsByMeeting_IdAndMember_Id(meeting.getId(), member.getId());
+        List<Meeting> meetings = meetingReadPort.findByClubMember_Club_Id(club.getId());
 
-        return MeetingAttendanceResponseDto.toDto(meeting.getId(), isAttended);
+        return meetings.stream()
+                .filter(meeting -> meeting.hasAttendee(member.getId()))
+                .map(Meeting::getId)
+                .toList();
     }
 
     @Override
-    public List<MeetingMember> getMeetingMembers(Long meetingId) {
+    public List<Member> getMeetingMembers(Long meetingId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
 
-        return meetingMemberReadPort.findByMeetingId(meeting.getId());
+        return meeting.getAttendedMembers();
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    private Club assertClubByClubId(Long clubId) {
+        return clubReadPort.findById(clubId)
+                .orElseThrow(() -> new DomainException(ClubErrorCode.NOT_FOUND));
     }
 
     public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
