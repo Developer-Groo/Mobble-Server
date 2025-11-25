@@ -11,6 +11,7 @@ import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubDeletePort;
 import com.mobble.mobbleserver.application.club.port.provided.ClubUpdatePort;
 import com.mobble.mobbleserver.application.club.port.required.ClubWritePort;
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
@@ -26,8 +27,6 @@ import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +81,8 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         clubMemberWritePort.save(leaderMembership);
 
         clubChatRoomCreatePort.createClubChatRoom(club.getId(), leader.getId());
+
+        // Todo: jwt 토큰 재발급 필요
 
         return club;
     }
@@ -146,7 +147,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: Error 수정 필요
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private Category assertCategoryByCode(CategoryCode code) {
@@ -155,7 +156,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     }
 
     private void assertLeader(ClubMember clubMember) {
-        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION); // Todo: Error 수정 필요
+        if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
     }
 
     private Image resolveMainImage(Long imageId) {

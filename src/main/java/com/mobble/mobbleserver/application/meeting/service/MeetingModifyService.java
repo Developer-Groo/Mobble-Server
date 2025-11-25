@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.application.meeting.service;
 
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
@@ -9,7 +11,6 @@ import com.mobble.mobbleserver.application.meeting.port.required.MeetingWritePor
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
@@ -73,10 +74,10 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private void assertCanManageMeeting(ClubMember clubMember) {
-        if (!clubMember.canManage()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+        if (!clubMember.canManage()) throw new BusinessException(ClubMemberBusinessError.NO_PERMISSION);
     }
 }
