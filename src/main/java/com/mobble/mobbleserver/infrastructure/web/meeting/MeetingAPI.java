@@ -2,12 +2,14 @@ package com.mobble.mobbleserver.infrastructure.web.meeting;
 
 import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.command.request.UpdateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.response.MeetingResult;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingDetailResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -56,13 +58,14 @@ public class MeetingAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
+    public ResponseEntity<List<MeetingDetailResponseDto>> findMeetingsByClubId(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(clubId);
+        List<MeetingResult> results = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(MeetingResponseDto.toDto(meetings));
+                .body(MeetingDetailResponseDto.create(results));
     }
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
