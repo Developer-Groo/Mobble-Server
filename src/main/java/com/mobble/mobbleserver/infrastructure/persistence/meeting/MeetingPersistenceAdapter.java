@@ -27,6 +27,11 @@ public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadP
     }
 
     @Override
+    public void deleteAll(List<Meeting> meetings) {
+        jpaMeetingRepository.deleteAll(meetings);
+    }
+
+    @Override
     public Optional<Meeting> findById(Long meetingId) {
         return jpaMeetingRepository.findById(meetingId);
     }
