@@ -39,7 +39,7 @@ class ArticleTest {
 //
 //            // then
 //            assertThat(article.getClub()).isEqualTo(mockClub);
-//            assertThat(article.getMember()).isEqualTo(mockMember);
+//            assertThat(article.getAttendedMembers()).isEqualTo(mockMember);
 //            assertThat(article.getArticleType()).isEqualTo(ArticleType.FREE);
 //            assertThat(article.getTitle()).isEqualTo(TITLE);
 //            assertThat(article.getContent()).isEqualTo(CONTENT);
