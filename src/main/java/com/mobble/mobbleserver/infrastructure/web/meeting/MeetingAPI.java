@@ -68,6 +68,17 @@ public class MeetingAPI {
                 .body(MeetingDetailResponseDto.create(results));
     }
 
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<MeetingDetailResponseDto>> findUpcomingMeetings(
+            @AuthenticationPrincipal(expression = "meberId") Long memberId,
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        List<MeetingResult> results = meetingQueryPort.findUpcomingMeetingsByClubId(memberId, clubId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(MeetingDetailResponseDto.create(results));
+    }
+
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
     @PatchMapping("/{meeting-id}")
     public ResponseEntity<MeetingResponseDto> updateMeeting(
