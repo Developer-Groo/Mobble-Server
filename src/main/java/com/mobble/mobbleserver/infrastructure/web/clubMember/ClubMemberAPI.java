@@ -6,11 +6,12 @@ import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberJo
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberLeavePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberQueryPort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberUpdatePort;
+import com.mobble.mobbleserver.application.clubMember.result.ClubMembersResult;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberRoleDto;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberStatusDto;
 import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberResponseDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMembersResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Validated
 @RestController
@@ -70,8 +69,8 @@ public class ClubMemberAPI {
                 .body(ClubMemberResponseDto.toDto(clubMember));
     }
 
-    @DeleteMapping("/{club-id}/members/withdraw")
-    public ResponseEntity<ClubMemberUpsertResponseDto> leave(
+    @DeleteMapping("/{club-id}/members/leave")
+    public ResponseEntity<Void> leave(
             @PathVariable("club-id") @Positive Long clubId,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
@@ -82,11 +81,13 @@ public class ClubMemberAPI {
     }
 
     @GetMapping("/{club-id}/members")
-    public ResponseEntity<List<ClubMemberResponseDto>> findClubMembers(
+    public ResponseEntity<ClubMembersResponseDto> getClubMembers(
             @PathVariable("club-id") @Positive Long clubId
     ) {
+        ClubMembersResult result = clubMemberQueryPort.getClubMembers(clubId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(clubMemberQueryPort.findClubMembers(clubId));
+                .body(ClubMembersResponseDto.create(result));
     }
 }
 
