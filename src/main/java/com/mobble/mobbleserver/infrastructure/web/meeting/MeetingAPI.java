@@ -70,7 +70,7 @@ public class MeetingAPI {
 
     @GetMapping("/upcoming")
     public ResponseEntity<List<MeetingDetailResponseDto>> findUpcomingMeetings(
-            @AuthenticationPrincipal(expression = "meberId") Long memberId,
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
         List<MeetingResult> results = meetingQueryPort.findUpcomingMeetings(memberId, clubId);
