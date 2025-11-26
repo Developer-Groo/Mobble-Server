@@ -9,7 +9,7 @@ public record MemberResponseDto(
         Gender gender,
         String email,
         String phone,
-        String profileImage
+        String profileImageUrl
 ) {
 
     public static MemberResponseDto toDto(Member member) {
@@ -19,7 +19,7 @@ public record MemberResponseDto(
                 member.getGender(),
                 member.getEmail(),
                 member.getPhone(),
-                member.getProfileImage()
+                member.getProfileImage().getUrl()
         );
     }
 }

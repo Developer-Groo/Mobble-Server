@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.domain.member;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
 import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.persistence.*;
@@ -42,8 +43,9 @@ public class Member extends BaseEntity {
     @Embedded
     private Location location;
 
-    @Column(name = "profile_image")
-    private String profileImage;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_image_id")
+    private Image profileImage;
 
     @Column(name = "terms_agreed")
     private boolean termsAgreed;
@@ -72,7 +74,7 @@ public class Member extends BaseEntity {
             String email,
             String phone,
             Location location,
-            String profileImage,
+            Image profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
             boolean isDeleted,
@@ -104,7 +106,7 @@ public class Member extends BaseEntity {
             String email,
             String phone,
             Location location,
-            String profileImage,
+            Image profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
             SocialProvider socialProvider,
@@ -127,7 +129,7 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Member updateMember(Location location, String profileImage) {
+    public Member updateMember(Location location, Image profileImage) {
         this.location = location;
         this.profileImage = profileImage;
         return this;

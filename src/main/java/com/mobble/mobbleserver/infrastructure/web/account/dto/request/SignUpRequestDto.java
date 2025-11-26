@@ -3,6 +3,8 @@ package com.mobble.mobbleserver.infrastructure.web.account.dto.request;
 
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
@@ -24,7 +26,7 @@ public record SignUpRequestDto(
 
         Location location,
 
-        String profileImage,
+        String profileImageUrl,
 
         @AssertTrue(message = "MEMBER:REQUIRED_TERMS_AGREE")
         boolean termsAgreed,
@@ -41,7 +43,7 @@ public record SignUpRequestDto(
                 userInfo.email(),
                 this.phone,
                 location,
-                this.profileImage,
+                Image.create(profileImageUrl, "", 1L, ImageType.MEMBER_PROFILE),
                 this.termsAgreed,
                 this.privacyAgreed,
                 userInfo.socialProvider(),
