@@ -1,25 +1,12 @@
 package com.mobble.mobbleserver.infrastructure.persistence.meeting;
 
 import com.mobble.mobbleserver.config.QueryDslConfig;
-import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
-import com.mobble.mobbleserver.domain.meeting.Meeting;
-import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.support.fixture.clubMember.ClubMemberTestFixture;
-import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;
-import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(QueryDslConfig.class)

@@ -1,8 +1,5 @@
 package com.mobble.mobbleserver.domain.article;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 class ArticleTest {
 
 //    private final Article mockArticle = ArticleTestFixture.createDefaultArticle();
