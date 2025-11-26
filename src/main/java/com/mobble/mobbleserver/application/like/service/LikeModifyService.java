@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.like.service;
 
+import com.mobble.mobbleserver.application.like.error.LikeBusinessError;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
@@ -9,7 +10,6 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,8 @@ public class LikeModifyService implements LikeModifyPort {
     public void deleteAll(LikeType likeType, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return;
 
-        if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능");
+        if (likeType == LikeType.CLUB)
+            throw new com.mobble.mobbleserver.domain.common.exception.DomainException(LikeBusinessError.INVALID_LIKE_TYPE);
 
         List<Long> distinctIds = targetIds.stream()
                 .distinct()
@@ -69,7 +70,7 @@ public class LikeModifyService implements LikeModifyPort {
 
     private void validateTarget(LikeType likeType, Long targetId) {
         if (!targetExistencePort.existsTarget(likeType, targetId)) {
-            throw new DomainException(LikeErrorCode.TARGET_NOT_FOUND);
+            throw new com.mobble.mobbleserver.domain.common.exception.DomainException(LikeBusinessError.TARGET_NOT_FOUND);
         }
     }
 
