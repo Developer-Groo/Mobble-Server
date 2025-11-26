@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting;
 
-import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
-import com.mobble.mobbleserver.application.meeting.command.request.UpdateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;

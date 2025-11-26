@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.meeting.command.request;
+package com.mobble.mobbleserver.application.meeting.command;
 
 import com.mobble.mobbleserver.domain.meeting.MeetingType;
 

@@ -2,8 +2,8 @@ package com.mobble.mobbleserver.application.meeting.service;
 
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.common.exception.BusinessException;
-import com.mobble.mobbleserver.application.meeting.command.request.CreateMeetingCommand;
-import com.mobble.mobbleserver.application.meeting.command.request.UpdateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
