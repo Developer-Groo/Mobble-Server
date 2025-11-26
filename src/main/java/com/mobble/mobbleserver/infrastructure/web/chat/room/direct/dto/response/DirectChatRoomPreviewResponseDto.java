@@ -26,7 +26,7 @@ public record DirectChatRoomPreviewResponseDto(
         return new DirectChatRoomPreviewResponseDto(
                 chatRoom.getId(),
                 receiver.getName(),
-                receiver.getProfileImage(),
+                receiver.getProfileImage().getUrl(),
                 lastMessage != null ? lastMessage.getContent() : "",
                 lastMessage != null ? lastMessage.getCreatedAt() : null,
                 unreadCount,

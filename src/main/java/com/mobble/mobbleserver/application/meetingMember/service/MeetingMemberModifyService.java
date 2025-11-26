@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.meetingMember.service;
 
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.AttendMeetingPort;

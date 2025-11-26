@@ -1,7 +1,8 @@
 package com.mobble.mobbleserver.application.meeting.service;
 
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
@@ -13,8 +14,6 @@ import com.mobble.mobbleserver.application.meeting.port.required.MeetingWritePor
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meeting.MeetingSchedule;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,7 +81,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public void deleteAll(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
-        assertIsLeader(clubMember);
+        assertLeader(clubMember);
 
         List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);
         if (meetings.isEmpty()) return;
@@ -98,14 +97,14 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private void assertCanManageMeeting(ClubMember clubMember) {
-        if (!clubMember.canManage()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+        if (!clubMember.canManage()) throw new BusinessException(ClubMemberBusinessError.NO_PERMISSION);
     }
 
-    private void assertIsLeader(ClubMember clubMember) {
-        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+    private void assertLeader(ClubMember clubMember) {
+        if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
     }
 }

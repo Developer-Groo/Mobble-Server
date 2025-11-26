@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public record ArticlePreviewResponseDto(
         String body,
         Long ownerId,
         String ownerName,
-        Long likeCount,
+        int likeCount,
         boolean isLiked,
         int commentCount,
         LocalDateTime createdAt,

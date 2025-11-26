@@ -14,35 +14,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadPort {
 
-    private final JpaMeetingRepository jpaMeetingRepository;
+    private final JpaMeetingRepository repository;
 
     @Override
     public Meeting save(Meeting meeting) {
-        return jpaMeetingRepository.save(meeting);
+        return repository.save(meeting);
     }
 
     @Override
     public void delete(Meeting meeting) {
-        jpaMeetingRepository.delete(meeting);
+        repository.delete(meeting);
     }
 
     @Override
     public void deleteAll(List<Meeting> meetings) {
-        jpaMeetingRepository.deleteAll(meetings);
+        repository.deleteAll(meetings);
     }
 
     @Override
     public Optional<Meeting> findById(Long meetingId) {
-        return jpaMeetingRepository.findById(meetingId);
+        return repository.findById(meetingId);
     }
 
     @Override
     public List<Meeting> findMeetingsByClubId(Long clubId) {
-        return jpaMeetingRepository.findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(clubId);
+        return repository.findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(clubId);
     }
 
     @Override
     public List<Meeting> findUpcomingMeetingsByClubId(Long clubId, LocalDateTime today) {
-        return jpaMeetingRepository.findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(clubId, today);
+        return repository.findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(clubId, today);
     }
 }

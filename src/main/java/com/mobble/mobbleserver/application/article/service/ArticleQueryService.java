@@ -1,24 +1,23 @@
 package com.mobble.mobbleserver.application.article.service;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentQueryPort;
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +51,7 @@ public class ArticleQueryService implements ArticleQueryPort {
 
         List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
 
-        Map<Long, Long> likeCounts = likeQueryPort.getLikeCounts(LikeType.ARTICLE, articleIds);
+        Map<Long, Integer> likeCounts = likeQueryPort.getLikeCounts(LikeType.ARTICLE, articleIds);
         List<Long> likedIds = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), articleIds);
         Map<Long, Integer> commentCounts = commentQueryPort.getCountComments(articleIds);
 
@@ -66,7 +65,7 @@ public class ArticleQueryService implements ArticleQueryPort {
         Member member = clubMember.getMember();
         Article article = assertArticleByArticleIdAndClubId(articleId, club.getId());
 
-        Long likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
+        int likeCount = likeQueryPort.getLikeCount(LikeType.ARTICLE, article.getId());
         List<Member> likedMembers = isLikedMembers(article.getId());
 
         boolean isLiked = likeQueryPort.getLikedIds(LikeType.ARTICLE, member.getId(), List.of(article.getId()))
@@ -85,7 +84,7 @@ public class ArticleQueryService implements ArticleQueryPort {
     /* ==== Private Helper ==== */
     private ClubMember assertMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: ErrorCode 수정 필요
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private Article assertArticleByArticleIdAndClubId(Long articleId, Long clubId) {

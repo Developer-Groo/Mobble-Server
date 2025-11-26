@@ -2,12 +2,14 @@ package com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request;
 
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record UpdateClubMemberRoleDto(
-        @NotNull(message = "CLUB_MEMBER:MEMBER_ID_NOT_NULL")
-        Long memberId,
+        @NotNull(message = "target member id must not be null")
+        @Positive(message = "target member id must be positive")
+        Long targetMemberId,
 
-        @NotNull(message = "CLUB_MEMBER:ROLE_NOT_NULL")
+        @NotNull(message = "new role must not be null")
         ClubMemberRole newRole
 ) {
 }

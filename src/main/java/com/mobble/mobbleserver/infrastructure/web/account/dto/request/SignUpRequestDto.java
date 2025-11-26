@@ -1,7 +1,10 @@
 package com.mobble.mobbleserver.infrastructure.web.account.dto.request;
 
+
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
-import com.mobble.mobbleserver.domain.ground.Ground;
+import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import com.mobble.mobbleserver.domain.member.Gender;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
@@ -21,9 +24,9 @@ public record SignUpRequestDto(
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "MEMBER:WRONG_PHONE_PATTERN")
         String phone,
 
-        Long groundCode,
+        Location location,
 
-        String profileImage,
+        String profileImageUrl,
 
         @AssertTrue(message = "MEMBER:REQUIRED_TERMS_AGREE")
         boolean termsAgreed,
@@ -32,15 +35,15 @@ public record SignUpRequestDto(
         boolean privacyAgreed
 ) {
 
-    public Member toEntity(SocialUserInfo userInfo, Ground ground) {
+    public Member toEntity(SocialUserInfo userInfo, Location location) {
         return Member.createMember(
                 this.name,
                 this.age,
                 this.gender,
                 userInfo.email(),
                 this.phone,
-                ground,
-                this.profileImage,
+                location,
+                Image.create(profileImageUrl, "", 1L, ImageType.MEMBER_PROFILE),
                 this.termsAgreed,
                 this.privacyAgreed,
                 userInfo.socialProvider(),

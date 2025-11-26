@@ -7,10 +7,9 @@ import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWrite
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.chat.room.club.dto.response.ClubChatRoomPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public ClubChatRoomPreviewResponseDto createClubChatRoom(Long clubId, Long memberId) {
+    public void createClubChatRoom(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
@@ -37,8 +36,6 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
 
         clubChatRoom.addParticipant(member);
         chatRoomWritePort.save(clubChatRoom);
-
-        return ClubChatRoomPreviewResponseDto.toDto(clubChatRoom, club, null, 0, null);
     }
 
     @Override

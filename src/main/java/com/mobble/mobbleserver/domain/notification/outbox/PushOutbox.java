@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.domain.notification.outbox;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

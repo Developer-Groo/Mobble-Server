@@ -1,13 +1,12 @@
 package com.mobble.mobbleserver.application.clubMember.port.provided;
 
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberRoleDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberStatusDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberRoleUpdateResultDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberUpsertResponseDto;
+import com.mobble.mobbleserver.application.clubMember.command.UpdateRoleCommand;
+import com.mobble.mobbleserver.application.clubMember.command.UpdateStatusCommand;
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 
 public interface ClubMemberUpdatePort {
 
-    ClubMemberUpsertResponseDto updateClubMemberJoinStatus(Long clubId, Long memberId, UpdateClubMemberStatusDto dto);
+    ClubMember updateJoinStatus(UpdateStatusCommand command);
 
-    ClubMemberRoleUpdateResultDto updateClubMemberRole(Long clubId, Long memberId, UpdateClubMemberRoleDto dto);
+    ClubMember updateRole(UpdateRoleCommand command);
 }

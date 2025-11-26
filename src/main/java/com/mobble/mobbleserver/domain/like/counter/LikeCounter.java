@@ -36,21 +36,21 @@ public class LikeCounter {
     private Long targetId;
 
     @Column(name = "cnt", nullable = false)
-    private long count;
+    private int count;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private LikeCounter(LikeType likeType, Long targetId, Long count) {
+    private LikeCounter(LikeType likeType, Long targetId, int count) {
         validateTypeAndTarget(likeType, targetId);
         this.likeType = likeType;
         this.targetId = targetId;
-        this.count = Math.max(count, 0);
+        this.count = count;
     }
 
     public static LikeCounter create(LikeType likeType, Long targetId) {
         return LikeCounter.builder()
                 .likeType(likeType)
                 .targetId(targetId)
-                .count(0L)
+                .count(0)
                 .build();
     }
 

@@ -4,7 +4,6 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,29 +16,26 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
 
     private final JpaClubMemberRepository repository;
 
+    /* ClubMemberWritePort */
     @Override
     public ClubMember save(ClubMember clubMember) {
         return repository.save(clubMember);
     }
 
     @Override
-    public void deleteAllClubMemberByClubId(Long clubId) {
-        repository.deleteAllClubMemberByClubId(clubId);
+    public void deleteAllByClubId(Long clubId) {
+        repository.deleteAllByClubId(clubId);
     }
 
+    /* ClubMemberReadPort */
     @Override
     public Optional<ClubMember> findClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return repository.findClubMemberByClubIdAndMemberId(clubId, memberId);
     }
 
     @Override
-    public long countByClubIdAndJoinStatus(Long clubId, JoinStatus joinStatus) {
-        return repository.countByClubIdAndJoinStatus(clubId, joinStatus);
-    }
-
-    @Override
-    public List<ClubMemberRole> findDistinctRolesByMemberIdAndRoleIn(Long memberId, List<ClubMemberRole> leader) {
-        return repository.findDistinctRolesByMemberIdAndRoleIn(memberId, leader);
+    public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
+        return repository.findAllByMemberId(memberId);
     }
 
     @Override
@@ -48,12 +44,7 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
-        return repository.findAllClubMemberByMemberId(memberId);
-    }
-
-    @Override
-    public Optional<ClubMember> findByClubIdAndClubMemberRole(Long clubId, ClubMemberRole clubMemberRole) {
-        return repository.findByClubIdAndClubMemberRole(clubId, clubMemberRole);
+    public List<ClubMemberRole> findDistinctRolesByMemberIdAndRoleIn(Long memberId, List<ClubMemberRole> leader) {
+        return repository.findDistinctRolesByMemberIdAndRoleIn(memberId, leader);
     }
 }

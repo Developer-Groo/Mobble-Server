@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.infrastructure.persistence.like.acl;
 import com.mobble.mobbleserver.application.like.port.required.TargetExistencePort;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.infrastructure.persistence.article.JpaArticleRepository;
-import com.mobble.mobbleserver.infrastructure.persistence.club.core.JpaClubRepository;
+import com.mobble.mobbleserver.infrastructure.persistence.club.JpaClubRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.comment.JpaCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

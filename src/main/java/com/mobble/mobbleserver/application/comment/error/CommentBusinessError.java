@@ -15,7 +15,7 @@ public enum CommentBusinessError implements CommonError {
 
     @Override
     public String code() {
-        return "COMMENT_BUSINESS" + name();
+        return "COMMENT_BUSINESS." + name();
     }
 
     @Override

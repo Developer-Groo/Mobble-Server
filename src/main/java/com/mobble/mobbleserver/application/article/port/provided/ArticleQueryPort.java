@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.application.article.port.provided;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 
 import java.util.List;

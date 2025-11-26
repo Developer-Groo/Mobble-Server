@@ -11,7 +11,7 @@ public interface LikeQueryPort {
 
     List<Long> getLikedIds(LikeType likeType, Long memberId, List<Long> targetIds);
 
-    Long getLikeCount(LikeType likeType, Long targetId);
+    int getLikeCount(LikeType likeType, Long targetId);
 
-    Map<Long, Long> getLikeCounts(LikeType likeType, List<Long> targetIds);
+    Map<Long, Integer> getLikeCounts(LikeType likeType, List<Long> targetIds);
 }

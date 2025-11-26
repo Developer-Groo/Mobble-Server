@@ -1,21 +1,5 @@
 package com.mobble.mobbleserver.domain.article;
 
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
-import com.mobble.mobbleserver.domain.club.core.Club;
-import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.article.ArticleErrorCode;
-import com.mobble.mobbleserver.support.fixture.article.ArticleTestFixture;
-import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
-import com.mobble.mobbleserver.support.fixture.clubCategory.ClubCategoryTestFixture;
-import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 class ArticleTest {
 
 //    private final Article mockArticle = ArticleTestFixture.createDefaultArticle();

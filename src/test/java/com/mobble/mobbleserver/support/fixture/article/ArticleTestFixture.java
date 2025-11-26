@@ -1,22 +1,17 @@
 package com.mobble.mobbleserver.support.fixture.article;
 
-import com.mobble.mobbleserver.domain.ClubCategory.ClubCategory;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.support.fixture.club.ClubTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 
 public class ArticleTestFixture {
 
     public static Article createDefaultArticle() {
-        ClubCategory category = ClubCategory.createClubCategory("SOCCER");
-        Club club = ClubTestFixture.createDefaultClub(category);
-
         return Article.createArticle(
-                club,
+                null,
                 MemberTestFixture.createDefaultMember(),
                 ArticleType.FREE,
                 ArticleContent.of("title", "body")
