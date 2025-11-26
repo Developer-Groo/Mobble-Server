@@ -3,6 +3,9 @@ package com.mobble.mobbleserver.application.meeting.service;
 import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
@@ -10,13 +13,12 @@ import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingWritePort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.meeting.MeetingErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
+import com.mobble.mobbleserver.domain.meeting.MeetingSchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,56 +30,81 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public Meeting createMeeting(Long memberId, Long clubId, MeetingRequestDto dto) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
+    public Meeting createMeeting(CreateMeetingCommand command) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
-        Meeting meeting = dto.toEntity(clubMember);
+        MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
+
+        Meeting meeting = Meeting.create(
+                clubMember,
+                command.title(),
+                meetingSchedule,
+                command.location(),
+                command.cost(),
+                command.memberLimit(),
+                command.type()
+        );
 
         return meetingWritePort.save(meeting);
     }
 
     @Override
-    public Meeting updateMeeting(Long memberId, Long clubId, Long meetingId, MeetingUpdateRequestDto dto) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
+    public Meeting updateMeeting(UpdateMeetingCommand command) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
-        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
+        MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
 
-        return meeting.updateMeeting(
-                dto.title(),
-                dto.dateTime(),
-                dto.location(),
-                dto.cost(),
-                dto.memberLimit(),
-                dto.type()
+        Meeting meeting = assertMeetingByMeetingId(command.meetingId());
+
+        return meeting.update(
+                command.title(),
+                meetingSchedule,
+                command.location(),
+                command.cost(),
+                command.memberLimit(),
+                command.type()
         );
     }
 
     @Override
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         assertCanManageMeeting(clubMember);
 
-        Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
+        Meeting meeting = assertMeetingByMeetingId(meetingId);
 
         meetingWritePort.delete(meeting);
     }
 
-    private Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
-        return meetingReadPort.findById(meetingId)
-                .orElseThrow(() -> new DomainException(MeetingErrorCode.NOT_FOUND_MEETING));
+    @Override
+    public void deleteAll(Long memberId, Long clubId) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        assertIsLeader(clubMember);
+
+        List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);
+        if (meetings.isEmpty()) return;
+
+        meetingWritePort.deleteAll(meetings);
     }
 
-    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+    /* ==== Private Helper ==== */
+    private Meeting assertMeetingByMeetingId(Long meetingId) {
+        return meetingReadPort.findById(meetingId)
+                .orElseThrow(() -> new BusinessException(MeetingBusinessError.NOT_FOUND));
+    }
+
+    private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
                 .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private void assertCanManageMeeting(ClubMember clubMember) {
         if (!clubMember.canManage()) throw new BusinessException(ClubMemberBusinessError.NO_PERMISSION);
+    }
+
+    private void assertIsLeader(ClubMember clubMember) {
+        if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
     }
 }

@@ -1,18 +1,22 @@
 package com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response;
 
-import com.mobble.mobbleserver.domain.meetingMember.MeetingMember;
+import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberInfoResult;
+import com.mobble.mobbleserver.domain.member.Member;
 
 import java.util.List;
 
-public record MeetingMemberListResponseDto(Long meetingId, List<MeetingMemberResponseDto> meetingMembers) {
+public record MeetingMemberListResponseDto(
+        Long meetingId,
+        List<MeetingMemberInfoResult> attendedMembers
+) {
 
-    public static MeetingMemberListResponseDto toDto(List<MeetingMember> meetingMemberList) {
-        Long meetingId = meetingMemberList.get(0).getMeeting().getId();
+    public static MeetingMemberListResponseDto toDto(Long meetingId, List<Member> attendedMembers) {
+        return new MeetingMemberListResponseDto(meetingId, toAttendedMembers(attendedMembers));
+    }
 
-        List<MeetingMemberResponseDto> meetingMembers = meetingMemberList.stream()
-                .map(meetingMember -> MeetingMemberResponseDto.toDto(meetingMember.getMember()))
+    private static List<MeetingMemberInfoResult> toAttendedMembers(List<Member> attendedMembers) {
+        return attendedMembers.stream()
+                .map(MeetingMemberInfoResult::toMeetingMemberInfo)
                 .toList();
-
-        return new MeetingMemberListResponseDto(meetingId, meetingMembers);
     }
 }

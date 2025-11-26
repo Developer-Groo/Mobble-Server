@@ -6,6 +6,7 @@ import com.mobble.mobbleserver.domain.meeting.Meeting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +27,22 @@ public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadP
     }
 
     @Override
+    public void deleteAll(List<Meeting> meetings) {
+        jpaMeetingRepository.deleteAll(meetings);
+    }
+
+    @Override
     public Optional<Meeting> findById(Long meetingId) {
         return jpaMeetingRepository.findById(meetingId);
     }
 
     @Override
-    public List<Meeting> findByClubMember_Club_Id(Long clubId) {
-        return jpaMeetingRepository.findByClubMember_Club_Id(clubId);
+    public List<Meeting> findMeetingsByClubId(Long clubId) {
+        return jpaMeetingRepository.findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(clubId);
+    }
+
+    @Override
+    public List<Meeting> findUpcomingMeetingsByClubId(Long clubId, LocalDateTime today) {
+        return jpaMeetingRepository.findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(clubId, today);
     }
 }
