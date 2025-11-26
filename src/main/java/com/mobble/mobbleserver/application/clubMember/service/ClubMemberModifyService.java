@@ -123,7 +123,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         clubMember.assertApproved();
 
         clubMember.getClub().decreaseMemberCount();
-        clubMember.updateStatus(JoinStatus.WITHDRAWN);
+        clubMember.updateStatus(JoinStatus.LEAVE);
     }
 
     /* ==== Private Helper ==== */
