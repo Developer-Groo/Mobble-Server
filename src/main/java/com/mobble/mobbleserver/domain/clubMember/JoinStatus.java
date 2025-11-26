@@ -13,7 +13,7 @@ public enum JoinStatus {
     WAITING("대기", false),
     REJECTED("거절", true),
     KICKED("강퇴", true),
-    WITHDRAWN("탈퇴", true);
+    LEAVE("탈퇴", true);
 
     private final String displayName;
     private final boolean rejoinable;
@@ -24,7 +24,7 @@ public enum JoinStatus {
         return switch (this) {
             case WAITING -> allowedTargets(JoinStatus.APPROVED, JoinStatus.REJECTED).contains(target);
             case APPROVED -> allowedTargets(JoinStatus.KICKED).contains(target);
-            case REJECTED, KICKED, WITHDRAWN -> false;
+            case REJECTED, KICKED, LEAVE -> false;
         };
     }
 
