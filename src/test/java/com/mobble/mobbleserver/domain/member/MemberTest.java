@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ class MemberTest {
     private static final String EMAIL = "test@example.com";
     private static final String PHONE = "010-1234-5678";
     private static final Location GROUND = null;
-    private static final String PROFILE_IMAGE = "profile";
+    private static final Image PROFILE_IMAGE = null;
     private static final SocialProvider SOCIAL_PROVIDER = SocialProvider.KAKAO;
     private static final String SOCIAL_ID = "1232123";
 
