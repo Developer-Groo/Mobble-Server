@@ -27,6 +27,16 @@ public record UpdateMeetingCommand(
             Integer memberLimit,
             MeetingType type
     ) {
-        return new UpdateMeetingCommand(memberId, clubId, meetingId, title, schedule, location, cost, memberLimit, type);
+        return new UpdateMeetingCommand(
+                memberId,
+                clubId,
+                meetingId,
+                title,
+                schedule,
+                location,
+                cost,
+                memberLimit,
+                type
+        );
     }
 }

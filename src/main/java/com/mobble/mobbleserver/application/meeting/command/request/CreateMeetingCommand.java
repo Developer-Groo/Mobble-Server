@@ -25,6 +25,15 @@ public record CreateMeetingCommand(
             Integer memberLimit,
             MeetingType type
     ) {
-        return new CreateMeetingCommand(memberId, clubId, title, schedule, location, cost, memberLimit, type);
+        return new CreateMeetingCommand(
+                memberId,
+                clubId,
+                title,
+                schedule,
+                location,
+                cost,
+                memberLimit,
+                type
+        );
     }
 }
