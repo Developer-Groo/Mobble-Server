@@ -2,9 +2,9 @@ package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.ground.Ground;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
+import com.mobble.mobbleserver.domain.member.error.MemberError;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -146,11 +148,11 @@ public class Member extends BaseEntity {
             boolean termsAgreed,
             boolean privacyAgreed
     ) {
-        if (name == null) throw new DomainException(MemberErrorCode.NAME_REQUIRED);
-        if (gender == null) throw new DomainException(MemberErrorCode.GENDER_REQUIRED);
-        if (phone == null) throw new DomainException(MemberErrorCode.PHONE_REQUIRED);
-        if (!termsAgreed) throw new DomainException(MemberErrorCode.TERMS_AGREED_REQUIRED);
-        if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
+        requireNonNull(name, "name must not be null");
+        requireNonNull(gender, "gender must not be null");
+        requireNonNull(phone, "phone must not be null");
+        if (!termsAgreed) throw new DomainException(MemberError.REQUIRED_TERMS_AGREED);
+        if (!privacyAgreed) throw new DomainException(MemberError.REQUIRED_PRIVACY_AGREED);
     }
 
     public void setGround(Ground ground) {
