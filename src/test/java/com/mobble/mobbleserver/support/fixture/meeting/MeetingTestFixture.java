@@ -13,7 +13,7 @@ public class MeetingTestFixture {
         return Meeting.create(
                 clubMember,
                 "정기 모임",
-                MeetingSchedule.of(LocalDateTime.of(2025, 10, 10, 19, 0)),
+                MeetingSchedule.of(LocalDateTime.of(2030, 10, 10, 19, 0)),
                 "체육관",
                 "5000",
                 10,
