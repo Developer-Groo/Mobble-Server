@@ -81,7 +81,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public void deleteAll(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
-        assertIsLeader(clubMember);
+        assertLeader(clubMember);
 
         List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);
         if (meetings.isEmpty()) return;
@@ -104,7 +104,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         if (!clubMember.canManage()) throw new BusinessException(ClubMemberBusinessError.NO_PERMISSION);
     }
 
-    private void assertIsLeader(ClubMember clubMember) {
+    private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
     }
 }
