@@ -41,12 +41,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         Club club = assertClubByClubId(clubId);
         Member member = assertMemberByMemberId(memberId);
 
-        Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .map(existingMember -> {
-                    if (existingMember.isActive()) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
-                    if (!existingMember.canRejoin()) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
-                    return existingMember;
-                });
+        Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId);
+        optionalMember.ifPresent(this::assertExistingMemberCanJoin);
 
         JoinStatus joinStatus = club.isAutoJoin()
                 ? JoinStatus.APPROVED
@@ -77,9 +73,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         JoinStatus current = targetMember.getJoinStatus();
         JoinStatus target = command.targetStatus();
 
-        if (command.leaderId().equals(command.targetMemberId())) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
-
-        if (!current.canTransitionTo(target)) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
+        assertNotSelfModification(command.leaderId(), command.targetMemberId());
+        assertValidJoinStatusTransition(current, target);
 
         if (current == JoinStatus.WAITING && target == JoinStatus.APPROVED) {
             targetMember.getClub().increaseMemberCount();
@@ -102,16 +97,16 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
 
         ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
 
-        if (command.leaderId().equals(command.targetMemberId())) throw new BusinessException(ClubMemberBusinessError.SELF_ROLE_CHANGE_NOT_ALLOWED);
+        assertNotSelfModification(command.leaderId(), command.targetMemberId());
 
         targetMember.assertApproved();
 
         ClubMemberRole currentRole = targetMember.getClubMemberRole();
         ClubMemberRole newRole = command.newRole();
 
-        if (!currentRole.canChangeTo(newRole)) throw new IllegalStateException(); // Todo: 메서드 분리 및 Error 적용
+        assertValidRoleChange(currentRole, newRole);
 
-        targetMember.updateRole(command.newRole());
+        targetMember.updateRole(newRole);
 
         // Todo: 알림 처리 (구현 예정)
         // sendRoleChangeNotification(clubMember, target);
@@ -123,7 +118,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     public void leave(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
 
-        if (clubMember.isLeader()) throw new IllegalStateException();
+        assertLeaderCannotLeave(clubMember);
 
         clubMember.assertApproved();
 
@@ -149,6 +144,29 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
 
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
+    }
+
+    private void assertExistingMemberCanJoin(ClubMember existingMember) {
+        if (existingMember.isActive())
+            throw new BusinessException(ClubMemberBusinessError.ALREADY_ACTIVE_MEMBER);
+        if (!existingMember.canRejoin())
+            throw new BusinessException(ClubMemberBusinessError.CANNOT_REJOIN_YET);
+    }
+
+    private void assertNotSelfModification(Long leaderId, Long targetMemberId) {
+        if (leaderId.equals(targetMemberId)) throw new BusinessException(ClubMemberBusinessError.CANNOT_MODIFY_LEADER);
+    }
+
+    private void assertValidJoinStatusTransition(JoinStatus current, JoinStatus target) {
+        if (!current.canTransitionTo(target)) throw new BusinessException(ClubMemberBusinessError.INVALID_JOIN_STATUS_TRANSITION);
+    }
+
+    private void assertValidRoleChange(ClubMemberRole current, ClubMemberRole newRole) {
+        if (!current.canChangeTo(newRole)) throw new BusinessException(ClubMemberBusinessError.INVALID_ROLE_CHANGE);
+    }
+
+    private void assertLeaderCannotLeave(ClubMember clubMember) {
+        if (clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.LEADER_CANNOT_LEAVE);
     }
 
     private void handleJoinNotification(Club club, Member member, JoinStatus joinStatus) {
