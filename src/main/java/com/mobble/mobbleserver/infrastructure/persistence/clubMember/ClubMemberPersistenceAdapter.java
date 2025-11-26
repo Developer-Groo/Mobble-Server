@@ -34,8 +34,8 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public List<ClubMemberRole> findDistinctRolesByMemberIdAndRoleIn(Long memberId, List<ClubMemberRole> leader) {
-        return repository.findDistinctRolesByMemberIdAndRoleIn(memberId, leader);
+    public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
+        return repository.findAllByMemberId(memberId);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public List<ClubMember> findAllClubMemberByMemberId(Long memberId) {
-        return repository.findAllClubMemberByMemberId(memberId);
+    public List<ClubMemberRole> findDistinctRolesByMemberIdAndRoleIn(Long memberId, List<ClubMemberRole> leader) {
+        return repository.findDistinctRolesByMemberIdAndRoleIn(memberId, leader);
     }
 }
