@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response;
 
-import com.mobble.mobbleserver.application.meetingMember.command.response.MeetingMemberInfoResult;
+import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberInfoResult;
 import com.mobble.mobbleserver.domain.member.Member;
 
 import java.util.List;

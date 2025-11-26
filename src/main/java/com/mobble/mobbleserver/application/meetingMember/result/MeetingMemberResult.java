@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.meetingMember.response;
+package com.mobble.mobbleserver.application.meetingMember.result;
 
 import com.mobble.mobbleserver.domain.member.Member;
 

@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.meetingMember.port.provided;
 
-import com.mobble.mobbleserver.application.meetingMember.response.MeetingMemberResult;
+import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberResult;
 
 import java.util.List;
 

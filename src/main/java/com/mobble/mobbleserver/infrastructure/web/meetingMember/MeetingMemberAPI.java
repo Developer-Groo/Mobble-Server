@@ -2,7 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.meetingMember;
 
 import com.mobble.mobbleserver.application.meetingMember.port.provided.AttendMeetingPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
-import com.mobble.mobbleserver.application.meetingMember.response.MeetingMemberResult;
+import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberResult;
 import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;

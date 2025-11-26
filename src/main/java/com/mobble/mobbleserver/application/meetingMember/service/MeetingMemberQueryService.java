@@ -5,7 +5,7 @@ import com.mobble.mobbleserver.application.common.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
-import com.mobble.mobbleserver.application.meetingMember.response.MeetingMemberResult;
+import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberResult;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.core.Club;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
