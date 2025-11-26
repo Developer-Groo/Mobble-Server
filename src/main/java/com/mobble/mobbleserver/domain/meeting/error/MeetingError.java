@@ -10,7 +10,6 @@ public enum MeetingError implements CommonError {
     INVALID_MEMBER_LIMIT("memberLimit must be at least 1", ErrorCategory.VALIDATION),
     FULL_CAPACITY("meeting has reached full capacity", ErrorCategory.CONFLICT);
 
-
     private final String message;
     private final ErrorCategory category;
 
