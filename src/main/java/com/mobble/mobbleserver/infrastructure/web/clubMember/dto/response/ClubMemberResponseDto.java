@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response;
 
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
-import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 
