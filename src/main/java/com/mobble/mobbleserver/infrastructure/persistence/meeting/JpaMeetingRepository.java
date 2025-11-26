@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface JpaMeetingRepository extends JpaRepository<Meeting, Long> {
 
-    List<Meeting> findByClubMember_Club_Id(Long clubId);
+    List<Meeting> findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(Long clubId);
 
     List<Meeting> findByClubMember_Club_IdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(Long clubId, LocalDateTime dateTime);
 }
