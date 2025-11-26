@@ -13,7 +13,7 @@ public record MeetingResponseDto(
         String title,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-        LocalDateTime dateTime,
+        LocalDateTime schedule,
         String location,
         String cost,
         Integer memberLimit,
@@ -27,7 +27,7 @@ public record MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
                 meeting.getTitle(),
-                meeting.getDatetime(),
+                meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),

@@ -1,12 +1,15 @@
 package com.mobble.mobbleserver.infrastructure.web.meeting;
 
+import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
+import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingDetailResponseDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -37,21 +40,43 @@ public class MeetingAPI {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        Meeting meeting = meetingCreatePort.createMeeting(memberId, clubId, dto);
+        CreateMeetingCommand command = CreateMeetingCommand.create(
+                memberId,
+                clubId,
+                dto.title(),
+                dto.schedule(),
+                dto.location(),
+                dto.cost(),
+                dto.memberLimit(),
+                dto.type()
+        );
+
+        Meeting meeting = meetingCreatePort.createMeeting(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(MeetingResponseDto.toDto(meeting));
     }
 
     @GetMapping
-    public ResponseEntity<List<MeetingResponseDto>> findMeetingsByClubId(
+    public ResponseEntity<List<MeetingDetailResponseDto>> findMeetingsByClubId(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId
     ) {
-        List<Meeting> meetings = meetingQueryPort.findMeetingsByClubId(memberId, clubId);
+        List<MeetingResult> results = meetingQueryPort.findMeetings(memberId, clubId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(MeetingResponseDto.toDto(meetings));
+                .body(MeetingDetailResponseDto.create(results));
+    }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<MeetingDetailResponseDto>> findUpcomingMeetings(
+            @AuthenticationPrincipal(expression = "memberId") Long memberId,
+            @PathVariable("club-id") @Positive Long clubId
+    ) {
+        List<MeetingResult> results = meetingQueryPort.findUpcomingMeetings(memberId, clubId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(MeetingDetailResponseDto.create(results));
     }
 
     @PreAuthorize("hasAnyAuthority('LEADER', 'MANAGER')")
@@ -60,9 +85,21 @@ public class MeetingAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @PathVariable("club-id") @Positive Long clubId,
             @PathVariable("meeting-id") @Positive Long meetingId,
-            @RequestBody MeetingUpdateRequestDto dto
+            @RequestBody MeetingRequestDto dto
     ) {
-        Meeting meeting = meetingUpdatePort.updateMeeting(memberId, clubId, meetingId, dto);
+        UpdateMeetingCommand command = UpdateMeetingCommand.create(
+                memberId,
+                clubId,
+                meetingId,
+                dto.title(),
+                dto.schedule(),
+                dto.location(),
+                dto.cost(),
+                dto.memberLimit(),
+                dto.type()
+        );
+
+        Meeting meeting = meetingUpdatePort.updateMeeting(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MeetingResponseDto.toDto(meeting));

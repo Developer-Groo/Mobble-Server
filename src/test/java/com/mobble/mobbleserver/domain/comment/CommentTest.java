@@ -26,7 +26,7 @@ class CommentTest {
 //            Comment rootComment = Comment.createRootComment(mockMember, mockArticle, CONTENT);
 //
 //            // then
-//            assertThat(rootComment.getMember()).isEqualTo(mockMember);
+//            assertThat(rootComment.getAttendedMembers()).isEqualTo(mockMember);
 //            assertThat(rootComment.getArticle()).isEqualTo(mockArticle);
 //            assertThat(rootComment.getContent()).isEqualTo(CONTENT);
 //            assertThat(rootComment.hasParent()).isFalse();
@@ -40,7 +40,7 @@ class CommentTest {
 //            Comment replyComment = Comment.createReplyComment(mockMember, mockArticle, rootComment, CONTENT);
 //
 //            // then
-//            assertThat(replyComment.getMember()).isEqualTo(mockMember);
+//            assertThat(replyComment.getAttendedMembers()).isEqualTo(mockMember);
 //            assertThat(replyComment.getArticle()).isEqualTo(mockArticle);
 //            assertThat(replyComment.getContent()).isEqualTo(CONTENT);
 //            assertThat(replyComment.getParent()).isEqualTo(rootComment);

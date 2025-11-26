@@ -60,7 +60,7 @@ class MeetingRepositoryTest {
         em.clear();
 
         // when
-        List<Meeting> result = meetingRepository.findByClubMember_Club_Id(club.getId());
+        List<Meeting> result = meetingRepository.findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(club.getId());
 
         // then
         assertThat(result).hasSize(2)
@@ -80,7 +80,7 @@ class MeetingRepositoryTest {
         em.clear();
 
         // when
-        List<Meeting> result = meetingRepository.findByClubMember_Club_Id(club.getId());
+        List<Meeting> result = meetingRepository.findByClubMember_Club_IdOrderBySchedule_DatetimeAsc(club.getId());
 
         // then
         assertThat(result).isEmpty();
