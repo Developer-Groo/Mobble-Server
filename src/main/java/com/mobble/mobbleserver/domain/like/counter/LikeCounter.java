@@ -58,12 +58,4 @@ public class LikeCounter {
         if (likeType == null) throw new DomainException(LikeErrorCode.LIKE_TYPE_REQUIRED);
         if (targetId == null) throw new DomainException(LikeErrorCode.TARGET_REQUIRED);
     }
-
-//    public void increase() {
-//        this.count++;
-//    }
-//
-//    public void decrease() {
-//        if (this.count > 0) this.count--;
-//    }
 }
