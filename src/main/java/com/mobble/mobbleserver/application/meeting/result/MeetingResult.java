@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.meeting.command.response;
+package com.mobble.mobbleserver.application.meeting.result;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mobble.mobbleserver.application.meetingMember.command.response.MeetingMemberInfoResult;

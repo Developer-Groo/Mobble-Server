@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.application.meeting.service;
 
 import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.meeting.command.response.MeetingResult;
+import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
