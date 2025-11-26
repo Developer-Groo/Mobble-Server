@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.domain.like.counter;
 
-import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.like.LikeType;
-import com.mobble.mobbleserver.domain.like.error.LikeError;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -55,7 +55,7 @@ public class LikeCounter {
     }
 
     private void validateTypeAndTarget(LikeType likeType, Long targetId) {
-        if (likeType == null) throw new DomainException(LikeError.REQUIRED_LIKE_TYPE);
-        if (targetId == null) throw new DomainException(LikeError.REQUIRED_TARGET);
+        requireNonNull(likeType, "likeType must not be null");
+        requireNonNull(targetId, "targetId must not be null");
     }
 }

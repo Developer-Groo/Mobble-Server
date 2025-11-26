@@ -1,11 +1,11 @@
 package com.mobble.mobbleserver.domain.like;
 
-import com.mobble.mobbleserver.domain.common.exception.DomainException;
-import com.mobble.mobbleserver.domain.like.error.LikeError;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Objects.requireNonNull;
 
 @Getter
 @MappedSuperclass
@@ -20,7 +20,7 @@ public abstract class AbstractLike {
     private Long memberId;
 
     protected AbstractLike(Long memberId) {
-        if (memberId == null) throw new DomainException(LikeError.REQUIRED_MEMBER);
+        requireNonNull(memberId, "memberId must not be null");
         this.memberId = memberId;
     }
 }

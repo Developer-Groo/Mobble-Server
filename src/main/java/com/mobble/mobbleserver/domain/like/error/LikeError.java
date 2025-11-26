@@ -6,10 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum LikeError implements CommonError {
-    REQUIRED_MEMBER("memberId must not be null", ErrorCategory.VALIDATION),
-    REQUIRED_ARTICLE("articleId must not be null", ErrorCategory.VALIDATION),
-    REQUIRED_CLUB("clubId must not be null", ErrorCategory.VALIDATION),
-    REQUIRED_COMMENT("commentId must not be null", ErrorCategory.VALIDATION),
     REQUIRED_TARGET("targetId must not be null", ErrorCategory.VALIDATION),
     REQUIRED_LIKE_TYPE("likeType must not be null", ErrorCategory.VALIDATION);
 
