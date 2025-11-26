@@ -1,7 +1,7 @@
 package com.mobble.mobbleserver.domain.like;
 
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
+import com.mobble.mobbleserver.domain.like.error.LikeError;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
@@ -20,7 +20,7 @@ public class ArticleLike extends AbstractLike {
     @Builder(access = AccessLevel.PRIVATE)
     private ArticleLike(Long memberId, Long articleId) {
         super(memberId);
-        if (articleId == null) throw new DomainException(LikeErrorCode.ARTICLE_REQUIRED);
+        if (articleId == null) throw new DomainException(LikeError.REQUIRED_ARTICLE);
         this.articleId = articleId;
     }
 

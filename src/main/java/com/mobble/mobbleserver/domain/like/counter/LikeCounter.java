@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.like.counter;
 
+import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.like.LikeType;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
+import com.mobble.mobbleserver.domain.like.error.LikeError;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -55,7 +55,7 @@ public class LikeCounter {
     }
 
     private void validateTypeAndTarget(LikeType likeType, Long targetId) {
-        if (likeType == null) throw new DomainException(LikeErrorCode.LIKE_TYPE_REQUIRED);
-        if (targetId == null) throw new DomainException(LikeErrorCode.TARGET_REQUIRED);
+        if (likeType == null) throw new DomainException(LikeError.REQUIRED_LIKE_TYPE);
+        if (targetId == null) throw new DomainException(LikeError.REQUIRED_TARGET);
     }
 }
