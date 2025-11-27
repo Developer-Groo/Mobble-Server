@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.application.article.result;
 
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
+import com.mobble.mobbleserver.domain.member.Member;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,12 +16,12 @@ public record ArticlePreviewResult(
         String body,
         Long ownerId,
         String ownerName,
+        String profileImageUrl,
         int likeCount,
         boolean isLiked,
         int commentCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-        // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
 
     public static List<ArticlePreviewResult> create(
@@ -42,6 +43,8 @@ public record ArticlePreviewResult(
 
     private static ArticlePreviewResult from(Article article, Integer likeCount, boolean isLiked, Integer commentCount) {
         String previewContent = summarize(article.getContent().getBody());
+        Member owner = article.getMember();
+        String profileImageUrl = getProfileImageUrl(owner);
 
         return new ArticlePreviewResult(
                 article.getClub().getId(),
@@ -49,8 +52,9 @@ public record ArticlePreviewResult(
                 article.getArticleType(),
                 article.getContent().getTitle(),
                 previewContent,
-                article.getMember().getId(),
-                article.getMember().getName(),
+                owner.getId(),
+                owner.getName(),
+                profileImageUrl,
                 likeCount,
                 isLiked,
                 commentCount,
@@ -63,5 +67,11 @@ public record ArticlePreviewResult(
         if (content == null) return "";
 
         return content.length() > 50 ? content.substring(0, 50) + "..." : content;
+    }
+
+    private static String getProfileImageUrl(Member member) {
+        return member.getProfileImage() != null
+                ? member.getProfileImage().getUrl()
+                : null;
     }
 }
