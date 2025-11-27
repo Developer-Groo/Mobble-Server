@@ -1,9 +1,9 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.error.LikeBusinessError;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
-import com.mobble.mobbleserver.domain.common.exception.DomainException;
 import com.mobble.mobbleserver.domain.like.ArticleLike;
 import com.mobble.mobbleserver.domain.like.ClubLike;
 import com.mobble.mobbleserver.domain.like.CommentLike;
@@ -42,7 +42,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
     public List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
         return switch (likeType) {
             case ARTICLE -> articleLikeRepository.findLikedMemberListByArticleId(targetId);
-            default -> throw new DomainException(LikeBusinessError.INVALID_LIKE_TYPE);
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         };
     }
 
@@ -92,7 +92,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteAllByArticleIdIn(targetIds);
             case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
-            default -> throw new DomainException(LikeBusinessError.INVALID_LIKE_TYPE);
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         }
     }
 }
