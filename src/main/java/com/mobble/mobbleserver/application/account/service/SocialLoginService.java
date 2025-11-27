@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.account.service;
 
-import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
+import com.mobble.mobbleserver.application.account.result.SocialLoginResult;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
