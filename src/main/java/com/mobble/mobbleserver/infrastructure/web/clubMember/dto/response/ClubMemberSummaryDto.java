@@ -11,7 +11,7 @@ public record ClubMemberSummaryDto(
         String joinStatus
 ) {
 
-    public static ClubMemberSummaryDto create(ClubMemberSummaryResult result) {
+    public static ClubMemberSummaryDto toDto(ClubMemberSummaryResult result) {
         return new ClubMemberSummaryDto(
                 result.clubMemberId(),
                 result.memberId(),

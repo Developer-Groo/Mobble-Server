@@ -47,7 +47,7 @@ public class ArticleAPI {
         Article article = articleCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ArticleResponseDto.create(article));
+                .body(ArticleResponseDto.toDto(article));
     }
 
     @GetMapping
@@ -59,7 +59,7 @@ public class ArticleAPI {
         List<ArticlePreviewResult> previews = articleQueryPort.getArticlesPreview(clubId, memberId, articleType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticlePreviewResponseDto.create(previews));
+                .body(ArticlePreviewResponseDto.toDto(previews));
     }
 
     @GetMapping("/{article-id}")
@@ -71,7 +71,7 @@ public class ArticleAPI {
         ArticleDetailResult detail = articleQueryPort.getArticleDetail(clubId, articleId, memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticleDetailResponseDto.create(detail));
+                .body(ArticleDetailResponseDto.toDto(detail));
     }
 
     @PatchMapping("/{article-id}")
@@ -85,7 +85,7 @@ public class ArticleAPI {
         Article article = articleUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticleResponseDto.create(article));
+                .body(ArticleResponseDto.toDto(article));
     }
 
     @DeleteMapping("/{article-id}")

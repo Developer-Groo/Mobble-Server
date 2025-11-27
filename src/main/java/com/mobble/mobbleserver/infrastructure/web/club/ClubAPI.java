@@ -75,6 +75,6 @@ public class ClubAPI {
         ClubResult result = clubQueryPort.getClub(clubId, memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ClubDetailResponseDto.create(result));
+                .body(ClubDetailResponseDto.toDto(result));
     }
 }
