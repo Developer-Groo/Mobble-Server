@@ -24,20 +24,20 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
     @Column(name = "age")
     private int age;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false)
     private String phone;
 
     @Embedded
@@ -54,10 +54,10 @@ public class Member extends BaseEntity {
     private boolean privacyAgreed;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "social_provider")
+    @Column(name = "social_provider", nullable = false)
     private SocialProvider socialProvider;
 
-    @Column(name = "social_id")
+    @Column(name = "social_id", nullable = false)
     private String socialId;
 
     @Column(name = "is_deleted")
