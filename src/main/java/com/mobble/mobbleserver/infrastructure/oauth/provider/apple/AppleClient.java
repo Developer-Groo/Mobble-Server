@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.error.OAuthBusinessError;
 import com.mobble.mobbleserver.application.exception.BusinessException;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.infrastructure.oauth.common.AbstractSocialClient;
 import com.mobble.mobbleserver.infrastructure.oauth.common.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Qualifier;
