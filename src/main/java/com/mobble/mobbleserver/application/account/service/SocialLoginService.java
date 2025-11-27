@@ -8,11 +8,12 @@ import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
 import com.mobble.mobbleserver.application.account.required.SignUpTokenPort;
 import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class SocialLoginService implements SocialLoginPort {
         return memberReadPort.findBySocialProviderAndSocialId(socialProvider, socialId)
                 .map(member -> {
                     if (member.isDeleted()) {
-                        throw new DomainException(MemberErrorCode.FAILED_JOIN);
+                        throw new BusinessException(MemberBusinessError.FAILED_JOIN);
                     }
                     return member;
                 })
