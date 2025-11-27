@@ -14,21 +14,21 @@ public record ArticlePreviewResponseDto(
         String body,
         Long ownerId,
         String ownerName,
+        String profileImageUrl,
         int likeCount,
         boolean isLiked,
         int commentCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-        // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
 
-    public static List<ArticlePreviewResponseDto> create(List<ArticlePreviewResult> results) {
+    public static List<ArticlePreviewResponseDto> toDto(List<ArticlePreviewResult> results) {
         return results.stream()
-                .map(ArticlePreviewResponseDto::toDto)
+                .map(ArticlePreviewResponseDto::from)
                 .toList();
     }
 
-    private static ArticlePreviewResponseDto toDto(ArticlePreviewResult result) {
+    private static ArticlePreviewResponseDto from(ArticlePreviewResult result) {
         return new ArticlePreviewResponseDto(
                 result.clubId(),
                 result.articleId(),
@@ -37,6 +37,7 @@ public record ArticlePreviewResponseDto(
                 result.body(),
                 result.ownerId(),
                 result.ownerName(),
+                result.profileImageUrl(),
                 result.likeCount(),
                 result.isLiked(),
                 result.commentCount(),
