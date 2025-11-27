@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.infrastructure.web.article.dto.response;
 
-import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult.ArticleLikedMembers;
+import static com.mobble.mobbleserver.application.article.result.ArticleDetailResult.ArticleLikedMembers;
 
 public record ArticleDetailResponseDto(
         Long clubId,
@@ -18,7 +18,7 @@ public record ArticleDetailResponseDto(
         String ownerName,
         boolean isOwner,
         boolean isLiked,
-        Long likeCount,
+        int likeCount,
         List<ArticleLikedMembers> likedMembers,
         int commentCount,
         List<RootCommentResult> commentList,

@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.comment;
 
-import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
-import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
-import com.mobble.mobbleserver.application.comment.command.request.UpdateCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.CreateRootCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.UpdateCommentCommand;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;

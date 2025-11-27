@@ -1,10 +1,11 @@
 package com.mobble.mobbleserver.domain.member;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
-import com.mobble.mobbleserver.domain.common.entity.BaseEntity;
-import com.mobble.mobbleserver.domain.common.exception.DomainException;
-import com.mobble.mobbleserver.domain.ground.Ground;
-import com.mobble.mobbleserver.domain.member.error.MemberError;
+import com.mobble.mobbleserver.domain.common.BaseEntity;
+import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.global.exception.common.DomainException;
+import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,12 +42,12 @@ public class Member extends BaseEntity {
     @Column(name = "phone")
     private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ground_code")
-    private Ground ground;
+    @Embedded
+    private Location location;
 
-    @Column(name = "profile_image")
-    private String profileImage;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_image_id")
+    private Image profileImage;
 
     @Column(name = "terms_agreed")
     private boolean termsAgreed;
@@ -74,8 +75,8 @@ public class Member extends BaseEntity {
             Gender gender,
             String email,
             String phone,
-            Ground ground,
-            String profileImage,
+            Location location,
+            Image profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
             boolean isDeleted,
@@ -88,7 +89,7 @@ public class Member extends BaseEntity {
         this.gender = gender;
         this.email = email;
         this.phone = phone;
-        this.ground = ground;
+        this.location = location;
         this.profileImage = profileImage;
         this.termsAgreed = termsAgreed;
         this.privacyAgreed = privacyAgreed;
@@ -106,8 +107,8 @@ public class Member extends BaseEntity {
             Gender gender,
             String email,
             String phone,
-            Ground ground,
-            String profileImage,
+            Location location,
+            Image profileImage,
             boolean termsAgreed,
             boolean privacyAgreed,
             SocialProvider socialProvider,
@@ -120,7 +121,7 @@ public class Member extends BaseEntity {
                 .gender(gender)
                 .email(email)
                 .phone(phone)
-                .ground(ground)
+                .location(location)
                 .profileImage(profileImage)
                 .termsAgreed(termsAgreed)
                 .privacyAgreed(privacyAgreed)
@@ -130,8 +131,8 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Member updateMember(Ground ground, String profileImage) {
-        this.ground = ground;
+    public Member updateMember(Location location, Image profileImage) {
+        this.location = location;
         this.profileImage = profileImage;
         return this;
     }
@@ -153,9 +154,5 @@ public class Member extends BaseEntity {
         requireNonNull(phone, "phone must not be null");
         if (!termsAgreed) throw new DomainException(MemberError.REQUIRED_TERMS_AGREED);
         if (!privacyAgreed) throw new DomainException(MemberError.REQUIRED_PRIVACY_AGREED);
-    }
-
-    public void setGround(Ground ground) {
-        this.ground = ground;
     }
 }

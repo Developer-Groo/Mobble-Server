@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.infrastructure.web.article;
 
-import com.mobble.mobbleserver.application.article.command.request.CreateArticleCommand;
-import com.mobble.mobbleserver.application.article.command.request.UpdateArticleCommand;
-import com.mobble.mobbleserver.application.article.command.response.ArticleDetailResult;
-import com.mobble.mobbleserver.application.article.command.response.ArticlePreviewResult;
+import com.mobble.mobbleserver.application.article.command.CreateArticleCommand;
+import com.mobble.mobbleserver.application.article.command.UpdateArticleCommand;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleCreatePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleQueryPort;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleUpdatePort;
+import com.mobble.mobbleserver.application.article.result.ArticleDetailResult;
+import com.mobble.mobbleserver.application.article.result.ArticlePreviewResult;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.infrastructure.web.article.dto.request.ArticleCreateRequestDto;

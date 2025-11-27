@@ -2,12 +2,14 @@ package com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request;
 
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record UpdateClubMemberStatusDto(
-        @NotNull(message = "CLUB_MEMBER:MEMBER_ID_NOT_NULL")
-        Long memberId,
+        @NotNull(message = "target member id must not be null")
+        @Positive(message = "target member id must be positive")
+        Long targetMemberId,
 
-        @NotNull(message = "CLUB_MEMBER:STATUS_NOT_NULL")
-        JoinStatus status
+        @NotNull(message = "target status must not be null")
+        JoinStatus targetStatus
 ) {
 }

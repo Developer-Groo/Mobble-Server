@@ -1,10 +1,8 @@
 package com.mobble.mobbleserver.application.clubMember.port.provided;
 
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberResponseDto;
-
-import java.util.List;
+import com.mobble.mobbleserver.application.clubMember.result.ClubMembersResult;
 
 public interface ClubMemberQueryPort {
 
-    List<ClubMemberResponseDto> findClubMembers(Long clubId);
+    ClubMembersResult getClubMembers(Long clubId);
 }

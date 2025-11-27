@@ -2,17 +2,18 @@ package com.mobble.mobbleserver.application.comment.service;
 
 import com.mobble.mobbleserver.application.article.error.ArticleBusinessError;
 import com.mobble.mobbleserver.application.article.port.required.ArticleReadPort;
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
-import com.mobble.mobbleserver.application.comment.command.request.CreateReplyCommentCommand;
-import com.mobble.mobbleserver.application.comment.command.request.CreateRootCommentCommand;
-import com.mobble.mobbleserver.application.comment.command.request.UpdateCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.CreateReplyCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.CreateRootCommentCommand;
+import com.mobble.mobbleserver.application.comment.command.UpdateCommentCommand;
 import com.mobble.mobbleserver.application.comment.error.CommentBusinessError;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentCreatePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentUpdatePort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentReadPort;
 import com.mobble.mobbleserver.application.comment.port.required.CommentWritePort;
-import com.mobble.mobbleserver.application.common.exception.BusinessException;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
@@ -20,8 +21,6 @@ import com.mobble.mobbleserver.domain.comment.Comment;
 import com.mobble.mobbleserver.domain.comment.CommentContent;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,7 +126,7 @@ public class CommentModifyService implements CommentCreatePort, CommentUpdatePor
 
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB)); // Todo: ErrorCode 수정 필요
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private void assertCanUpdateComment(Member member, Comment comment) {

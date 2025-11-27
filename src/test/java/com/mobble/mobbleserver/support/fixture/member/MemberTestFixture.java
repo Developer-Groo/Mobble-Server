@@ -16,7 +16,7 @@ public class MemberTestFixture {
                 UUID.randomUUID().toString(),
                 "phone",
                 null,
-                "profileImage",
+                null,
                 true,
                 true,
                 SocialProvider.NAVER,

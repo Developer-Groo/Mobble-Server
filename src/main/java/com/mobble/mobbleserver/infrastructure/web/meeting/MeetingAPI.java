@@ -2,11 +2,11 @@ package com.mobble.mobbleserver.infrastructure.web.meeting;
 
 import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
-import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingCreatePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
+import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.request.MeetingRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.meeting.dto.response.MeetingDetailResponseDto;

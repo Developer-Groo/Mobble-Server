@@ -1,36 +1,34 @@
 package com.mobble.mobbleserver.application.clubMember.service;
 
-import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
-import com.mobble.mobbleserver.application.club.core.port.required.ClubReadPort;
-import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberCreatePort;
-import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberDeletePort;
+import com.mobble.mobbleserver.application.club.error.ClubBusinessError;
+import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
+import com.mobble.mobbleserver.application.clubMember.command.UpdateRoleCommand;
+import com.mobble.mobbleserver.application.clubMember.command.UpdateStatusCommand;
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
+import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberJoinPort;
+import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberLeavePort;
 import com.mobble.mobbleserver.application.clubMember.port.provided.ClubMemberUpdatePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
-import com.mobble.mobbleserver.domain.club.core.Club;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.club.ClubMemberErrorCode;
 import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberRoleDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.request.UpdateClubMemberStatusDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberRoleUpdateResultDto;
-import com.mobble.mobbleserver.infrastructure.web.clubMember.dto.response.ClubMemberUpsertResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMemberUpdatePort, ClubMemberDeletePort {
+public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUpdatePort, ClubMemberLeavePort {
 
     private final ClubMemberWritePort clubMemberWritePort;
 
@@ -38,120 +36,148 @@ public class ClubMemberModifyService implements ClubMemberCreatePort, ClubMember
     private final MemberReadPort memberReadPort;
     private final ClubReadPort clubReadPort;
 
-    private final JwtTokenIssuerPort jwtTokenIssuerPort;
-
     @Override
-    public ClubMemberUpsertResponseDto joinClub(Long memberId, Long clubId) {
-        Club club = findClubByClubIdOrThrow(clubId);
-        Member member = findMemberByMemberIdOrThrow(memberId);
+    public ClubMember join(Long memberId, Long clubId) {
+        Club club = assertClubByClubId(clubId);
+        Member member = assertMemberByMemberId(memberId);
 
-        boolean existsClubMember = existsClubMember(clubId, memberId);
-        if (existsClubMember) throw new DomainException(ClubMemberErrorCode.ALREADY_JOINED);
+        Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId);
+        optionalMember.ifPresent(this::assertExistingMemberCanJoin);
 
-        validateClubNotFull(club);
+        JoinStatus joinStatus = club.isAutoJoin()
+                ? JoinStatus.APPROVED
+                : JoinStatus.WAITING;
 
-        JoinStatus joinStatus = determineJoinStatus(club);
+        ClubMember clubMember = optionalMember
+                .map(existingMember -> existingMember.updateStatus(joinStatus))
+                .orElseGet(() -> ClubMember.createMember(member, club, joinStatus));
 
-        ClubMember clubMember = ClubMember.createClubMember(member, club, ClubMemberRole.MEMBER, joinStatus);
-        clubMemberWritePort.save(clubMember);
-
-        return ClubMemberUpsertResponseDto.toDto(clubMember);
-    }
-
-    @Override
-    public void leaveClub(Long memberId, Long clubId) {
-        Club club = findClubByClubIdOrThrow(clubId);
-        Member member = findMemberByMemberIdOrThrow(memberId);
-
-        boolean existsClubMember = existsClubMember(clubId, memberId);
-        if (!existsClubMember) throw new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB);
-
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, memberId);
-
-        clubMember.updateStatus(JoinStatus.WITHDRAWN);
-        // Todo: 클럽 탈퇴 시 역할(ClubMemberRole) 처리 방식 확정 후 반영
-        // - 현재는 역할 유지 상태
-        // - 추후 권한 초기화 or tokenVersion 증가 필요 여부 판단
-    }
-
-    @Override
-    public ClubMemberUpsertResponseDto updateClubMemberJoinStatus(Long clubId, Long loginedMemberId, UpdateClubMemberStatusDto dto) {
-        Long targetMemberId = dto.memberId();
-        JoinStatus targetStatus = dto.status();
-
-        Club club = findClubByClubIdOrThrow(clubId);
-        Member member = findMemberByMemberIdOrThrow(targetMemberId);
-        Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
-        ClubMember clubLeader = findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        assertLeader(clubLeader);
-
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, member.getId());
-
-        if (targetStatus == JoinStatus.APPROVED) {
-            validateClubNotFull(club);
+        if (joinStatus == JoinStatus.APPROVED) {
+            club.increaseMemberCount();
         }
 
-        clubMember.updateStatus(targetStatus);
+        ClubMember saved = clubMemberWritePort.save(clubMember);
 
-        return ClubMemberUpsertResponseDto.toDto(clubMember);
+        // Todo: 알림 처리 (구현 예정)
+         handleJoinNotification(club, member, joinStatus);
+
+        return saved;
     }
 
     @Override
-    public ClubMemberRoleUpdateResultDto updateClubMemberRole(Long clubId, Long loginedMemberId, UpdateClubMemberRoleDto dto) {
-        Long targetMemberId = dto.memberId();
-        ClubMemberRole newRole = dto.newRole();
+    public ClubMember updateJoinStatus(UpdateStatusCommand command) {
+        ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        assertLeader(leader);
 
-        Club club = findClubByClubIdOrThrow(clubId);
-        Member member = findMemberByMemberIdOrThrow(targetMemberId);
-        Member loginedMember = findMemberByMemberIdOrThrow(loginedMemberId);
-        ClubMember clubLeader = findClubMemberByClubIdAndMemberIdOrThrow(clubId, loginedMember.getId());
-        assertLeader(clubLeader);
+        ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
+        JoinStatus current = targetMember.getJoinStatus();
+        JoinStatus target = command.targetStatus();
 
-        ClubMember clubMember = findClubMemberByClubIdAndMemberIdOrThrow(clubId, targetMemberId);
+        assertNotSelfModification(command.leaderId(), command.targetMemberId());
+        assertValidJoinStatusTransition(current, target);
 
-        if (targetMemberId.equals(loginedMemberId))
-            throw new DomainException(ClubMemberErrorCode.CANNOT_CHANGE_OWN_ROLE);
+        if (current == JoinStatus.WAITING && target == JoinStatus.APPROVED) {
+            targetMember.getClub().increaseMemberCount();
+        } else if (current == JoinStatus.APPROVED && target == JoinStatus.KICKED) {
+            targetMember.getClub().decreaseMemberCount();
+        }
 
-        clubMember.updateRole(newRole);
+        targetMember.updateStatus(target);
 
-        // 권한 변경으로 Access Token 재발급
-        List<ClubMemberRole> roles = clubMemberReadPort.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
-        String jwtToken = jwtTokenIssuerPort.issueJwtToken(member.getId(), roles);
+        // Todo: 알림 처리 (구현 예정)
+        // sendStatusChangeNotification(clubMember, target);
 
-        return ClubMemberRoleUpdateResultDto.toDto(clubMember, jwtToken);
+        return targetMember;
     }
 
-    private Club findClubByClubIdOrThrow(Long clubId) {
+    @Override
+    public ClubMember updateRole(UpdateRoleCommand command) {
+        ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        assertLeader(leader);
+
+        ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
+
+        assertNotSelfModification(command.leaderId(), command.targetMemberId());
+
+        targetMember.assertApproved();
+
+        ClubMemberRole currentRole = targetMember.getClubMemberRole();
+        ClubMemberRole newRole = command.newRole();
+
+        assertValidRoleChange(currentRole, newRole);
+
+        targetMember.updateRole(newRole);
+
+        // Todo: 알림 처리 (구현 예정)
+        // sendRoleChangeNotification(clubMember, target);
+
+        return targetMember;
+    }
+
+    @Override
+    public void leave(Long memberId, Long clubId) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+
+        assertLeaderCannotLeave(clubMember);
+
+        clubMember.assertApproved();
+
+        clubMember.getClub().decreaseMemberCount();
+        clubMember.updateStatus(JoinStatus.LEAVE);
+    }
+
+    /* ==== Private Helper ==== */
+    private Club assertClubByClubId(Long clubId) {
         return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new DomainException((ClubErrorCode.NOT_FOUND)));
+                .orElseThrow(() -> new BusinessException(ClubBusinessError.NOT_FOUND));
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER)); // Todo: Error 수정 필요
     }
 
-    private ClubMember findClubMemberByClubIdAndMemberIdOrThrow(Long clubId, Long memberId) {
+    private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new DomainException(ClubMemberErrorCode.NOT_JOINED_CLUB));
-    }
-
-    private boolean existsClubMember(Long clubId, Long memberId) {
-        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).isPresent();
-    }
-
-    public void validateClubNotFull(Club club) {
-        long approvedCount = clubMemberReadPort.countByClubIdAndJoinStatus(club.getId(), JoinStatus.APPROVED);
-        if (approvedCount >= club.getHeadCount()) {
-            throw new DomainException(ClubMemberErrorCode.CLUB_IS_FULL);
-        }
-    }
-
-    private JoinStatus determineJoinStatus(Club club) {
-        return club.isAutoJoin() ? JoinStatus.APPROVED : JoinStatus.WAITING;
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private void assertLeader(ClubMember clubMember) {
-        if (!clubMember.isLeader()) throw new DomainException(ClubMemberErrorCode.NO_PERMISSION);
+        if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
+    }
+
+    private void assertExistingMemberCanJoin(ClubMember existingMember) {
+        if (existingMember.isActive())
+            throw new BusinessException(ClubMemberBusinessError.ALREADY_ACTIVE_MEMBER);
+        if (!existingMember.canRejoin())
+            throw new BusinessException(ClubMemberBusinessError.CANNOT_REJOIN_YET);
+    }
+
+    private void assertNotSelfModification(Long leaderId, Long targetMemberId) {
+        if (leaderId.equals(targetMemberId)) throw new BusinessException(ClubMemberBusinessError.CANNOT_MODIFY_LEADER);
+    }
+
+    private void assertValidJoinStatusTransition(JoinStatus current, JoinStatus target) {
+        if (!current.canTransitionTo(target)) throw new BusinessException(ClubMemberBusinessError.INVALID_JOIN_STATUS_TRANSITION);
+    }
+
+    private void assertValidRoleChange(ClubMemberRole current, ClubMemberRole newRole) {
+        if (!current.canChangeTo(newRole)) throw new BusinessException(ClubMemberBusinessError.INVALID_ROLE_CHANGE);
+    }
+
+    private void assertLeaderCannotLeave(ClubMember clubMember) {
+        if (clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.LEADER_CANNOT_LEAVE);
+    }
+
+    private void handleJoinNotification(Club club, Member member, JoinStatus joinStatus) {
+        if (joinStatus.equals(JoinStatus.WAITING)) {
+            // Todo: 관리자 승인 필요
+            //  "가입 요청" 알림 전송 로직: Service port
+        }
+
+        if (joinStatus.equals(JoinStatus.APPROVED)) {
+            // Todo: 자동 가입
+            //  "새 멤버 가입" 알림 전송 로직: Service port
+        }
     }
 }

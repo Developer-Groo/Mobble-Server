@@ -15,7 +15,7 @@ public enum ArticleBusinessError implements CommonError {
 
     @Override
     public String code() {
-        return "ARTICLE_BUSINESS" + name();
+        return "ARTICLE_BUSINESS." + name();
     }
 
     @Override

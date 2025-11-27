@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.comment.port.provided;
 
-import com.mobble.mobbleserver.application.comment.command.response.RootCommentResult;
+import com.mobble.mobbleserver.application.comment.result.RootCommentResult;
 
 import java.util.List;
 import java.util.Map;

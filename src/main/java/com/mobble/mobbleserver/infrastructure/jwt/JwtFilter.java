@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.jwt;
 
 import com.mobble.mobbleserver.application.account.required.JwtTokenVerifierPort;
-import com.mobble.mobbleserver.infrastructure.jwt.principal.AuthMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.infrastructure.jwt.principal.AuthMember;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
