@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.oauth.provider.naver;
 
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
+import com.mobble.mobbleserver.application.account.error.OAuthBusinessError;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.infrastructure.oauth.common.OAuth2UserInfo;
 
 import java.util.Collections;
@@ -15,12 +15,12 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     public NaverUserInfo(Map<String, Object> rawResponse) {
         Object response = rawResponse.get("response");
-        if (!(response instanceof Map<?,?> map)) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
+        if (!(response instanceof Map<?,?> map)) throw new BusinessException(OAuthBusinessError.INVALID_USER_INFO);
 
         Map<String, Object> safe = new HashMap<>();
 
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            if (!(entry.getKey() instanceof String key)) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
+            if (!(entry.getKey() instanceof String key)) throw new BusinessException(OAuthBusinessError.INVALID_USER_INFO);
             safe.put(key, entry.getValue());
         }
 
@@ -34,14 +34,14 @@ public class NaverUserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        if (response.get("id") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
+        if (response.get("id") == null) throw new BusinessException(OAuthBusinessError.INVALID_USER_INFO);
 
         return response.get("id").toString();
     }
 
     @Override
     public String getEmail() {
-        if (response.get("email") == null) throw new DomainException(OAuthErrorCode.NO_USER_INFO);
+        if (response.get("email") == null) throw new BusinessException(OAuthBusinessError.INVALID_USER_INFO);
 
         return response.get("email").toString();
     }
