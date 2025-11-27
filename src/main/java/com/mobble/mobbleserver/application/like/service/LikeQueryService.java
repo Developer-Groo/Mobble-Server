@@ -1,14 +1,14 @@
 package com.mobble.mobbleserver.application.like.service;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.like.counter.LikeCounter;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +41,7 @@ public class LikeQueryService implements LikeQueryPort {
     public List<Long> getLikedIds(LikeType likeType, Long memberId, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return Collections.emptyList();
 
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member member = assertMemberByMemberId(memberId);
 
         return likeReadPort.findLikedTargetIdListByMemberId(likeType, member.getId(), targetIds);
     }
@@ -77,8 +77,8 @@ public class LikeQueryService implements LikeQueryPort {
                 ));
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 }
