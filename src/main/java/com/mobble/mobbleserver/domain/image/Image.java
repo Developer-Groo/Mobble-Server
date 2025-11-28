@@ -25,6 +25,9 @@ public class Image {
     @Column(nullable = false)
     private long size;
 
+    @Column(name = "content_type", length = 50)
+    private String contentType;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private ImageType type;
@@ -34,11 +37,13 @@ public class Image {
             String url,
             String originalName,
             long size,
+            String contentType,
             ImageType type
     ) {
         this.url = url;
         this.originalName = originalName;
         this.size = size;
+        this.contentType = contentType;
         this.type = type;
     }
 
@@ -46,12 +51,16 @@ public class Image {
             String url,
             String originalName,
             long size,
+            String contentType,
             ImageType type
     ) {
+        // Todo: assert 검증
+
         return Image.builder()
                 .url(url)
                 .originalName(originalName)
                 .size(size)
+                .contentType(contentType)
                 .type(type)
                 .build();
     }
