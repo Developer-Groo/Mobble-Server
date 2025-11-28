@@ -79,12 +79,6 @@ public class LikeModifyService implements LikeModifyPort {
         likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(likeType, distinctIds);
     }
 
-    private void validateTarget(LikeType likeType, Long targetId) {
-        if (!targetExistencePort.existsTarget(likeType, targetId)) {
-            throw new BusinessException(LikeBusinessError.TARGET_NOT_FOUND);
-        }
-    }
-
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
@@ -98,6 +92,17 @@ public class LikeModifyService implements LikeModifyPort {
     private Comment assertCommentByCommentId(Long targetId) {
         return commentReadPort.findById(targetId)
                 .orElseThrow(() -> new BusinessException(CommentBusinessError.NOT_FOUND));
+    }
+
+    private void validateTarget(LikeType likeType, Long targetId) {
+        if (!targetExistencePort.existsTarget(likeType, targetId)) {
+            throw new BusinessException(LikeBusinessError.TARGET_NOT_FOUND);
+        }
+    }
+
+    private void validateClubMember(Long clubId, Long memberId) {
+        boolean isClubMember = clubMemberReadPort.existsByClubIdAndMemberId(clubId, memberId);
+        if (!isClubMember) throw new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB);
     }
 
     private void validateLikePermission(LikeType likeType, Long targetId, Long memberId) {
@@ -114,10 +119,5 @@ public class LikeModifyService implements LikeModifyPort {
                 validateClubMember(clubId, memberId);
             }
         }
-    }
-
-    private void validateClubMember(Long clubId, Long memberId) {
-        boolean isClubMember = clubMemberReadPort.existsByClubIdAndMemberId(clubId, memberId);
-        if (!isClubMember) throw new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB);
     }
 }
