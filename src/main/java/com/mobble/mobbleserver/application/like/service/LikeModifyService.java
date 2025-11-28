@@ -81,6 +81,7 @@ public class LikeModifyService implements LikeModifyPort {
         likeCounterWritePort.deleteAllByLikeTypeAndTargetIds(likeType, distinctIds);
     }
 
+    /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
