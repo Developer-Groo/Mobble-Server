@@ -1,16 +1,16 @@
 package com.mobble.mobbleserver.application.like.service;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.error.LikeBusinessError;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeCounterWritePort;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
 import com.mobble.mobbleserver.application.like.port.required.TargetExistencePort;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class LikeModifyService implements LikeModifyPort {
     public void toggleLike(LikeType likeType, Long targetId, Long memberId) {
         validateTarget(likeType, targetId);
 
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member member = assertMemberByMemberId(memberId);
         //Todo LikeType에 따른 권한 검증
         boolean existsTargetLike = likeReadPort.existsTargetLike(likeType, targetId, member.getId());
 
@@ -57,7 +57,7 @@ public class LikeModifyService implements LikeModifyPort {
     public void deleteAll(LikeType likeType, List<Long> targetIds) {
         if (targetIds == null || targetIds.isEmpty()) return;
 
-        if (likeType == LikeType.CLUB) throw new IllegalArgumentException("지원하지 않는 기능");
+        if (likeType == LikeType.CLUB) throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
 
         List<Long> distinctIds = targetIds.stream()
                 .distinct()
@@ -69,12 +69,12 @@ public class LikeModifyService implements LikeModifyPort {
 
     private void validateTarget(LikeType likeType, Long targetId) {
         if (!targetExistencePort.existsTarget(likeType, targetId)) {
-            throw new DomainException(LikeErrorCode.TARGET_NOT_FOUND);
+            throw new BusinessException(LikeBusinessError.TARGET_NOT_FOUND);
         }
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 }

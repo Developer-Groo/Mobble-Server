@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.domain.like;
 
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -20,7 +20,7 @@ public class CommentLike extends AbstractLike {
     @Builder(access = AccessLevel.PRIVATE)
     private CommentLike(Long memberId, Long commentId) {
         super(memberId);
-        if (commentId == null) throw new DomainException(LikeErrorCode.COMMENT_REQUIRED);
+        requireNonNull(commentId, "commentId must not be null");
         this.commentId = commentId;
     }
 

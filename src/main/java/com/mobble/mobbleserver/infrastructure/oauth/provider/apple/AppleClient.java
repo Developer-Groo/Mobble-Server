@@ -5,8 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.oAuth.OAuthErrorCode;
+import com.mobble.mobbleserver.application.account.error.OAuthBusinessError;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.infrastructure.oauth.common.AbstractSocialClient;
 import com.mobble.mobbleserver.infrastructure.oauth.common.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,7 +48,7 @@ public class AppleClient extends AbstractSocialClient {
                     .body(JsonNode.class);
 
             if (jwkResponse == null || jwkResponse.get("keys") == null) {
-                throw new DomainException(OAuthErrorCode.FAILED_TO_REQUEST_USER_INFO);
+                throw new BusinessException(OAuthBusinessError.SOCIAL_PROVIDER_UNAVAILABLE);
             }
 
             // Apple 공개키(JWK Set)에서 key ID(kid)가 일치하는 키를 찾아 반환
@@ -67,7 +68,7 @@ public class AppleClient extends AbstractSocialClient {
         } catch (DomainException e) {
             throw e;
         } catch (Exception e) {
-            throw new DomainException(OAuthErrorCode.FAILED_TO_REQUEST_USER_INFO);
+            throw new BusinessException(OAuthBusinessError.SOCIAL_PROVIDER_UNAVAILABLE);
         }
     }
 
@@ -83,7 +84,7 @@ public class AppleClient extends AbstractSocialClient {
 
     private JsonNode findMatchingKey(JsonNode keys, String kid, String alg) {
         if (keys == null || !keys.isArray()) {
-            throw new DomainException(OAuthErrorCode.FAILED_TO_REQUEST_USER_INFO);
+            throw new BusinessException(OAuthBusinessError.SOCIAL_PROVIDER_UNAVAILABLE);
         }
 
         Iterator<JsonNode> it = keys.elements();
@@ -93,7 +94,7 @@ public class AppleClient extends AbstractSocialClient {
                 return key;
             }
         }
-        throw new DomainException(OAuthErrorCode.INVALID_ACCESS_TOKEN);
+        throw new BusinessException(OAuthBusinessError.INVALID_ACCESS_TOKEN);
     }
 
     /**
