@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.account.service;
 
-import com.mobble.mobbleserver.application.account.command.SocialLoginResult;
+import com.mobble.mobbleserver.application.account.result.SocialLoginResult;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.error.OAuthBusinessError;
@@ -37,7 +37,7 @@ public class SocialLoginService implements SocialLoginPort {
     public SocialLoginResult socialLogin(SocialLoginRequestDto dto) {
         SocialUserInfo userInfo = socialIdentityClientPort.verify(dto.socialProvider(), dto.accessToken());
 
-        Member member = findMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
+        Member member = assertMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
             List<ClubMemberRole> roles = clubMemberReadPort.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
@@ -53,7 +53,7 @@ public class SocialLoginService implements SocialLoginPort {
         return SocialLoginResult.newMember(signupToken);
     }
 
-    private Member findMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
+    private Member assertMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
         return memberReadPort.findBySocialProviderAndSocialId(socialProvider, socialId)
                 .map(member -> {
                     if (member.isDeleted()) {
