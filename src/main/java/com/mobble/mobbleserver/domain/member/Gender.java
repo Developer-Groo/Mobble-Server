@@ -1,8 +1,8 @@
 package com.mobble.mobbleserver.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberValidationErrorCode;
+import com.mobble.mobbleserver.domain.exception.DomainException;
+import com.mobble.mobbleserver.domain.member.error.MemberError;
 
 public enum Gender {
     MALE,
@@ -13,7 +13,7 @@ public enum Gender {
         return switch (value.toLowerCase()) {
             case "male" -> MALE;
             case "female" -> FEMALE;
-            default -> throw new DomainException(MemberValidationErrorCode.INVALID_GENDER);
+            default -> throw new DomainException(MemberError.INVALID_GENDER);
         };
     }
 }

@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.error.LikeBusinessError;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
 import com.mobble.mobbleserver.domain.like.ArticleLike;
 import com.mobble.mobbleserver.domain.like.ClubLike;
 import com.mobble.mobbleserver.domain.like.CommentLike;
 import com.mobble.mobbleserver.domain.like.LikeType;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.like.clubLike.JpaClubLikeRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
@@ -42,7 +42,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
     public List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
         return switch (likeType) {
             case ARTICLE -> articleLikeRepository.findLikedMemberListByArticleId(targetId);
-            default -> throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         };
     }
 
@@ -92,7 +92,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteAllByArticleIdIn(targetIds);
             case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
-            default -> throw new IllegalArgumentException("Not support LikeType: " + likeType.name());
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         }
     }
 }

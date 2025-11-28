@@ -1,13 +1,13 @@
 package com.mobble.mobbleserver.application.member.service;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
 import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
 
     @Override
     public Member updateMember(Long memberId, MemberUpdateRequestDto dto) {
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member member = assertMemberByMemberId(memberId);
 //        Ground ground = groundReadPort.findById(dto.groundCode())
 //                .orElseThrow();
 
@@ -38,7 +38,7 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
 
     @Override
     public void softDeleteMember(Long memberId) {
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member member = assertMemberByMemberId(memberId);
         member.softDelete();
     }
 
@@ -61,8 +61,8 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
         log.info("Finished deleting soft deleted members.");
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 }

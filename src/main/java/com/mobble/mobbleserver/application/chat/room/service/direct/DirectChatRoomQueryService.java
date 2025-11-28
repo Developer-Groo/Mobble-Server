@@ -3,14 +3,14 @@ package com.mobble.mobbleserver.application.chat.room.service.direct;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomQueryPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.DirectRoomInfo;
 import com.mobble.mobbleserver.domain.chat.room.Participant;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatRoomPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class DirectChatRoomQueryService implements DirectChatRoomQueryPort {
 
     @Override
     public List<DirectChatRoomPreviewResponseDto> getDirectChatRoomsPreview(Long memberId) {
-        Member member = findMemberByMemberIdOrThrow(memberId);
+        Member member = assertMemberByMemberId(memberId);
 
         List<DirectRoomInfo> directRoomInfos = chatRoomReadPort.findDirectChatRoomsAllByMemberId(memberId);
         List<Long> chatRoomIds = extractChatRoomIds(directRoomInfos);
@@ -71,8 +71,8 @@ public class DirectChatRoomQueryService implements DirectChatRoomQueryPort {
                 ));
     }
 
-    private Member findMemberByMemberIdOrThrow(Long memberId) {
+    private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new DomainException(MemberErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 }
