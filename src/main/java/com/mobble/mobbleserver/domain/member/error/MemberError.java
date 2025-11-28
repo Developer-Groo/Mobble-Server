@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum MemberError implements CommonError {
     REQUIRED_TERMS_AGREED("agreement to the terms of service is required", ErrorCategory.VALIDATION),
     REQUIRED_PRIVACY_AGREED("agreement to the privacy policy is required", ErrorCategory.VALIDATION),
-    INVALID_GENDER("invalid gender value", ErrorCategory.VALIDATION);
+    INVALID_GENDER("invalid gender value", ErrorCategory.VALIDATION),
+    AGE_MIN("age must be greater than or equal to 1", ErrorCategory.VALIDATION),
+    AGE_MAX("age must be less than or equal to 100", ErrorCategory.VALIDATION);
 
     private final String message;
     private final ErrorCategory category;

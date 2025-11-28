@@ -83,7 +83,6 @@ public class Member extends BaseEntity {
             SocialProvider socialProvider,
             String socialId
     ) {
-        validateCommon(name, gender, phone, termsAgreed, privacyAgreed);
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -114,6 +113,7 @@ public class Member extends BaseEntity {
             SocialProvider socialProvider,
             String socialId
     ) {
+        assertCommon(name, age, gender, phone, termsAgreed, privacyAgreed);
 
         return Member.builder()
                 .name(name)
@@ -142,17 +142,24 @@ public class Member extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    private void validateCommon(
+    private static void assertCommon(
             String name,
+            int age,
             Gender gender,
             String phone,
             boolean termsAgreed,
             boolean privacyAgreed
     ) {
         requireNonNull(name, "name must not be null");
+        assertAge(age);
         requireNonNull(gender, "gender must not be null");
         requireNonNull(phone, "phone must not be null");
         if (!termsAgreed) throw new DomainException(MemberError.REQUIRED_TERMS_AGREED);
         if (!privacyAgreed) throw new DomainException(MemberError.REQUIRED_PRIVACY_AGREED);
+    }
+
+    private static void assertAge(int age) {
+        if (age < 1) throw new DomainException(MemberError.AGE_MIN);
+        if (age > 100) throw new DomainException(MemberError.AGE_MAX);
     }
 }
