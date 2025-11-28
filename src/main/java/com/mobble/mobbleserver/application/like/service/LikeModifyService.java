@@ -31,13 +31,15 @@ import java.util.List;
 public class LikeModifyService implements LikeModifyPort {
 
     private final LikeWritePort likeWritePort;
-    private final LikeReadPort likeReadPort;
     private final LikeCounterWritePort likeCounterWritePort;
+
+    private final LikeReadPort likeReadPort;
     private final MemberReadPort memberReadPort;
-    private final TargetExistencePort targetExistencePort;
     private final ArticleReadPort articleReadPort;
     private final CommentReadPort commentReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
+
+    private final TargetExistencePort targetExistencePort;
 
     @Override
     public void toggleLike(LikeType likeType, Long targetId, Long memberId) {
