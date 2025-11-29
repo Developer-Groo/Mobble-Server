@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum ImageBusinessError implements CommonError {
-    NOT_FOUND("image not found", ErrorCategory.NOT_FOUND),;
+    NOT_FOUND("image not found", ErrorCategory.NOT_FOUND),
+    INVALID_IMAGE_SIZE("invalid image size", ErrorCategory.CONFLICT),
+    INVALID_IMAGE_TYPE("invalid image type", ErrorCategory.CONFLICT);
 
     private final String message;
     private final ErrorCategory category;
