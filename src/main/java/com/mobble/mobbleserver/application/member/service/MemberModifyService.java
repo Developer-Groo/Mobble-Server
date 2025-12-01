@@ -8,7 +8,7 @@ import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePor
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.request.UpdateMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
     private final MemberWritePort memberWritePort;
 
     @Override
-    public Member updateMember(Long memberId, MemberUpdateRequestDto dto) {
+    public Member updateMember(Long memberId, UpdateMemberRequestDto dto) {
         Member member = assertMemberByMemberId(memberId);
 //        Ground ground = groundReadPort.findById(dto.groundCode())
 //                .orElseThrow();
