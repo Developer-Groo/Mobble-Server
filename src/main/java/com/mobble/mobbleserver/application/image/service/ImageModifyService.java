@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -57,10 +58,9 @@ public class ImageModifyService implements ImageUploadPort, ImageDeletePort {
     public void delete(Long imageId) {
         Image image = assertImageByImageId(imageId);
 
-        // Todo: default 이미지의 경우 삭제 하지 않음
+        if (image.isDefault()) return;
 
         imageStoragePort.delete(image.getUrl());
-
         imageWritePort.delete(image);
     }
 
@@ -69,11 +69,21 @@ public class ImageModifyService implements ImageUploadPort, ImageDeletePort {
         if (imageIds == null || imageIds.isEmpty()) return;
 
         List<Long> distinctIds = imageIds.stream()
+                .filter(Objects::nonNull)
                 .distinct()
                 .toList();
 
+        if (distinctIds.isEmpty()) return;
+
         List<Image> images = imageReadPort.findAllByIds(distinctIds);
+
         if (images.isEmpty()) return;
+
+        List<Image> deletableImages = images.stream()
+                .filter(image -> !image.isDefault())
+                .toList();
+
+        if (deletableImages.isEmpty()) return;
 
         images.forEach(image -> imageStoragePort.delete(image.getUrl()));
 
