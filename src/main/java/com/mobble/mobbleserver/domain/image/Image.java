@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static java.util.Objects.requireNonNull;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -54,7 +56,7 @@ public class Image {
             String contentType,
             ImageType type
     ) {
-        // Todo: assert 검증
+        assertCreate(url, originalName, size, contentType, type);
 
         return Image.builder()
                 .url(url)
@@ -63,5 +65,13 @@ public class Image {
                 .contentType(contentType)
                 .type(type)
                 .build();
+    }
+
+    /* Assert 검증 */
+    private static void assertCreate(String url, String originalName, long size, String contentType, ImageType type) {
+        requireNonNull(url, "url must not be null");
+        requireNonNull(originalName, "original name must not be null");
+        requireNonNull(contentType, "content type must not be null");
+        requireNonNull(type, "image type must not be null");
     }
 }
