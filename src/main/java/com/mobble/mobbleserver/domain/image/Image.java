@@ -24,14 +24,14 @@ public class Image {
     @Column(name = "original_name")
     private String originalName;
 
-    @Column(nullable = false)
+    @Column(name = "size", nullable = false)
     private long size;
 
     @Column(name = "content_type", length = 50)
     private String contentType;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @Column(name = "type", nullable = false, length = 30)
     private ImageType type;
 
     @Builder(access = AccessLevel.PRIVATE)
