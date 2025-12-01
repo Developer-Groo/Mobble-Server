@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.infrastructure.persistence.like.acl;
+package com.mobble.mobbleserver.infrastructure.persistence.like.existence;
 
 import com.mobble.mobbleserver.application.like.port.required.TargetExistencePort;
 import com.mobble.mobbleserver.domain.like.LikeType;
