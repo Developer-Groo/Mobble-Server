@@ -62,9 +62,9 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
     @Transactional
     public void save(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
-            case ARTICLE -> articleLikeRepository.save(ArticleLike.createArticleLike(memberId, targetId));
-            case CLUB -> clubLikeRepository.save(ClubLike.createClubLike(memberId, targetId));
-            case COMMENT -> commentLikeRepository.save(CommentLike.createCommentLike(memberId, targetId));
+            case ARTICLE -> articleLikeRepository.save(ArticleLike.create(memberId, targetId));
+            case CLUB -> clubLikeRepository.save(ClubLike.create(memberId, targetId));
+            case COMMENT -> commentLikeRepository.save(CommentLike.create(memberId, targetId));
         }
     }
 

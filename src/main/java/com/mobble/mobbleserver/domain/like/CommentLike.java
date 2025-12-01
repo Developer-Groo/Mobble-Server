@@ -24,7 +24,7 @@ public class CommentLike extends AbstractLike {
         this.commentId = commentId;
     }
 
-    public static CommentLike createCommentLike(Long memberId, Long commentId) {
+    public static CommentLike create(Long memberId, Long commentId) {
         return CommentLike.builder()
                 .memberId(memberId)
                 .commentId(commentId)
