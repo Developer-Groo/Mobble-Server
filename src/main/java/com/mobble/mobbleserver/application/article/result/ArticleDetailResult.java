@@ -14,6 +14,7 @@ public record ArticleDetailResult(
         ArticleType articleType,
         String title,
         String body,
+        String articleImageUrl,
         Long ownerId,
         String ownerName,
         String profileImageUrl,
@@ -38,6 +39,7 @@ public record ArticleDetailResult(
     ) {
         Member owner = article.getMember();
         String profileImageUrl = getProfileImageUrl(owner);
+        String articleImageUrl = getArticleContentImageUrl(article);
 
         return new ArticleDetailResult(
                 article.getClub().getId(),
@@ -45,6 +47,7 @@ public record ArticleDetailResult(
                 article.getArticleType(),
                 article.getContent().getTitle(),
                 article.getContent().getBody(),
+                articleImageUrl,
                 owner.getId(),
                 owner.getName(),
                 profileImageUrl,
@@ -77,6 +80,12 @@ public record ArticleDetailResult(
     private static String getProfileImageUrl(Member member) {
         return member.getProfileImage() != null
                 ? member.getProfileImage().getUrl()
+                : null;
+    }
+
+    private static String getArticleContentImageUrl(Article article) {
+        return article.getImage() != null
+                ? article.getImage().getUrl()
                 : null;
     }
 }
