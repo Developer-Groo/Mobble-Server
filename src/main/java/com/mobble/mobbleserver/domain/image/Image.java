@@ -56,7 +56,7 @@ public class Image {
             String contentType,
             ImageType type
     ) {
-        assertCreate(url, originalName, size, contentType, type);
+        assertCreate(url, originalName, contentType, type);
 
         return Image.builder()
                 .url(url)
@@ -68,7 +68,7 @@ public class Image {
     }
 
     /* Assert 검증 */
-    private static void assertCreate(String url, String originalName, long size, String contentType, ImageType type) {
+    private static void assertCreate(String url, String originalName, String contentType, ImageType type) {
         requireNonNull(url, "url must not be null");
         requireNonNull(originalName, "original name must not be null");
         requireNonNull(contentType, "content type must not be null");
