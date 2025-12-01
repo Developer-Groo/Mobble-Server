@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.infrastructure.persistence.image;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.image.port.required.ImageWritePort;
 import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +41,10 @@ public class ImagePersistenceAdapter implements ImageWritePort, ImageReadPort {
     @Override
     public List<Image> findAllByIds(List<Long> imageIds) {
         return repository.findAllById(imageIds);
+    }
+
+    @Override
+    public Optional<Image> findDefaultByType(ImageType imageType) {
+        return repository.findByTypeAndIsDefault(imageType, true);
     }
 }
