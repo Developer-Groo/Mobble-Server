@@ -3,9 +3,9 @@ package com.mobble.mobbleserver.domain.member;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
 import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.image.Image;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.member.MemberErrorCode;
+import com.mobble.mobbleserver.domain.member.error.MemberError;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Getter
@@ -24,20 +26,20 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
     @Column(name = "age")
     private int age;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false)
     private String phone;
 
     @Embedded
@@ -54,10 +56,10 @@ public class Member extends BaseEntity {
     private boolean privacyAgreed;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "social_provider")
+    @Column(name = "social_provider", nullable = false)
     private SocialProvider socialProvider;
 
-    @Column(name = "social_id")
+    @Column(name = "social_id", nullable = false)
     private String socialId;
 
     @Column(name = "is_deleted")
@@ -81,7 +83,6 @@ public class Member extends BaseEntity {
             SocialProvider socialProvider,
             String socialId
     ) {
-        validateCommon(name, gender, phone, termsAgreed, privacyAgreed);
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -112,6 +113,7 @@ public class Member extends BaseEntity {
             SocialProvider socialProvider,
             String socialId
     ) {
+        assertCommon(name, age, gender, phone, termsAgreed, privacyAgreed);
 
         return Member.builder()
                 .name(name)
@@ -140,17 +142,24 @@ public class Member extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    private void validateCommon(
+    private static void assertCommon(
             String name,
+            int age,
             Gender gender,
             String phone,
             boolean termsAgreed,
             boolean privacyAgreed
     ) {
-        if (name == null) throw new DomainException(MemberErrorCode.NAME_REQUIRED);
-        if (gender == null) throw new DomainException(MemberErrorCode.GENDER_REQUIRED);
-        if (phone == null) throw new DomainException(MemberErrorCode.PHONE_REQUIRED);
-        if (!termsAgreed) throw new DomainException(MemberErrorCode.TERMS_AGREED_REQUIRED);
-        if (!privacyAgreed) throw new DomainException(MemberErrorCode.PRIVACY_AGREED_REQUIRED);
+        requireNonNull(name, "name must not be null");
+        assertAge(age);
+        requireNonNull(gender, "gender must not be null");
+        requireNonNull(phone, "phone must not be null");
+        if (!termsAgreed) throw new DomainException(MemberError.REQUIRED_TERMS_AGREED);
+        if (!privacyAgreed) throw new DomainException(MemberError.REQUIRED_PRIVACY_AGREED);
+    }
+
+    private static void assertAge(int age) {
+        if (age < 1) throw new DomainException(MemberError.AGE_MIN);
+        if (age > 100) throw new DomainException(MemberError.AGE_MAX);
     }
 }

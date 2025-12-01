@@ -1,21 +1,20 @@
-package com.mobble.mobbleserver.domain.meeting.error;
+package com.mobble.mobbleserver.application.like.error;
 
 import com.mobble.mobbleserver.shared.error.CommonError;
 import com.mobble.mobbleserver.shared.error.ErrorCategory;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum MeetingError implements CommonError {
-    INVALID_DATETIME("datetime must not be in the past", ErrorCategory.VALIDATION),
-    INVALID_MEMBER_LIMIT("memberLimit must be at least 1", ErrorCategory.VALIDATION),
-    FULL_CAPACITY("meeting has reached full capacity", ErrorCategory.CONFLICT);
+public enum LikeBusinessError implements CommonError {
+    INVALID_LIKE_TYPE("unsupported like type", ErrorCategory.VALIDATION),
+    TARGET_NOT_FOUND("target not found", ErrorCategory.NOT_FOUND);
 
     private final String message;
     private final ErrorCategory category;
 
     @Override
     public String code() {
-        return "MEETING." + name();
+        return "MEETING_BUSINESS" + name();
     }
 
     @Override

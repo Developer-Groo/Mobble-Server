@@ -1,25 +1,23 @@
 package com.mobble.mobbleserver.infrastructure.persistence.like;
 
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.like.error.LikeBusinessError;
 import com.mobble.mobbleserver.application.like.port.required.LikeReadPort;
 import com.mobble.mobbleserver.application.like.port.required.LikeWritePort;
 import com.mobble.mobbleserver.domain.like.ArticleLike;
 import com.mobble.mobbleserver.domain.like.ClubLike;
 import com.mobble.mobbleserver.domain.like.CommentLike;
 import com.mobble.mobbleserver.domain.like.LikeType;
-import com.mobble.mobbleserver.global.exception.common.DomainException;
-import com.mobble.mobbleserver.global.exception.errorCode.like.LikeErrorCode;
 import com.mobble.mobbleserver.infrastructure.persistence.like.articleLike.JpaArticleLikeRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.like.clubLike.JpaClubLikeRepository;
 import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
 
     private final JpaArticleLikeRepository articleLikeRepository;
@@ -42,7 +40,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
     public List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
         return switch (likeType) {
             case ARTICLE -> articleLikeRepository.findLikedMemberListByArticleId(targetId);
-            default -> throw new DomainException(LikeErrorCode.NOT_SUPPORTED_TYPE);
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         };
     }
 
@@ -59,17 +57,15 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
      * LikeWritePort
      */
     @Override
-    @Transactional
     public void save(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
-            case ARTICLE -> articleLikeRepository.save(ArticleLike.createArticleLike(memberId, targetId));
-            case CLUB -> clubLikeRepository.save(ClubLike.createClubLike(memberId, targetId));
-            case COMMENT -> commentLikeRepository.save(CommentLike.createCommentLike(memberId, targetId));
+            case ARTICLE -> articleLikeRepository.save(ArticleLike.create(memberId, targetId));
+            case CLUB -> clubLikeRepository.save(ClubLike.create(memberId, targetId));
+            case COMMENT -> commentLikeRepository.save(CommentLike.create(memberId, targetId));
         }
     }
 
     @Override
-    @Transactional
     public void delete(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteByMemberIdAndArticleId(memberId, targetId);
@@ -92,7 +88,7 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteAllByArticleIdIn(targetIds);
             case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
-            default -> throw new IllegalArgumentException("Not support LikeType: " + likeType.name());
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         }
     }
 }

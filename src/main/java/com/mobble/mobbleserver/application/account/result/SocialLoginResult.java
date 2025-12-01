@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.account.command;
+package com.mobble.mobbleserver.application.account.result;
 
 public record SocialLoginResult(String jwtToken, boolean isNewMember) {
 

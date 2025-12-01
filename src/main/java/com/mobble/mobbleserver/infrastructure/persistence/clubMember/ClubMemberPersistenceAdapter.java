@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
+import com.mobble.mobbleserver.domain.clubMember.JoinStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +47,10 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     @Override
     public List<ClubMemberRole> findDistinctRolesByMemberIdAndRoleIn(Long memberId, List<ClubMemberRole> leader) {
         return repository.findDistinctRolesByMemberIdAndRoleIn(memberId, leader);
+    }
+
+    @Override
+    public boolean existsByClubIdAndMemberId(Long clubId, Long memberId) {
+        return repository.existsByClubIdAndMemberIdAndJoinStatus(clubId, memberId, JoinStatus.APPROVED);
     }
 }

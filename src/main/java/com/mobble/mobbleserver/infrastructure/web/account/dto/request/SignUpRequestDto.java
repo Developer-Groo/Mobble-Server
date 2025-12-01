@@ -10,28 +10,30 @@ import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
 
 public record SignUpRequestDto(
-        @NotBlank(message = "MEMBER:NAME_NOT_BLANK")
+        @NotBlank(message = "name must not be null")
+        @Size(max = 10, message = "name must be 10 characters or fewer")
         String name,
 
-        @Min(value = 1, message = "MEMBER:AGE_TOO_LOW")
-        @Max(value = 100, message = "MEMBER:AGE_TOO_HIGH")
+        @Min(value = 1, message = "age must be greater than or equal to 1")
+        @Max(value = 100, message = "age must be less than or equal to 100")
         int age,
 
-        @NotNull(message = "MEMBER:REQUIRED_GENDER")
+        @NotNull(message = "gender must be not null")
         Gender gender,
 
-        @NotBlank(message = "MEMBER:REQUIRED_PHONE")
-        @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$", message = "MEMBER:WRONG_PHONE_PATTERN")
+        @NotBlank(message = "phone must be not null")
+        @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
+                message = "phone must follow the pattern 010-xxx-xxxx or 010-xxxx-xxxx")
         String phone,
 
         Location location,
 
         String profileImageUrl,
 
-        @AssertTrue(message = "MEMBER:REQUIRED_TERMS_AGREE")
+        @AssertTrue(message = "terms of service agreement is required")
         boolean termsAgreed,
 
-        @AssertTrue(message = "MEMBER:REQUIRED_PRIVACY_AGREE")
+        @AssertTrue(message = "privacy policy agreement is required")
         boolean privacyAgreed
 ) {
 
