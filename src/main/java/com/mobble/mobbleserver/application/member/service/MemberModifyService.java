@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.application.member.service;
 
 import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
+import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.member.command.UpdateMemberCommand;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
@@ -8,6 +10,8 @@ import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort
 import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePort;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
+import com.mobble.mobbleserver.domain.common.Location;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +29,23 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
 
     private final MemberReadPort memberReadPort;
     private final MemberWritePort memberWritePort;
+    private final ImageReadPort imageReadPort;
 
     @Override
     public Member updateMember(UpdateMemberCommand command) {
         Member member = assertMemberByMemberId(command.memberId());
-//        Ground ground = groundReadPort.findById(dto.groundCode())
-//                .orElseThrow();
+        Location location = Location.create(
+                command.address1(),
+                command.address2(),
+                command.city(),
+                command.district(),
+                command.latitude(),
+                command.longitude()
+        );
 
-//        return member.update(ground, dto.profileImage());
-        return null;
+        Image profileImage = resolveMainImage(command.profileImageId());
+
+        return member.update(location, profileImage);
     }
 
     @Override
@@ -61,8 +73,20 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
         log.info("Finished deleting soft deleted members.");
     }
 
+    /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
+    }
+
+    private Image resolveMainImage(Long imageId) {
+        return (imageId == null)
+                ? null // Todo: getDefaultImage 메서드 호출
+                : assertImageByImageId(imageId);
+    }
+
+    private Image assertImageByImageId(Long imageId) {
+        return imageReadPort.findById(imageId)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
     }
 }
