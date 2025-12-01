@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePort, MeetingDeletePort {
 
     private final MeetingWritePort meetingWritePort;
