@@ -136,8 +136,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
         // Todo:
         //  1. Meeting -> Service port
-        //  2. Image delete -> Service port
-        //  3. Notification delete -> Service port
+        //  2. Notification delete -> Service port
 
         clubMemberWritePort.deleteAllByClubId(club.getId());
         imageWritePort.delete(club.getMainImage());
