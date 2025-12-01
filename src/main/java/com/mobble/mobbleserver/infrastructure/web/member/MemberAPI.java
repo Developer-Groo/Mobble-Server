@@ -41,8 +41,7 @@ public class MemberAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody @Valid UpdateMemberRequestDto dto
     ) {
-        UpdateMemberCommand command = UpdateMemberCommand.create(memberId, dto);
-
+        UpdateMemberCommand command = dto.toCommand(memberId);
         Member member = memberUpdatePort.updateMember(command);
 
         return ResponseEntity.status(HttpStatus.OK)
