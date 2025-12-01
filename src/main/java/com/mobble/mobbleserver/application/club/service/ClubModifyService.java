@@ -18,6 +18,7 @@ import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.category.Category;
 import com.mobble.mobbleserver.domain.category.CategoryCode;
@@ -25,6 +26,7 @@ import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -142,7 +144,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(); // Todo: Error 수정 필요
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
@@ -159,14 +161,19 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
     }
 
-    private Image resolveMainImage(Long imageId) {
-        return (imageId == null)
-                ? null // Todo: getDefaultImage 메서드 호출
-                : assertImageByImageId(imageId);
-    }
-
     private Image assertImageByImageId(Long imageId) {
         return imageReadPort.findById(imageId)
                 .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
+    }
+
+    private Image assertDefaultImageByImageType() {
+        return imageReadPort.findDefaultByType(ImageType.CLUB_MAIN)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
+    }
+
+    private Image resolveMainImage(Long imageId) {
+        return (imageId == null)
+                ? assertDefaultImageByImageType()
+                : assertImageByImageId(imageId);
     }
 }
