@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.member;
 
+import com.mobble.mobbleserver.application.member.command.UpdateMemberCommand;
 import com.mobble.mobbleserver.application.member.port.provided.MemberQueryPort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
@@ -40,7 +41,9 @@ public class MemberAPI {
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
             @RequestBody @Valid UpdateMemberRequestDto dto
     ) {
-        Member member = memberUpdatePort.updateMember(memberId, dto);
+        UpdateMemberCommand command = UpdateMemberCommand.create(memberId, dto);
+
+        Member member = memberUpdatePort.updateMember(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MemberResponseDto.toDto(member));

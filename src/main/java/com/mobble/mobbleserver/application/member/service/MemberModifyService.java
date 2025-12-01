@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.member.service;
 
 import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.member.command.UpdateMemberCommand;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
@@ -8,7 +9,6 @@ import com.mobble.mobbleserver.application.member.port.provided.MembersDeletePor
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.member.dto.request.UpdateMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,12 +27,12 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
     private final MemberWritePort memberWritePort;
 
     @Override
-    public Member updateMember(Long memberId, UpdateMemberRequestDto dto) {
-        Member member = assertMemberByMemberId(memberId);
+    public Member updateMember(UpdateMemberCommand command) {
+        Member member = assertMemberByMemberId(command.memberId());
 //        Ground ground = groundReadPort.findById(dto.groundCode())
 //                .orElseThrow();
 
-//        return member.updateMember(ground, dto.profileImage());
+//        return member.update(ground, dto.profileImage());
         return null;
     }
 
