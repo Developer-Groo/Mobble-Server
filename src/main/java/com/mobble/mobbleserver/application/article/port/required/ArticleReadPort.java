@@ -17,4 +17,6 @@ public interface ArticleReadPort {
     List<Article> findByClubIdAndArticleType(Long clubId, ArticleType articleType);
 
     List<Long> findIdsByClubId(Long clubId);
+
+    List<Long> findImageIdsByClubId(Long clubId);
 }
