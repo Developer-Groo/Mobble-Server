@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.domain.article;
 
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.common.BaseEntity;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -33,6 +34,10 @@ public class Article extends BaseEntity {
     @Column(name = "article_type")
     private ArticleType articleType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     @Embedded
     private ArticleContent content;
 
@@ -41,19 +46,22 @@ public class Article extends BaseEntity {
             Club club,
             Member member,
             ArticleType articleType,
-            ArticleContent content
+            ArticleContent content,
+            Image image
     ) {
         this.club = club;
         this.member = member;
         this.articleType = articleType;
         this.content = content;
+        this.image = image;
     }
 
     public static Article createArticle(
             Club club,
             Member member,
             ArticleType articleType,
-            ArticleContent content
+            ArticleContent content,
+            Image image
     ) {
         assertCreateArticle(club, member, articleType, content);
 
@@ -62,12 +70,14 @@ public class Article extends BaseEntity {
                 .member(member)
                 .articleType(articleType)
                 .content(content)
+                .image(image)
                 .build();
     }
 
-    public Article updateArticle(ArticleContent content) {
+    public Article updateArticle(ArticleContent content, Image image) {
         requireNonNull(content, "body must not be null");
         this.content = content;
+        this.image = image;
 
         return this;
     }
