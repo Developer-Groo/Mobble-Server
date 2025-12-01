@@ -24,7 +24,7 @@ public class Image {
     @Column(name = "original_name")
     private String originalName;
 
-    @Column(name = "size", nullable = false)
+    @Column(name = "size")
     private long size;
 
     @Column(name = "content_type", length = 50)
@@ -34,19 +34,24 @@ public class Image {
     @Column(name = "type", nullable = false, length = 30)
     private ImageType type;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean isDefault;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Image(
             String url,
             String originalName,
             long size,
             String contentType,
-            ImageType type
+            ImageType type,
+            boolean isDefault
     ) {
         this.url = url;
         this.originalName = originalName;
         this.size = size;
         this.contentType = contentType;
         this.type = type;
+        this.isDefault = isDefault;
     }
 
     public static Image create(
@@ -64,6 +69,7 @@ public class Image {
                 .size(size)
                 .contentType(contentType)
                 .type(type)
+                .isDefault(false)
                 .build();
     }
 
