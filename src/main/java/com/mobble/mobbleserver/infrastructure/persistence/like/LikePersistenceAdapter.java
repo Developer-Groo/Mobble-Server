@@ -13,13 +13,11 @@ import com.mobble.mobbleserver.infrastructure.persistence.like.clubLike.JpaClubL
 import com.mobble.mobbleserver.infrastructure.persistence.like.commentLike.JpaCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
 
     private final JpaArticleLikeRepository articleLikeRepository;
@@ -59,17 +57,15 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
      * LikeWritePort
      */
     @Override
-    @Transactional
     public void save(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
-            case ARTICLE -> articleLikeRepository.save(ArticleLike.createArticleLike(memberId, targetId));
-            case CLUB -> clubLikeRepository.save(ClubLike.createClubLike(memberId, targetId));
-            case COMMENT -> commentLikeRepository.save(CommentLike.createCommentLike(memberId, targetId));
+            case ARTICLE -> articleLikeRepository.save(ArticleLike.create(memberId, targetId));
+            case CLUB -> clubLikeRepository.save(ClubLike.create(memberId, targetId));
+            case COMMENT -> commentLikeRepository.save(CommentLike.create(memberId, targetId));
         }
     }
 
     @Override
-    @Transactional
     public void delete(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
             case ARTICLE -> articleLikeRepository.deleteByMemberIdAndArticleId(memberId, targetId);
