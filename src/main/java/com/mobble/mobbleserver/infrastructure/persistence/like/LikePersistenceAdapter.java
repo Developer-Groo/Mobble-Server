@@ -18,44 +18,13 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
+public class LikePersistenceAdapter implements LikeWritePort, LikeReadPort {
 
     private final JpaArticleLikeRepository articleLikeRepository;
     private final JpaClubLikeRepository clubLikeRepository;
     private final JpaCommentLikeRepository commentLikeRepository;
 
-    /**
-     * LikeReadPort
-     */
-    @Override
-    public boolean existsTargetLike(LikeType likeType, Long targetId, Long memberId) {
-        return switch (likeType) {
-            case ARTICLE -> articleLikeRepository.existsByMemberIdAndArticleId(memberId, targetId);
-            case CLUB -> clubLikeRepository.existsByMemberIdAndClubId(memberId, targetId);
-            case COMMENT -> commentLikeRepository.existsByMemberIdAndCommentId(memberId, targetId);
-        };
-    }
-
-    @Override
-    public List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
-        return switch (likeType) {
-            case ARTICLE -> articleLikeRepository.findLikedMemberListByArticleId(targetId);
-            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
-        };
-    }
-
-    @Override
-    public List<Long> findLikedTargetIdListByMemberId(LikeType likeType, Long memberId, List<Long> targetIds) {
-        return switch (likeType) {
-            case ARTICLE -> articleLikeRepository.findLikedArticleIdListByMemberId(targetIds, memberId);
-            case CLUB -> clubLikeRepository.findLikedClubIdListByMemberId(targetIds, memberId);
-            case COMMENT -> commentLikeRepository.findLikedCommentIdListByMemberId(targetIds, memberId);
-        };
-    }
-
-    /**
-     * LikeWritePort
-     */
+    /* LikeWritePort */
     @Override
     public void save(LikeType likeType, Long targetId, Long memberId) {
         switch (likeType) {
@@ -90,5 +59,32 @@ public class LikePersistenceAdapter implements LikeReadPort, LikeWritePort {
             case COMMENT -> commentLikeRepository.deleteAllByCommentIdIn(targetIds);
             default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
         }
+    }
+
+    /* LikeReadPort */
+    @Override
+    public boolean existsTargetLike(LikeType likeType, Long targetId, Long memberId) {
+        return switch (likeType) {
+            case ARTICLE -> articleLikeRepository.existsByMemberIdAndArticleId(memberId, targetId);
+            case CLUB -> clubLikeRepository.existsByMemberIdAndClubId(memberId, targetId);
+            case COMMENT -> commentLikeRepository.existsByMemberIdAndCommentId(memberId, targetId);
+        };
+    }
+
+    @Override
+    public List<Long> findLikedMemberListByTargetId(LikeType likeType, Long targetId) {
+        return switch (likeType) {
+            case ARTICLE -> articleLikeRepository.findLikedMemberListByArticleId(targetId);
+            default -> throw new BusinessException(LikeBusinessError.INVALID_LIKE_TYPE);
+        };
+    }
+
+    @Override
+    public List<Long> findLikedTargetIdListByMemberId(LikeType likeType, Long memberId, List<Long> targetIds) {
+        return switch (likeType) {
+            case ARTICLE -> articleLikeRepository.findLikedArticleIdListByMemberId(targetIds, memberId);
+            case CLUB -> clubLikeRepository.findLikedClubIdListByMemberId(targetIds, memberId);
+            case COMMENT -> commentLikeRepository.findLikedCommentIdListByMemberId(targetIds, memberId);
+        };
     }
 }
