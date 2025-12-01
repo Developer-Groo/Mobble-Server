@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ImagePersistenceAdapter implements ImageReadPort, ImageWritePort {
+public class ImagePersistenceAdapter implements ImageWritePort, ImageReadPort {
 
     private final JpaImageRepository repository;
 
