@@ -17,6 +17,7 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWr
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
+import com.mobble.mobbleserver.application.image.port.required.ImageWritePort;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
@@ -45,6 +46,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
 
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
+    private final ImageWritePort imageWritePort;
 
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
@@ -138,6 +140,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         //  3. Notification delete -> Service port
 
         clubMemberWritePort.deleteAllByClubId(club.getId());
+        imageWritePort.delete(club.getMainImage());
         clubWritePort.delete(club);
     }
 
