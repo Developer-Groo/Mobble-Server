@@ -28,19 +28,6 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
     private final ClubReadPort clubReadPort;
 
     @Override
-    public List<Long> getIsAttended(Long memberId, Long clubId) {
-        Member member = assertMemberByMemberId(memberId);
-        Club club = assertClubByClubId(clubId);
-
-        List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(club.getId());
-
-        return meetings.stream()
-                .filter(meeting -> meeting.hasAttendee(member.getId()))
-                .map(Meeting::getId)
-                .toList();
-    }
-
-    @Override
     public MeetingMemberResult getMeetingMembers(Long meetingId) {
         Meeting meeting = findMeetingByMeetingIdOrThrow(meetingId);
         List<Member> attendedMembers = meeting.getAttendedMembers();
