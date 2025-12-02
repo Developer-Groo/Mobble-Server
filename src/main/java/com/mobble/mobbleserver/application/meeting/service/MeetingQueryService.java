@@ -6,7 +6,6 @@ import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingQueryPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meeting.result.MeetingResult;
-import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.Club;
@@ -25,8 +24,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MeetingQueryService implements MeetingQueryPort {
 
-    private final MeetingMemberQueryPort meetingMemberQueryPort;
-
     private final MeetingReadPort meetingReadPort;
     private final MemberReadPort memberReadPort;
     private final ClubReadPort clubReadPort;
@@ -37,9 +34,8 @@ public class MeetingQueryService implements MeetingQueryPort {
         Club club = assertClubByClubId(clubId);
 
         List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(club.getId());
-        List<Long> atendedList = meetingMemberQueryPort.getIsAttended(member.getId(), club.getId());
 
-        return MeetingResult.create(meetings, atendedList);
+        return MeetingResult.create(meetings, member.getId());
     }
 
     @Override
@@ -50,9 +46,8 @@ public class MeetingQueryService implements MeetingQueryPort {
         LocalDateTime today = LocalDate.now().atStartOfDay();
 
         List<Meeting> meetings = meetingReadPort.findUpcomingMeetingsByClubId(club.getId(), today);
-        List<Long> attendedList = meetingMemberQueryPort.getIsAttended(member.getId(), club.getId());
 
-        return MeetingResult.create(meetings, attendedList);
+        return MeetingResult.create(meetings, member.getId());
     }
 
     /* ==== Private Helper ==== */
