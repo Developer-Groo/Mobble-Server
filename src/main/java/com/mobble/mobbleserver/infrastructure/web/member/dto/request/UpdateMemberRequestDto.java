@@ -30,7 +30,7 @@ public record UpdateMemberRequestDto(
         @DecimalMin(value = "-180.0", message = "longitude must be greater than or equal to -180.0")
         @DecimalMax(value = "180.0", message = "longitude must be less than or equal to 180.0")
         Double longitude
-        ) {
+) {
 
     public UpdateMemberCommand toCommand(Long memberId) {
         return UpdateMemberCommand.create(
