@@ -9,7 +9,7 @@ import java.util.UUID;
 public class MemberTestFixture {
 
     public static Member createDefaultMember() {
-        return Member.createMember(
+        return Member.create(
                 "name",
                 1,
                 Gender.FEMALE,
