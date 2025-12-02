@@ -5,10 +5,7 @@ import com.mobble.mobbleserver.domain.member.Member;
 
 import java.util.List;
 
-public record MeetingMemberListResponseDto(
-        Long meetingId,
-        List<MeetingMemberInfoResult> attendedMembers
-) {
+public record MeetingMemberListResponseDto(Long meetingId, List<MeetingMemberInfoResult> attendedMembers) {
 
     public static MeetingMemberListResponseDto toDto(Long meetingId, List<Member> attendedMembers) {
         return new MeetingMemberListResponseDto(meetingId, toAttendedMembers(attendedMembers));
