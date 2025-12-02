@@ -1,12 +1,8 @@
 package com.mobble.mobbleserver.infrastructure.web.account.dto.request;
 
 
-import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
-import com.mobble.mobbleserver.domain.common.Location;
-import com.mobble.mobbleserver.domain.image.Image;
-import com.mobble.mobbleserver.domain.image.ImageType;
+import com.mobble.mobbleserver.application.account.command.SignUpCommand;
 import com.mobble.mobbleserver.domain.member.Gender;
-import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.validation.constraints.*;
 
 public record SignUpRequestDto(
@@ -26,9 +22,32 @@ public record SignUpRequestDto(
                 message = "phone must follow the pattern 010-xxx-xxxx or 010-xxxx-xxxx")
         String phone,
 
-        Location location,
+        Long profileImageId,
 
-        String profileImageUrl,
+        @NotBlank(message = "address1 must not be blank")
+        @Size(max = 100, message = "address1 must be 100 characters or fewer")
+        String address1,
+
+        @Size(max = 100, message = "address2 must be 100 characters or fewer")
+        String address2,
+
+        @NotBlank(message = "city must not be blank")
+        @Size(max = 50, message = "city must be 50 characters or fewer")
+        String city,
+
+        @NotBlank(message = "district must not be blank")
+        @Size(max = 50, message = "district must be 50 characters or fewer")
+        String district,
+
+        @NotNull(message = "latitude must not be null")
+        @DecimalMin(value = "-90.0", message = "latitude must be greater than or equal to -90.0")
+        @DecimalMax(value = "90.0", message = "latitude must be less than or equal to 90.0")
+        Double latitude,
+
+        @NotNull(message = "longitude must not be null")
+        @DecimalMin(value = "-180.0", message = "longitude must be greater than or equal to -180.0")
+        @DecimalMax(value = "180.0", message = "longitude must be less than or equal to 180.0")
+        Double longitude,
 
         @AssertTrue(message = "terms of service agreement is required")
         boolean termsAgreed,
@@ -37,19 +56,22 @@ public record SignUpRequestDto(
         boolean privacyAgreed
 ) {
 
-    public Member toEntity(SocialUserInfo userInfo, Location location) {
-        return Member.create(
-                this.name,
-                this.age,
-                this.gender,
-                userInfo.email(),
-                this.phone,
-                location,
-                Image.create(profileImageUrl, "", 1L, ImageType.MEMBER_PROFILE),
-                this.termsAgreed,
-                this.privacyAgreed,
-                userInfo.socialProvider(),
-                userInfo.socialId()
+    public SignUpCommand toCommand(String signUpToken) {
+        return SignUpCommand.create(
+                name,
+                age,
+                gender,
+                phone,
+                profileImageId,
+                address1,
+                address2,
+                city,
+                district,
+                latitude,
+                longitude,
+                termsAgreed,
+                privacyAgreed,
+                signUpToken
         );
     }
 }
