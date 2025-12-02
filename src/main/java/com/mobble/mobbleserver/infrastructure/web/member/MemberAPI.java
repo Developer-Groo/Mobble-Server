@@ -1,10 +1,11 @@
 package com.mobble.mobbleserver.infrastructure.web.member;
 
+import com.mobble.mobbleserver.application.member.command.UpdateMemberCommand;
 import com.mobble.mobbleserver.application.member.port.provided.MemberQueryPort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberSoftDeletePort;
 import com.mobble.mobbleserver.application.member.port.provided.MemberUpdatePort;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.member.dto.request.MemberUpdateRequestDto;
+import com.mobble.mobbleserver.infrastructure.web.member.dto.request.UpdateMemberRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.member.dto.response.MemberResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +39,10 @@ public class MemberAPI {
     @PatchMapping
     public ResponseEntity<MemberResponseDto> updateMember(
             @AuthenticationPrincipal(expression = "memberId") Long memberId,
-            @RequestBody @Valid MemberUpdateRequestDto dto
+            @RequestBody @Valid UpdateMemberRequestDto dto
     ) {
-        Member member = memberUpdatePort.updateMember(memberId, dto);
+        UpdateMemberCommand command = dto.toCommand(memberId);
+        Member member = memberUpdatePort.updateMember(command);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(MemberResponseDto.toDto(member));
