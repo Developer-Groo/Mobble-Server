@@ -36,16 +36,6 @@ public class MeetingMemberQueryService implements MeetingMemberQueryPort {
     }
 
     /* ==== Private Helper ==== */
-    private Member assertMemberByMemberId(Long memberId) {
-        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
-    }
-
-    private Club assertClubByClubId(Long clubId) {
-        return clubReadPort.findById(clubId)
-                .orElseThrow(() -> new BusinessException(ClubBusinessError.NOT_FOUND));
-    }
-
     public Meeting findMeetingByMeetingIdOrThrow(Long meetingId) {
         return meetingReadPort.findById(meetingId)
                 .orElseThrow(() -> new BusinessException(MeetingBusinessError.NOT_FOUND));
