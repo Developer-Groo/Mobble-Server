@@ -43,7 +43,7 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
                 command.longitude()
         );
 
-        Image profileImage = resolveMainImage(command.profileImageId());
+        Image profileImage = resolveProfileImage(command.profileImageId());
 
         return member.update(location, profileImage);
     }
@@ -79,7 +79,7 @@ public class MemberModifyService implements MemberUpdatePort, MemberSoftDeletePo
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 
-    private Image resolveMainImage(Long imageId) {
+    private Image resolveProfileImage(Long imageId) {
         return (imageId == null)
                 ? null // Todo: getDefaultImage 메서드 호출
                 : assertImageByImageId(imageId);
