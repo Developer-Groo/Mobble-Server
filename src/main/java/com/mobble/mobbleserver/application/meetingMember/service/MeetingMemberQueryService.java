@@ -1,15 +1,10 @@
 package com.mobble.mobbleserver.application.meetingMember.service;
 
-import com.mobble.mobbleserver.application.club.error.ClubBusinessError;
-import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
 import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberResult;
-import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
-import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
-import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +18,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MeetingMemberQueryService implements MeetingMemberQueryPort {
 
-    private final MemberReadPort memberReadPort;
     private final MeetingReadPort meetingReadPort;
-    private final ClubReadPort clubReadPort;
 
     @Override
     public MeetingMemberResult getMeetingMembers(Long meetingId) {
