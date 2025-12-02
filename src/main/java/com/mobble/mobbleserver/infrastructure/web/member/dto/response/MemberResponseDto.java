@@ -9,6 +9,15 @@ public record MemberResponseDto(
         Gender gender,
         String email,
         String phone,
+
+        String address1,
+        String address2,
+        String city,
+        String district,
+        Double latitude,
+        Double longitude,
+
+        Long profileImageId,
         String profileImageUrl
 ) {
 
@@ -19,6 +28,15 @@ public record MemberResponseDto(
                 member.getGender(),
                 member.getEmail(),
                 member.getPhone(),
+
+                member.getLocation().getAddress1(),
+                member.getLocation().getAddress2(),
+                member.getLocation().getCity(),
+                member.getLocation().getDistrict(),
+                member.getLocation().getLatitude(),
+                member.getLocation().getLongitude(),
+
+                member.getProfileImage().getId(),
                 member.getProfileImage().getUrl()
         );
     }

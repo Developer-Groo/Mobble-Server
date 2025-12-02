@@ -100,7 +100,7 @@ public class Member extends BaseEntity {
     /**
      * 소셜 회원가입 완료 시 회원 생성
      */
-    public static Member createMember(
+    public static Member create(
             String name,
             int age,
             Gender gender,
@@ -131,7 +131,7 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public Member updateMember(Location location, Image profileImage) {
+    public Member update(Location location, Image profileImage) {
         this.location = location;
         this.profileImage = profileImage;
         return this;

@@ -28,7 +28,7 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        member = Member.createMember(
+        member = Member.create(
                 NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
                 true, true, SOCIAL_PROVIDER, SOCIAL_ID
         );
@@ -51,7 +51,7 @@ class MemberTest {
         @DisplayName("name 이 null 이면 예외 발생")
         void fail_when_name_null() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    null, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
 //                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -63,7 +63,7 @@ class MemberTest {
         @DisplayName("gender 가 null 이면 예외 발생")
         void fail_when_gender_null() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    NAME, AGE, null, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
 //                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -75,7 +75,7 @@ class MemberTest {
         @DisplayName("phone 이 null 이면 예외 발생")
         void fail_when_phone_null() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    NAME, AGE, GENDER, EMAIL, null, GROUND, PROFILE_IMAGE,
 //                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -87,7 +87,7 @@ class MemberTest {
 //        @DisplayName("ground 가 null 이면 예외 발생")
 //        void fail_when_ground_null() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    NAME, AGE, GENDER, EMAIL, PHONE, null, PROFILE_IMAGE,
 //                    true, true, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -99,7 +99,7 @@ class MemberTest {
         @DisplayName("termsAgreed 가 false 면 예외 발생")
         void fail_when_terms_not_agreed() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
 //                    false, true, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -111,7 +111,7 @@ class MemberTest {
         @DisplayName("privacyAgreed 가 false 면 예외 발생")
         void fail_when_privacy_not_agreed() {
 //            // when & then
-//            assertThatThrownBy(() -> Member.createMember(
+//            assertThatThrownBy(() -> Member.create(
 //                    NAME, AGE, GENDER, EMAIL, PHONE, GROUND, PROFILE_IMAGE,
 //                    true, false, SOCIAL_PROVIDER, SOCIAL_ID
 //            ))
@@ -128,7 +128,7 @@ class MemberTest {
 //        @DisplayName("ground, profileImage 수정 성공")
 //        void success_when_update_ground_and_profile_image() {
 //            // when
-//            member.updateMember(null, "new profileImage");
+//            member.update(null, "new profileImage");
 //
 //            // then
 //            assertThat(member.getGround()).isEqualTo("new Ground");
@@ -139,7 +139,7 @@ class MemberTest {
 //        @DisplayName("ground 가 null 이면 예외 발생")
 //        void fail_when_ground_null() {
 //            // when & then
-//            assertThatThrownBy(() -> member.updateMember(null, "new profileImage"))
+//            assertThatThrownBy(() -> member.update(null, "new profileImage"))
 //                    .isInstanceOf(DomainException.class)
 //                    .hasMessage(MemberErrorCode.GROUND_REQUIRED.message());
 //        }

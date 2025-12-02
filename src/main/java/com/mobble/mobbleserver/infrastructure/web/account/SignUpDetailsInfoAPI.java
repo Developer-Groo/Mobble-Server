@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.account;
 
+import com.mobble.mobbleserver.application.account.command.SignUpCommand;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.provided.SignUpDetailsPort;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SignUpRequestDto;
@@ -29,12 +30,14 @@ public class SignUpDetailsInfoAPI {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Void> signup(
+    public ResponseEntity<Void> signUp(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody SignUpRequestDto dto
     ) {
-        String signupToken = authHeader.replace("Bearer ", "");
-        String jwtToken = signUpDetailsPort.signUp(signupToken, dto);
+        String signUpToken = authHeader.replace("Bearer ", "");
+        SignUpCommand command = dto.toCommand(signUpToken);
+
+        String jwtToken = signUpDetailsPort.signUp(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Authorization", "Bearer " + jwtToken)
