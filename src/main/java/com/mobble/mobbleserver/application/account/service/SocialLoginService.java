@@ -1,6 +1,6 @@
 package com.mobble.mobbleserver.application.account.service;
 
-import com.mobble.mobbleserver.application.account.result.SocialLoginResult;
+import com.mobble.mobbleserver.application.account.command.SocialLoginCommand;
 import com.mobble.mobbleserver.application.account.command.SocialProvider;
 import com.mobble.mobbleserver.application.account.command.SocialUserInfo;
 import com.mobble.mobbleserver.application.account.error.OAuthBusinessError;
@@ -8,13 +8,13 @@ import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
 import com.mobble.mobbleserver.application.account.required.JwtTokenIssuerPort;
 import com.mobble.mobbleserver.application.account.required.SignUpTokenPort;
 import com.mobble.mobbleserver.application.account.required.SocialIdentityClientPort;
+import com.mobble.mobbleserver.application.account.result.SocialLoginResult;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.clubMember.ClubMemberRole;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +34,8 @@ public class SocialLoginService implements SocialLoginPort {
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public SocialLoginResult socialLogin(SocialLoginRequestDto dto) {
-        SocialUserInfo userInfo = socialIdentityClientPort.verify(dto.socialProvider(), dto.accessToken());
+    public SocialLoginResult socialLogin(SocialLoginCommand command) {
+        SocialUserInfo userInfo = socialIdentityClientPort.verify(command.socialProvider(), command.accessToken());
 
         Member member = assertMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
 

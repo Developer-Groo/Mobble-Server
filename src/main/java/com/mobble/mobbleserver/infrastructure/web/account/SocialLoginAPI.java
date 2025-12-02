@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.infrastructure.web.account;
 
+import com.mobble.mobbleserver.application.account.command.SocialLoginCommand;
 import com.mobble.mobbleserver.application.account.result.SocialLoginResult;
 import com.mobble.mobbleserver.application.account.provided.SocialLoginPort;
 import com.mobble.mobbleserver.infrastructure.web.account.dto.request.SocialLoginRequestDto;
@@ -23,7 +24,8 @@ public class SocialLoginAPI {
     public ResponseEntity<Void> socialLogin(
             @RequestBody @Valid SocialLoginRequestDto dto
     ) {
-        SocialLoginResult result = socialLoginPort.socialLogin(dto);
+        SocialLoginCommand command = dto.toCommand();
+        SocialLoginResult result = socialLoginPort.socialLogin(command);
 
         return ResponseEntity.status(result.isNewMember() ? HttpStatus.FORBIDDEN : HttpStatus.OK)
                 .header("Authorization", "Bearer " + result.jwtToken())
