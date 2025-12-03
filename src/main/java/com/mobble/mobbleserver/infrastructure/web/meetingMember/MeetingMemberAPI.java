@@ -3,7 +3,7 @@ package com.mobble.mobbleserver.infrastructure.web.meetingMember;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.AttendMeetingPort;
 import com.mobble.mobbleserver.application.meetingMember.port.provided.MeetingMemberQueryPort;
 import com.mobble.mobbleserver.application.meetingMember.result.MeetingMemberResult;
-import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberListResponseDto;
+import com.mobble.mobbleserver.infrastructure.web.meetingMember.dto.response.MeetingMemberInfoListResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,12 +33,12 @@ public class MeetingMemberAPI {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<MeetingMemberListResponseDto> getMeetingMembers(
+    public ResponseEntity<MeetingMemberInfoListResponseDto> getMeetingMembers(
             @PathVariable("meeting-id") @Positive Long meetingId
     ) {
         MeetingMemberResult result = meetingMemberQueryPort.getMeetingMembers(meetingId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(MeetingMemberListResponseDto.toDto(result.meetingId(), result.attendedMembers()));
+                .body(MeetingMemberInfoListResponseDto.toDto(result.meetingId(), result.attendedMembers()));
     }
 }
