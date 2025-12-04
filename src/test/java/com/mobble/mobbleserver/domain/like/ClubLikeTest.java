@@ -38,5 +38,14 @@ class ClubLikeTest {
                     .hasMessage("memberId must not be null");
 
         }
+
+        @Test
+        @DisplayName("clubId == null -> 예외")
+        void create_fail_when_club_id_null() {
+            // when & then
+            assertThatThrownBy(() -> ClubLike.create(MEMBER_ID, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("clubId must not be null");
+        }
     }
 }
