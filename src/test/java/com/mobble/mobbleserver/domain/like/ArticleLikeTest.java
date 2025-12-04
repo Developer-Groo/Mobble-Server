@@ -17,7 +17,7 @@ class ArticleLikeTest {
 
         @Test
         @DisplayName("articleLike 생성 성공")
-        void create_whenValidParameters_thenSuccess() {
+        void create_Success() {
             // given & when
             ArticleLike like = ArticleLike.create(MEMBER_ID, ARTICLE_ID);
 
