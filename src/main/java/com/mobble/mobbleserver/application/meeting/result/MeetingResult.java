@@ -25,13 +25,13 @@ public record MeetingResult(
         boolean isAttended
 ) {
 
-    public static List<MeetingResult> create(List<Meeting> meetings, List<Long> attendedList) {
+    public static List<MeetingResult> create(List<Meeting> meetings, Long memberId) {
         return meetings.stream()
-                .map(meeting -> toResult(meeting, attendedList))
+                .map(meeting -> toResult(meeting, memberId))
                 .toList();
     }
 
-    public static MeetingResult toResult(Meeting meeting, List<Long> attendedList) {
+    public static MeetingResult toResult(Meeting meeting, Long memberId) {
         return new MeetingResult(
                 meeting.getId(),
                 meeting.getClubMember().getClub().getId(),
@@ -44,7 +44,7 @@ public record MeetingResult(
                 meeting.getType(),
                 meeting.calculateDDay(),
                 toAttendedMembers(meeting),
-                attendedList.contains(meeting.getId())
+                meeting.hasAttendee(memberId)
         );
     }
 
