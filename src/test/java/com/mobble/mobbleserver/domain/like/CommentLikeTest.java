@@ -32,10 +32,19 @@ class CommentLikeTest {
         @Test
         @DisplayName("memberId == null -> 예외")
         void create_fail_when_member_id_null() {
-            //when & then
+            // when & then
             assertThatThrownBy(() -> CommentLike.create(null, COMMENT_ID))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("memberId must not be null");
+        }
+
+        @Test
+        @DisplayName("commentId == null -> 예외")
+        void create_fail_when_comment_id_null() {
+            // when & then
+            assertThatThrownBy(() -> CommentLike.create(MEMBER_ID, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("commentId must not be null");
         }
     }
 }
