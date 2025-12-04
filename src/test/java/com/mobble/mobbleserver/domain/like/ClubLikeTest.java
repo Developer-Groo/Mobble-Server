@@ -18,7 +18,7 @@ class ClubLikeTest {
 
         @Test
         @DisplayName("ClubLike 생성 성공")
-        void create_Success() {
+        void create_success() {
             // given & when
             ClubLike like = ClubLike.create(MEMBER_ID, CLUB_ID);
 
