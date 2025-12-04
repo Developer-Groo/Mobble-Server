@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ClubLikeTest {
 
@@ -26,6 +27,16 @@ class ClubLikeTest {
             assertThat(like.getClubId()).isEqualTo(CLUB_ID);
 
             assertThat(like.getId()).isNull();
+        }
+
+        @Test
+        @DisplayName("memberId == null -> 예외")
+        void create_fail_when_member_id_null() {
+            // when & then
+            assertThatThrownBy(() -> ClubLike.create(null, CLUB_ID))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("memberId must not be null");
+
         }
     }
 }
