@@ -39,5 +39,15 @@ class LikeCounterTest {
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("likeType must not be null");
         }
+
+        @Test
+        @DisplayName("targetId == null -> 예외")
+        void create_fail_when_target_id_null() {
+            // when & then
+            assertThatThrownBy(() -> LikeCounter.create(LIKE_TYPE, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("targetId must not be null");
+
+        }
     }
 }
