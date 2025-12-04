@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class LikeCounterTest {
 
@@ -28,6 +29,15 @@ class LikeCounterTest {
             assertThat(counter.getCount()).isZero();
 
             assertThat(counter.getId()).isNull();
+        }
+
+        @Test
+        @DisplayName("likeType == null -> 예외")
+        void create_fail_when_like_type_null() {
+            // when & then
+            assertThatThrownBy(() -> LikeCounter.create(null, TARGET_ID))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("likeType must not be null");
         }
     }
 }
