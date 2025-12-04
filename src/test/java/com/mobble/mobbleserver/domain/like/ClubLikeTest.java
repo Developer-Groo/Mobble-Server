@@ -19,11 +19,11 @@ class ClubLikeTest {
         @DisplayName("ClubLike 생성 성공")
         void create_Success() {
             // given & when
-            ArticleLike like = ArticleLike.create(MEMBER_ID, CLUB_ID);
+            ClubLike like = ClubLike.create(MEMBER_ID, CLUB_ID);
 
             // then
             assertThat(like.getMemberId()).isEqualTo(MEMBER_ID);
-            assertThat(like.getArticleId()).isEqualTo(CLUB_ID);
+            assertThat(like.getClubId()).isEqualTo(CLUB_ID);
 
             assertThat(like.getId()).isNull();
         }
