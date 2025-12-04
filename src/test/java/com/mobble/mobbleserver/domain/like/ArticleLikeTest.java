@@ -35,7 +35,6 @@ class ArticleLikeTest {
             assertThatThrownBy(() -> ArticleLike.create(null, ARTICLE_ID))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("memberId must not be null");
-
         }
 
         @Test

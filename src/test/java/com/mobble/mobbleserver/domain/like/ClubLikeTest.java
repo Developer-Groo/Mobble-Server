@@ -36,7 +36,6 @@ class ClubLikeTest {
             assertThatThrownBy(() -> ClubLike.create(null, CLUB_ID))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("memberId must not be null");
-
         }
 
         @Test
