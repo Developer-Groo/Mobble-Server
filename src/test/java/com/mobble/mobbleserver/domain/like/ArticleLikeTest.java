@@ -37,5 +37,14 @@ class ArticleLikeTest {
                     .hasMessage("memberId must not be null");
 
         }
+
+        @Test
+        @DisplayName("articleId == null -> 예외")
+        void create_fail_when_article_id_null() {
+            // when & then
+            assertThatThrownBy(() -> ArticleLike.create(MEMBER_ID, null))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("articleId must not be null");
+        }
     }
 }
