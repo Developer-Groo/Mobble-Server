@@ -30,7 +30,7 @@ public record ClubDetailResponseDto(
         boolean isLiked
 ) {
 
-    public static ClubDetailResponseDto create(ClubResult result) {
+    public static ClubDetailResponseDto toDto(ClubResult result) {
         return new ClubDetailResponseDto(
                 result.id(),
                 result.name(),

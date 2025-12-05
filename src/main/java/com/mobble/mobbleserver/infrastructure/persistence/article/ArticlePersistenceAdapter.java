@@ -57,4 +57,9 @@ public class ArticlePersistenceAdapter implements ArticleReadPort, ArticleWriteP
     public List<Long> findIdsByClubId(Long clubId) {
         return repository.findIdsByClubId(clubId);
     }
+
+    @Override
+    public List<Long> findImageIdsByClubId(Long clubId) {
+        return repository.findImageIdsByClubId(clubId);
+    }
 }

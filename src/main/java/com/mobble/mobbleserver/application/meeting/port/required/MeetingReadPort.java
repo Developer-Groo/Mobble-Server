@@ -13,4 +13,6 @@ public interface MeetingReadPort {
     List<Meeting> findMeetingsByClubId(Long clubId);
 
     List<Meeting> findUpcomingMeetingsByClubId(Long clubId, LocalDateTime today);
+
+    List<Long> findMainImageIdsByClubId(Long clubId);
 }

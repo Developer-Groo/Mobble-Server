@@ -14,12 +14,16 @@ import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessEr
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.comment.port.provided.CommentDeletePort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
+import com.mobble.mobbleserver.application.image.port.provided.ImageDeletePort;
+import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
 import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.article.ArticleContent;
 import com.mobble.mobbleserver.domain.article.ArticleType;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.like.LikeType;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +39,14 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
     private final CommentDeletePort commentDeletePort;
     private final LikeModifyPort likeModifyPort;
+    private final ImageDeletePort imageDeletePort;
 
     private final ArticleWritePort articleWritePort;
 
     private final ArticleReadPort articleReadPort;
     private final ClubReadPort clubReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
+    private final ImageReadPort imageReadPort;
 
     @Override
     public Article create(CreateArticleCommand command) {
@@ -49,7 +55,16 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         assertCanPost(clubMember, command.type());
 
         ArticleContent content = ArticleContent.of(command.title(), command.content());
-        Article article = Article.createArticle(clubMember.getClub(), clubMember.getMember(), command.type(), content);
+
+        Image image = resolveMainImage(command.imageId());
+
+        Article article = Article.createArticle(
+                clubMember.getClub(),
+                clubMember.getMember(),
+                command.type(),
+                content,
+                image
+        );
 
         return articleWritePort.save(article);
     }
@@ -65,7 +80,9 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         ArticleContent content = ArticleContent.of(command.title(), command.content());
 
-        return article.updateArticle(content);
+        Image image = resolveMainImage(command.imageId());
+
+        return article.updateArticle(content, image);
     }
 
     @Override
@@ -77,6 +94,11 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
 
         commentDeletePort.deleteAll(clubMember.getId(), article.getId());
         likeModifyPort.delete(LikeType.ARTICLE, article.getId());
+
+        if (article.getImage() != null) {
+            imageDeletePort.delete(article.getImage().getId());
+        }
+
         articleWritePort.delete(article);
     }
 
@@ -87,8 +109,11 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         List<Long> articleIds = articleReadPort.findIdsByClubId(club.getId());
         if (articleIds.isEmpty()) return;
 
+        List<Long> imageIds = articleReadPort.findImageIdsByClubId(club.getId());
+
         commentDeletePort.deleteAll(articleIds);
         likeModifyPort.deleteAll(LikeType.ARTICLE, articleIds);
+        imageDeletePort.deleteAll(imageIds);
         articleWritePort.deleteAll(club.getId());
     }
 
@@ -122,5 +147,16 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
         if (article.isOwner(clubMember.getMember().getId())) return;
 
         throw new BusinessException(ArticleBusinessError.NO_PERMISSION);
+    }
+
+    private Image assertImageByImageId(Long imageId) {
+        return imageReadPort.findById(imageId)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
+    }
+
+    private Image resolveMainImage(Long imageId) {
+        return (imageId == null)
+                ? null
+                : assertImageByImageId(imageId);
     }
 }

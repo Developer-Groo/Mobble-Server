@@ -7,7 +7,8 @@ public record CreateArticleCommand(
         Long clubId,
         ArticleType type,
         String title,
-        String content
+        String content,
+        Long imageId
 ) {
 
     public static CreateArticleCommand create(
@@ -15,8 +16,9 @@ public record CreateArticleCommand(
             Long clubId,
             ArticleType type,
             String title,
-            String content
+            String content,
+            Long imageId
     ) {
-        return new CreateArticleCommand(memberId, clubId, type, title, content);
+        return new CreateArticleCommand(memberId, clubId, type, title, content, imageId);
     }
 }

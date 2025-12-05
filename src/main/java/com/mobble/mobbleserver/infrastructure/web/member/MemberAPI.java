@@ -25,7 +25,6 @@ public class MemberAPI {
     private final MemberUpdatePort memberUpdatePort;
     private final MemberSoftDeletePort memberDeletePort;
 
-
     @GetMapping
     public ResponseEntity<MemberResponseDto> getMember(
             @AuthenticationPrincipal(expression = "memberId") Long memberId
