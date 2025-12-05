@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.domain.meeting;
 
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.exception.DomainException;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
@@ -28,11 +30,19 @@ public class Meeting {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "club_member_id")
-    private ClubMember clubMember;
+    @JoinColumn(name = "club_id", nullable = false)
+    private Club club;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Member owner;
 
     @Column(name = "title", nullable = false, length = 50)
     private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_image_id", nullable = false)
+    private Image mainImage;
 
     @Embedded
     private MeetingSchedule schedule;
@@ -55,16 +65,20 @@ public class Meeting {
 
     @Builder(access = AccessLevel.PRIVATE)
     private Meeting(
-            ClubMember clubMember,
+            Club club,
+            Member owner,
             String title,
+            Image mainImage,
             MeetingSchedule schedule,
             String location,
             String cost,
             int memberLimit,
             MeetingType type
     ) {
-        this.clubMember = clubMember;
+        this.club = club;
+        this.owner = owner;
         this.title = title;
+        this.mainImage = mainImage;
         this.schedule = schedule;
         this.location = location;
         this.cost = cost;
@@ -73,19 +87,23 @@ public class Meeting {
     }
 
     public static Meeting create(
-            ClubMember clubMember,
+            Club club,
+            Member owner,
             String title,
+            Image mainImage,
             MeetingSchedule schedule,
             String location,
             String cost,
             int memberLimit,
             MeetingType type
     ) {
-        assertCreate(clubMember, title, schedule, location, cost, memberLimit, type);
+        assertCreate(club, owner, title, mainImage, schedule, location, cost, memberLimit, type);
 
         return Meeting.builder()
-                .clubMember(clubMember)
+                .club(club)
+                .owner(owner)
                 .title(title)
+                .mainImage(mainImage)
                 .schedule(schedule)
                 .location(location)
                 .cost(cost)
@@ -96,15 +114,17 @@ public class Meeting {
 
     public Meeting update(
             String title,
+            Image mainImage,
             MeetingSchedule schedule,
             String location,
             String cost,
-            Integer memberLimit,
+            int memberLimit,
             MeetingType type
     ) {
-        assertUpdate(title, schedule, location, cost, memberLimit, type);
+        assertUpdate(title, mainImage, schedule, location, cost, memberLimit, type);
 
         this.title = title;
+        this.mainImage = mainImage;
         this.schedule = schedule;
         this.location = location;
         this.cost = cost;
@@ -160,20 +180,36 @@ public class Meeting {
 
     /* Assert 검증 */
     private static void assertCreate(
-            ClubMember clubMember,
+            Club club,
+            Member owner,
             String title,
+            Image mainImage,
             MeetingSchedule schedule,
             String location,
             String cost,
             int memberLimit,
             MeetingType type
     ) {
-        requireNonNull(clubMember, "clubMember must not be null");
-        assertUpdate(title, schedule, location, cost, memberLimit, type);
+        requireNonNull(club, "club must not be null");
+        requireNonNull(owner, "meeting owner must not be null");
+        assertCommon(title, mainImage, schedule, location, cost, memberLimit, type);
     }
 
     private static void assertUpdate(
             String title,
+            Image mainImage,
+            MeetingSchedule schedule,
+            String location,
+            String cost,
+            int memberLimit,
+            MeetingType type
+    ) {
+        assertCommon(title, mainImage, schedule, location, cost, memberLimit, type);
+    }
+
+    private static void assertCommon(
+            String title,
+            Image mainImage,
             MeetingSchedule schedule,
             String location,
             String cost,
@@ -181,6 +217,7 @@ public class Meeting {
             MeetingType type
     ) {
         requireNonNull(title, "title must not be null");
+        requireNonNull(mainImage, "main image must not be null");
         requireNonNull(schedule, "schedule must not be null");
         requireNonNull(location, "location must not be null");
         requireNonNull(cost, "cost must not be null");
