@@ -53,6 +53,7 @@ public class SocialLoginService implements SocialLoginPort {
         return SocialLoginResult.newMember(signupToken);
     }
 
+    /* ==== Private Helper ==== */
     private Member assertExistingMemberBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId) {
         return memberReadPort.findBySocialProviderAndSocialId(socialProvider, socialId)
                 .map(member -> {
