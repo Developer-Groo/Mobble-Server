@@ -11,6 +11,7 @@ import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
 import com.mobble.mobbleserver.application.member.port.required.MemberWritePort;
 import com.mobble.mobbleserver.domain.common.Location;
 import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,8 +71,13 @@ public class SignUpDetailsInfoService implements SignUpDetailsPort {
     /* ==== Private Helper ==== */
     private Image resolveProfileImage(Long imageId) {
         return (imageId == null)
-                ? null // Todo: getDefaultImage 메서드 호출
+                ? assertDefaultImageByImageType()
                 : assertImageByImageId(imageId);
+    }
+
+    private Image assertDefaultImageByImageType() {
+        return imageReadPort.findDefaultByType(ImageType.MEMBER_PROFILE)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
     }
 
     private Image assertImageByImageId(Long imageId) {
