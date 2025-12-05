@@ -3,6 +3,10 @@ package com.mobble.mobbleserver.application.meeting.service;
 import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
+import com.mobble.mobbleserver.application.image.port.provided.ImageDeletePort;
+import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
+import com.mobble.mobbleserver.application.image.port.required.ImageWritePort;
 import com.mobble.mobbleserver.application.meeting.command.CreateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.command.UpdateMeetingCommand;
 import com.mobble.mobbleserver.application.meeting.error.MeetingBusinessError;
@@ -11,9 +15,13 @@ import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePo
 import com.mobble.mobbleserver.application.meeting.port.provided.MeetingUpdatePort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingReadPort;
 import com.mobble.mobbleserver.application.meeting.port.required.MeetingWritePort;
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.image.ImageType;
 import com.mobble.mobbleserver.domain.meeting.Meeting;
 import com.mobble.mobbleserver.domain.meeting.MeetingSchedule;
+import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +33,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePort, MeetingDeletePort {
 
+    private final ImageDeletePort imageDeletePort;
+
     private final MeetingWritePort meetingWritePort;
+    private final ImageWritePort imageWritePort;
+
     private final MeetingReadPort meetingReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
+    private final ImageReadPort imageReadPort;
 
     @Override
     public Meeting createMeeting(CreateMeetingCommand command) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        Image mainImage = resolveMainImage(command.mainImageId());
+
         assertCanManageMeeting(clubMember);
+
+        Club club = clubMember.getClub();
+        Member owner = clubMember.getMember();
 
         MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
 
         Meeting meeting = Meeting.create(
-                clubMember,
+                club,
+                owner,
                 command.title(),
+                mainImage,
                 meetingSchedule,
                 command.location(),
                 command.cost(),
@@ -54,12 +74,14 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
         assertCanManageMeeting(clubMember);
 
+        Image mainImage = resolveMainImage(command.mainImageId());
         MeetingSchedule meetingSchedule = MeetingSchedule.of(command.schedule());
 
         Meeting meeting = assertMeetingByMeetingId(command.meetingId());
 
         return meeting.update(
                 command.title(),
+                mainImage,
                 meetingSchedule,
                 command.location(),
                 command.cost(),
@@ -75,6 +97,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
         Meeting meeting = assertMeetingByMeetingId(meetingId);
 
+        imageWritePort.delete(meeting.getMainImage());
         meetingWritePort.delete(meeting);
     }
 
@@ -86,6 +109,9 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
         List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);
         if (meetings.isEmpty()) return;
 
+        List<Long> imageIds = meetingReadPort.findMainImageIdsByClubId(clubId);
+
+        imageDeletePort.deleteAll(imageIds);
         meetingWritePort.deleteAll(meetings);
     }
 
@@ -106,5 +132,21 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
 
     private void assertLeader(ClubMember clubMember) {
         if (!clubMember.isLeader()) throw new BusinessException(ClubMemberBusinessError.ONLY_LEADER_ALLOWED);
+    }
+
+    private Image assertImageByImageId(Long imageId) {
+        return imageReadPort.findById(imageId)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
+    }
+
+    private Image assertDefaultImageByImageType() {
+        return imageReadPort.findDefaultByType(ImageType.MEETING_MAIN)
+                .orElseThrow(() -> new BusinessException(ImageBusinessError.NOT_FOUND));
+    }
+
+    private Image resolveMainImage(Long imageId) {
+        return (imageId == null)
+                ? assertDefaultImageByImageType()
+                : assertImageByImageId(imageId);
     }
 }
