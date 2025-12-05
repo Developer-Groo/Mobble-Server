@@ -19,10 +19,8 @@ class ClubLikeTest {
         @Test
         @DisplayName("ClubLike 생성 성공")
         void create_success() {
-            // given & when
             ClubLike like = ClubLike.create(MEMBER_ID, CLUB_ID);
 
-            // then
             assertThat(like.getMemberId()).isEqualTo(MEMBER_ID);
             assertThat(like.getClubId()).isEqualTo(CLUB_ID);
 
@@ -32,7 +30,6 @@ class ClubLikeTest {
         @Test
         @DisplayName("memberId == null -> 예외")
         void create_fail_when_member_id_null() {
-            // when & then
             assertThatThrownBy(() -> ClubLike.create(null, CLUB_ID))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("memberId must not be null");
@@ -41,7 +38,6 @@ class ClubLikeTest {
         @Test
         @DisplayName("clubId == null -> 예외")
         void create_fail_when_club_id_null() {
-            // when & then
             assertThatThrownBy(() -> ClubLike.create(MEMBER_ID, null))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("clubId must not be null");

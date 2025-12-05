@@ -19,10 +19,8 @@ class CommentLikeTest {
         @Test
         @DisplayName("commentLike 생성 성공")
         void create_success() {
-            // given & when
             CommentLike like = CommentLike.create(MEMBER_ID, COMMENT_ID);
 
-            // then
             assertThat(like.getMemberId()).isEqualTo(MEMBER_ID);
             assertThat(like.getCommentId()).isEqualTo(COMMENT_ID);
 
@@ -32,7 +30,6 @@ class CommentLikeTest {
         @Test
         @DisplayName("memberId == null -> 예외")
         void create_fail_when_member_id_null() {
-            // when & then
             assertThatThrownBy(() -> CommentLike.create(null, COMMENT_ID))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("memberId must not be null");
@@ -41,7 +38,6 @@ class CommentLikeTest {
         @Test
         @DisplayName("commentId == null -> 예외")
         void create_fail_when_comment_id_null() {
-            // when & then
             assertThatThrownBy(() -> CommentLike.create(MEMBER_ID, null))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("commentId must not be null");
