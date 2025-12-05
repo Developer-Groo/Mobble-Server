@@ -11,6 +11,7 @@ public record MeetingRequestDto(
         @Size(max = 50, message = "title must be 50 characters or fewer")
         String title,
 
+        @Positive(message = "main image id must be positive")
         Long mainImageId,
 
         @NotNull(message = "schedule must not be null")
