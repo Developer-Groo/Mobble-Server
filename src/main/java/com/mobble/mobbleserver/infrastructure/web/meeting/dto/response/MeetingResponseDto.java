@@ -29,7 +29,7 @@ public record MeetingResponseDto(
         return new MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClub().getId(),
-                toMeetingMemberInfo(meeting.getOwner()),
+                toMeetingOwnerInfo(meeting.getOwner()),
                 meeting.getTitle(),
                 meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
@@ -48,7 +48,7 @@ public record MeetingResponseDto(
     }
 
     /* ==== Private Helper ==== */
-    private static MeetingMemberInfoResult toMeetingMemberInfo(Member owner) {
+    private static MeetingMemberInfoResult toMeetingOwnerInfo(Member owner) {
         return new MeetingMemberInfoResult(
                 owner.getId(),
                 owner.getName(),
