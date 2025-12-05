@@ -11,6 +11,8 @@ public record MeetingRequestDto(
         @Size(max = 50, message = "title must be 50 characters or fewer")
         String title,
 
+        Long mainImageId,
+
         @NotNull(message = "schedule must not be null")
         @FutureOrPresent(message = "schedule must not be in the past")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
