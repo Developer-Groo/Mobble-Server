@@ -13,6 +13,7 @@ public record MeetingResult(
         Long meetingId,
         Long clubId,
         MeetingMemberInfoResult ownerInfo,
+
         String title,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -20,9 +21,14 @@ public record MeetingResult(
         String location,
         String cost,
         Integer memberLimit,
-        int attendeeCount,
         MeetingType type,
+
+        int attendeeCount,
         int dDay,
+
+        Long mainImageId,
+        String mainImageUrl,
+
         List<MeetingMemberInfoResult> attendedMembers,
         boolean isAttended
 ) {
@@ -38,14 +44,20 @@ public record MeetingResult(
                 meeting.getId(),
                 meeting.getClub().getId(),
                 toMeetingOwnerInfo(meeting.getOwner()),
+
                 meeting.getTitle(),
                 meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),
-                meeting.getAttendeeCount(),
                 meeting.getType(),
+
+                meeting.getAttendeeCount(),
                 meeting.calculateDDay(),
+
+                meeting.getMainImage() != null ? meeting.getMainImage().getId() : null,
+                meeting.getMainImage() != null ? meeting.getMainImage().getUrl() : null,
+
                 toAttendedMembers(meeting),
                 meeting.hasAttendee(memberId)
         );

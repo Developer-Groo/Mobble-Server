@@ -13,6 +13,7 @@ public record MeetingResponseDto(
         Long meetingId,
         Long clubId,
         MeetingMemberInfoResult ownerInfo,
+
         String title,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -20,9 +21,13 @@ public record MeetingResponseDto(
         String location,
         String cost,
         Integer memberLimit,
-        int attendeeCount,
         MeetingType type,
-        int dDay
+
+        int attendeeCount,
+        int dDay,
+
+        Long mainImageId,
+        String mainImageUrl
 ) {
 
     public static MeetingResponseDto toDto(Meeting meeting) {
@@ -30,14 +35,19 @@ public record MeetingResponseDto(
                 meeting.getId(),
                 meeting.getClub().getId(),
                 toMeetingOwnerInfo(meeting.getOwner()),
+
                 meeting.getTitle(),
                 meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
                 meeting.getCost(),
                 meeting.getMemberLimit(),
-                meeting.getAttendeeCount(),
                 meeting.getType(),
-                meeting.calculateDDay()
+
+                meeting.getAttendeeCount(),
+                meeting.calculateDDay(),
+
+                meeting.getMainImage() != null ? meeting.getMainImage().getId() : null,
+                meeting.getMainImage() != null ? meeting.getMainImage().getUrl() : null
         );
     }
 

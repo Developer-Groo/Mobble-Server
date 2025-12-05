@@ -12,6 +12,7 @@ public record MeetingDetailResponseDto(
         Long meetingId,
         Long clubId,
         MeetingMemberInfoResult ownerInfo,
+
         String title,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -19,9 +20,14 @@ public record MeetingDetailResponseDto(
         String location,
         String cost,
         Integer memberLimit,
-        int attendeeCount,
         MeetingType type,
+
+        int attendeeCount,
         int dDay,
+
+        Long mainImageId,
+        String mainImageUrl,
+
         List<MeetingMemberInfoResult> attendedMembers,
         boolean isAttended
 ) {
@@ -37,14 +43,20 @@ public record MeetingDetailResponseDto(
                 result.meetingId(),
                 result.clubId(),
                 result.ownerInfo(),
+
                 result.title(),
                 result.schedule(),
                 result.location(),
                 result.cost(),
                 result.memberLimit(),
-                result.attendeeCount(),
                 result.type(),
+
+                result.attendeeCount(),
                 result.dDay(),
+
+                result.mainImageId(),
+                result.mainImageUrl(),
+
                 result.attendedMembers(),
                 result.isAttended()
         );
