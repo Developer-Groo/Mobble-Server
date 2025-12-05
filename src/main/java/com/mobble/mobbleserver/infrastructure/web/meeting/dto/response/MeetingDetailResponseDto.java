@@ -11,6 +11,7 @@ import java.util.List;
 public record MeetingDetailResponseDto(
         Long meetingId,
         Long clubId,
+        MeetingMemberInfoResult ownerInfo,
         String title,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
@@ -35,6 +36,7 @@ public record MeetingDetailResponseDto(
         return new MeetingDetailResponseDto(
                 result.meetingId(),
                 result.clubId(),
+                result.ownerInfo(),
                 result.title(),
                 result.schedule(),
                 result.location(),
