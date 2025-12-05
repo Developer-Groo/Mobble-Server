@@ -47,6 +47,7 @@ public record MeetingResponseDto(
                 .toList();
     }
 
+    /* ==== Private Helper ==== */
     private static MeetingMemberInfoResult toMeetingMemberInfo(Member owner) {
         return new MeetingMemberInfoResult(
                 owner.getId(),
