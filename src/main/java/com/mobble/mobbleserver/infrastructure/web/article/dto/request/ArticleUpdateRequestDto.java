@@ -10,6 +10,8 @@ public record ArticleUpdateRequestDto(
 
         @NotBlank(message = "body must not be blank")
         @Size(max = 800, message = "body must be 800 characters or fewer")
-        String content
+        String content,
+
+        Long imageId
 ) {
 }

@@ -43,7 +43,14 @@ public class ArticleAPI {
             @RequestBody @Valid ArticleCreateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        CreateArticleCommand command = CreateArticleCommand.create(memberId, clubId, dto.articleType(), dto.title(), dto.content());
+        CreateArticleCommand command = CreateArticleCommand.create(
+                memberId,
+                clubId,
+                dto.articleType(),
+                dto.title(),
+                dto.content(),
+                dto.imageId()
+        );
         Article article = articleCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -81,7 +88,14 @@ public class ArticleAPI {
             @RequestBody @Valid ArticleUpdateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        UpdateArticleCommand command = UpdateArticleCommand.create(memberId, clubId, articleId, dto.title(), dto.content());
+        UpdateArticleCommand command = UpdateArticleCommand.create(
+                memberId,
+                clubId,
+                articleId,
+                dto.title(),
+                dto.content(),
+                dto.imageId()
+        );
         Article article = articleUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
