@@ -40,17 +40,7 @@ public class MeetingAPI {
             @PathVariable("club-id") @Positive Long clubId,
             @RequestBody MeetingRequestDto dto
     ) {
-        CreateMeetingCommand command = CreateMeetingCommand.create(
-                memberId,
-                clubId,
-                dto.title(),
-                dto.mainImageId(),
-                dto.schedule(),
-                dto.location(),
-                dto.cost(),
-                dto.memberLimit(),
-                dto.type()
-        );
+        CreateMeetingCommand command = dto.toCreateCommand(memberId, clubId);
 
         Meeting meeting = meetingCreatePort.createMeeting(command);
 
@@ -88,18 +78,7 @@ public class MeetingAPI {
             @PathVariable("meeting-id") @Positive Long meetingId,
             @RequestBody MeetingRequestDto dto
     ) {
-        UpdateMeetingCommand command = UpdateMeetingCommand.create(
-                memberId,
-                clubId,
-                meetingId,
-                dto.title(),
-                dto.mainImageId(),
-                dto.schedule(),
-                dto.location(),
-                dto.cost(),
-                dto.memberLimit(),
-                dto.type()
-        );
+        UpdateMeetingCommand command = dto.toUpdateCommand(memberId, clubId, meetingId);
 
         Meeting meeting = meetingUpdatePort.updateMeeting(command);
 
