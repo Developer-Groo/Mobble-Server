@@ -23,6 +23,18 @@ class MeetingTest {
 
     private final ClubMember mockClubMember = mock(ClubMember.class);
 
+    private Meeting createDefaultMeeting() {
+        return Meeting.create(
+                mockClubMember,
+                TITLE,
+                MeetingSchedule.of(DATETIME),
+                LOCATION,
+                COST,
+                LIMIT,
+                TYPE
+        );
+    }
+
     @Nested
     @DisplayName("create")
     class Create {
@@ -68,30 +80,28 @@ class MeetingTest {
     }
 
     @Nested
-    @DisplayName("모임 수정 테스트")
-    class UpdateMeeting {
+    @DisplayName("update")
+    class Update {
 
         @Test
-        @DisplayName("모임 수정 성공")
-        void success_when_update_meeting() {
-//            // given & when
-//            mockMeeting.update(
-//                    "수정된 title",
-//                    DATETIME.plusDays(2),
-//                    "다른 체육관",
-//                    "7000",
-//                    20,
-//                    MeetingType.IMPROMPTU_MEETING
-//            );
-//
-//
-//            // then
-//            assertThat(mockMeeting.getTitle()).isEqualTo("수정된 title");
-//            assertThat(mockMeeting.getDatetime()).isEqualTo(DATETIME.plusDays(2));
-//            assertThat(mockMeeting.getLocation()).isEqualTo("다른 체육관");
-//            assertThat(mockMeeting.getCost()).isEqualTo("7000");
-//            assertThat(mockMeeting.getMemberLimit()).isEqualTo(20);
-//            assertThat(mockMeeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
+        void update_success() {
+            Meeting meeting = createDefaultMeeting();
+
+            meeting.update(
+                    "수정된 title",
+                    MeetingSchedule.of(DATETIME.plusDays(2)),
+                    "다른 체육관",
+                    "7000",
+                    20,
+                    MeetingType.IMPROMPTU_MEETING
+            );
+
+            assertThat(meeting.getTitle()).isEqualTo("수정된 title");
+            assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME.plusDays(2));
+            assertThat(meeting.getLocation()).isEqualTo("다른 체육관");
+            assertThat(meeting.getCost()).isEqualTo("7000");
+            assertThat(meeting.getMemberLimit()).isEqualTo(20);
+            assertThat(meeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
         }
     }
 
