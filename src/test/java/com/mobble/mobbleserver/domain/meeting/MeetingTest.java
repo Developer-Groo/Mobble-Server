@@ -1,56 +1,51 @@
 package com.mobble.mobbleserver.domain.meeting;
 
+import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
 class MeetingTest {
 
-//    private final Member mockMember = MemberTestFixture.createDefaultMember();
-//    private final ClubCategory mockClubCategory = ClubCategory.createClubCategory("SOCCER");
-//    private final Club mockClub = ClubTestFixture.createDefaultClub(mockClubCategory);
-//    private final ClubMember mockClubMember = ClubMemberTestFixture.createDefaultClubMember(
-//            mockMember,
-//            mockClub,
-//            ClubMemberRole.LEADER,
-//            JoinStatus.APPROVED
-//    );
-//    private final Meeting mockMeeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
-//
-//    private static final String TITLE = "정기모임";
-//    private static final String LOCATION = "체육관";
-//    private static final String COST = "5000";
-//    private static final int LIMIT = 10;
-//    private static final MeetingType TYPE = MeetingType.REGULAR_MEETING;
-//    private static final LocalDateTime DATETIME = LocalDateTime.of(2025, 10, 10, 19, 0);
+    private static final String TITLE = "정기모임";
+    private static final String LOCATION = "체육관";
+    private static final String COST = "5000";
+    private static final int LIMIT = 10;
+    private static final MeetingType TYPE = MeetingType.REGULAR_MEETING;
+
+    private static final LocalDateTime DATETIME = LocalDateTime.now().plusDays(1);
+
+    private final ClubMember mockClubMember = mock(ClubMember.class);
 
     @Nested
-    @DisplayName("모임 생성 테스트")
-    class CreateMeeting {
+    @DisplayName("create")
+    class Create {
 
         @Test
-        @DisplayName("모임 생성 성공")
-        void success_when_create_meeting() {
-//            // given & when
-//            Meeting meeting = Meeting.create(
-//                    mockClubMember,
-//                    TITLE,
-//                    DATETIME,
-//                    LOCATION,
-//                    COST,
-//                    LIMIT,
-//                    TYPE
-//            );
-//
-//            // then
-//            assertThat(meeting.getClubMember()).isEqualTo(mockClubMember);
-//            assertThat(meeting.getTitle()).isEqualTo(TITLE);
-//            assertThat(meeting.getDatetime()).isEqualTo(DATETIME);
-//            assertThat(meeting.getLocation()).isEqualTo(LOCATION);
-//            assertThat(meeting.getCost()).isEqualTo(COST);
-//            assertThat(meeting.getMemberLimit()).isEqualTo(LIMIT);
-//            assertThat(meeting.getType()).isEqualTo(TYPE);
-//            assertThat(meeting.getMeetingMembers()).isEmpty();
+        void success_create() {
+            Meeting meeting = Meeting.create(
+                    mockClubMember,
+                    TITLE,
+                    MeetingSchedule.of(DATETIME),
+                    LOCATION,
+                    COST,
+                    LIMIT,
+                    TYPE
+            );
+
+            assertThat(meeting.getClubMember()).isEqualTo(mockClubMember);
+            assertThat(meeting.getTitle()).isEqualTo(TITLE);
+            assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME);
+            assertThat(meeting.getLocation()).isEqualTo(LOCATION);
+            assertThat(meeting.getCost()).isEqualTo(COST);
+            assertThat(meeting.getMemberLimit()).isEqualTo(LIMIT);
+            assertThat(meeting.getType()).isEqualTo(TYPE);
+            assertThat(meeting.getMeetingMembers()).isEmpty();
         }
 
         @Test
