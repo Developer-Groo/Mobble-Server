@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 class MeetingTest {
@@ -49,20 +50,20 @@ class MeetingTest {
         }
 
         @Test
-        @DisplayName("ClubMember 가 null 이면 예외 발생")
-        void fails_when_club_member_is_null() {
-//            // when & then
-//            assertThatThrownBy(() -> Meeting.create(
-//                    null,
-//                    TITLE,
-//                    DATETIME,
-//                    LOCATION,
-//                    COST,
-//                    LIMIT,
-//                    TYPE
-//            ))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.CLUB_MEMBER_REQUIRED.message());
+        void create_fail_when_club_member_null() {
+            // when & then
+            assertThatThrownBy(() -> Meeting.create(
+                            null,
+                            TITLE,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("clubMember must not be null");
         }
     }
 
