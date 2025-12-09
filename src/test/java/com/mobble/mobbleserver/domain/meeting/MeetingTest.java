@@ -125,23 +125,20 @@ class MeetingTest {
         }
 
         @Test
-        @DisplayName("제목을 공백으로 변경 시 예외 발생")
-        void fails_when_title_is_blank() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(" ", DATETIME, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
-        }
+        void update_fail_when_schedule_null() {
+            Meeting meeting = createDefaultMeeting();
 
-        @Test
-        @DisplayName("모임 날짜를 null 로 변경 시 예외 발생")
-        void fails_when_datetime_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, null, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.DATETIME_REQUIRED.message());
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            null,
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("schedule must not be null");
         }
 
         @Test
