@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
@@ -29,14 +28,14 @@ class MeetingTest {
 
     private final Club mockClub = mock(Club.class);
     private final Member mockOwner = mock(Member.class);
-    private final Image mockImage = mock(Image.class);
+    private final Image mockMainImage = mock(Image.class);
 
     private Meeting createDefaultMeeting() {
         return Meeting.create(
                 mockClub,
                 mockOwner,
                 TITLE,
-                mockImage,
+                mockMainImage,
                 MeetingSchedule.of(DATETIME),
                 LOCATION,
                 COST,
@@ -54,7 +53,7 @@ class MeetingTest {
                     mockClub,
                     mockOwner,
                     TITLE,
-                    mockImage,
+                    mockMainImage,
                     MeetingSchedule.of(DATETIME),
                     LOCATION,
                     COST,
@@ -65,7 +64,7 @@ class MeetingTest {
             assertThat(meeting.getClub()).isEqualTo(mockClub);
             assertThat(meeting.getOwner()).isEqualTo(mockOwner);
             assertThat(meeting.getTitle()).isEqualTo(TITLE);
-            assertThat(meeting.getMainImage()).isEqualTo(mockImage);
+            assertThat(meeting.getMainImage()).isEqualTo(mockMainImage);
             assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME);
             assertThat(meeting.getLocation()).isEqualTo(LOCATION);
             assertThat(meeting.getCost()).isEqualTo(COST);
@@ -80,7 +79,7 @@ class MeetingTest {
                             null,
                             mockOwner,
                             TITLE,
-                            mockImage,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
@@ -98,7 +97,7 @@ class MeetingTest {
                             mockClub,
                             null,
                             TITLE,
-                            mockImage,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
@@ -108,6 +107,24 @@ class MeetingTest {
             )
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("owner must not be null");
+        }
+
+        @Test
+        void create_fail_when_main_image_null() {
+            assertThatThrownBy(() -> Meeting.create(
+                            mockClub,
+                            mockOwner,
+                            TITLE,
+                            null,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("main image must not be null");
         }
     }
 
