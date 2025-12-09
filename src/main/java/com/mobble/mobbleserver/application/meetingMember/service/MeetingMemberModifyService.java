@@ -22,6 +22,7 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
 
     @Override
     public void toggleAttend(Long meetingId, Long memberId) {
+        // Todo: 검증 조건 추가 필요
         Meeting meeting = assertMeetingByMeetingId(meetingId);
         Member member = assertMemberByMemberId(memberId);
 

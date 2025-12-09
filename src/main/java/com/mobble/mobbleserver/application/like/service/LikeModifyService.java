@@ -104,6 +104,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     private void validateClubMember(Long clubId, Long memberId) {
+        // Todo: 활성회원 조건 추가 필요
         boolean isClubMember = clubMemberReadPort.existsByClubIdAndMemberId(clubId, memberId);
         if (!isClubMember) throw new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB);
     }
