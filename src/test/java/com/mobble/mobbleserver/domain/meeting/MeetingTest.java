@@ -250,5 +250,29 @@ class MeetingTest {
 
             assertThat(meeting.getMeetingMembers()).hasSize(1);
         }
+
+        @Test
+        void success_fail_when_full_capacity() {
+            Meeting meeting = Meeting.create(
+                    mockClubMember,
+                    TITLE,
+                    MeetingSchedule.of(DATETIME),
+                    LOCATION,
+                    COST,
+                    1,
+                    TYPE
+            );
+
+            Member member1 = MemberTestFixture.createDefaultMember();
+            Member member2 = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member1, "id", 1L);
+            ReflectionTestUtils.setField(member2, "id", 2L);
+
+            meeting.attend(member1);
+
+            assertThatThrownBy(() -> meeting.attend(member2))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingError.FULL_CAPACITY.message());
+        }
     }
 }
