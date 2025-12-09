@@ -36,7 +36,6 @@ class MeetingTest {
     }
 
     @Nested
-    @DisplayName("create")
     class Create {
 
         @Test
@@ -80,7 +79,6 @@ class MeetingTest {
     }
 
     @Nested
-    @DisplayName("update")
     class Update {
 
         @Test
