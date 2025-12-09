@@ -17,5 +17,7 @@ public interface JpaArticleRepository extends JpaRepository<Article, Long> {
 
     List<Long> findIdsByClubId(Long clubId);
 
+    List<Long> findImageIdsByClubId(Long clubId);
+
     void deleteAllByClubId(Long clubId);
 }

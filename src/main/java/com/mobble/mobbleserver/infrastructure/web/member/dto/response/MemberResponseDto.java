@@ -36,8 +36,8 @@ public record MemberResponseDto(
                 member.getLocation().getLatitude(),
                 member.getLocation().getLongitude(),
 
-                member.getProfileImage().getId(),
-                member.getProfileImage().getUrl()
+                member.getProfileImage() != null ? member.getProfileImage().getId() : null,
+                member.getProfileImage() != null ? member.getProfileImage().getUrl() : null
         );
     }
 }

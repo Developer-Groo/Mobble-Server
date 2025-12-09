@@ -17,40 +17,36 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LikeCounterPersistenceAdapter implements LikeCounterWritePort, LikeCounterReadPort {
 
-    private final JpaLikeCounterRepository jpaLikeCounterRepository;
+    private final JpaLikeCounterRepository repository;
 
-    /**
-     * LikeCounterWritePort
-     */
+    /* LikeCounterWritePort */
     @Override
     public void increment(LikeType likeType, Long targetId) {
-        jpaLikeCounterRepository.upsertIncrement(likeType.name(), targetId);
+        repository.upsertIncrement(likeType.name(), targetId);
     }
 
     @Override
     public void decrement(LikeType likeType, Long targetId) {
-        jpaLikeCounterRepository.decrement(likeType.name(), targetId);
+        repository.decrement(likeType.name(), targetId);
     }
 
     public void deleteByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
-        jpaLikeCounterRepository.deleteByLikeTypeAndTargetId(likeType, targetId);
+        repository.deleteByLikeTypeAndTargetId(likeType, targetId);
     }
 
     @Override
     public void deleteAllByLikeTypeAndTargetIds(LikeType likeType, List<Long> targetIds) {
-        jpaLikeCounterRepository.deleteAllByLikeTypeAndTargetIdIn(likeType, targetIds);
+        repository.deleteAllByLikeTypeAndTargetIdIn(likeType, targetIds);
     }
 
-    /**
-     * LikeCounterReadPort
-     */
+    /* LikeCounterReadPort */
     @Override
     public Optional<LikeCounter> findByLikeTypeAndTargetId(LikeType likeType, Long targetId) {
-        return jpaLikeCounterRepository.findByLikeTypeAndTargetId(likeType, targetId);
+        return repository.findByLikeTypeAndTargetId(likeType, targetId);
     }
 
     @Override
     public List<LikeCounter> findAllByLikeTypeAndTargetIds(LikeType likeType, List<Long> targetIds) {
-        return jpaLikeCounterRepository.findAllByLikeTypeAndTargetIdIn(likeType, targetIds);
+        return repository.findAllByLikeTypeAndTargetIdIn(likeType, targetIds);
     }
 }

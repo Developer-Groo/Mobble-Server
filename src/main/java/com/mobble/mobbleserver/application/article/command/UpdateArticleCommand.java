@@ -5,7 +5,8 @@ public record UpdateArticleCommand(
         Long clubId,
         Long articleId,
         String title,
-        String content
+        String content,
+        Long imageId
 ) {
 
     public static UpdateArticleCommand create(
@@ -13,8 +14,9 @@ public record UpdateArticleCommand(
             Long clubId,
             Long articleId,
             String title,
-            String content
+            String content,
+            Long imageId
     ) {
-        return new UpdateArticleCommand(memberId, clubId, articleId, title, content);
+        return new UpdateArticleCommand(memberId, clubId, articleId, title, content, imageId);
     }
 }

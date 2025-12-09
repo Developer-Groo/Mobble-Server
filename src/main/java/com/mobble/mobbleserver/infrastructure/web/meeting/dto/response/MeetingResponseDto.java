@@ -25,7 +25,7 @@ public record MeetingResponseDto(
     public static MeetingResponseDto toDto(Meeting meeting) {
         return new MeetingResponseDto(
                 meeting.getId(),
-                meeting.getClubMember().getClub().getId(),
+                meeting.getClub().getId(),
                 meeting.getTitle(),
                 meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),
