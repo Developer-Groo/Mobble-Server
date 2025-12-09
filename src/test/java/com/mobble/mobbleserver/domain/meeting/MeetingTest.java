@@ -106,7 +106,7 @@ class MeetingTest {
                     )
             )
                     .isInstanceOf(NullPointerException.class)
-                    .hasMessage("owner must not be null");
+                    .hasMessage("meeting owner must not be null");
         }
 
         @Test
@@ -134,9 +134,11 @@ class MeetingTest {
         @Test
         void update_success() {
             Meeting meeting = createDefaultMeeting();
+            Image newImage = mock(Image.class);
 
             meeting.update(
                     "수정된 title",
+                    newImage,
                     MeetingSchedule.of(DATETIME.plusDays(2)),
                     "다른 체육관",
                     "7000",
@@ -145,6 +147,7 @@ class MeetingTest {
             );
 
             assertThat(meeting.getTitle()).isEqualTo("수정된 title");
+            assertThat(meeting.getMainImage()).isEqualTo(newImage);
             assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME.plusDays(2));
             assertThat(meeting.getLocation()).isEqualTo("다른 체육관");
             assertThat(meeting.getCost()).isEqualTo("7000");
@@ -162,6 +165,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             null,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
@@ -197,6 +201,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             TITLE,
+                            mockMainImage,
                             null,
                             LOCATION,
                             COST,
@@ -214,6 +219,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             TITLE,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             null,
                             COST,
@@ -231,6 +237,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             TITLE,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             null,
@@ -248,6 +255,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             TITLE,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
@@ -265,6 +273,7 @@ class MeetingTest {
 
             assertThatThrownBy(() -> meeting.update(
                             TITLE,
+                            mockMainImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
@@ -307,8 +316,10 @@ class MeetingTest {
         @Test
         void success_fail_when_full_capacity() {
             Meeting meeting = Meeting.create(
-                    mockClubMember,
+                    mockClub,
+                    mockOwner,
                     TITLE,
+                    mockMainImage,
                     MeetingSchedule.of(DATETIME),
                     LOCATION,
                     COST,
