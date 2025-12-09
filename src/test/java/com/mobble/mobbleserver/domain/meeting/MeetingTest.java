@@ -3,9 +3,11 @@ package com.mobble.mobbleserver.domain.meeting;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
-import org.junit.jupiter.api.DisplayName;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 
@@ -105,11 +107,9 @@ class MeetingTest {
     }
 
     @Nested
-    @DisplayName("모임 수정 유효성 검증 테스트")
     class Validation {
 
         @Test
-        @DisplayName("제목을 null 로 변경 시 예외 발생")
         void update_fail_when_title_null() {
             Meeting meeting = createDefaultMeeting();
 
@@ -210,35 +210,21 @@ class MeetingTest {
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("type must not be null");
         }
+    }
+
+    @Nested
+    class Attend {
 
         @Test
-        @DisplayName("참여 인원을 0 으로 변경 시 예외 발생")
-        void fails_when_member_limit_is_zero() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
-        }
+        void success_attend() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
 
-        @Test
-        @DisplayName("참여 인원을 음수로 변경 시 예외 발생")
-        void fails_when_member_limit_is_negative() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
-        }
+            meeting.attend(member);
 
-        @Test
-        @DisplayName("모임 타입을 null 로 변경 시 예외 발생")
-        void fails_when_type_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, LIMIT, null))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TYPE_REQUIRED.message());
+            assertThat(meeting.getMeetingMembers()).hasSize(1);
+            assertThat(meeting.hasAttendee(1L)).isTrue();
         }
     }
 }
