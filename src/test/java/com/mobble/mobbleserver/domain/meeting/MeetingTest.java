@@ -223,7 +223,7 @@ class MeetingTest {
 
             meeting.attend(member);
 
-            assertThat(meeting.getMeetingMembers()).hasSize(1);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
             assertThat(meeting.hasAttendee(1L)).isTrue();
         }
 
@@ -236,7 +236,7 @@ class MeetingTest {
             meeting.attend(member);
             meeting.attend(member);
 
-            assertThat(meeting.getMeetingMembers()).hasSize(1);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
         }
 
         @Test
@@ -272,7 +272,7 @@ class MeetingTest {
             meeting.attend(member);
             meeting.cancelAttend(1L);
 
-            assertThat(meeting.getMeetingMembers()).isEmpty();
+            assertThat(meeting.getAttendeeCount()).isZero();
         }
 
         @Test
@@ -282,10 +282,10 @@ class MeetingTest {
             ReflectionTestUtils.setField(member, "id", 1L);
 
             meeting.attend(member);
-            assertThat(meeting.getMeetingMembers()).hasSize(1);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
 
             meeting.cancelAttend(999L);
-            assertThat(meeting.getMeetingMembers()).hasSize(1);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
         }
     }
 }
