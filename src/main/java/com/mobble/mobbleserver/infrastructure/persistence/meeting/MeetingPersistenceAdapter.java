@@ -45,7 +45,7 @@ public class MeetingPersistenceAdapter implements MeetingWritePort, MeetingReadP
 
     @Override
     public List<Meeting> findUpcomingMeetingsByClubId(Long clubId, LocalDateTime today) {
-        return repository.findByClubIdAndSchedule_DatetimeGreaterThanEqualOrderBySchedule_DatetimeAsc(clubId, today);
+        return repository.findUpcomingMeetings(clubId, today);
     }
 
     @Override
