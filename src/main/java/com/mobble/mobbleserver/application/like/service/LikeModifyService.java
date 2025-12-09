@@ -104,7 +104,7 @@ public class LikeModifyService implements LikeModifyPort {
     }
 
     private void validateClubMember(Long clubId, Long memberId) {
-        boolean isClubMember = clubMemberReadPort.existsByClubIdAndMemberId(clubId, memberId);
+        boolean isClubMember = clubMemberReadPort.existsByClubIdAndMemberIdAndIsApproved(clubId, memberId);
         if (!isClubMember) throw new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB);
     }
 

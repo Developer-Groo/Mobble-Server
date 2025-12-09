@@ -16,5 +16,5 @@ public interface ClubMemberReadPort {
 
     List<ClubMember> findAllClubMemberByMemberId(Long memberId);
 
-    boolean existsByClubIdAndMemberId(Long clubId, Long memberId);
+    boolean existsByClubIdAndMemberIdAndIsApproved(Long clubId, Long memberId);
 }
