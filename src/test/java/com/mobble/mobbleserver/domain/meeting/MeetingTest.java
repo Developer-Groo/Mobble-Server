@@ -75,10 +75,12 @@ class MeetingTest {
         }
 
         @Test
-        void create_fail_when_club_member_null() {
+        void create_fail_when_club_null() {
             assertThatThrownBy(() -> Meeting.create(
                             null,
+                            mockOwner,
                             TITLE,
+                            mockImage,
                             MeetingSchedule.of(DATETIME),
                             LOCATION,
                             COST,
