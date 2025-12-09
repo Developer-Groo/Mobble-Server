@@ -174,6 +174,24 @@ class MeetingTest {
         }
 
         @Test
+        void update_fail_when_main_image_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            null,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("main image must not be null");
+        }
+
+        @Test
         void update_fail_when_schedule_null() {
             Meeting meeting = createDefaultMeeting();
 
