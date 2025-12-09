@@ -27,7 +27,9 @@ public class MeetingMemberModifyService implements AttendMeetingPort {
     public void toggleAttend(Long meetingId, Long memberId) {
         Meeting meeting = assertMeetingByMeetingId(meetingId);
         Member member = assertMemberByMemberId(memberId);
-        validateClubMember(meeting.getClub().getId(), member.getId());
+
+        Long clubId = meeting.getClub().getId();
+        validateClubMember(clubId, member.getId());
 
         if (meeting.hasAttendee(memberId)) {
             meeting.cancelAttend(member.getId());
