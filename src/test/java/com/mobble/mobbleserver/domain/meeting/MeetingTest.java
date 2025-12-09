@@ -159,13 +159,20 @@ class MeetingTest {
         }
 
         @Test
-        @DisplayName("장소를 공백으로 변경 시 예외 발생")
-        void fails_when_location_is_blank() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, " ", COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
+        void update_fail_when_cost_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            null,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("cost must not be null");
         }
 
         @Test
