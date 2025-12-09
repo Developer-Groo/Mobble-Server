@@ -274,5 +274,18 @@ class MeetingTest {
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingError.FULL_CAPACITY.message());
         }
+
+        @Test
+        void success_when_cancel_non_attended_member() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            assertThat(meeting.getMeetingMembers()).hasSize(1);
+
+            meeting.cancelAttend(999L);
+            assertThat(meeting.getMeetingMembers()).hasSize(1);
+        }
     }
 }
