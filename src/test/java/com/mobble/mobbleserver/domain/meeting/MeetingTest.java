@@ -89,7 +89,25 @@ class MeetingTest {
                     )
             )
                     .isInstanceOf(NullPointerException.class)
-                    .hasMessage("clubMember must not be null");
+                    .hasMessage("club must not be null");
+        }
+
+        @Test
+        void create_fail_when_owner_null() {
+            assertThatThrownBy(() -> Meeting.create(
+                            mockClub,
+                            null,
+                            TITLE,
+                            mockImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("owner must not be null");
         }
     }
 
