@@ -228,18 +228,6 @@ class MeetingTest {
         }
 
         @Test
-        void success_attend_cancel() {
-            Meeting meeting = createDefaultMeeting();
-            Member member = MemberTestFixture.createDefaultMember();
-            ReflectionTestUtils.setField(member, "id", 1L);
-
-            meeting.attend(member);
-            meeting.cancelAttend(1L);
-
-            assertThat(meeting.getMeetingMembers()).isEmpty();
-        }
-
-        @Test
         void success_when_attend_same_member_twice() {
             Meeting meeting = createDefaultMeeting();
             Member member = MemberTestFixture.createDefaultMember();
@@ -273,6 +261,18 @@ class MeetingTest {
             assertThatThrownBy(() -> meeting.attend(member2))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(MeetingError.FULL_CAPACITY.message());
+        }
+
+        @Test
+        void success_attend_cancel() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            meeting.cancelAttend(1L);
+
+            assertThat(meeting.getMeetingMembers()).isEmpty();
         }
 
         @Test
