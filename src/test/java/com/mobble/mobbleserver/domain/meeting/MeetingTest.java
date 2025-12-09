@@ -1,6 +1,8 @@
 package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.exception.DomainException;
+import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -176,13 +178,20 @@ class MeetingTest {
         }
 
         @Test
-        @DisplayName("비용을 null 로 변경 시 예외 발생")
-        void fails_when_cost_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, null, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
+        void update_fail_when_limit_is_zero() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            0,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingError.INVALID_MEMBER_LIMIT.message());
         }
 
         @Test
