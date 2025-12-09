@@ -238,5 +238,17 @@ class MeetingTest {
 
             assertThat(meeting.getMeetingMembers()).isEmpty();
         }
+
+        @Test
+        void success_when_attend_same_member_twice() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            meeting.attend(member);
+
+            assertThat(meeting.getMeetingMembers()).hasSize(1);
+        }
     }
 }
