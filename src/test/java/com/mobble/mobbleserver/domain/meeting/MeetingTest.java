@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.domain.meeting;
 
+import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.exception.DomainException;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -25,12 +27,16 @@ class MeetingTest {
 
     private static final LocalDateTime DATETIME = LocalDateTime.now().plusDays(1);
 
-    private final ClubMember mockClubMember = mock(ClubMember.class);
+    private final Club mockClub = mock(Club.class);
+    private final Member mockOwner = mock(Member.class);
+    private final Image mockImage = mock(Image.class);
 
     private Meeting createDefaultMeeting() {
         return Meeting.create(
-                mockClubMember,
+                mockClub,
+                mockOwner,
                 TITLE,
+                mockImage,
                 MeetingSchedule.of(DATETIME),
                 LOCATION,
                 COST,
@@ -45,8 +51,10 @@ class MeetingTest {
         @Test
         void success_create() {
             Meeting meeting = Meeting.create(
-                    mockClubMember,
+                    mockClub,
+                    mockOwner,
                     TITLE,
+                    mockImage,
                     MeetingSchedule.of(DATETIME),
                     LOCATION,
                     COST,
@@ -54,8 +62,10 @@ class MeetingTest {
                     TYPE
             );
 
-            assertThat(meeting.getClubMember()).isEqualTo(mockClubMember);
+            assertThat(meeting.getClub()).isEqualTo(mockClub);
+            assertThat(meeting.getOwner()).isEqualTo(mockOwner);
             assertThat(meeting.getTitle()).isEqualTo(TITLE);
+            assertThat(meeting.getMainImage()).isEqualTo(mockImage);
             assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME);
             assertThat(meeting.getLocation()).isEqualTo(LOCATION);
             assertThat(meeting.getCost()).isEqualTo(COST);
