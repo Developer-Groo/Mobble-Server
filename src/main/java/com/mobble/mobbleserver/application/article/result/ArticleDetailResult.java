@@ -14,7 +14,10 @@ public record ArticleDetailResult(
         ArticleType articleType,
         String title,
         String body,
+        String articleImageUrl,
+        Long ownerId,
         String ownerName,
+        String profileImageUrl,
         boolean isOwner,
         boolean isLiked,
         int likeCount,
@@ -23,7 +26,6 @@ public record ArticleDetailResult(
         List<RootCommentResult> commentList,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-        // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
 
     public static ArticleDetailResult create(
@@ -35,13 +37,20 @@ public record ArticleDetailResult(
             int commentCount,
             List<RootCommentResult> commentList
     ) {
+        Member owner = article.getMember();
+        String profileImageUrl = getProfileImageUrl(owner);
+        String articleImageUrl = getArticleContentImageUrl(article);
+
         return new ArticleDetailResult(
                 article.getClub().getId(),
                 article.getId(),
                 article.getArticleType(),
                 article.getContent().getTitle(),
                 article.getContent().getBody(),
-                article.getMember().getName(),
+                articleImageUrl,
+                owner.getId(),
+                owner.getName(),
+                profileImageUrl,
                 isOwner,
                 isLiked,
                 likeCount,
@@ -57,12 +66,26 @@ public record ArticleDetailResult(
 
     public record ArticleLikedMembers(
             Long memberId,
-            String name
-            // todo: member 프로필 이미지 url
+            String name,
+            String profileImageUrl
     ) {
 
-        public static ArticleLikedMembers create(Member member) {
-            return new ArticleLikedMembers(member.getId(), member.getName());
+        private static ArticleLikedMembers create(Member member) {
+            String profileImageUrl = getProfileImageUrl(member);
+
+            return new ArticleLikedMembers(member.getId(), member.getName(), profileImageUrl);
         }
+    }
+
+    private static String getProfileImageUrl(Member member) {
+        return member.getProfileImage() != null
+                ? member.getProfileImage().getUrl()
+                : null;
+    }
+
+    private static String getArticleContentImageUrl(Article article) {
+        return article.getImage() != null
+                ? article.getImage().getUrl()
+                : null;
     }
 }

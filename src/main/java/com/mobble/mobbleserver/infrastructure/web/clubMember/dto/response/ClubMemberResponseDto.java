@@ -18,19 +18,22 @@ public record ClubMemberResponseDto(
 
     public static ClubMemberResponseDto toDto(ClubMember clubMember) {
         Member member = clubMember.getMember();
-
-        String imageUrl = member.getProfileImage() != null
-                ? member.getProfileImage().getUrl()
-                : null;
+        String profileImageUrl = getProfileImageUrl(member);
 
         return new ClubMemberResponseDto(
                 clubMember.getId(),
                 member.getId(),
                 member.getName(),
-                imageUrl,
+                profileImageUrl,
                 clubMember.getClubMemberRole().name(),
                 clubMember.getJoinStatus().name(),
                 DateTimeUtils.toKST(clubMember.getStatusUpdatedAt())
         );
+    }
+
+    private static String getProfileImageUrl(Member member) {
+        return member.getProfileImage() != null
+                ? member.getProfileImage().getUrl()
+                : null;
     }
 }

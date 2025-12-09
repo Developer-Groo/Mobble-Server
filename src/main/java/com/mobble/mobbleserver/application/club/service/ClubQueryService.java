@@ -6,6 +6,7 @@ import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.club.result.ClubResult;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.like.port.provided.LikeQueryPort;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.like.LikeType;
@@ -41,7 +42,7 @@ public class ClubQueryService implements ClubQueryPort {
     /* ==== Private Helper ==== */
     private void assertMemberByMemberId(Long memberId) {
         memberReadPort.findByIdAndIsDeletedFalse(memberId)
-                .orElseThrow(); // Todo: Error 수정 필요
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
     }
 
     private Club assertClubByClubId(Long clubId) {

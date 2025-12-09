@@ -43,11 +43,18 @@ public class ArticleAPI {
             @RequestBody @Valid ArticleCreateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        CreateArticleCommand command = CreateArticleCommand.create(memberId, clubId, dto.articleType(), dto.title(), dto.content());
+        CreateArticleCommand command = CreateArticleCommand.create(
+                memberId,
+                clubId,
+                dto.articleType(),
+                dto.title(),
+                dto.content(),
+                dto.imageId()
+        );
         Article article = articleCreatePort.create(command);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ArticleResponseDto.create(article));
+                .body(ArticleResponseDto.toDto(article));
     }
 
     @GetMapping
@@ -59,7 +66,7 @@ public class ArticleAPI {
         List<ArticlePreviewResult> previews = articleQueryPort.getArticlesPreview(clubId, memberId, articleType);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticlePreviewResponseDto.create(previews));
+                .body(ArticlePreviewResponseDto.toDto(previews));
     }
 
     @GetMapping("/{article-id}")
@@ -71,7 +78,7 @@ public class ArticleAPI {
         ArticleDetailResult detail = articleQueryPort.getArticleDetail(clubId, articleId, memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticleDetailResponseDto.create(detail));
+                .body(ArticleDetailResponseDto.toDto(detail));
     }
 
     @PatchMapping("/{article-id}")
@@ -81,11 +88,18 @@ public class ArticleAPI {
             @RequestBody @Valid ArticleUpdateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        UpdateArticleCommand command = UpdateArticleCommand.create(memberId, clubId, articleId, dto.title(), dto.content());
+        UpdateArticleCommand command = UpdateArticleCommand.create(
+                memberId,
+                clubId,
+                articleId,
+                dto.title(),
+                dto.content(),
+                dto.imageId()
+        );
         Article article = articleUpdatePort.update(command);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ArticleResponseDto.create(article));
+                .body(ArticleResponseDto.toDto(article));
     }
 
     @DeleteMapping("/{article-id}")

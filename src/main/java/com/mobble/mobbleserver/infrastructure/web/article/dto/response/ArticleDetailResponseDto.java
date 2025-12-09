@@ -15,7 +15,10 @@ public record ArticleDetailResponseDto(
         ArticleType articleType,
         String title,
         String body,
+        String articleImageUrl,
+        Long ownerId,
         String ownerName,
+        String profileImageUrl,
         boolean isOwner,
         boolean isLiked,
         int likeCount,
@@ -24,17 +27,19 @@ public record ArticleDetailResponseDto(
         List<RootCommentResult> commentList,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-        // todo: Owner 의 프로필 이미지 데이터 추가
 ) {
 
-    public static ArticleDetailResponseDto create(ArticleDetailResult result) {
+    public static ArticleDetailResponseDto toDto(ArticleDetailResult result) {
         return new ArticleDetailResponseDto(
                 result.clubId(),
                 result.articleId(),
                 result.articleType(),
                 result.title(),
                 result.body(),
+                result.articleImageUrl(),
+                result.ownerId(),
                 result.ownerName(),
+                result.profileImageUrl(),
                 result.isOwner(),
                 result.isLiked(),
                 result.likeCount(),

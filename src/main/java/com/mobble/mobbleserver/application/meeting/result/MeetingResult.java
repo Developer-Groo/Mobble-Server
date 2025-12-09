@@ -34,7 +34,7 @@ public record MeetingResult(
     public static MeetingResult toResult(Meeting meeting, Long memberId) {
         return new MeetingResult(
                 meeting.getId(),
-                meeting.getClubMember().getClub().getId(),
+                meeting.getClub().getId(),
                 meeting.getTitle(),
                 meeting.getSchedule().getDatetime(),
                 meeting.getLocation(),

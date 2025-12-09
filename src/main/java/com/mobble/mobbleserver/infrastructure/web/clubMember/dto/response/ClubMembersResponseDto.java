@@ -13,23 +13,23 @@ public record ClubMembersResponseDto(
         List<ClubMemberSummaryDto> rejectedMembers
 ) {
 
-    public static ClubMembersResponseDto create(ClubMembersResult result) {
+    public static ClubMembersResponseDto toDto(ClubMembersResult result) {
         return new ClubMembersResponseDto(
                 result.clubId(),
                 result.approvedMembers().stream()
-                        .map(ClubMemberSummaryDto::create)
+                        .map(ClubMemberSummaryDto::toDto)
                         .toList(),
                 result.waitingMembers().stream()
-                        .map(ClubMemberSummaryDto::create)
+                        .map(ClubMemberSummaryDto::toDto)
                         .toList(),
                 result.leaveMembers().stream()
-                        .map(ClubMemberSummaryDto::create)
+                        .map(ClubMemberSummaryDto::toDto)
                         .toList(),
                 result.kickedMembers().stream()
-                        .map(ClubMemberSummaryDto::create)
+                        .map(ClubMemberSummaryDto::toDto)
                         .toList(),
                 result.rejectedMembers().stream()
-                        .map(ClubMemberSummaryDto::create)
+                        .map(ClubMemberSummaryDto::toDto)
                         .toList()
         );
     }

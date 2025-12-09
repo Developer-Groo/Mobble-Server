@@ -37,7 +37,7 @@ public class SocialLoginService implements SocialLoginPort {
     public SocialLoginResult socialLogin(SocialLoginCommand command) {
         SocialUserInfo userInfo = socialIdentityClientPort.verify(command.socialProvider(), command.accessToken());
 
-        Member member = assertMemberOrThrowIfDeleted(userInfo.socialProvider(), userInfo.socialId());
+        Member member = assertExistingMemberBySocialProviderAndSocialId(userInfo.socialProvider(), userInfo.socialId());
 
         if (member != null) {
             List<ClubMemberRole> roles = clubMemberReadPort.findDistinctRolesByMemberIdAndRoleIn(member.getId(), List.of(ClubMemberRole.LEADER, ClubMemberRole.MANAGER));
@@ -53,7 +53,8 @@ public class SocialLoginService implements SocialLoginPort {
         return SocialLoginResult.newMember(signupToken);
     }
 
-    private Member assertMemberOrThrowIfDeleted(SocialProvider socialProvider, String socialId) {
+    /* ==== Private Helper ==== */
+    private Member assertExistingMemberBySocialProviderAndSocialId(SocialProvider socialProvider, String socialId) {
         return memberReadPort.findBySocialProviderAndSocialId(socialProvider, socialId)
                 .map(member -> {
                     if (member.isDeleted()) {
