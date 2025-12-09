@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.domain.meeting;
 
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
+import com.mobble.mobbleserver.domain.club.Club;
+import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.member.Member;
 import com.mobble.mobbleserver.support.fixture.meeting.MeetingTestFixture;
 import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
@@ -13,14 +14,16 @@ import static org.mockito.Mockito.mock;
 
 class MeetingMemberTest {
 
-    private final ClubMember mockClubMember = mock(ClubMember.class);
+    private final Club mockClub = mock(Club.class);
+    private final Member mockMember = mock(Member.class);
+    private final Image mockMainImage = mock(Image.class);
 
     @Nested
     class Create {
 
         @Test
         void success_create() {
-            Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
+            Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClub, mockMember, mockMainImage);
             Member member = MemberTestFixture.createDefaultMember();
 
             MeetingMember meetingMember = MeetingMember.createMeetingMember(meeting, member);
@@ -40,7 +43,7 @@ class MeetingMemberTest {
 
         @Test
         void success_fail_when_member_null() {
-            Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
+            Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClub, mockMember, mockMainImage);
 
             assertThatThrownBy(() -> MeetingMember.createMeetingMember(meeting, null))
                     .isInstanceOf(NullPointerException.class)
@@ -50,7 +53,7 @@ class MeetingMemberTest {
 
     @Test
     void success_detach() {
-        Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
+        Meeting meeting = MeetingTestFixture.createDefaultMeeting(mockClub, mockMember, mockMainImage);
         Member member = MemberTestFixture.createDefaultMember();
 
         MeetingMember meetingMember = MeetingMember.createMeetingMember(meeting, member);
