@@ -94,6 +94,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     @Override
     public Club update(UpdateClubCommand command) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        clubMember.assertApproved();
 
         assertLeader(clubMember);
 
@@ -127,6 +128,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     public void delete(Long clubId, Long memberId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         Club club = clubMember.getClub();
+        clubMember.assertApproved();
 
         assertLeader(clubMember);
 

@@ -66,6 +66,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public ClubMember updateJoinStatus(UpdateStatusCommand command) {
         ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        leader.assertApproved();
+
         assertLeader(leader);
 
         ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
@@ -92,6 +94,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public ClubMember updateRole(UpdateRoleCommand command) {
         ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        leader.assertApproved();
+
         assertLeader(leader);
 
         ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
@@ -116,10 +120,9 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public void leave(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMember.assertApproved();
 
         assertLeaderCannotLeave(clubMember);
-
-        clubMember.assertApproved();
 
         clubMember.getClub().decreaseMemberCount();
         clubMember.updateStatus(JoinStatus.LEAVE);
