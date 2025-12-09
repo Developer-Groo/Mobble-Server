@@ -62,7 +62,6 @@ class MeetingTest {
 
         @Test
         void create_fail_when_club_member_null() {
-            // when & then
             assertThatThrownBy(() -> Meeting.create(
                             null,
                             TITLE,
@@ -109,12 +108,20 @@ class MeetingTest {
 
         @Test
         @DisplayName("제목을 null 로 변경 시 예외 발생")
-        void fails_when_title_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(null, DATETIME, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
+        void update_fail_when_title_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            null,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("title must not be null");
         }
 
         @Test
