@@ -62,7 +62,8 @@ public record MeetingResponseDto(
         return new MeetingMemberInfoResult(
                 owner.getId(),
                 owner.getName(),
-                owner.getProfileImage().getUrl()
+                owner.getProfileImage() != null ? owner.getProfileImage().getId() : null,
+                owner.getProfileImage() != null ? owner.getProfileImage().getUrl() : null
         );
     }
 }
