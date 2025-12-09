@@ -226,5 +226,17 @@ class MeetingTest {
             assertThat(meeting.getMeetingMembers()).hasSize(1);
             assertThat(meeting.hasAttendee(1L)).isTrue();
         }
+
+        @Test
+        void success_attend_cancel() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            meeting.cancelAttend(1L);
+
+            assertThat(meeting.getMeetingMembers()).isEmpty();
+        }
     }
 }
