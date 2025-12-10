@@ -9,19 +9,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatRoomReadPort {
-    // Common
+    /* Common */
     // Todo: fetch join 고려
     Optional<ChatRoom> findChatRoomById(Long chatRoomId);
 
-    // Participant
+    /* Participant */
     List<Participant> findAllByChatRoomIdsAndMemberId(List<Long> chatRoomId, Long memberId);
 
-    // Club
+    /* Club */
     Optional<ClubRoomInfo> findClubRoomInfoByClubId(Long clubId);
+
+    List<ChatRoom> findChatRoomsByClubIds(List<Long> clubIds);
 
     boolean existsClubRoomInfo(Long clubId);
 
-    // Direct
+    /* Direct */
     List<DirectRoomInfo> findDirectChatRoomsAllByMemberId(Long memberId);
 
     boolean existsDirectChatRoomByBetweenMembers(Long senderId, Long receiverId);
