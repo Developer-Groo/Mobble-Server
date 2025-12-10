@@ -120,6 +120,13 @@ public class ChatRoom extends CreatedAtEntity {
         }
     }
 
+    public Club getClub() {
+        if (roomInfo instanceof ClubRoomInfo clubRoomInfo) {
+            return clubRoomInfo.getClub();
+        }
+        return null;
+    }
+
     /* 1대1 채팅방 전용 */
     public Member getReceiverFor(Long senderId) {
         if (this.type != ChatRoomType.DIRECT) throw new IllegalStateException("");
