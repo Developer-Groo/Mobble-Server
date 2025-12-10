@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.application.chat.room.service.direct;
+package com.mobble.mobbleserver.application.chat.room.service.command;
 
-import com.mobble.mobbleserver.application.chat.room.port.provided.direct.DirectChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.direct.DirectChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
@@ -25,9 +25,9 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
     private final ChatRoomReadPort chatRoomReadPort;
 
     @Override
-    public DirectChatRoomPreviewResponseDto createDirectChatRoom(DirectChatRoomCreateRequestDto dto, Long memberId) {
+    public DirectChatRoomPreviewResponseDto create(DirectChatRoomCreateRequestDto dto, Long memberId) {
         // Todo: DB Unique 제약 필요 (memberA + memberB)
-        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, dto.receiverId())) throw new IllegalStateException();
+        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, dto.receiverId())) throw new IllegalStateException(); // Todo: Error 수정
 
         Member sender = assertMemberByMemberId(memberId);
         Member receiver = assertMemberByMemberId(dto.receiverId());
@@ -41,6 +41,7 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
         return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, receiver, null, 0, null);
     }
 
+    /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));

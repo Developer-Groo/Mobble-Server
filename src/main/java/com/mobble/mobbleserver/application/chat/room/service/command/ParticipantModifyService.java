@@ -1,10 +1,12 @@
-package com.mobble.mobbleserver.application.chat.room.service.common;
+package com.mobble.mobbleserver.application.chat.room.service.command;
 
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
-import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
-import com.mobble.mobbleserver.application.chat.room.port.provided.common.ParticipantUpdatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ParticipantUpdatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
+import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
@@ -16,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExitPort {
+public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoomExitPort {
 
     private final ChatRoomWritePort chatRoomWritePort;
     private final MessageWritePort messageWritePort;
@@ -26,16 +28,16 @@ public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExi
 
     @Override
     public void updateLastReadMessage(Long chatRoomId, Long memberId, Long lastMessageId) {
-        Member member = memberReadPort.findByIdAndIsDeletedFalse(memberId).orElseThrow();
-        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
+        Member member = assertMemberByMemberId(memberId);
+        ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
 
         chatRoom.updateLastReadMessage(member, lastMessageId);
     }
 
     @Override
     public void updateNotification(Long chatRoomId, Long memberId, boolean enabled) {
-        Member member = memberReadPort.findByIdAndIsDeletedFalse(memberId).orElseThrow();
-        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
+        Member member = assertMemberByMemberId(memberId);
+        ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
 
         if (enabled) {
             chatRoom.enableNotified(member);
@@ -46,8 +48,8 @@ public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExi
 
     @Override
     public void leave(Long chatRoomId, Long memberId) {
-        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElseThrow();
-        Member member = memberReadPort.findByIdAndIsDeletedFalse(memberId).orElseThrow();
+        Member member = assertMemberByMemberId(memberId);
+        ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
 
         chatRoom.removeParticipant(member);
 
@@ -58,10 +60,23 @@ public class ChatRoomModifyService implements ParticipantUpdatePort, ChatRoomExi
 
     @Override
     public void delete(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId).orElse(null);
+        ChatRoom chatRoom = chatRoomReadPort.findChatRoomById(chatRoomId)
+                .orElse(null);
+
         if (chatRoom == null) return;
 
         messageWritePort.delete(chatRoom.getId());
         chatRoomWritePort.delete(chatRoom);
+    }
+
+    /* ==== Private Helper ==== */
+    private Member assertMemberByMemberId(Long memberId) {
+        return memberReadPort.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
+    }
+
+    private ChatRoom assertChatRoomByChatRoomId(Long chatRoomId) {
+        return chatRoomReadPort.findChatRoomById(chatRoomId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
     }
 }

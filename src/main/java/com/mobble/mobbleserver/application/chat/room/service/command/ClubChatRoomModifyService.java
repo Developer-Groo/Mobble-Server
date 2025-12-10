@@ -1,7 +1,7 @@
-package com.mobble.mobbleserver.application.chat.room.service.club;
+package com.mobble.mobbleserver.application.chat.room.service.command;
 
-import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
-import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomJoinPort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomJoinPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
@@ -25,12 +25,14 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     private final ClubMemberReadPort clubMemberReadPort;
 
     @Override
-    public void createClubChatRoom(Long clubId, Long memberId) {
+    public void create(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
+        clubMember.assertApproved();
+
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
 
-        if (chatRoomReadPort.existsClubRoomInfo(clubId)) throw new IllegalStateException();
+        if (chatRoomReadPort.existsClubRoomInfo(clubId)) throw new IllegalStateException(); // Todo: Error 수정
 
         ChatRoom clubChatRoom = ChatRoom.createClub(club);
 
@@ -39,15 +41,28 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     }
 
     @Override
-    public void joinClubChatRoom(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
+    public void join(Long clubId, Long memberId) {
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMember.assertApproved();
+
         Member member = clubMember.getMember();
         Club club = clubMember.getClub();
 
-        ClubRoomInfo clubRoomInfo = chatRoomReadPort.findClubRoomInfoByClubId(club.getId()).orElseThrow();
+        ClubRoomInfo clubRoomInfo = assertClubRoomInfoByClubId(club.getId());
 
         ChatRoom chatRoom = clubRoomInfo.getChatRoom();
 
         chatRoom.addParticipant(member);
+    }
+
+    /* ==== Private Helper ==== */
+    private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
+        return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+    }
+
+    private ClubRoomInfo assertClubRoomInfoByClubId(Long clubId) {
+        return chatRoomReadPort.findClubRoomInfoByClubId(clubId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
     }
 }
