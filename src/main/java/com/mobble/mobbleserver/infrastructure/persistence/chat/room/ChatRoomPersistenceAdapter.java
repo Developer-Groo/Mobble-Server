@@ -55,6 +55,13 @@ public class ChatRoomPersistenceAdapter implements ChatRoomWritePort, ChatRoomRe
     }
 
     @Override
+    public List<ChatRoom> findChatRoomsByClubIds(List<Long> clubIds) {
+        return clubRoomInfoRepository.findByClub_idIn(clubIds).stream()
+                .map(ClubRoomInfo::getChatRoom)
+                .toList();
+    }
+
+    @Override
     public boolean existsClubRoomInfo(Long clubId) {
         return clubRoomInfoRepository.existsByClub_Id(clubId);
     }
