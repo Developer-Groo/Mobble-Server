@@ -3,8 +3,8 @@ package com.mobble.mobbleserver.application.club.service;
 import com.mobble.mobbleserver.application.article.port.provided.ArticleDeletePort;
 import com.mobble.mobbleserver.application.category.error.CategoryBusinessError;
 import com.mobble.mobbleserver.application.category.port.required.CategoryReadPort;
-import com.mobble.mobbleserver.application.chat.room.port.provided.club.ClubChatRoomCreatePort;
-import com.mobble.mobbleserver.application.chat.room.port.provided.common.ChatRoomExitPort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.club.command.CreateClubCommand;
 import com.mobble.mobbleserver.application.club.command.UpdateClubCommand;
 import com.mobble.mobbleserver.application.club.port.provided.ClubCreatePort;
@@ -16,9 +16,10 @@ import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberRe
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberWritePort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.image.error.ImageBusinessError;
+import com.mobble.mobbleserver.application.image.port.provided.ImageDeletePort;
 import com.mobble.mobbleserver.application.image.port.required.ImageReadPort;
-import com.mobble.mobbleserver.application.image.port.required.ImageWritePort;
 import com.mobble.mobbleserver.application.like.port.provided.LikeModifyPort;
+import com.mobble.mobbleserver.application.meeting.port.provided.MeetingDeletePort;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.category.Category;
@@ -42,11 +43,12 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     private final ArticleDeletePort articleDeletePort;
     private final ClubChatRoomCreatePort clubChatRoomCreatePort;
     private final ChatRoomExitPort chatRoomExitPort;
+    private final MeetingDeletePort meetingDeletePort;
     private final LikeModifyPort likeModifyPort;
+    private final ImageDeletePort imageDeletePort;
 
     private final ClubWritePort clubWritePort;
     private final ClubMemberWritePort clubMemberWritePort;
-    private final ImageWritePort imageWritePort;
 
     private final MemberReadPort memberReadPort;
     private final ClubMemberReadPort clubMemberReadPort;
@@ -84,7 +86,7 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
         ClubMember leaderMembership = ClubMember.createLeader(leader, club);
         clubMemberWritePort.save(leaderMembership);
 
-        clubChatRoomCreatePort.createClubChatRoom(club.getId(), leader.getId());
+        clubChatRoomCreatePort.create(club.getId(), leader.getId());
 
         // Todo: jwt 토큰 재발급 필요
 
@@ -128,20 +130,20 @@ public class ClubModifyService implements ClubCreatePort, ClubUpdatePort, ClubDe
     public void delete(Long clubId, Long memberId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         Club club = clubMember.getClub();
+        Member member = clubMember.getMember();
         clubMember.assertApproved();
 
         assertLeader(clubMember);
 
         articleDeletePort.deleteAll(club.getId());
         likeModifyPort.delete(LikeType.CLUB, club.getId());
+        imageDeletePort.delete(club.getMainImage().getId());
         chatRoomExitPort.delete(club.getId());
+        meetingDeletePort.deleteAll(member.getId(), club.getId());
 
-        // Todo:
-        //  1. Meeting -> Service port
-        //  2. Notification delete -> Service port
+        // Todo: Notification delete -> Service port
 
         clubMemberWritePort.deleteAllByClubId(club.getId());
-        imageWritePort.delete(club.getMainImage());
         clubWritePort.delete(club);
     }
 
