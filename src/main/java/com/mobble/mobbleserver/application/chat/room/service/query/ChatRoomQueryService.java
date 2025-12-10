@@ -62,15 +62,15 @@ public class ChatRoomQueryService implements ChatRoomQueryPort {
 
         List<ChatRoomPreviewResult> results = new ArrayList<>();
 
-        for (ChatRoom chatRoom : allChatRooms) {
+        allChatRooms.forEach(chatRoom ->
             results.add(ChatRoomPreviewResult.create(
                     member,
                     chatRoom,
                     lastReadMessageIdsByChatRoom,
                     latestMessagesMap,
                     unreadCountMap
-            ));
-        }
+            ))
+        );
 
         results.sort(Comparator.comparing(
                 ChatRoomPreviewResult::latestMessageAt,
