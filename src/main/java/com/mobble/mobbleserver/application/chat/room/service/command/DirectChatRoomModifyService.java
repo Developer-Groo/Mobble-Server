@@ -3,6 +3,7 @@ package com.mobble.mobbleserver.application.chat.room.service.command;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.direct.DirectChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
+import com.mobble.mobbleserver.application.chat.room.result.DirectChatRoomPreviewResult;
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
@@ -25,12 +26,12 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
     private final ChatRoomReadPort chatRoomReadPort;
 
     @Override
-    public DirectChatRoomPreviewResponseDto create(DirectChatRoomCreateRequestDto dto, Long memberId) {
+    public DirectChatRoomPreviewResult create(Long receiverId, Long memberId) {
         // Todo: DB Unique 제약 필요 (memberA + memberB)
-        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, dto.receiverId())) throw new IllegalStateException(); // Todo: Error 수정
+        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, receiverId)) throw new IllegalStateException(); // Todo: Error 수정
 
         Member sender = assertMemberByMemberId(memberId);
-        Member receiver = assertMemberByMemberId(dto.receiverId());
+        Member receiver = assertMemberByMemberId(receiverId);
 
         ChatRoom directChatRoom = ChatRoom.createDirect(sender, receiver);
         directChatRoom.addParticipant(sender);
@@ -38,7 +39,7 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
 
         chatRoomWritePort.save(directChatRoom);
 
-        return DirectChatRoomPreviewResponseDto.toDto(directChatRoom, receiver, null, 0, null);
+        return DirectChatRoomPreviewResult.create(directChatRoom, receiver);
     }
 
     /* ==== Private Helper ==== */
