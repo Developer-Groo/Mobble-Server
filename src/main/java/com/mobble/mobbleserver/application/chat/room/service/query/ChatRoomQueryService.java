@@ -34,56 +34,61 @@ public class ChatRoomQueryService implements ChatRoomQueryPort {
     public List<ChatRoomPreviewResult> getChatRoomsPreview(Long memberId, ChatRoomPreviewFilter filter) {
         Member member = assertMemberByMemberId(memberId);
 
-        List<DirectRoomInfo> directRoomInfos = (filter == ChatRoomPreviewFilter.CLUB_ONLY)
-                ? List.of()
-                : chatRoomReadPort.findDirectChatRoomsAllByMemberId(member.getId());
+        FilteredChatRoomSources sources = loadChatRoomSources(member, filter);
 
-        List<ClubMember> clubMembers = (filter == ChatRoomPreviewFilter.DIRECT_ONLY)
-                ? List.of()
-                : clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
+        List<ChatRoom> chatRooms = extractChatRooms(sources);
+        if (chatRooms.isEmpty()) return List.of();
 
-        List<ChatRoom> directChatRooms = extractDirectChatRooms(directRoomInfos);
-        List<ChatRoom> clubChatRooms = extractClubChatRooms(clubMembers);
-
-        ArrayList<ChatRoom> allChatRooms = new ArrayList<>();
-        allChatRooms.addAll(directChatRooms);
-        allChatRooms.addAll(clubChatRooms);
-
-        if (allChatRooms.isEmpty()) return List.of();
-
-        List<Long> chatRoomIds = allChatRooms.stream()
+        List<Long> chatRoomIds = chatRooms.stream()
                 .map(ChatRoom::getId)
                 .distinct()
                 .toList();
 
-        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, member.getId());
-        Map<Long, ChatMessage> latestMessagesMap = messageReadPort.findLatestMessagesByChatRoomIds(chatRoomIds);
-        Map<Long, Integer> unreadCountMap = messageReadPort.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
+        ChatRoomMessageMeta meta = loadChatRoomMessageMeta(chatRoomIds, member.getId());
 
-        List<ChatRoomPreviewResult> results = new ArrayList<>();
-
-        allChatRooms.forEach(chatRoom ->
-            results.add(ChatRoomPreviewResult.create(
-                    member,
-                    chatRoom,
-                    lastReadMessageIdsByChatRoom,
-                    latestMessagesMap,
-                    unreadCountMap
-            ))
-        );
-
-        results.sort(Comparator.comparing(
-                ChatRoomPreviewResult::latestMessageAt,
-                Comparator.nullsLast(Comparator.reverseOrder())
-        ));
-
-        return results;
+        return buildPreviewResults(member, chatRooms, meta);
     }
 
     /* ==== Private Helper ==== */
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
+    }
+
+    private FilteredChatRoomSources loadChatRoomSources(Member member, ChatRoomPreviewFilter filter) {
+        ChatRoomPreviewFilter effectiveFilter = (filter == null) ? ChatRoomPreviewFilter.ALL : filter;
+
+        List<DirectRoomInfo> directRoomInfos;
+        List<ClubMember> clubMembers;
+
+        switch (effectiveFilter) {
+            case ALL -> {
+                directRoomInfos = chatRoomReadPort.findDirectChatRoomsAllByMemberId(member.getId());
+                clubMembers = clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
+            }
+            case DIRECT_ONLY -> {
+                directRoomInfos = chatRoomReadPort.findDirectChatRoomsAllByMemberId(member.getId());
+                clubMembers = List.of();
+            }
+            case CLUB_ONLY -> {
+                directRoomInfos = List.of();
+                clubMembers = clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
+            }
+            default -> throw new IllegalStateException(""); // Todo: Error 수정
+        }
+
+        return new FilteredChatRoomSources(directRoomInfos, clubMembers);
+    }
+
+    private List<ChatRoom> extractChatRooms(FilteredChatRoomSources sources) {
+        List<ChatRoom> directChatRooms = extractDirectChatRooms(sources.directRooms());
+        List<ChatRoom> clubChatRooms = extractClubChatRooms(sources.clubMembers());
+
+        ArrayList<ChatRoom> allChatRooms = new ArrayList<>();
+        allChatRooms.addAll(directChatRooms);
+        allChatRooms.addAll(clubChatRooms);
+
+        return allChatRooms;
     }
 
     private List<ChatRoom> extractDirectChatRooms(List<DirectRoomInfo> directRoomInfos) {
@@ -110,6 +115,18 @@ public class ChatRoomQueryService implements ChatRoomQueryPort {
         return chatRoomReadPort.findChatRoomsByClubIds(clubIds);
     }
 
+    private ChatRoomMessageMeta loadChatRoomMessageMeta(List<Long> chatRoomIds, Long memberId) {
+        if (chatRoomIds == null || chatRoomIds.isEmpty()) {
+            return new ChatRoomMessageMeta(Map.of(), Map.of(), Map.of());
+        }
+
+        Map<Long, Long> lastReadMessageIdsByChatRoom = getLastReadMessageIdsByChatRoom(chatRoomIds, memberId);
+        Map<Long, ChatMessage> latestMessagesMap = messageReadPort.findLatestMessagesByChatRoomIds(chatRoomIds);
+        Map<Long, Integer> unreadCountMap = messageReadPort.countUnreadMessagesByChatRoomIds(chatRoomIds, lastReadMessageIdsByChatRoom);
+
+        return new ChatRoomMessageMeta(lastReadMessageIdsByChatRoom, latestMessagesMap, unreadCountMap);
+    }
+
     private Map<Long, Long> getLastReadMessageIdsByChatRoom(List<Long> chatRoomIds, Long memberId) {
         if (chatRoomIds == null || chatRoomIds.isEmpty()) return Map.of();
 
@@ -121,4 +138,37 @@ public class ChatRoomQueryService implements ChatRoomQueryPort {
                         (existing, replacement) -> replacement
                 ));
     }
+
+    private List<ChatRoomPreviewResult> buildPreviewResults(Member member, List<ChatRoom> chatRooms, ChatRoomMessageMeta meta) {
+        List<ChatRoomPreviewResult> results = new ArrayList<>();
+
+        chatRooms.forEach(chatRoom ->
+                results.add(ChatRoomPreviewResult.create(
+                        member,
+                        chatRoom,
+                        meta.lastReadMessageIdsByChatRoom(),
+                        meta.latestMessagesMap(),
+                        meta.unreadCountMap()
+                ))
+        );
+
+        results.sort(Comparator.comparing(
+                ChatRoomPreviewResult::latestMessageAt,
+                Comparator.nullsLast(Comparator.reverseOrder())
+        ));
+
+        return results;
+    }
+
+    /* ==== Internal DTO records ==== */
+    private record FilteredChatRoomSources(
+            List<DirectRoomInfo> directRooms,
+            List<ClubMember> clubMembers
+    ) {}
+
+    private record ChatRoomMessageMeta(
+            Map<Long, Long> lastReadMessageIdsByChatRoom,
+            Map<Long, ChatMessage> latestMessagesMap,
+            Map<Long, Integer> unreadCountMap
+    ) {}
 }
