@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.infrastructure.web.chat.room.direct;
 
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.direct.DirectChatRoomCreatePort;
+import com.mobble.mobbleserver.application.chat.room.result.DirectChatRoomPreviewResult;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.request.DirectChatRoomCreateRequestDto;
 import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatRoomPreviewResponseDto;
 import jakarta.validation.Valid;
@@ -27,8 +28,10 @@ public class DirectChatRoomAPI {
             @RequestBody @Valid DirectChatRoomCreateRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
+        DirectChatRoomPreviewResult result = directChatRoomCreatePort.create(dto.receiverId(), memberId);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(directChatRoomCreatePort.create(dto, memberId));
+                .body(DirectChatRoomPreviewResponseDto.toDto(result));
     }
 
     @DeleteMapping("/chat/rooms/{chat-room-id}/direct/leave")
