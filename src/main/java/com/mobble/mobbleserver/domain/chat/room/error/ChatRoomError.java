@@ -9,7 +9,8 @@ public enum ChatRoomError implements CommonError {
     ALREADY_PARTICIPANT("member already participates in this chat room", ErrorCategory.CONFLICT),
     PARTICIPANT_NOT_FOUND("participant not found in this chat room", ErrorCategory.PERMISSION_DENIED),
     INVALID_ROOM_TYPE("chat room type does not match expected type", ErrorCategory.VALIDATION),
-    NOT_DIRECT_ROOM("chat room is not a direct room", ErrorCategory.VALIDATION);
+    NOT_DIRECT_ROOM("chat room is not a direct room", ErrorCategory.VALIDATION),
+    SELF_DIRECT_CHAT_NOT_ALLOWED("sender and receiver must be different", ErrorCategory.VALIDATION);;
 
     private final String message;
     private final ErrorCategory category;
