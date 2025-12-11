@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaChatMessageRepository extends JpaRepository<ChatMessage, Long>, ChatMessageQueryDslRepository {
 
-    void deleteChatMessagesByChatRoomId(Long chatRoomId);
+    void deleteAllByChatRoom_Id(Long chatRoomId);
 }

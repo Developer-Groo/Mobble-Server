@@ -6,5 +6,5 @@ public interface MessageWritePort {
 
     ChatMessage save(ChatMessage chatMessage);
 
-    void delete(Long chatRoomId);
+    void deleteAll(Long chatRoomId);
 }

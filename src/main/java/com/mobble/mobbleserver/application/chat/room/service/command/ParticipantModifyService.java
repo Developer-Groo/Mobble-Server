@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.service.command;
 
+import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ParticipantUpdatePort;
@@ -8,6 +9,7 @@ import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWrite
 import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
+import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoomType;
 import com.mobble.mobbleserver.domain.member.Member;
@@ -23,13 +25,19 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     private final ChatRoomWritePort chatRoomWritePort;
     private final MessageWritePort messageWritePort;
 
-    private final ChatRoomReadPort chatRoomReadPort;
     private final MemberReadPort memberReadPort;
+    private final ChatRoomReadPort chatRoomReadPort;
+    private final MessageReadPort messageReadPort;
 
     @Override
     public void updateLastReadMessage(Long chatRoomId, Long memberId, Long lastMessageId) {
         Member member = assertMemberByMemberId(memberId);
         ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
+
+        assertHasParticipant(chatRoom, member);
+        ChatMessage message = assertMessageByMessageId(lastMessageId);
+
+        assertMessageBelongsToChatRoom(message, chatRoom);
 
         chatRoom.updateLastReadMessage(member, lastMessageId);
     }
@@ -38,6 +46,8 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     public void updateNotification(Long chatRoomId, Long memberId, boolean enabled) {
         Member member = assertMemberByMemberId(memberId);
         ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
+
+        assertHasParticipant(chatRoom, member);
 
         if (enabled) {
             chatRoom.enableNotified(member);
@@ -50,6 +60,8 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     public void leave(Long chatRoomId, Long memberId) {
         Member member = assertMemberByMemberId(memberId);
         ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
+
+        assertHasParticipant(chatRoom, member);
 
         chatRoom.removeParticipant(member);
 
@@ -65,7 +77,7 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
 
         if (chatRoom == null) return;
 
-        messageWritePort.delete(chatRoom.getId());
+        messageWritePort.deleteAll(chatRoom.getId());
         chatRoomWritePort.delete(chatRoom);
     }
 
@@ -78,5 +90,18 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     private ChatRoom assertChatRoomByChatRoomId(Long chatRoomId) {
         return chatRoomReadPort.findChatRoomById(chatRoomId)
                 .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+    }
+
+    private ChatMessage assertMessageByMessageId(Long messageId) {
+        return messageReadPort.findMessageByMessageId(messageId)
+                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+    }
+
+    private void assertHasParticipant(ChatRoom chatRoom, Member member) {
+        if (!chatRoom.hasParticipant(member)) throw new IllegalStateException(""); // Todo: Error 수정
+    }
+
+    private void assertMessageBelongsToChatRoom(ChatMessage message, ChatRoom chatRoom) {
+        if (!message.getChatRoom().getId().equals(chatRoom.getId())) throw new IllegalStateException(""); // Todo: Error 수정
     }
 }
