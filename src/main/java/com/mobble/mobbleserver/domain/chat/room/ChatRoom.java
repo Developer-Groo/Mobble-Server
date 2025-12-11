@@ -61,7 +61,7 @@ public class ChatRoom extends CreatedAtEntity {
         boolean alreadyJoined = participants.stream()
                 .anyMatch(participant -> participant.getMember().getId().equals(member.getId()));
 
-        if (alreadyJoined) throw new IllegalStateException("");
+        if (alreadyJoined) throw new IllegalStateException(""); // Todo: Error 수정
 
         Participant participant = Participant.create(this, member);
         participants.add(participant);
@@ -100,7 +100,7 @@ public class ChatRoom extends CreatedAtEntity {
         return participants.stream()
                 .filter(participant -> participant.getMember().getId().equals(member.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException(""));
+                .orElseThrow(() -> new IllegalStateException("")); // Todo: Error 수정
     }
 
     /* Info 관리 */
@@ -116,7 +116,7 @@ public class ChatRoom extends CreatedAtEntity {
 
     private void assertType(ChatRoomType expected) {
         if (this.type != expected) {
-            throw new IllegalStateException("채팅방 타입이 일치하지 않습니다.");
+            throw new IllegalStateException("채팅방 타입이 일치하지 않습니다."); // Todo: Error 수정
         }
     }
 
@@ -129,7 +129,7 @@ public class ChatRoom extends CreatedAtEntity {
 
     /* 1대1 채팅방 전용 */
     public Member getReceiverFor(Long senderId) {
-        if (this.type != ChatRoomType.DIRECT) throw new IllegalStateException("");
+        if (this.type != ChatRoomType.DIRECT) throw new IllegalStateException(""); // Todo: Error 수정
 
         DirectRoomInfo directRoomInfo = (DirectRoomInfo) this.roomInfo;
 
