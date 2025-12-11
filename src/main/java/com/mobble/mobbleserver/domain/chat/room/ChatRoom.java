@@ -1,7 +1,9 @@
 package com.mobble.mobbleserver.domain.chat.room;
 
+import com.mobble.mobbleserver.domain.chat.room.error.ChatRoomError;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.common.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -61,7 +63,7 @@ public class ChatRoom extends CreatedAtEntity {
         boolean alreadyJoined = participants.stream()
                 .anyMatch(participant -> participant.getMember().getId().equals(member.getId()));
 
-        if (alreadyJoined) throw new IllegalStateException(""); // Todo: Error 수정
+        if (alreadyJoined) throw new DomainException(ChatRoomError.ALREADY_PARTICIPANT);
 
         Participant participant = Participant.create(this, member);
         participants.add(participant);
@@ -100,7 +102,7 @@ public class ChatRoom extends CreatedAtEntity {
         return participants.stream()
                 .filter(participant -> participant.getMember().getId().equals(member.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("")); // Todo: Error 수정
+                .orElseThrow(() -> new DomainException(ChatRoomError.PARTICIPANT_NOT_FOUND));
     }
 
     /* Info 관리 */
@@ -116,7 +118,7 @@ public class ChatRoom extends CreatedAtEntity {
 
     private void assertType(ChatRoomType expected) {
         if (this.type != expected) {
-            throw new IllegalStateException("채팅방 타입이 일치하지 않습니다."); // Todo: Error 수정
+            throw new DomainException(ChatRoomError.INVALID_ROOM_TYPE);
         }
     }
 
@@ -129,7 +131,7 @@ public class ChatRoom extends CreatedAtEntity {
 
     /* 1대1 채팅방 전용 */
     public Member getReceiverFor(Long senderId) {
-        if (this.type != ChatRoomType.DIRECT) throw new IllegalStateException(""); // Todo: Error 수정
+        if (this.type != ChatRoomType.DIRECT) throw new DomainException(ChatRoomError.NOT_DIRECT_ROOM);
 
         DirectRoomInfo directRoomInfo = (DirectRoomInfo) this.roomInfo;
 
