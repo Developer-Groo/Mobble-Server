@@ -75,7 +75,7 @@ public class ChatMessage extends CreatedAtEntity {
         memberIds.stream()
                 .distinct()
                 .forEach(id ->
-                        this.mentions.add(ChatMessageMention.createChatMessageMention(this, id))
+                        this.mentions.add(ChatMessageMention.create(this, id))
                 );
     }
 
@@ -86,7 +86,7 @@ public class ChatMessage extends CreatedAtEntity {
                 .anyMatch(mention -> mentionedMemberId.equals(mention.getMentionedMemberId()));
 
         if (exists) {
-            mentions.add(ChatMessageMention.createChatMessageMention(this, mentionedMemberId));
+            mentions.add(ChatMessageMention.create(this, mentionedMemberId));
         }
     }
 

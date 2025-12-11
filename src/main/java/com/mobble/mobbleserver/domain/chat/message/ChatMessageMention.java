@@ -30,7 +30,7 @@ public class ChatMessageMention extends CreatedAtEntity {
         this.mentionedMemberId = mentionedMemberId;
     }
 
-    static ChatMessageMention createChatMessageMention(ChatMessage chatMessage, Long mentionedMemberId) {
+    static ChatMessageMention create(ChatMessage chatMessage, Long mentionedMemberId) {
         return ChatMessageMention.builder()
                 .chatMessage(chatMessage)
                 .mentionedMemberId(mentionedMemberId)
