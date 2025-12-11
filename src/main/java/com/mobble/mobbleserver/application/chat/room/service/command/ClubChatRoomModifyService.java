@@ -1,10 +1,13 @@
 package com.mobble.mobbleserver.application.chat.room.service.command;
 
+import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomJoinPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
+import com.mobble.mobbleserver.application.clubMember.error.ClubMemberBusinessError;
 import com.mobble.mobbleserver.application.clubMember.port.required.ClubMemberReadPort;
+import com.mobble.mobbleserver.application.exception.BusinessException;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.chat.room.ClubRoomInfo;
 import com.mobble.mobbleserver.domain.club.Club;
@@ -26,13 +29,13 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
 
     @Override
     public void create(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId).orElseThrow();
+        ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
         clubMember.assertApproved();
 
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
 
-        if (chatRoomReadPort.existsClubRoomInfo(clubId)) throw new IllegalStateException(); // Todo: Error 수정
+        assertClubChatRoomNotExists(club.getId());
 
         ChatRoom clubChatRoom = ChatRoom.createClub(club);
 
@@ -58,11 +61,15 @@ public class ClubChatRoomModifyService implements ClubChatRoomCreatePort, ClubCh
     /* ==== Private Helper ==== */
     private ClubMember assertClubMemberByClubIdAndMemberId(Long clubId, Long memberId) {
         return clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+                .orElseThrow(() -> new BusinessException(ClubMemberBusinessError.NOT_JOINED_CLUB));
     }
 
     private ClubRoomInfo assertClubRoomInfoByClubId(Long clubId) {
         return chatRoomReadPort.findClubRoomInfoByClubId(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+                .orElseThrow(() -> new BusinessException(ChatRoomBusinessError.NOT_FOUND));
+    }
+
+    private void assertClubChatRoomNotExists(Long clubId) {
+        if (chatRoomReadPort.existsClubRoomInfo(clubId)) throw new BusinessException(ChatRoomBusinessError.ALREADY_EXISTS);
     }
 }

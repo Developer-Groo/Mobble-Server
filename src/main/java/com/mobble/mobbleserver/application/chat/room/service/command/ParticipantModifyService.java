@@ -2,6 +2,7 @@ package com.mobble.mobbleserver.application.chat.room.service.command;
 
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
+import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ChatRoomExitPort;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ParticipantUpdatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
@@ -89,7 +90,7 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
 
     private ChatRoom assertChatRoomByChatRoomId(Long chatRoomId) {
         return chatRoomReadPort.findChatRoomById(chatRoomId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+                .orElseThrow(() -> new BusinessException(ChatRoomBusinessError.NOT_FOUND));
     }
 
     private ChatMessage assertMessageByMessageId(Long messageId) {
@@ -98,7 +99,7 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     }
 
     private void assertHasParticipant(ChatRoom chatRoom, Member member) {
-        if (!chatRoom.hasParticipant(member)) throw new IllegalStateException(""); // Todo: Error 수정
+        if (!chatRoom.hasParticipant(member)) throw new BusinessException(ChatRoomBusinessError.NOT_PARTICIPANT);
     }
 
     private void assertMessageBelongsToChatRoom(ChatMessage message, ChatRoom chatRoom) {

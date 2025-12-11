@@ -1,6 +1,7 @@
 package com.mobble.mobbleserver.application.chat.room.service.query;
 
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
+import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
 import com.mobble.mobbleserver.application.chat.room.port.provided.query.ChatRoomQueryPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.result.ChatRoomPreviewResult;
@@ -74,7 +75,7 @@ public class ChatRoomQueryService implements ChatRoomQueryPort {
                 directRoomInfos = List.of();
                 clubMembers = clubMemberReadPort.findAllClubMemberByMemberId(member.getId());
             }
-            default -> throw new IllegalStateException(""); // Todo: Error 수정
+            default -> throw new BusinessException(ChatRoomBusinessError.INVALID_FILTER);
         }
 
         return new FilteredChatRoomSources(directRoomInfos, clubMembers);

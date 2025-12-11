@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.service.command;
 
+import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
 import com.mobble.mobbleserver.application.chat.room.port.provided.command.direct.DirectChatRoomCreatePort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomWritePort;
@@ -9,8 +10,6 @@ import com.mobble.mobbleserver.application.member.error.MemberBusinessError;
 import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.request.DirectChatRoomCreateRequestDto;
-import com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response.DirectChatRoomPreviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
     @Override
     public DirectChatRoomPreviewResult create(Long receiverId, Long memberId) {
         // Todo: DB Unique 제약 필요 (memberA + memberB)
-        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(memberId, receiverId)) throw new IllegalStateException(); // Todo: Error 수정
+        assertDirectChatRoomNotExistsBetweenMembers(receiverId, memberId);
 
         Member sender = assertMemberByMemberId(memberId);
         Member receiver = assertMemberByMemberId(receiverId);
@@ -46,5 +45,9 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
     private Member assertMemberByMemberId(Long memberId) {
         return memberReadPort.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new BusinessException(MemberBusinessError.NOT_FOUND));
+    }
+
+    private void assertDirectChatRoomNotExistsBetweenMembers(Long senderId, Long receiverId) {
+        if (chatRoomReadPort.existsDirectChatRoomByBetweenMembers(senderId, receiverId)) throw new BusinessException(ChatRoomBusinessError.ALREADY_EXISTS);
     }
 }
