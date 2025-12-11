@@ -11,6 +11,7 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,6 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
 
     @Override
     public DirectChatRoomPreviewResult create(Long receiverId, Long memberId) {
-        // Todo: DB Unique 제약 필요 (memberA + memberB)
         assertDirectChatRoomNotExistsBetweenMembers(receiverId, memberId);
 
         Member sender = assertMemberByMemberId(memberId);
@@ -36,7 +36,11 @@ public class DirectChatRoomModifyService implements DirectChatRoomCreatePort {
         directChatRoom.addParticipant(sender);
         directChatRoom.addParticipant(receiver);
 
-        chatRoomWritePort.save(directChatRoom);
+        try {
+            chatRoomWritePort.save(directChatRoom);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(ChatRoomBusinessError.ALREADY_EXISTS);
+        }
 
         return DirectChatRoomPreviewResult.create(directChatRoom, receiver);
     }
