@@ -11,7 +11,7 @@ public interface MessageReadPort {
 
     Optional<ChatMessage> findMessageByMessageId(Long messageId);
 
-    List<ChatMessage> findMessagesFrom(Long roomId, LocalDateTime startDate, Long lastMessageId, LocalDateTime lastCreatedAt);
+    List<ChatMessage> findMessages(Long chatRoomId, LocalDateTime startDate, Long cursorId, LocalDateTime cursorCreatedAt, int limit);
 
     Map<Long, ChatMessage> findLatestMessagesByChatRoomIds(List<Long> chatRoomIds);
 
