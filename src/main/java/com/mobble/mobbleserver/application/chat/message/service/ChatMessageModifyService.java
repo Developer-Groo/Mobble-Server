@@ -4,6 +4,7 @@ import com.mobble.mobbleserver.application.chat.message.command.SendMessageComma
 import com.mobble.mobbleserver.application.chat.message.port.provided.SendMessagePort;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
 import com.mobble.mobbleserver.application.chat.message.port.required.PublisherPort;
+import com.mobble.mobbleserver.application.chat.message.result.ChatMessageResult;
 import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
 import com.mobble.mobbleserver.application.chat.room.port.required.ChatRoomReadPort;
 import com.mobble.mobbleserver.application.exception.BusinessException;
@@ -12,7 +13,6 @@ import com.mobble.mobbleserver.application.member.port.required.MemberReadPort;
 import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
 import com.mobble.mobbleserver.domain.member.Member;
-import com.mobble.mobbleserver.application.chat.message.result.ChatMessageResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

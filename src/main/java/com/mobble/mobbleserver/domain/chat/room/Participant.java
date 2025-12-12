@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 
 @Getter
 @Entity
