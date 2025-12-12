@@ -27,21 +27,23 @@ public class ChatMessageQueryDslRepositoryImpl implements ChatMessageQueryDslRep
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ChatMessage> findMessagesFrom(
+    public List<ChatMessage> findMessages(
             Long chatroomId,
             LocalDateTime startDate,
-            Long lastMessageId,
-            LocalDateTime lastCreatedAt
+            Long cursorId,
+            LocalDateTime cursorCreatedAt,
+            int limit
     ) {
         BooleanBuilder conditions = new BooleanBuilder();
         conditions.and(chatMessage.chatRoom.id.eq(chatroomId));
         conditions.and(chatMessage.createdAt.goe(startDate));
 
-        if (lastMessageId != null && lastCreatedAt != null) {
+        if (cursorId != null && cursorCreatedAt != null) {
             conditions.and(
-                    chatMessage.createdAt.lt(lastCreatedAt)
-                            .or(chatMessage.createdAt.eq(lastCreatedAt))
-                            .and(chatMessage.id.lt(lastMessageId))
+                    chatMessage.createdAt.lt(cursorCreatedAt)
+                            .or(chatMessage.createdAt.eq(cursorCreatedAt)
+                                    .and(chatMessage.id.lt(cursorId)))
+
             );
         }
 
@@ -52,7 +54,7 @@ public class ChatMessageQueryDslRepositoryImpl implements ChatMessageQueryDslRep
                         chatMessage.createdAt.desc(),
                         chatMessage.id.desc()
                 )
-                .limit(50)
+                .limit(limit)
                 .fetch();
     }
 

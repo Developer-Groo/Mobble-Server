@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface ChatMessageQueryDslRepository {
 
-    List<ChatMessage> findMessagesFrom(Long chatroomId, LocalDateTime startDate, Long lastMessageId, LocalDateTime lastCreatedAt);
+    List<ChatMessage> findMessages(Long chatroomId, LocalDateTime startDate, Long cursorId, LocalDateTime cursorCreatedAt, int limit);
 
     Map<Long, ChatMessage> findLatestMessagesByChatRoomIds(List<Long> chatRoomIds);
 

@@ -35,8 +35,8 @@ public class ChatMessagePersistenceAdapter implements MessageWritePort, MessageR
     }
 
     @Override
-    public List<ChatMessage> findMessagesFrom(Long chatRoomId, LocalDateTime startDate, Long lastMessageId, LocalDateTime lastCreatedAt) {
-        return repository.findMessagesFrom(chatRoomId, startDate, lastMessageId, lastCreatedAt);
+    public List<ChatMessage> findMessages(Long chatRoomId, LocalDateTime startDate, Long cursorId, LocalDateTime cursorCreatedAt, int limit) {
+        return repository.findMessages(chatRoomId, startDate, cursorId, cursorCreatedAt, limit);
     }
 
     @Override
