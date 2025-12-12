@@ -1,206 +1,367 @@
 package com.mobble.mobbleserver.domain.meeting;
 
-import org.junit.jupiter.api.DisplayName;
+import com.mobble.mobbleserver.domain.club.Club;
+import com.mobble.mobbleserver.domain.exception.DomainException;
+import com.mobble.mobbleserver.domain.image.Image;
+import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
+import com.mobble.mobbleserver.domain.member.Member;
+import com.mobble.mobbleserver.support.fixture.member.MemberTestFixture;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 class MeetingTest {
 
-//    private final Member mockMember = MemberTestFixture.createDefaultMember();
-//    private final ClubCategory mockClubCategory = ClubCategory.createClubCategory("SOCCER");
-//    private final Club mockClub = ClubTestFixture.createDefaultClub(mockClubCategory);
-//    private final ClubMember mockClubMember = ClubMemberTestFixture.createDefaultClubMember(
-//            mockMember,
-//            mockClub,
-//            ClubMemberRole.LEADER,
-//            JoinStatus.APPROVED
-//    );
-//    private final Meeting mockMeeting = MeetingTestFixture.createDefaultMeeting(mockClubMember);
-//
-//    private static final String TITLE = "정기모임";
-//    private static final String LOCATION = "체육관";
-//    private static final String COST = "5000";
-//    private static final int LIMIT = 10;
-//    private static final MeetingType TYPE = MeetingType.REGULAR_MEETING;
-//    private static final LocalDateTime DATETIME = LocalDateTime.of(2025, 10, 10, 19, 0);
+    private static final String TITLE = "정기모임";
+    private static final String LOCATION = "체육관";
+    private static final String COST = "5000";
+    private static final int LIMIT = 10;
+    private static final MeetingType TYPE = MeetingType.REGULAR_MEETING;
+
+    private static final LocalDateTime DATETIME = LocalDateTime.now().plusDays(1);
+
+    private final Club mockClub = mock(Club.class);
+    private final Member mockOwner = mock(Member.class);
+    private final Image mockMainImage = mock(Image.class);
+
+    private Meeting createDefaultMeeting() {
+        return Meeting.create(
+                mockClub,
+                mockOwner,
+                TITLE,
+                mockMainImage,
+                MeetingSchedule.of(DATETIME),
+                LOCATION,
+                COST,
+                LIMIT,
+                TYPE
+        );
+    }
 
     @Nested
-    @DisplayName("모임 생성 테스트")
-    class CreateMeeting {
+    class Create {
 
         @Test
-        @DisplayName("모임 생성 성공")
-        void success_when_create_meeting() {
-//            // given & when
-//            Meeting meeting = Meeting.create(
-//                    mockClubMember,
-//                    TITLE,
-//                    DATETIME,
-//                    LOCATION,
-//                    COST,
-//                    LIMIT,
-//                    TYPE
-//            );
-//
-//            // then
-//            assertThat(meeting.getClubMember()).isEqualTo(mockClubMember);
-//            assertThat(meeting.getTitle()).isEqualTo(TITLE);
-//            assertThat(meeting.getDatetime()).isEqualTo(DATETIME);
-//            assertThat(meeting.getLocation()).isEqualTo(LOCATION);
-//            assertThat(meeting.getCost()).isEqualTo(COST);
-//            assertThat(meeting.getMemberLimit()).isEqualTo(LIMIT);
-//            assertThat(meeting.getType()).isEqualTo(TYPE);
-//            assertThat(meeting.getMeetingMembers()).isEmpty();
+        void success_create() {
+            Meeting meeting = Meeting.create(
+                    mockClub,
+                    mockOwner,
+                    TITLE,
+                    mockMainImage,
+                    MeetingSchedule.of(DATETIME),
+                    LOCATION,
+                    COST,
+                    LIMIT,
+                    TYPE
+            );
+
+            assertThat(meeting.getClub()).isEqualTo(mockClub);
+            assertThat(meeting.getOwner()).isEqualTo(mockOwner);
+            assertThat(meeting.getTitle()).isEqualTo(TITLE);
+            assertThat(meeting.getMainImage()).isEqualTo(mockMainImage);
+            assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME);
+            assertThat(meeting.getLocation()).isEqualTo(LOCATION);
+            assertThat(meeting.getCost()).isEqualTo(COST);
+            assertThat(meeting.getMemberLimit()).isEqualTo(LIMIT);
+            assertThat(meeting.getType()).isEqualTo(TYPE);
+            assertThat(meeting.getMeetingMembers()).isEmpty();
         }
 
         @Test
-        @DisplayName("ClubMember 가 null 이면 예외 발생")
-        void fails_when_club_member_is_null() {
-//            // when & then
-//            assertThatThrownBy(() -> Meeting.create(
-//                    null,
-//                    TITLE,
-//                    DATETIME,
-//                    LOCATION,
-//                    COST,
-//                    LIMIT,
-//                    TYPE
-//            ))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.CLUB_MEMBER_REQUIRED.message());
+        void create_fail_when_club_null() {
+            assertThatThrownBy(() -> Meeting.create(
+                            null,
+                            mockOwner,
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("club must not be null");
+        }
+
+        @Test
+        void create_fail_when_owner_null() {
+            assertThatThrownBy(() -> Meeting.create(
+                            mockClub,
+                            null,
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("meeting owner must not be null");
+        }
+
+        @Test
+        void create_fail_when_main_image_null() {
+            assertThatThrownBy(() -> Meeting.create(
+                            mockClub,
+                            mockOwner,
+                            TITLE,
+                            null,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("main image must not be null");
         }
     }
 
     @Nested
-    @DisplayName("모임 수정 테스트")
-    class UpdateMeeting {
+    class Update {
 
         @Test
-        @DisplayName("모임 수정 성공")
-        void success_when_update_meeting() {
-//            // given & when
-//            mockMeeting.update(
-//                    "수정된 title",
-//                    DATETIME.plusDays(2),
-//                    "다른 체육관",
-//                    "7000",
-//                    20,
-//                    MeetingType.IMPROMPTU_MEETING
-//            );
-//
-//
-//            // then
-//            assertThat(mockMeeting.getTitle()).isEqualTo("수정된 title");
-//            assertThat(mockMeeting.getDatetime()).isEqualTo(DATETIME.plusDays(2));
-//            assertThat(mockMeeting.getLocation()).isEqualTo("다른 체육관");
-//            assertThat(mockMeeting.getCost()).isEqualTo("7000");
-//            assertThat(mockMeeting.getMemberLimit()).isEqualTo(20);
-//            assertThat(mockMeeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
+        void update_success() {
+            Meeting meeting = createDefaultMeeting();
+            Image newImage = mock(Image.class);
+
+            meeting.update(
+                    "수정된 title",
+                    newImage,
+                    MeetingSchedule.of(DATETIME.plusDays(2)),
+                    "다른 체육관",
+                    "7000",
+                    20,
+                    MeetingType.IMPROMPTU_MEETING
+            );
+
+            assertThat(meeting.getTitle()).isEqualTo("수정된 title");
+            assertThat(meeting.getMainImage()).isEqualTo(newImage);
+            assertThat(meeting.getSchedule().getDatetime()).isEqualTo(DATETIME.plusDays(2));
+            assertThat(meeting.getLocation()).isEqualTo("다른 체육관");
+            assertThat(meeting.getCost()).isEqualTo("7000");
+            assertThat(meeting.getMemberLimit()).isEqualTo(20);
+            assertThat(meeting.getType()).isEqualTo(MeetingType.IMPROMPTU_MEETING);
         }
     }
 
     @Nested
-    @DisplayName("모임 수정 유효성 검증 테스트")
     class Validation {
 
         @Test
-        @DisplayName("제목을 null 로 변경 시 예외 발생")
-        void fails_when_title_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(null, DATETIME, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
+        void update_fail_when_title_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            null,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("title must not be null");
         }
 
         @Test
-        @DisplayName("제목을 공백으로 변경 시 예외 발생")
-        void fails_when_title_is_blank() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(" ", DATETIME, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TITLE_REQUIRED.message());
+        void update_fail_when_main_image_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            null,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("main image must not be null");
         }
 
         @Test
-        @DisplayName("모임 날짜를 null 로 변경 시 예외 발생")
-        void fails_when_datetime_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, null, LOCATION, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.DATETIME_REQUIRED.message());
+        void update_fail_when_schedule_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            mockMainImage,
+                            null,
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("schedule must not be null");
         }
 
         @Test
-        @DisplayName("장소를 null 로 변경 시 예외 발생")
-        void fails_when_location_is_null() {
-            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, null, COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
+        void update_fail_when_location_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            null,
+                            COST,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("location must not be null");
         }
 
         @Test
-        @DisplayName("장소를 공백으로 변경 시 예외 발생")
-        void fails_when_location_is_blank() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, " ", COST, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.LOCATION_REQUIRED.message());
+        void update_fail_when_cost_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            null,
+                            LIMIT,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("cost must not be null");
         }
 
         @Test
-        @DisplayName("비용을 null 로 변경 시 예외 발생")
-        void fails_when_cost_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, null, LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
+        void update_fail_when_limit_is_zero() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            0,
+                            TYPE
+                    )
+            )
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingError.INVALID_MEMBER_LIMIT.message());
         }
 
         @Test
-        @DisplayName("비용을 공백으로 변경 시 예외 발생")
-        void fails_when_cost_is_blank() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, " ", LIMIT, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.COST_REQUIRED.message());
+        void update_fail_when_type_null() {
+            Meeting meeting = createDefaultMeeting();
+
+            assertThatThrownBy(() -> meeting.update(
+                            TITLE,
+                            mockMainImage,
+                            MeetingSchedule.of(DATETIME),
+                            LOCATION,
+                            COST,
+                            LIMIT,
+                            null
+                    )
+            )
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("type must not be null");
+        }
+    }
+
+    @Nested
+    class Attend {
+
+        @Test
+        void success_attend() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
+            assertThat(meeting.hasAttendee(1L)).isTrue();
         }
 
         @Test
-        @DisplayName("참여 인원을 0 으로 변경 시 예외 발생")
-        void fails_when_member_limit_is_zero() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, 0, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
+        void success_when_attend_same_member_twice() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            meeting.attend(member);
+
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
         }
 
         @Test
-        @DisplayName("참여 인원을 음수로 변경 시 예외 발생")
-        void fails_when_member_limit_is_negative() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, -10, TYPE))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.INVALID_MEMBER_LIMIT.message());
+        void success_fail_when_full_capacity() {
+            Meeting meeting = Meeting.create(
+                    mockClub,
+                    mockOwner,
+                    TITLE,
+                    mockMainImage,
+                    MeetingSchedule.of(DATETIME),
+                    LOCATION,
+                    COST,
+                    1,
+                    TYPE
+            );
+
+            Member member1 = MemberTestFixture.createDefaultMember();
+            Member member2 = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member1, "id", 1L);
+            ReflectionTestUtils.setField(member2, "id", 2L);
+
+            meeting.attend(member1);
+
+            assertThatThrownBy(() -> meeting.attend(member2))
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(MeetingError.FULL_CAPACITY.message());
         }
 
         @Test
-        @DisplayName("모임 타입을 null 로 변경 시 예외 발생")
-        void fails_when_type_is_null() {
-//            // when & then
-//            assertThatThrownBy(() ->
-//                    mockMeeting.update(TITLE, DATETIME, LOCATION, COST, LIMIT, null))
-//                    .isInstanceOf(DomainException.class)
-//                    .hasMessage(MeetingErrorCode.TYPE_REQUIRED.message());
+        void success_attend_cancel() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            meeting.cancelAttend(1L);
+
+            assertThat(meeting.getAttendeeCount()).isZero();
+        }
+
+        @Test
+        void success_when_cancel_non_attended_member() {
+            Meeting meeting = createDefaultMeeting();
+            Member member = MemberTestFixture.createDefaultMember();
+            ReflectionTestUtils.setField(member, "id", 1L);
+
+            meeting.attend(member);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
+
+            meeting.cancelAttend(999L);
+            assertThat(meeting.getAttendeeCount()).isEqualTo(1);
         }
     }
 }

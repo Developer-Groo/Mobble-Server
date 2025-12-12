@@ -50,7 +50,7 @@ public class ClubMemberPersistenceAdapter implements ClubMemberWritePort, ClubMe
     }
 
     @Override
-    public boolean existsByClubIdAndMemberId(Long clubId, Long memberId) {
+    public boolean existsByClubIdAndMemberIdAndIsApproved(Long clubId, Long memberId) {
         return repository.existsByClubIdAndMemberIdAndJoinStatus(clubId, memberId, JoinStatus.APPROVED);
     }
 }
