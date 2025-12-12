@@ -1,7 +1,6 @@
 package com.mobble.mobbleserver.domain.meeting;
 
 import com.mobble.mobbleserver.domain.club.Club;
-import com.mobble.mobbleserver.domain.clubMember.ClubMember;
 import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.image.Image;
 import com.mobble.mobbleserver.domain.meeting.error.MeetingError;
