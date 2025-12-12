@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.chat.room.service.command;
 
+import com.mobble.mobbleserver.application.chat.message.error.ChatMessageBusinessError;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageReadPort;
 import com.mobble.mobbleserver.application.chat.message.port.required.MessageWritePort;
 import com.mobble.mobbleserver.application.chat.room.error.ChatRoomBusinessError;
@@ -95,7 +96,7 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
 
     private ChatMessage assertMessageByMessageId(Long messageId) {
         return messageReadPort.findMessageByMessageId(messageId)
-                .orElseThrow(() -> new IllegalArgumentException("")); // Todo: Error 수정
+                .orElseThrow(() -> new BusinessException(ChatMessageBusinessError.NOT_FOUND));
     }
 
     private void assertHasParticipant(ChatRoom chatRoom, Member member) {
@@ -103,6 +104,6 @@ public class ParticipantModifyService implements ParticipantUpdatePort, ChatRoom
     }
 
     private void assertMessageBelongsToChatRoom(ChatMessage message, ChatRoom chatRoom) {
-        if (!message.getChatRoom().getId().equals(chatRoom.getId())) throw new IllegalStateException(""); // Todo: Error 수정
+        if (!message.getChatRoom().getId().equals(chatRoom.getId())) throw new BusinessException(ChatMessageBusinessError.NOT_BELONG_TO_CHAT_ROOM);
     }
 }
