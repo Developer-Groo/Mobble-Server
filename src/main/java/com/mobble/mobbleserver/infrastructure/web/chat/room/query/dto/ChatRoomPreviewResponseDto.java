@@ -17,7 +17,7 @@ public record ChatRoomPreviewResponseDto(
         );
     }
 
-    private record ChatRoomPreviewItemDto(
+    public record ChatRoomPreviewItemDto(
             Long chatRoomId,
             String type,
             Long clubId,
@@ -30,7 +30,7 @@ public record ChatRoomPreviewResponseDto(
             Long lastReadMessageId
     ) {
 
-        private static ChatRoomPreviewItemDto from(ChatRoomPreviewResult result) {
+        public static ChatRoomPreviewItemDto from(ChatRoomPreviewResult result) {
             return new ChatRoomPreviewItemDto(
                     result.chatRoomId(),
                     result.roomType().name(),
