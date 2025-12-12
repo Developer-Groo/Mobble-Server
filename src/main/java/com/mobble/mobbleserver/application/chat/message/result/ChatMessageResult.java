@@ -25,7 +25,9 @@ public record ChatMessageResult(
                 chatMessage.getType(),
                 chatMessage.getSender().getId(),
                 chatMessage.getSender().getName(),
-                chatMessage.getSender().getProfileImage() != null ? chatMessage.getSender().getProfileImage().getUrl() : null,
+                chatMessage.getSender().getProfileImage() != null
+                        ? chatMessage.getSender().getProfileImage().getUrl()
+                        : null,
                 DateTimeUtils.toKST(chatMessage.getCreatedAt())
         );
     }

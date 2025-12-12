@@ -48,41 +48,19 @@ public class ChatMessageQueryService implements MessageQueryPort {
         ChatRoom chatRoom = assertChatRoomByChatRoomId(chatRoomId);
         assertHasParticipant(chatRoom, member);
 
+        validateCursor(cursorId, cursorCreatedAt);
+
         LocalDateTime startDate = chatRoom.joinedAtOf(member);
 
-        if ((cursorId == null) != (cursorCreatedAt == null)) {
-            throw new BusinessException(ChatMessageBusinessError.INVALID_CURSOR);
-        }
-
-        boolean hasCursor = cursorId != null;
-        Long effectiveCursorId = hasCursor ? cursorId : null;
-        LocalDateTime effectiveCursorCreatedAt = hasCursor ? cursorCreatedAt : null;
-
-        List<ChatMessage> messages = messageReadPort.findMessages(
+        List<ChatMessage> fetched = messageReadPort.findMessages(
                 chatRoom.getId(),
                 startDate,
-                effectiveCursorId,
-                effectiveCursorCreatedAt,
+                cursorId,
+                cursorCreatedAt,
                 LIMIT + 1
         );
 
-        if (messages.isEmpty()) return ChatMessageSliceResult.empty();
-
-        boolean hasMore = messages.size() > LIMIT;
-        List<ChatMessage> page = hasMore ? messages.subList(0, LIMIT) : messages;
-
-        List<ChatMessageResult> results = page.stream()
-                .map(ChatMessageResult::create)
-                .toList();
-
-        ChatMessage last = page.get(page.size() - 1);
-
-        return ChatMessageSliceResult.create(
-                hasMore,
-                last.getId(),
-                last.getCreatedAt(),
-                results
-        );
+        return ChatMessageSliceResult.create(fetched, LIMIT);
     }
 
     /* ==== Private Helper ==== */
@@ -98,6 +76,12 @@ public class ChatMessageQueryService implements MessageQueryPort {
 
     private void assertHasParticipant(ChatRoom chatRoom, Member member) {
         if (!chatRoom.hasParticipant(member)) throw new BusinessException(ChatRoomBusinessError.NOT_PARTICIPANT);
+    }
+
+    private void validateCursor(Long cursorId, LocalDateTime cursorCreatedAt) {
+        if ((cursorId == null) != (cursorCreatedAt == null)) {
+            throw new BusinessException(ChatMessageBusinessError.INVALID_CURSOR);
+        }
     }
 }
 
