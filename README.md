@@ -13,10 +13,10 @@
 - [🍰 Performance Comparison](#-Performance-Comparison)
 
 ## 🏁 Team
-|**우현**|**태준**|**호진**|
-|-------|-------|-------|
-|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/c10e91bf-cccd-4fd3-a8c3-9e2985cd63bc"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/ac3a7f06-8c81-4f58-a1b1-aee9d5014d0a"/>|
-|[GitHub](https://github.com/Developer-Groo)|[GitHub](https://github.com/taejunUM)|[GitHub](https://github.com/Hojin02)|
+|**우현**|**태준**|
+|-------|-------|
+|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/c10e91bf-cccd-4fd3-a8c3-9e2985cd63bc"/>|
+|[GitHub](https://github.com/Developer-Groo)|[GitHub](https://github.com/taejunUM)|
 
 ## 📑 Wiki
 
@@ -248,20 +248,25 @@ erDiagram
 
 ## ✅ 작업 목록
 ## 😃 우현
-#### ✅ 댓글 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 채팅 도메인 기능 개발 및 테스트 코드 작성
-#### ☑️ 알림 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ API 문서화
-#### ☑️ API 문서화 디테일 작업
-#### ☑️ Liam ERD 로 시각화 변경 작업
-#### ☑️ 댓글 도메인 성능 테스트 및 최적화
-#### ☑️ 알림 도메인 부하 테스트 및 최적화
-#### ☑️ 기존 레이어 아키텍처에서 헥사고날 아키텍처로의 리팩터링 주도
-#### ☑️ CI/CD 파이프 라인 구축 및 인프라 설계, 배포
-#### ☑️ DDL 제약조건 명명 규칙 정리
+    ✅ 댓글 도메인 기능 개발
+    ✅ 클럽 도메인 기능 개발
+    ✅ 이미지 도메인 기능 개발
+    ✅ 채팅 도메인 기능 개발 
+    ✅ 알림 도메인 기능 개발 
+    ☑️ 테스트 코드 작성
+    ☑️ 채팅 도메인 멘션 기능 개발 및 테스트 코드 작성
+    ☑️ 알림 도메인 아키텍처 적용 및 테스트 코드 작성
+    ☑️ API 문서화 디테일 작업
+    ☑️ Liam ERD 로 시각화 변경 작업
+    ☑️ 각 도메인 성능, 부하 테스트 및 최적화
+    ☑️ CI/CD 파이프 라인 구축 및 인프라 설계, 배포
+    ☑️ DDL 제약조건 명명 규칙 정리
+    
 #### 📌 제약조건 명명 규칙 정의
     • MySQL 기본 제약조건 이름이 난해하게 생성되는 문제를 개선하여 식별 가능한 규칙 기반 네이밍으로 변경
+    
 #### ☑️ 채팅 도메인 부하 테스트 및 최적화: 채팅의 경우 대량 트래픽 발생이 예상 됨, Kafka 적용 예정/MySQL -> MongoDB 변경 구상
+
 #### 📌 채팅 도메인 부하 테스트 및 최적화
     •	채팅 서비스는 실시간성이 핵심, 동시 접속자 수 증가에 따라 초당 수천~수만 건의 메시지 발생 예상
     •	단일 DB 기반 처리 시 쓰기 작업에 트래픽이 몰려 병목 현상 발생 가능성 높음
@@ -276,32 +281,13 @@ erDiagram
     •	내장 메시지 보존: 메시지를 일정 기간 유지하여 장애 시 재처리 및 메시지 유실 방지
     
 ## 😃 태준
-#### ✅ 좋아요 도메인 기능 개발 및 테스트 코드 작성
-  - 중복 최소화: AbstractLikeService 추상클래스로 공통 로직 통합 → 도메인별 Service 중복 코드 제거
-  - 확장성 있는 위임 구조: LikeDispatcherService에서 LikeType(ARTICLE, CLUB, COMMENT)에 따라 요청 위임 → 새로운 LikeType 추가 시 확장 용이
-#### ✅ 모임(Meeting) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 모임 참석(Meeting Member) 기능 개발 및 테스트 코드 작성
-#### ✅ JWT 기반 인증 구조 리팩토링
-#### ✅ 소셜 로그인 기능 개발 및 테스트 코드 작성
-  - TokenVerifier 패턴 도입으로 플랫폼별 AccessToken (idToken) 검증 및 사용자 정보 요청 로직 분리
-#### ☑️ 좋아요 도메인 동시성 테스트 및 최적화
-#### ☑️ Meeting & MeetingMember 동시성 테스트 및 최적화
-
-## 😃 호진
-#### ✅ 게시글(Article) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 클럽(Club) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 클럽멤버(ClubMember) 도메인 기능 개발 및 테스트 코드 작성
-#### ☑️ 클럽 가입 동시성 문제 해결
-#### ☑️ Member, Club, Article 등 S3 + CDN 이미지 업/다운로드
-#### ☑️ 주소 도메인 만들어서 따로 관리
-  - 법정동 코드(행안부 주소 데이터 사용)
-  - 시도, 읍면동 등 상세 주소 관리
-#### ☑️ 클럽 검색 기능 개발
-   - 주소 api로 근처 클럽 검색
-   - 활동지역(법정동)으로 검색
-   - 이름, 카테고리, 연령대, 자동가입 여부 필터링 검색
-   - 좋아요 순, 생성 날짜 순, 가입자 수 등 정렬
-#### ☑️ 검색 최적화를 위해 엘라스틱 서치 인덱스 설계
-   - 검색 정확도 향상
-   - 연관 검색어, 부분 일치(like), 추천 검색어 등
+    ✅ 좋아요 도메인 기능 개발
+    ✅ 미팅 도메인 기능 개발
+    ✅ 멤버 도메인 기능 개발
+    ✅ JWT 기반 로그인 및 시큐리티 기능 개발
+    ☑️ 테스트 코드 작성
+    ☑️ 좋아요 기능 동시성 테스트 및 최적화
+    ☑️ Meeting 참석 기능 동시성 테스트 및 최적화
+    ☑️ 각 도메인 성능, 부하 테스트 및 최적화
+    
 
