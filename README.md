@@ -13,10 +13,10 @@
 - [🍰 Performance Comparison](#-Performance-Comparison)
 
 ## 🏁 Team
-|**우현**|**태준**|**호진**|
-|-------|-------|-------|
-|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/c10e91bf-cccd-4fd3-a8c3-9e2985cd63bc"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/ac3a7f06-8c81-4f58-a1b1-aee9d5014d0a"/>|
-|[GitHub](https://github.com/Developer-Groo)|[GitHub](https://github.com/taejunUM)|[GitHub](https://github.com/Hojin02)|
+|**우현**|**태준**|
+|-------|-------|
+|<img width="110" height="110" src="https://github.com/user-attachments/assets/c1c5bccc-9245-403c-b422-e4c1b0ecff92"/>|<img width="110" height="110" src="https://github.com/user-attachments/assets/c10e91bf-cccd-4fd3-a8c3-9e2985cd63bc"/>|
+|[GitHub](https://github.com/Developer-Groo)|[GitHub](https://github.com/taejunUM)|
 
 ## 📑 Wiki
 
@@ -31,237 +31,309 @@
 ~~~ mermaid
 erDiagram
 
-  MEMBER {
-    bigint member_id PK
-    varchar name
-    int age
-    tinyint gender
-    varchar email
-    varchar phone
-    varchar ground
-    tinyint terms_agreed
-    tinyint privacy_agreed
-    varchar profile_image
-    varchar social_provider
-    varchar social_id
-    tinyint is_deleted
-    timestamp updated_at
-    timestamp created_at
-  }
+    IMAGE {
+        BIGINT image_id PK
+        VARCHAR url
+        VARCHAR original_name
+        BIGINT size
+        VARCHAR content_type
+        VARCHAR type
+        BOOLEAN is_default
+    }
 
-  CLUB_MEMBER {
-    bigint club_member_id PK
-    bigint member_id FK
-    bigint club_id FK
-    enum role
-    tinyint join_status
-    timestamp created_at
-  }
+    MEMBER {
+        BIGINT member_id PK
+        VARCHAR name
+        INT age
+        VARCHAR gender
+        VARCHAR email
+        VARCHAR phone
+        VARCHAR address1
+        VARCHAR address2
+        VARCHAR city
+        VARCHAR district
+        DOUBLE latitude
+        DOUBLE longitude
+        BIGINT profile_image_id FK
+        BOOLEAN terms_agreed
+        BOOLEAN privacy_agreed
+        VARCHAR social_provider
+        VARCHAR social_id
+        BOOLEAN is_deleted
+        DATETIME deleted_at
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  CLUB {
-    bigint club_id PK
-    bigint club_category_id FK
-    varchar name
-    varchar ground
-    int headcount
-    tinyint join_type
-    timestamp updated_at
-    timestamp created_at
-  }
+    CATEGORY {
+        BIGINT category_id PK
+        VARCHAR code
+        VARCHAR target_type
+    }
 
-  CLUB_IMAGE {
-    bigint club_image_id PK
-    bigint club_id FK
-    varchar url
-    int sort_order
-    timestamp created_at
-  }
+    CLUB {
+        BIGINT club_id PK
+        VARCHAR name
+        BIGINT leader_id FK
+        BIGINT main_image_id FK
+        BIGINT category_id FK
+        VARCHAR age_group
+        VARCHAR description
+        BOOLEAN is_auto_join
+        INT member_count
+        VARCHAR address1
+        VARCHAR address2
+        VARCHAR city
+        VARCHAR district
+        DOUBLE latitude
+        DOUBLE longitude
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  CLUB_AGE_GROUP {
-    bigint club_age_group_id PK
-    bigint club_id FK
-    enum age_group_type
-  }
+    CLUB_MEMBER {
+        BIGINT club_member_id PK
+        BIGINT member_id FK
+        BIGINT club_id FK
+        VARCHAR club_member_role
+        VARCHAR join_status
+        DATETIME status_updated_at
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  CLUB_CATEGORY {
-    bigint club_category_id PK
-    varchar name
-  }
+    ARTICLE {
+        BIGINT article_id PK
+        BIGINT club_id FK
+        BIGINT member_id FK
+        VARCHAR article_type
+        BIGINT image_id FK
+        VARCHAR title
+        VARCHAR body
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  ARTICLE {
-    bigint article_id PK
-    bigint club_id FK
-    bigint member_id FK
-    enum article_type
-    varchar title
-    text content
-    timestamp updated_at
-    timestamp created_at
-  }
+    COMMENT {
+        BIGINT comment_id PK
+        BIGINT member_id FK
+        BIGINT article_id FK
+        BIGINT parent_id FK
+        VARCHAR body
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  ARTICLE_IMAGE {
-    bigint article_image_id PK
-    bigint article_id FK
-    varchar url
-    int sort_order
-    timestamp created_at
-  }
+    ARTICLE_LIKE {
+        BIGINT id PK
+        BIGINT member_id FK
+        BIGINT article_id FK
+    }
 
-  COMMENT {
-    bigint comment_id PK
-    bigint article_id FK
-    bigint member_id FK
-    bigint parent_id
-    varchar content
-    timestamp created_at
-    timestamp updated_at
-  }
+    CLUB_LIKE {
+        BIGINT id PK
+        BIGINT member_id FK
+        BIGINT club_id FK
+    }
 
-  ARTICLE_LIKE {
-    bigint article_like_id PK
-    bigint article_id FK
-    bigint member_id FK
-  }
+    COMMENT_LIKE {
+        BIGINT id PK
+        BIGINT member_id FK
+        BIGINT comment_id FK
+    }
 
-  COMMENT_LIKE {
-    bigint comment_like_id PK
-    bigint comment_id FK
-    bigint member_id FK
-  }
+    LIKE_COUNTER {
+        BIGINT like_counter_id PK
+        VARCHAR like_type
+        BIGINT target_id
+        INT cnt
+    }
 
-  CLUB_LIKE {
-    bigint club_like_id PK
-    bigint club_id FK
-    bigint member_id FK
-  }
+    MEETING {
+        BIGINT meeting_id PK
+        BIGINT club_id FK
+        BIGINT owner_id FK
+        BIGINT main_image_id FK
+        VARCHAR title
+        DATETIME datetime
+        VARCHAR location
+        VARCHAR cost
+        INT member_limit
+        VARCHAR type
+    }
 
-  MEETING {
-    bigint meeting_id PK
-    bigint club_member_id FK
-    varchar title
-    timestamp datetime
-    varchar location
-    varchar cost
-    int member_limit
-    enum type
-    timestamp updated_at
-    timestamp created_at
-  }
+    MEETING_MEMBER {
+        BIGINT meeting_member_id PK
+        BIGINT meeting_id FK
+        BIGINT member_id FK
+    }
 
-  MEETING_MEMBER {
-    bigint meeting_member_id PK
-    bigint meeting_id FK
-    bigint member_id FK
-    timestamp created_at
-  }
+    CHAT_ROOM {
+        BIGINT chat_room_id PK
+        VARCHAR type
+    }
 
-  CHAT_ROOM {
-    bigint chat_room_id PK
-    enum type
-    timestamp created_at
-  }
+    ROOM_INFO {
+        BIGINT room_info_id PK
+        BIGINT chat_room_id FK
+        VARCHAR room_kind
+    }
 
-  CLUB_CHAT_ROOM {
-    bigint club_id PK
-    bigint chat_room_id FK
-  }
+    DIRECT_ROOM_INFO {
+        BIGINT room_info_id PK
+        BIGINT member_a_id FK
+        BIGINT member_b_id FK
+    }
 
-  DIRECT_CHAT_ROOM {
-    bigint direct_chat_room_id PK
-    bigint chat_room_id FK
-    bigint member1_id FK
-    bigint member2_id FK
-  }
+    CHAT_ROOM_PARTICIPANT {
+        BIGINT chat_room_participant_id PK
+        BIGINT chat_room_id FK
+        BIGINT member_id FK
+        BIGINT last_read_message_id
+        BOOLEAN notified
+        DATETIME created_at
+    }
 
-  CHAT_ROOM_PARTICIPANT {
-    bigint chat_room_member_id PK
-    bigint chat_room_id FK
-    bigint member_id FK
-    timestamp joined_at
-    bigint last_read_message_id
-    tinyint notified
-  }
+    CHAT_MESSAGE {
+        BIGINT chat_message_id PK
+        BIGINT chat_room_id FK
+        BIGINT sender_id FK
+        VARCHAR content
+        VARCHAR type
+        DATETIME created_at
+    }
 
-  CHAT_MESSAGE {
-    bigint chat_message_id PK
-    bigint chat_room_id FK
-    bigint sender_id FK
-    text content
-    enum type
-    timestamp created_at
-  }
+    CHAT_MESSAGE_MENTION {
+        BIGINT chat_message_mention_id PK
+        BIGINT chat_message_id FK
+        BIGINT mentioned_member_id FK
+        DATETIME created_at
+    }
 
-  CHAT_MESSAGE_MENTION {
-    bigint chat_message_id FK
-    bigint mentioned_member_id FK
-  }
+    NOTIFICATION {
+        BIGINT notification_id PK
+        BIGINT receiver_id FK
+        VARCHAR type
+        VARCHAR title
+        VARCHAR content
+        BOOLEAN is_read
+        VARCHAR target_type
+        BIGINT target_id
+        DATETIME created_at
+    }
 
-  NOTIFICATION {
-    bigint notification_id PK
-    bigint receiver_id FK
-    enum type
-    varchar content
-    tinyint is_read
-    bigint related_id
-    timestamp created_at
-  }
+    DEVICE_TOKEN {
+        BIGINT device_token_id PK
+        BIGINT member_id FK
+        VARCHAR token
+        VARCHAR platform
+        BOOLEAN enabled
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  %% -------- Relationships --------
+    NOTIFICATION_SETTING {
+        BIGINT notification_setting_id PK
+        BIGINT member_id FK
+        BOOLEAN push_global
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  CLUB_MEMBER }o--|| MEMBER : member_id
-  COMMENT }o--|| MEMBER : member_id
-  ARTICLE_LIKE }o--|| MEMBER : member_id
-  COMMENT_LIKE }o--|| MEMBER : member_id
-  CLUB_LIKE }o--|| MEMBER : member_id
-  MEETING_MEMBER }o--|| MEMBER : member_id
-  CHAT_ROOM_PARTICIPANT }o--|| MEMBER : member_id
-  CHAT_MESSAGE }o--|| MEMBER : sender_id
-  CHAT_MESSAGE_MENTION }o--|| MEMBER : mentioned_member_id
-  NOTIFICATION }o--|| MEMBER : receiver_id
+    NOTIFICATION_SETTING_ITEM {
+        BIGINT notification_setting_item_id PK
+        BIGINT setting_id FK
+        VARCHAR type
+        BOOLEAN enabled
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  CLUB_MEMBER }o--|| CLUB : club_id
-  CLUB_IMAGE }o--|| CLUB : club_id
-  CLUB }o--|| CLUB_CATEGORY : club_category_id
-  CLUB_AGE_GROUP }o--|| CLUB : club_id
-  CLUB_LIKE }o--|| CLUB : club_id
-  MEETING }o--|| CLUB_MEMBER : club_member_id
+    PUSH_OUTBOX {
+        BIGINT push_outbox_id PK
+        VARCHAR token
+        VARCHAR title
+        VARCHAR body
+        VARCHAR data_json
+        VARCHAR status
+        INT attempts
+        DATETIME next_attempt_at
+        VARCHAR last_error
+        DATETIME created_at
+        DATETIME updated_at
+    }
 
-  ARTICLE_IMAGE }o--|| ARTICLE : article_id
-  COMMENT }o--|| ARTICLE : article_id
-  ARTICLE_LIKE }o--|| ARTICLE : article_id
+    IMAGE o|--o{ MEMBER : profile_image
+    IMAGE o|--o{ ARTICLE : used_by
+    IMAGE o|--o{ MEETING : main_image
+    IMAGE o|--o| CLUB : main_image
 
-  COMMENT }o--|| COMMENT : parent_id
-  COMMENT_LIKE }o--|| COMMENT : comment_id
+    CATEGORY ||--o{ CLUB : categorizes
+    MEMBER   ||--o{ CLUB : leads
+    CLUB     ||--o{ CLUB_MEMBER : has_members
+    MEMBER   ||--o{ CLUB_MEMBER : joins
 
-  MEETING_MEMBER }o--|| MEETING : meeting_id
+    CLUB    ||--o{ ARTICLE : has
+    MEMBER  ||--o{ ARTICLE : writes
+    ARTICLE ||--o{ COMMENT : has
+    MEMBER  ||--o{ COMMENT : writes
+    COMMENT o|--o{ COMMENT : replies_to
 
-  CHAT_ROOM_PARTICIPANT }o--|| CHAT_ROOM : chat_room_id
-  CHAT_MESSAGE }o--|| CHAT_ROOM : chat_room_id
-  CHAT_MESSAGE_MENTION }o--|| CHAT_MESSAGE : chat_message_id
-  CHAT_ROOM_PARTICIPANT }o--|| CHAT_MESSAGE : last_read_message_id
-  CLUB_CHAT_ROOM }o--|| CHAT_ROOM : chat_room_id
-  CLUB_CHAT_ROOM }o--|| CLUB : club_id
-  DIRECT_CHAT_ROOM }o--|| CHAT_ROOM : chat_room_id
-  DIRECT_CHAT_ROOM }o--|| MEMBER : member1_id
-  DIRECT_CHAT_ROOM }o--|| MEMBER : member2_id
+    MEMBER  ||--o{ ARTICLE_LIKE : likes
+    ARTICLE ||--o{ ARTICLE_LIKE : liked_by
+    MEMBER  ||--o{ CLUB_LIKE : likes
+    CLUB    ||--o{ CLUB_LIKE : liked_by
+    MEMBER  ||--o{ COMMENT_LIKE : likes
+    COMMENT ||--o{ COMMENT_LIKE : liked_by
+
+    CLUB    ||--o{ MEETING : hosts
+    MEMBER  ||--o{ MEETING : owns
+    MEETING ||--o{ MEETING_MEMBER : attendees
+    MEMBER  ||--o{ MEETING_MEMBER : attends
+
+    CHAT_ROOM ||--|| ROOM_INFO : has
+    ROOM_INFO ||--|| DIRECT_ROOM_INFO : subtype
+    CHAT_ROOM ||--o{ CHAT_ROOM_PARTICIPANT : participants
+    MEMBER   ||--o{ CHAT_ROOM_PARTICIPANT : joins
+
+    CHAT_ROOM ||--o{ CHAT_MESSAGE : messages
+    MEMBER   ||--o{ CHAT_MESSAGE : sends
+    CHAT_MESSAGE ||--o{ CHAT_MESSAGE_MENTION : mentions
+    MEMBER ||--o{ CHAT_MESSAGE_MENTION : mentioned
+
+    MEMBER ||--o{ DIRECT_ROOM_INFO : memberA
+    MEMBER ||--o{ DIRECT_ROOM_INFO : memberB
+
+    MEMBER ||--o{ NOTIFICATION : receives
+    MEMBER ||--o{ DEVICE_TOKEN : owns
+
+    MEMBER ||--|| NOTIFICATION_SETTING : has
+    NOTIFICATION_SETTING ||--o{ NOTIFICATION_SETTING_ITEM : items
 ~~~
 
 ## ✅ 작업 목록
 ## 😃 우현
-#### ✅ 댓글 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 채팅 도메인 기능 개발 및 테스트 코드 작성
-#### ☑️ 알림 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ API 문서화
-#### ☑️ API 문서화 디테일 작업
-#### ☑️ Liam ERD 로 시각화 변경 작업
-#### ☑️ 댓글 도메인 성능 테스트 및 최적화
-#### ☑️ 알림 도메인 부하 테스트 및 최적화
-#### ☑️ 기존 레이어 아키텍처에서 헥사고날 아키텍처로의 리팩터링 주도
-#### ☑️ CI/CD 파이프 라인 구축 및 인프라 설계, 배포
-#### ☑️ DDL 제약조건 명명 규칙 정리
+    ✅ 댓글 도메인 기능 개발
+    ✅ 클럽 도메인 기능 개발
+    ✅ 카테고리 도메인 기능 개발
+    ✅ 이미지 도메인 기능 개발
+    ✅ 채팅 도메인 기능 개발 
+    ✅ 알림 도메인 기능 개발 
+    ☑️ 클럽 조건 검색 기능 개발
+    ☑️ 테스트 코드 작성
+    ☑️ 채팅 도메인 멘션 기능 개발 및 테스트 코드 작성
+    ☑️ 알림 도메인 아키텍처 적용 및 테스트 코드 작성
+    ☑️ API 문서화 디테일 작업
+    ☑️ Liam ERD 로 시각화 변경 작업
+    ☑️ 각 도메인 성능, 부하 테스트 및 최적화
+    ☑️ CI/CD 파이프 라인 구축 및 인프라 설계, 배포
+    ☑️ DDL 제약조건 명명 규칙 정리
+    
 #### 📌 제약조건 명명 규칙 정의
     • MySQL 기본 제약조건 이름이 난해하게 생성되는 문제를 개선하여 식별 가능한 규칙 기반 네이밍으로 변경
+    
 #### ☑️ 채팅 도메인 부하 테스트 및 최적화: 채팅의 경우 대량 트래픽 발생이 예상 됨, Kafka 적용 예정/MySQL -> MongoDB 변경 구상
+
 #### 📌 채팅 도메인 부하 테스트 및 최적화
     •	채팅 서비스는 실시간성이 핵심, 동시 접속자 수 증가에 따라 초당 수천~수만 건의 메시지 발생 예상
     •	단일 DB 기반 처리 시 쓰기 작업에 트래픽이 몰려 병목 현상 발생 가능성 높음
@@ -276,32 +348,13 @@ erDiagram
     •	내장 메시지 보존: 메시지를 일정 기간 유지하여 장애 시 재처리 및 메시지 유실 방지
     
 ## 😃 태준
-#### ✅ 좋아요 도메인 기능 개발 및 테스트 코드 작성
-  - 중복 최소화: AbstractLikeService 추상클래스로 공통 로직 통합 → 도메인별 Service 중복 코드 제거
-  - 확장성 있는 위임 구조: LikeDispatcherService에서 LikeType(ARTICLE, CLUB, COMMENT)에 따라 요청 위임 → 새로운 LikeType 추가 시 확장 용이
-#### ✅ 모임(Meeting) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 모임 참석(Meeting Member) 기능 개발 및 테스트 코드 작성
-#### ✅ JWT 기반 인증 구조 리팩토링
-#### ✅ 소셜 로그인 기능 개발 및 테스트 코드 작성
-  - TokenVerifier 패턴 도입으로 플랫폼별 AccessToken (idToken) 검증 및 사용자 정보 요청 로직 분리
-#### ☑️ 좋아요 도메인 동시성 테스트 및 최적화
-#### ☑️ Meeting & MeetingMember 동시성 테스트 및 최적화
-
-## 😃 호진
-#### ✅ 게시글(Article) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 클럽(Club) 도메인 기능 개발 및 테스트 코드 작성
-#### ✅ 클럽멤버(ClubMember) 도메인 기능 개발 및 테스트 코드 작성
-#### ☑️ 클럽 가입 동시성 문제 해결
-#### ☑️ Member, Club, Article 등 S3 + CDN 이미지 업/다운로드
-#### ☑️ 주소 도메인 만들어서 따로 관리
-  - 법정동 코드(행안부 주소 데이터 사용)
-  - 시도, 읍면동 등 상세 주소 관리
-#### ☑️ 클럽 검색 기능 개발
-   - 주소 api로 근처 클럽 검색
-   - 활동지역(법정동)으로 검색
-   - 이름, 카테고리, 연령대, 자동가입 여부 필터링 검색
-   - 좋아요 순, 생성 날짜 순, 가입자 수 등 정렬
-#### ☑️ 검색 최적화를 위해 엘라스틱 서치 인덱스 설계
-   - 검색 정확도 향상
-   - 연관 검색어, 부분 일치(like), 추천 검색어 등
+    ✅ 좋아요 도메인 기능 개발
+    ✅ 미팅 도메인 기능 개발
+    ✅ 멤버 도메인 기능 개발
+    ✅ JWT 기반 로그인 및 시큐리티 기능 개발
+    ☑️ 테스트 코드 작성
+    ☑️ 좋아요 기능 동시성 테스트 및 최적화
+    ☑️ Meeting 참석 기능 동시성 테스트 및 최적화
+    ☑️ 각 도메인 성능, 부하 테스트 및 최적화
+    
 
