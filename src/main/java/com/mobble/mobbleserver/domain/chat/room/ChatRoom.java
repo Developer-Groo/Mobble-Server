@@ -122,6 +122,7 @@ public class ChatRoom extends CreatedAtEntity {
         }
     }
 
+    /* 클럽 채팅방 전용 */
     public Club getClub() {
         if (roomInfo instanceof ClubRoomInfo clubRoomInfo) {
             return clubRoomInfo.getClub();
