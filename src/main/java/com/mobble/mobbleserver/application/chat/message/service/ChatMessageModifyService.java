@@ -36,7 +36,14 @@ public class ChatMessageModifyService implements SendMessagePort {
 
         assertHasParticipant(chatRoom, sender);
 
-        ChatMessage chatMessage = ChatMessage.create(chatRoom, sender, command.content(), command.type());
+        ChatMessage chatMessage = ChatMessage.create(
+                chatRoom,
+                sender,
+                command.content(),
+                command.type(),
+                command.mentionedMemberIds()
+        );
+
         ChatMessage savedMessage = messageWritePort.save(chatMessage);
 
         chatRoom.updateLastReadMessage(sender, savedMessage.getId());
