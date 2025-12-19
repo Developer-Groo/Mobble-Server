@@ -25,7 +25,7 @@ public class ChatMessageWsAPI {
             @RequestBody @Valid ChatMessageRequestDto dto,
             @AuthenticationPrincipal(expression = "memberId") Long memberId
     ) {
-        SendMessageCommand command = SendMessageCommand.create(chatRoomId, memberId, dto.content(), dto.type());
+        SendMessageCommand command = dto.toCommand(chatRoomId, memberId);
 
         sendMessagePort.send(command);
     }
