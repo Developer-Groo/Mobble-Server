@@ -5,6 +5,7 @@ import com.mobble.mobbleserver.domain.chat.message.MessageType;
 import com.mobble.mobbleserver.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ChatMessageResult(
         Long chatRoomId,
@@ -14,7 +15,8 @@ public record ChatMessageResult(
         Long senderId,
         String senderName,
         String senderProfileImageUrl,
-        LocalDateTime sentAt
+        LocalDateTime sentAt,
+        List<Long> mentionedMemberIds
 ) {
 
     public static ChatMessageResult create(ChatMessage chatMessage) {
@@ -28,7 +30,8 @@ public record ChatMessageResult(
                 chatMessage.getSender().getProfileImage() != null
                         ? chatMessage.getSender().getProfileImage().getUrl()
                         : null,
-                DateTimeUtils.toKST(chatMessage.getCreatedAt())
+                DateTimeUtils.toKST(chatMessage.getCreatedAt()),
+                chatMessage.getMentionedMemberIds()
         );
     }
 }
