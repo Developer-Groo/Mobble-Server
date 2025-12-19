@@ -57,17 +57,28 @@ public class ChatMessage extends CreatedAtEntity {
             ChatRoom chatRoom,
             Member sender,
             String content,
-            MessageType type
+            MessageType type,
+            List<Long> mentionIds
     ) {
-        return ChatMessage.builder()
+        ChatMessage message = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .sender(sender)
                 .content(content)
                 .type(type)
                 .build();
+
+        message.setMentions(mentionIds);
+
+        return message;
     }
 
-    public void setMentionsByMemberIds(List<Long> memberIds) {
+    public List<Long> getMentionedMemberIds() {
+        return mentions.stream()
+                .map(ChatMessageMention::getMentionedMemberId)
+                .toList();
+    }
+
+    private void setMentions(List<Long> memberIds) {
         this.mentions.clear();
 
         if (memberIds == null || memberIds.isEmpty()) return;
@@ -77,26 +88,5 @@ public class ChatMessage extends CreatedAtEntity {
                 .forEach(id ->
                         this.mentions.add(ChatMessageMention.create(this, id))
                 );
-    }
-
-    public void addMention(Long mentionedMemberId) {
-        if (mentionedMemberId == null) return;
-
-        boolean exists = mentions.stream()
-                .anyMatch(mention -> mentionedMemberId.equals(mention.getMentionedMemberId()));
-
-        if (exists) {
-            mentions.add(ChatMessageMention.create(this, mentionedMemberId));
-        }
-    }
-
-    public void removeMention(Long mentionedMemberId) {
-        mentions.removeIf(mention -> mentionedMemberId.equals(mention.getMentionedMemberId()));
-    }
-
-    public List<Long> getMentionedMemberIds() {
-        return mentions.stream()
-                .map(ChatMessageMention::getMentionedMemberId)
-                .toList();
     }
 }
