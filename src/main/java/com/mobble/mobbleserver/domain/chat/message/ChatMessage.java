@@ -1,7 +1,11 @@
 package com.mobble.mobbleserver.domain.chat.message;
 
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.comment.error.CommentError;
 import com.mobble.mobbleserver.domain.common.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 @Getter
 @Entity
@@ -60,6 +66,8 @@ public class ChatMessage extends CreatedAtEntity {
             MessageType type,
             List<Long> mentionIds
     ) {
+        assertCreate(chatRoom, sender, content, type);
+
         ChatMessage message = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .sender(sender)
@@ -88,5 +96,13 @@ public class ChatMessage extends CreatedAtEntity {
                 .forEach(id ->
                         this.mentions.add(ChatMessageMention.create(this, id))
                 );
+    }
+
+    /* Assert 검증 */
+    private static void assertCreate(ChatRoom chatRoom, Member sender, String content, MessageType type) {
+        requireNonNull(chatRoom, "chat room must not be null");
+        requireNonNull(sender, "sender must not be null");
+        requireNonNull(content, "content must not be null");
+        requireNonNull(type, "message type must not be null");
     }
 }
