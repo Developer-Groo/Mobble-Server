@@ -51,6 +51,7 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     @Override
     public Article create(CreateArticleCommand command) {
         ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        clubMember.assertApproved();
 
         assertCanPost(clubMember, command.type());
 
@@ -72,6 +73,8 @@ public class ArticleModifyService implements ArticleCreatePort, ArticleUpdatePor
     @Override
     public Article update(UpdateArticleCommand command) {
         ClubMember clubMember = assertMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        clubMember.assertApproved();
+
         Club club = clubMember.getClub();
         Member member = clubMember.getMember();
         Article article = assertArticleByArticleIdAndClubId(command.articleId(), club.getId());

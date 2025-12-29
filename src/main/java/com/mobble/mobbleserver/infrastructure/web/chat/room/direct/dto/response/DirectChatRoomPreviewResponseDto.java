@@ -1,36 +1,20 @@
 package com.mobble.mobbleserver.infrastructure.web.chat.room.direct.dto.response;
 
-import com.mobble.mobbleserver.domain.chat.message.ChatMessage;
-import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
-import com.mobble.mobbleserver.domain.member.Member;
-
-import java.time.LocalDateTime;
+import com.mobble.mobbleserver.application.chat.room.result.DirectChatRoomPreviewResult;
 
 public record DirectChatRoomPreviewResponseDto(
         Long chatRoomId,
+        Long receiverId,
         String receiverName,
-        String receiverProfileImageUrl,
-        String lastMessage,
-        LocalDateTime lastMessageTime,
-        int unreadCount,
-        Long lastReadMessageId
+        String receiverProfileImageUrl
 ) {
 
-    public static DirectChatRoomPreviewResponseDto toDto(
-            ChatRoom chatRoom,
-            Member receiver,
-            ChatMessage lastMessage,
-            int unreadCount,
-            Long lastReadMessageId
-    ) {
+    public static DirectChatRoomPreviewResponseDto toDto(DirectChatRoomPreviewResult result) {
         return new DirectChatRoomPreviewResponseDto(
-                chatRoom.getId(),
-                receiver.getName(),
-                receiver.getProfileImage().getUrl(),
-                lastMessage != null ? lastMessage.getContent() : "",
-                lastMessage != null ? lastMessage.getCreatedAt() : null,
-                unreadCount,
-                lastReadMessageId
+                result.chatRoomId(),
+                result.receiverId(),
+                result.receiverName(),
+                result.receiverProfileImageUrl()
         );
     }
 }

@@ -1,4 +1,4 @@
-package com.mobble.mobbleserver.application.chat.room.port.provided.common;
+package com.mobble.mobbleserver.application.chat.room.port.provided.command.participant;
 
 public interface ParticipantUpdatePort {
 

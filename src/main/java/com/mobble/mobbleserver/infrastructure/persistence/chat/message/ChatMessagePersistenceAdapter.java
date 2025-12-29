@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,14 +24,19 @@ public class ChatMessagePersistenceAdapter implements MessageWritePort, MessageR
     }
 
     @Override
-    public void delete(Long chatRoomId) {
-        repository.deleteChatMessagesByChatRoomId(chatRoomId);
+    public void deleteAll(Long chatRoomId) {
+        repository.deleteAllByChatRoom_Id(chatRoomId);
     }
 
     /* MessageReadPort */
     @Override
-    public List<ChatMessage> findMessagesFrom(Long chatRoomId, LocalDateTime startDate, Long lastMessageId, LocalDateTime lastCreatedAt) {
-        return repository.findMessagesFrom(chatRoomId, startDate, lastMessageId, lastCreatedAt);
+    public Optional<ChatMessage> findMessageByMessageId(Long messageId) {
+        return repository.findById(messageId);
+    }
+
+    @Override
+    public List<ChatMessage> findMessages(Long chatRoomId, LocalDateTime startDate, Long cursorId, LocalDateTime cursorCreatedAt, int limit) {
+        return repository.findMessages(chatRoomId, startDate, cursorId, cursorCreatedAt, limit);
     }
 
     @Override

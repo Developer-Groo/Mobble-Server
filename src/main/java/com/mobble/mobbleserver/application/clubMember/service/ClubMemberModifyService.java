@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.application.clubMember.service;
 
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.club.ClubChatRoomJoinPort;
 import com.mobble.mobbleserver.application.club.error.ClubBusinessError;
 import com.mobble.mobbleserver.application.club.port.required.ClubReadPort;
 import com.mobble.mobbleserver.application.clubMember.command.UpdateRoleCommand;
@@ -29,6 +30,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUpdatePort, ClubMemberLeavePort {
 
+    private final ClubChatRoomJoinPort clubChatRoomJoinPort;
+
     private final ClubMemberWritePort clubMemberWritePort;
 
     private final ClubMemberReadPort clubMemberReadPort;
@@ -40,7 +43,7 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
         Club club = assertClubByClubId(clubId);
         Member member = assertMemberByMemberId(memberId);
 
-        Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(clubId, memberId);
+        Optional<ClubMember> optionalMember = clubMemberReadPort.findClubMemberByClubIdAndMemberId(club.getId(), member.getId());
         optionalMember.ifPresent(this::assertExistingMemberCanJoin);
 
         JoinStatus joinStatus = club.isAutoJoin()
@@ -51,11 +54,12 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
                 .map(existingMember -> existingMember.updateStatus(joinStatus))
                 .orElseGet(() -> ClubMember.createMember(member, club, joinStatus));
 
+        ClubMember saved = clubMemberWritePort.save(clubMember);
+
         if (joinStatus == JoinStatus.APPROVED) {
             club.increaseMemberCount();
+            clubChatRoomJoinPort.join(club.getId(), member.getId());
         }
-
-        ClubMember saved = clubMemberWritePort.save(clubMember);
 
         // Todo: 알림 처리 (구현 예정)
          handleJoinNotification(club, member, joinStatus);
@@ -66,6 +70,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public ClubMember updateJoinStatus(UpdateStatusCommand command) {
         ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        leader.assertApproved();
+
         assertLeader(leader);
 
         ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
@@ -92,6 +98,8 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public ClubMember updateRole(UpdateRoleCommand command) {
         ClubMember leader = assertClubMemberByClubIdAndMemberId(command.clubId(), command.leaderId());
+        leader.assertApproved();
+
         assertLeader(leader);
 
         ClubMember targetMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.targetMemberId());
@@ -116,13 +124,13 @@ public class ClubMemberModifyService implements ClubMemberJoinPort, ClubMemberUp
     @Override
     public void leave(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMember.assertApproved();
 
         assertLeaderCannotLeave(clubMember);
 
-        clubMember.assertApproved();
-
         clubMember.getClub().decreaseMemberCount();
         clubMember.updateStatus(JoinStatus.LEAVE);
+        // Todo: clubChatRoom 에서 leave 필요
     }
 
     /* ==== Private Helper ==== */

@@ -1,7 +1,11 @@
 package com.mobble.mobbleserver.domain.chat.message;
 
+import com.mobble.mobbleserver.domain.article.Article;
 import com.mobble.mobbleserver.domain.chat.room.ChatRoom;
+import com.mobble.mobbleserver.domain.comment.Comment;
+import com.mobble.mobbleserver.domain.comment.error.CommentError;
 import com.mobble.mobbleserver.domain.common.CreatedAtEntity;
+import com.mobble.mobbleserver.domain.exception.DomainException;
 import com.mobble.mobbleserver.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 @Getter
 @Entity
@@ -57,17 +63,30 @@ public class ChatMessage extends CreatedAtEntity {
             ChatRoom chatRoom,
             Member sender,
             String content,
-            MessageType type
+            MessageType type,
+            List<Long> mentionIds
     ) {
-        return ChatMessage.builder()
+        assertCreate(chatRoom, sender, content, type);
+
+        ChatMessage message = ChatMessage.builder()
                 .chatRoom(chatRoom)
                 .sender(sender)
                 .content(content)
                 .type(type)
                 .build();
+
+        message.setMentions(mentionIds);
+
+        return message;
     }
 
-    public void setMentionsByMemberIds(List<Long> memberIds) {
+    public List<Long> getMentionedMemberIds() {
+        return mentions.stream()
+                .map(ChatMessageMention::getMentionedMemberId)
+                .toList();
+    }
+
+    private void setMentions(List<Long> memberIds) {
         this.mentions.clear();
 
         if (memberIds == null || memberIds.isEmpty()) return;
@@ -75,28 +94,15 @@ public class ChatMessage extends CreatedAtEntity {
         memberIds.stream()
                 .distinct()
                 .forEach(id ->
-                        this.mentions.add(ChatMessageMention.createChatMessageMention(this, id))
+                        this.mentions.add(ChatMessageMention.create(this, id))
                 );
     }
 
-    public void addMention(Long mentionedMemberId) {
-        if (mentionedMemberId == null) return;
-
-        boolean exists = mentions.stream()
-                .anyMatch(mention -> mentionedMemberId.equals(mention.getMentionedMemberId()));
-
-        if (exists) {
-            mentions.add(ChatMessageMention.createChatMessageMention(this, mentionedMemberId));
-        }
-    }
-
-    public void removeMention(Long mentionedMemberId) {
-        mentions.removeIf(mention -> mentionedMemberId.equals(mention.getMentionedMemberId()));
-    }
-
-    public List<Long> getMentionedMemberIds() {
-        return mentions.stream()
-                .map(ChatMessageMention::getMentionedMemberId)
-                .toList();
+    /* Assert 검증 */
+    private static void assertCreate(ChatRoom chatRoom, Member sender, String content, MessageType type) {
+        requireNonNull(chatRoom, "chat room must not be null");
+        requireNonNull(sender, "sender must not be null");
+        requireNonNull(content, "content must not be null");
+        requireNonNull(type, "message type must not be null");
     }
 }

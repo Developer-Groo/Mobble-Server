@@ -1,6 +1,6 @@
-package com.mobble.mobbleserver.infrastructure.web.chat.room.common;
+package com.mobble.mobbleserver.infrastructure.web.chat.room.participant;
 
-import com.mobble.mobbleserver.application.chat.room.port.provided.common.ParticipantUpdatePort;
+import com.mobble.mobbleserver.application.chat.room.port.provided.command.participant.ParticipantUpdatePort;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/chat-rooms/{chat-room-id}")
+@RequestMapping("/api/chat/rooms/{chat-room-id}")
 public class ParticipantAPI {
 
     private final ParticipantUpdatePort participantUpdatePort;

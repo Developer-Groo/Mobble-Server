@@ -45,6 +45,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public Meeting createMeeting(CreateMeetingCommand command) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        clubMember.assertApproved();
         Image mainImage = resolveMainImage(command.mainImageId());
 
         assertCanManageMeeting(clubMember);
@@ -72,6 +73,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public Meeting updateMeeting(UpdateMeetingCommand command) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(command.clubId(), command.memberId());
+        clubMember.assertApproved();
         assertCanManageMeeting(clubMember);
 
         Image mainImage = resolveMainImage(command.mainImageId());
@@ -93,6 +95,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public void deleteMeeting(Long memberId, Long clubId, Long meetingId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMember.assertApproved();
         assertCanManageMeeting(clubMember);
 
         Meeting meeting = assertMeetingByMeetingId(meetingId);
@@ -104,6 +107,7 @@ public class MeetingModifyService implements MeetingCreatePort, MeetingUpdatePor
     @Override
     public void deleteAll(Long memberId, Long clubId) {
         ClubMember clubMember = assertClubMemberByClubIdAndMemberId(clubId, memberId);
+        clubMember.assertApproved();
         assertLeader(clubMember);
 
         List<Meeting> meetings = meetingReadPort.findMeetingsByClubId(clubId);

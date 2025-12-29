@@ -55,7 +55,6 @@ public class LikeQueryService implements LikeQueryPort {
 
     @Override
     public Map<Long, Integer> getLikeCounts(LikeType likeType, List<Long> targetIds) {
-
         List<LikeCounter> counters = likeCounterReadPort.findAllByLikeTypeAndTargetIds(likeType, targetIds);
         Map<Long, Integer> counterMap = toCounterMap(counters);
 

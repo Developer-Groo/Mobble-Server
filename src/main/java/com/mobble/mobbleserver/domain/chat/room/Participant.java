@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static java.util.Objects.requireNonNull;
+
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,7 +50,7 @@ public class Participant extends CreatedAtEntity {
     }
 
     void updateLastReadMessage(Long messageId) {
-        if (this.lastReadMessageId == null) throw new IllegalArgumentException("");
+        requireNonNull(lastReadMessageId, "last read message id must not be null");
         this.lastReadMessageId = messageId;
     }
 
