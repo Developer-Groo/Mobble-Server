@@ -1,5 +1,6 @@
 package com.mobble.mobbleserver.domain.chat.room;
 
+import com.mobble.mobbleserver.domain.chat.message.MessageType;
 import com.mobble.mobbleserver.domain.chat.room.error.ChatRoomError;
 import com.mobble.mobbleserver.domain.club.Club;
 import com.mobble.mobbleserver.domain.common.CreatedAtEntity;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 @Getter
 @Entity
@@ -41,6 +44,8 @@ public class ChatRoom extends CreatedAtEntity {
     }
 
     public static ChatRoom createDirect(Member memberA, Member memberB) {
+        assertDirect(memberA, memberB);
+
         ChatRoom room = ChatRoom.builder()
                 .type(ChatRoomType.DIRECT)
                 .build();
@@ -50,6 +55,8 @@ public class ChatRoom extends CreatedAtEntity {
     }
 
     public static ChatRoom createClub(Club club) {
+        assertGroup(club);
+
         ChatRoom room = ChatRoom.builder()
                 .type(ChatRoomType.GROUP)
                 .build();
@@ -137,5 +144,15 @@ public class ChatRoom extends CreatedAtEntity {
         DirectRoomInfo directRoomInfo = (DirectRoomInfo) this.roomInfo;
 
         return directRoomInfo.getReceiverFor(senderId);
+    }
+
+    /* Assert 검증 */
+    private static void assertDirect(Member memberA, Member memberB) {
+        requireNonNull(memberA, "member A must not be null");
+        requireNonNull(memberB, "member B must not be null");
+    }
+
+    private static void assertGroup(Club club) {
+        requireNonNull(club, "club must not be null");
     }
 }
